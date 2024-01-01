@@ -1,30 +1,54 @@
 <html>
     <head>
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-NMWCJ4LM9T"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-NMWCJ4LM9T');
+        </script>
+        <meta name="keywords" content="ツール,アプリ,艦これ,艦隊これくしょん">
+        <meta name="description" content="艦これに役立つツールを目的別で探せます。">
+        <title>艦これツール目録 ｜ poyopoyo工具箱</title>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script type="text/javascript" src="index.js"></script>
+        <script type="text/javascript" src="../commons/header.js"></script>
         <link rel="stylesheet" type="text/css" href="main.css">
+        <link rel="stylesheet" type="text/css" href="../commons/header.css">
     </head>
     <body>
-        <div>
-            <div id="header">
-                <div>
-                    <input id="search-form">
-                </div>
-            </div>
-            <div id="tag-list">
-            
+        <!-- header body直後に貼り付けること -->
+        <div id="side-bar-container">
+            <span id="header-side-close">
+                <svg class="side-bar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z" /></svg>
+            </span>
+            <div id="side-menu">
+                <a href="/index"><p class="side-menu-content">ツールを探す</p></a>
+                <a href="/compass"><p class="side-menu-content">羅針盤シミュ</p></a>
+                <a href="/judge"><p class="side-menu-content">B勝利ヨシ！</p></a>
+                <a href="/suzu"><p class="side-menu-content">涼月タイマー</p></a>
             </div>
         </div>
-        <div>
-            <ul id="main-list">
-            
-            </ul>
+        <div id="mask">
         </div>
+        <div id="header-container">
+            <div id="header-inner-container">
+                <span id="header-side-open">
+                    <svg class="side-bar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z" /></svg>
+                </span>
+                <a href="/index"><span id="header-title">poyopoyo工具箱</span></a>
+            </div>
+        </div>
+        <!-- end of header -->
+        <div id="tag-list"></div>
+        <ul id="main-list"></ul>
         <script type="application/json" id="tag-data">
-            ["対潜","対空","編成","制空","索敵","TP","カットイン","シミュレーター","web","アプリ","改修","勝率","ダメージ計算","戦果","遠征","経験値","ルート","基地航空隊","疲労度"]
+            ["ランダム","対潜","対空","編成","制空","索敵","TP","夜偵","カットイン","シミュレーター","web","アプリ","改修","勝率","ダメージ計算","戦果","遠征","経験値","ルート","基地航空隊","疲労度","特殊攻撃","統計","ドロップ"]
         </script>
         <script type="application/json" id="content-data">
-            {"制空権シミュレーター":{"tag":["制空","対空","編成","対潜","索敵","TP","カットイン","基地航空隊","web"],"description":"制空(を中心とした)シミュレーター%%編成、制空権等の核心機能から艦隊分析までなんでもござれ。%%UIも洗練されている","link":"https://noro6.github.io/kc-web/#/"},"明石の改修工廠早見表":{"tag":["改修","web"],"description":"改修曜日、秘書官、他あれこれ%%毎日お世話になる","link":"https://akashi-list.me/"},"Senka Viwer":{"tag":["戦果","web"],"description":"泊地ごとに今月の戦果ボーダー推移がまとめられている","link":"https://senka.me/"},"改修資材必要数期待値計算":{"tag":["改修","web"],"description":"改修確実化が合理的か調べられる","link":"https://dsco11.web.fc2.com/kancolle/improvement-chance.html"},"勝率計算機":{"tag":["勝率","web"],"description":"勝率100%,74%までに必要な勝ち数、負け数が分かる%%但し現在イベント参加条件に勝率は含まれないので趣味の範囲","link":"https://beige006956.wixsite.com/monooki/kcwincalc"},"疲労度計算":{"tag":["疲労度","web"],"description":"疲労度の予想に","link":"https://moker-spaghetti.github.io/Kancolle-tiredness-calculator/index.html"},"KanColle Sortie Simulator":{"tag":["シミュレーター","web"],"description":"出撃シミュ%%勝率や撤退率が実際どんなもんよってのが分かる%%使いこなせればかなり強力","link":"https://kc3kai.github.io/kancolle-replay/simulator.html"},"KCnavi":{"tag":["ドロップ","統計","web"],"description":"海域ごとのドロップ艦、艦隊編成が調べられる","link":"https://tsunkit.net/nav"},"jervis作戦室":{"tag":["シミュレーター","編成","ダメージ計算","特殊攻撃","web"],"description":"ダメージ計算と特殊攻撃演算が目玉%%他命中回避、破砕効果計算等","link":"https://jervis.vercel.app/"},"艦これ遠征大成功ノート":{"tag":["遠征","web"],"description":"遠征の大成功に必要な条件がまとめられている","link":"https://kancolle.narublo.com/"}}
+            {"制空権シミュレーター":{"tag":["制空","対空","編成","対潜","索敵","夜偵","TP","カットイン","基地航空隊","web"],"description":"制空(を中心とした)シミュレーター%%編成、制空権等の核心機能から艦隊分析までなんでもござれ。%%UIも洗練されている","link":"https://noro6.github.io/kc-web/#/"},"明石の改修工廠早見表":{"tag":["改修","web"],"description":"改修曜日、秘書官、他あれこれ%%毎日お世話になる","link":"https://akashi-list.me/"},"Senka Viwer":{"tag":["戦果","web"],"description":"泊地ごとに今月の戦果ボーダー推移がまとめられている","link":"https://senka.me/"},"改修資材必要数期待値計算":{"tag":["改修","web"],"description":"改修確実化が合理的か調べられる","link":"https://dsco11.web.fc2.com/kancolle/improvement-chance.html"},"勝率計算機":{"tag":["勝率","web"],"description":"勝率100%,74%までに必要な勝ち数、負け数が分かる%%但し現在イベント参加条件に勝率は含まれないので趣味の範囲","link":"https://beige006956.wixsite.com/monooki/kcwincalc"},"疲労度計算":{"tag":["疲労度","web"],"description":"疲労度の予想に","link":"https://moker-spaghetti.github.io/Kancolle-tiredness-calculator/index.html"},"KanColle Sortie Simulator":{"tag":["シミュレーター","web"],"description":"出撃シミュ%%勝率や撤退率が実際どんなもんよってのが分かる%%使いこなせればかなり強力","link":"https://kc3kai.github.io/kancolle-replay/simulator.html"},"KCnavi":{"tag":["ドロップ","統計","web"],"description":"海域ごとのドロップ艦、艦隊編成が調べられる","link":"https://tsunkit.net/nav"},"jervis作戦室":{"tag":["シミュレーター","編成","ダメージ計算","特殊攻撃","web"],"description":"ダメージ計算と特殊攻撃演算が目玉%%他命中回避、破砕効果計算等","link":"https://jervis.vercel.app/"},"艦これ遠征大成功ノート":{"tag":["遠征","web"],"description":"遠征の大成功に必要な条件がまとめられている","link":"https://kancolle.narublo.com/"},"複合レシピジェネレータ":{"tag":["開発","web"],"description":"複数の装備が出るレシピを生成","link":"https://xn--uesr8qr0rdwk.cn/kc-development-tools/?ja#gen"},"羅針盤シミュ":{"tag":["ルート","シミュレーター","web"],"description":"編成した艦隊がどのルートを通るかシミュレート","link":"https://x-20a.github.io/compass/"},"B勝利ヨシ！":{"tag":["勝敗","web"],"description":"B勝利条件を満たすか計算","link":"https://x-20a.github.io/compass/"},"涼月タイマー":{"tag":["タイマー","アプリ"],"description":"艦これ用に調整されたマルチタイマー","link":"https://x-20a.github.io/suzu/"},"締切までの残り時間":{"tag":["タイマー","web"],"description":"マンスリー、クウォータリーetcの期限が一覧で見られる","link":"https://dsco11.web.fc2.com/kancolle/kancolle-deadline.html"},"経験値差計算":{"tag":["経験値","web"],"description":"目的のレベルまでに必要な経験値を計算","link":"https://dsco11.web.fc2.com/kancolle/exp-diff.html"}}
         </script>
     </body>
 </html>
