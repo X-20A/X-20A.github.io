@@ -1,0 +1,36 @@
+@charset "UTF-8";
+.tags {
+    line-height: 25px;
+    margin: 2px;
+    cursor: pointer;
+    color: #fff;
+    border: 1px solid #27acd9;
+    border-radius: 100vh;
+    background: #27acd9;
+    user-select: none;
+}
+.list-item {
+    border-bottom: 1px solid #ddd;
+}
+.site-name {
+    font-weight: 800;
+    font-size: 18px;
+}
+.min-tags {
+    margin: 3px;
+    padding: 1px 4px;
+    background-color: #d9d9d9;
+    font-size: 13px;
+}
+.description {
+    font-size: 16px;
+}
+#tag-list {
+    width: 600px;
+    margin: auto;
+    margin-top: 50px;
+}
+#main-list {
+    margin: auto;
+    width: 600px;
+}
