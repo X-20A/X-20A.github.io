@@ -48,11 +48,18 @@ $(function() {
         }
         return array;
     }
-    //キーを任意の個数ランダムに取得
+    //任意の個数キーを取得
     function getRandomKeys(count) {
         const result = [];
+        const usedKeys = new Set(); // 既に使用されたキーを記録するための Set
         for (let i = 0; i < count && i < ck_length; i++) {
-            const randomKey = content_keys[Math.floor(Math.random() * ck_length)];
+            let randomKey;
+            do {
+                randomKey = content_keys[Math.floor(Math.random() * ck_length)];
+            } while (usedKeys.has(randomKey));
+
+            // 取得したキーを記録
+            usedKeys.add(randomKey);
             result.push(randomKey);
         }
         return result;
