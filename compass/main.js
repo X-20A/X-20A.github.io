@@ -1,6 +1,6 @@
 $(function() {
     //制空シミュに貼るの
-    const code = 'copy(JSON.stringify({composition: document.querySelector(\'.mt-0.pt-0.v-input input\').value,speed: document.querySelector(\'.mr-1.body-2\').textContent,search: Array.from(document.querySelectorAll(\'.mr-1.option-status\')).slice(0, 4).map(e => e.textContent),fleet: Array.from(document.querySelectorAll(\'.d-flex.pl-1.clickable-status >div:first-child\')).map(e => e.textContent),}));';
+    const code = 'copy(JSON.stringify({composition: document.querySelector(\'.mt-0.pt-0 input\')?.value,speed: document.querySelector(\'.mr-1.body-2\').textContent,search: Array.from(document.querySelectorAll(\'.mr-1.option-status\')).slice(0, 4).map(e => e.textContent),fleet: Array.from(document.querySelectorAll(\'.d-flex.pl-1.clickable-status >div:first-child\')).map(e => e.textContent),}));';
     //艦隊諸元
     var com = {
         BB:0, //戦艦
