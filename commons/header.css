@@ -67,6 +67,7 @@ ul {
     cursor: pointer;
 }
 #header-container {
+    z-index: 9999;
     position: fixed;
     width: 100%;
     top: 0;
@@ -85,4 +86,19 @@ ul {
     display: inline-block;
     user-select: none;
     color: white;
+}
+/*以下footer*/
+#footer {
+    padding: 2px;
+    font-size: 13px;
+    color: white;
+    background-color: #333333;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    text-align: center;
+}
+#odaibako {
+    color: #82b1ff;
+    text-decoration: underline;
 }
