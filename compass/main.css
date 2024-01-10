@@ -43,6 +43,9 @@ li {
     text-align: center;
     padding:20px 20px 0 20px;
 }
+#import-display {
+    padding: 0px 220px;
+}
 #option-box {
     display:none;
 }
