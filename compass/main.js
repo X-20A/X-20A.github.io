@@ -162,7 +162,28 @@ $(function() {
         //ひとまずjsonが正常に読まれればフラグは立てる
         f_flag = true;
         checkFlag();
+        //表示
+        reloadImportDisplay();
     });
+
+    function reloadImportDisplay() {
+        $('#import-display').empty();
+        let json = localStorage.getItem('fleet');
+        if(json) {
+            json = JSON.parse(json);
+            let fleet = json['fleet'];
+            let f_length = fleet.length;
+            let part = `${fleet[0]}`;
+            for(let i = 1;i < f_length;i++) {
+                part += ` | ${fleet[i]}`;
+            }
+            let speed = json['speed'];
+            let search = json['search'];
+            if(fleet && speed && search) {
+                $('#import-display').append(`<p>${speed}</p><p>${part}</p><p>索敵値: <strong>1: </strong>${search[0]} <strong>2: </strong>${search[1]} <strong>3: </strong>${search[2]} <strong>4: </strong>${search[3]}</p>`);
+            }
+        }
+    }
     
     //フラグをチェックして開始ボタン無効 or 有効
     function checkFlag() {
