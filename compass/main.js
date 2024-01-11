@@ -1,6 +1,8 @@
 $(function() {
+    //shipdata.jsより
+    let s_data = ship_data;
     //制空シミュに貼るの
-    const code = 'copy(JSON.stringify({composition: document.querySelector(\'.mt-0.pt-0 input\')?.value,speed: document.querySelector(\'.mr-1.body-2\').textContent,search: Array.from(document.querySelectorAll(\'.mr-1.option-status\')).slice(0, 4).map(e => e.textContent.slice(1)),fleet: Array.from(document.querySelectorAll(\'.d-flex.pl-1.clickable-status >div:first-child\')).map(e => e.textContent),}));';
+    const code = 'copy(JSON.stringify({speed: document.querySelector(\'.mr-1.body-2\').textContent,search: Array.from(document.querySelectorAll(\'.mr-1.option-status\')).slice(0, 4).map(e => e.textContent.slice(1)),fleet: Array.from(document.querySelectorAll(\'.d-flex.pl-1.clickable-status >div:first-child\')).map(e => e.textContent),}));';
     //艦隊諸元
     var com = {
         BB:0, //戦艦
@@ -12,19 +14,19 @@ $(function() {
         CAV:0, //航巡
         CL:0, //軽巡
         CLT:0, //雷巡
-        ATU:0, //練習特務艦
+        ATU:0, //練習特務艦 欠番
         CT:0, //練習巡洋艦
-        DD:0, //駆逐艦 ※テスト
+        DD:0, //駆逐艦
         DE:0, //海防艦
         SS:0, //潜水艦
         SSV:0, //潜水空母
         AV:0, //水母
         AO:0, //補給艦
-        ASU:0, //特務艦
-        LHT:0, //灯台補給船
-        CVE:0, //特設護衛空母
+        ASU:0, //特務艦 欠番
+        LHT:0, //灯台補給船 欠番
+        CVE:0, //特設護衛空母 欠番
         LHA:0, //揚陸艦
-        LST:0, //戦車揚陸艦
+        LST:0, //戦車揚陸艦 欠番
         AS:0, //潜水母艦
         AR:0 //工作艦
     };
@@ -81,6 +83,7 @@ $(function() {
         var type = $(this).attr('type');
         var key = name.slice(0,3);
         var char = name.slice(-1);
+        console.log(`key : ${key}, char : ${char}`);
         if($(this).attr('type') === 'radio') {
             //能動分岐&7-3解放如何
             var elem = localStorage.getItem('active');
@@ -108,9 +111,7 @@ $(function() {
     });
     //自艦隊読み込み
     $('#fleet-import').on('input', function() {
-        console.log('発火');
         var text = $(this).val();
-        console.log('text : ' + text);
         var json = null;
         try {
             json = JSON.parse(text);
@@ -120,28 +121,10 @@ $(function() {
         }
         //空欄化
         $(this).val('');
-        console.log(json);
         //初期化してから
         for (var key in com) {
             com[key] = 0;
         }
-        //変数反映
-        //艦種
-        json['composition'].split(' ').forEach(item => {
-            if (com.hasOwnProperty(item)) {
-                // キーが存在する場合
-                com[item] += 1;
-            } else if (item.match(/^\d+([A-Z]+)$/)) {
-                // キーが存在しない場合で、数値とキーが組み合わさっている場合
-                const matches = item.match(/^(\d+)([A-Z]+)$/);
-                const number = parseInt(matches[1], 10);
-                const key = matches[2];
-                if (com.hasOwnProperty(key)) {
-                    com[key] += number;
-                }
-            }
-        });
-        console.log(com);
         //速度
         speed = json['speed'];
         //索敵値
@@ -149,15 +132,15 @@ $(function() {
         json['search'].forEach(item => {
             search.push(item);
         });
-        console.log(search);
         //構成艦
         fleet = json['fleet'];
-        console.log(fleet);
-        $('#fleet-import').attr('title', fleet);
-        $('#fleet-import').attr('placeholder', 'ok');
         f_length = fleet.length;
+        let types = getType(fleet);
+        //変数反映
+        reflectionCom(types);
+        console.log(`type : ${types}`);
+        console.log(`com : ${com}`);
         //丸ごとlocalstorageへ
-        console.log('json : ' + JSON.stringify(json));
         localStorage.setItem('fleet', JSON.stringify(json));
         //ひとまずjsonが正常に読まれればフラグは立てる
         f_flag = true;
@@ -165,7 +148,87 @@ $(function() {
         //表示
         reloadImportDisplay();
     });
-
+    
+    //変数に反映
+    function reflectionCom(types) {
+        let res = [];
+        for(let i = 0;i < types.length;i++) {
+            switch(types[i]) {
+                case '戦艦':
+                case '巡洋戦艦':
+                    com['BB']++;
+                    break;
+                case '航空戦艦':
+                    com['BBV']++;
+                    break;
+                case '正規空母':
+                    com['CV']++;
+                    break;
+                case '装甲空母':
+                    com['CVB']++;
+                    break;
+                case '軽空母':
+                    com['CVL']++;
+                    break;
+                case '重巡洋艦':
+                    com['CA']++;
+                    break;
+                case '航空巡洋艦':
+                    com['CAV']++;
+                    break;
+                case '軽巡洋艦':
+                    com['CL']++;
+                    break;
+                case '重雷装巡洋艦':
+                    com['CLT']++;
+                    break;
+                case '練習巡洋艦':
+                    com['CT']++;
+                    break;
+                case '駆逐艦':
+                    com['DD']++;
+                    break;
+                case '海防艦':
+                    com['DE']++;
+                    break;
+                case '潜水艦':
+                    com['SS']++;
+                    break;
+                case '潜水空母':
+                    com['SSV']++;
+                    break;
+                case '水上機母艦':
+                    com['AV']++;
+                    break;
+                case '補給艦':
+                    com['AO']++;
+                    break;
+                case '揚陸艦':
+                    com['LHA']++;
+                    break;
+                case '潜水母艦':
+                    com['AS']++;
+                    break;
+                case '工作艦':
+                    com['AR']++;
+                    break;
+            }
+        }
+    }
+    
+    //艦名から艦種取得 配列で渡す
+    function getType(names) {
+        let types = [];
+        for (let name of names) {
+            let entry = s_data.find(entry => entry.name === name);
+            if (entry) {
+                types.push(entry.type);
+            }
+        }
+        return types;
+    }
+    
+    //艦隊情報表示
     function reloadImportDisplay() {
         $('#import-display').empty();
         let json = localStorage.getItem('fleet');
@@ -5794,7 +5857,7 @@ $(function() {
 
     //マップ描画
     function drawMap() {
-        var map = JSON.parse(document.getElementById('map-info').textContent);
+        var map = map_info; //map.jsより
         var spots = map['spots'][area];
         var routes = map['route'][area];
         var elements = {
