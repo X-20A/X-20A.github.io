@@ -3202,7 +3202,7 @@ $(function() {
                                 } else if(CAs + CL > 0 && Ds > 1) {
                                     sum('EtoI');
                                     return 'I';
-                                } else if(DR > 2 || (DE > 1 && AO + AS > 0)) {
+                                } else if(DE > 2 || (DE > 1 && AO + AS > 0)) {
                                     sum('EtoC');
                                     return null;
                                 } else if(Ds > 1) {
