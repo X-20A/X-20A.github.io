@@ -24,7 +24,7 @@
     修正
     冬月改
         max_seek:48 to 49
-    涼月改の索敵最大値
+    涼月改
         max_seek:48 to 49
 */
 var s_data = [{"id":"1","no":"31","name":"睦月","pron":"むつき","type":"駆逐艦","next":"254", "nextlv":20,"hp":13,"max_hp":24,"armor":5,"fire":6,"torpedo":18,"aac":7,"ass":16,"evasion":37,"seek":4,"luck":12,"max_armor":18,"max_fire":29,"max_torpedo":59,"max_aac":29,"max_ass":39,"max_evasion":79,"max_seek":17,"max_luck":49,"speed":10,"range":1,"slot":2,"fuel":15,"bullet":15,"carry":[0,0],"equip":[1,37], "na":0, "sg":2}
