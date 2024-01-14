@@ -1,10 +1,12 @@
 $(function() {
-    //shipdata.jsより
-    let s_data = ship_data;
-    //制空シミュに貼るの
-    const code = 'copy(JSON.stringify({speed: document.querySelector(\'.mr-1.body-2\').textContent,search: Array.from(document.querySelectorAll(\'.mr-1.option-status\')).slice(0, 4).map(e => e.textContent.slice(1)),fleet: Array.from(document.querySelectorAll(\'.d-flex.pl-1.clickable-status >div:first-child\')).map(e => e.textContent),}));';
+    /*
+    s_dataはship.js
+    e_dataはitem.jsより
+    idがs_dataは文字列
+    e_dataは数字であることに注意
+    */
     //艦隊諸元
-    var com = {
+    let com = {
         BB:0, //戦艦
         BBV:0, //航空戦艦&改装航空戦艦
         CV:0, //正規空母
@@ -30,17 +32,19 @@ $(function() {
         AS:0, //潜水母艦
         AR:0 //工作艦
     };
-    var fleet = [];
-    var f_length = 0;
-    var speed = null;
-    var search = [];
+    let i_json = null; //インポートしたjsonを格納
+    let f_ids = null; //艦隊のid
+    let f_length = 0; //構成艦数
+    let f_names = null; //構成艦艦名
+    let speed = null;
+    let f_search = null;
     
     //値は初期値で実際にはlocalstorageから取得する
     var units = {'2-5':{'D':'0'},'3-2':{'R':'0'},'5-3':{'D':'0','C':'0'},'5-4':{'D':'0','C':'0'},'5-5':{'D':'0','C':'0'}};
     var active = {'4-5':{'A':'D','C':'F','I':'J'},'5-3':{'O':'K'}, '5-5':{'F':'D'}, '6-3':{'A':'B'},'7-3':{'0':'0'},'7-4':{'F':'H'},'7-5':{'F':'G','H':'I','O':'P'}};
     
     //入力
-    var area = null; //※テスト 本来null
+    var area = null;
     
     //オプション表示の為のz-index
     var z_value = 10;
@@ -52,10 +56,7 @@ $(function() {
     var rate = {};
     //軌跡
     var track = [];
-    
-    $('#code-copy').on('click', function () {
-        navigator.clipboard.writeText(code);
-    });
+
     $('#area').on('input', function() {
         var text = $('#area').val();
         const areas = ['1-1','1-2','1-3','1-4','1-5','1-6','2-1','2-2','2-3','2-4','2-5','3-1','3-2','3-3','3-4','3-5','4-1','4-2','4-3','4-4','4-5','5-1','5-2','5-3','5-4','5-5','6-1','6-2','6-3','6-4','6-5','7-1','7-2','7-3','7-3-1','7-4','7-5'];
@@ -112,11 +113,11 @@ $(function() {
     //自艦隊読み込み
     $('#fleet-import').on('input', function() {
         var text = $(this).val();
-        var json = null;
         try {
-            json = JSON.parse(text);
+            i_json = JSON.parse(text);
         } catch(e) {
             f_flag = false;
+            alert('入力値不正');
             return;
         }
         //空欄化
@@ -125,29 +126,599 @@ $(function() {
         for (var key in com) {
             com[key] = 0;
         }
-        //速度
-        speed = json['speed'];
-        //索敵値
-        search = [];
-        json['search'].forEach(item => {
-            search.push(item);
-        });
-        //構成艦
-        fleet = json['fleet'];
-        f_length = fleet.length;
-        let types = getType(fleet);
+        //艦隊の構成艦数
+        f_length = countShips();
+        console.log(`f_length : ${f_length}`);
+        //構成艦のid
+        f_ids = getIdsFromFleet();
+        console.log(`f_ids : ${f_ids}`);
+        //構成艦の名前
+        f_names = getShipName();
+        console.log(`f_names : ${f_names}`);
+        let types = getType();
+        console.log(`types : ${types}`);
         //変数反映
         reflectionCom(types);
-        console.log(`type : ${types}`);
-        console.log(`com : ${com}`);
+        //索敵値
+        f_search = calcSeek();
+        console.log(`f_search : ${f_search}`);
+        //速度
+        speed = calcSpeed();
+        console.log(`speed : ${speed}`);
         //丸ごとlocalstorageへ
-        localStorage.setItem('fleet', JSON.stringify(json));
+        localStorage.setItem('fleet', JSON.stringify(i_json));
         //ひとまずjsonが正常に読まれればフラグは立てる
         f_flag = true;
         checkFlag();
         //表示
         reloadImportDisplay();
     });
+    
+    //速度を取得 高速+艦隊etc
+    function calcSpeed() {
+        let arr = [];
+        for(let i = 0;i < f_length;i++) {
+            let e_ids = getEqIds(f_ids[i]);
+            let rf = getEqIds(f_ids[i]);
+            /*
+            33:タービン
+            34:強化缶
+            87:新型缶
+            */
+            let tur = e_ids.includes(33); //タービン
+            let kan = 0; //強化缶
+            let n_kan = 0; //新型缶
+            let pow = 0; //新型缶☆7↑
+            for(let q = 0;q < e_ids.length;q++) {
+                if(e_ids[q] === 34) {
+                    kan++;
+                } else if(e_ids[q] === 87) {
+                    n_kan++;
+                    if(rf[q] > 6) {
+                        pow++;
+                    }
+                }
+            }
+            let kans = kan + n_kan;
+            let ship = s_data.find(entry => entry.id === f_ids[i]);
+            let sg = ship.sg;
+            let val = 0;
+            switch(sg) { //thanks to Aerial Combat Simulator 無駄がなく美しい
+                case 0: //高速A
+                    val = 1;
+                    if(tur && n_kan || pow > 1) {
+                        val = 3;
+                    } else if(tur && kans || pow) {
+                        val = 2;
+                    }
+                    arr.push(val);
+                    break;
+                case 1: //高速B1
+                    val = 1;
+                    if(tur && n_kan && kans > 1) {
+                        val = 3;
+                    } else if(tur && kans) {
+                        val = 2;
+                    }
+                    arr.push(val);
+                    break;
+                case 2://高速B2
+                    val = 1;
+                    if(tur &&(n_kan > 1 || kans > 2)) {
+                        val = 3;
+                    } else if(tur && kans) {
+                        val = 2;
+                    }
+                    arr.push(val);
+                    break;
+                case 3: //高速C
+                    val = 1;
+                    if(tur && kans) {
+                        val = 2;
+                    }
+                    arr.push(val);
+                    break;
+                case 4: //低速A群
+                    val = 0;
+                    if(tur && n_kan && kans > 2) {
+                        val = 3;
+                    } else if(tur && pow > 1) {
+                        val = 3;
+                    } else if(tur && n_kan && kans > 1) {
+                        val = 2;
+                    } else if(tur && pow) {
+                        val = 2;
+                    } else if(tur && kans) {
+                        val = 1;
+                    }
+                    arr.push(val);
+                    break;
+                case 5: //低速B
+                    val = 0;
+                    if(tur && (n_kan > 1 || kans > 2)) {
+                        val = 2;
+                    } else if(tur && kans) {
+                        val = 1;
+                    }
+                    arr.push(val);
+                    break;
+                case 6: //低速C
+                    val = 0;
+                    if(tur && kans) {
+                        val = 1;
+                    }
+                    arr.push(val);
+                    break;
+                case 7: //低速D
+                    val = 0;
+                    if(tur && n_kan) {
+                        val = 2;
+                    } else if(n_kan || tur && kans) {
+                        val = 1;
+                    }
+                    arr.push(val);
+                    break;
+                case 8: //低速E
+                    val = 0;
+                    if(tur && n_kan && kans > 1) {
+                        val = 3;
+                    } else if(tur && n_kan) {
+                        val = 2;
+                    } else if(tur && kans) {
+                        val = 1;
+                    } else if(n_kan) {
+                        val = 1;
+                    }
+                    arr.push(val);
+                    break;
+                case 9: //サミュ/改&夕張改二特
+                    val = 0;
+                    if(tur && (n_kan > 1 || kans > 2)) {
+                        val = 2;
+                    } else if(tur) {
+                        val = 1;
+                    }
+                    arr.push(val);
+                    break;
+            }
+        }
+        console.log(`艦隊各速度 : ${arr}`);
+        let res = '';
+        if(arr.every(elem => elem === 3)) {
+            res = '最速艦隊';
+        } else if(arr.every(elem => elem === 2)) {
+            res = '高速+艦隊';
+        } else if(arr.every(elem => elem === 1)) {
+            res = '高速艦隊';
+        } else {
+            res = '低速艦隊';
+        }
+        return res;
+    }
+    
+    //構成艦のidを取得 配列で返す
+    function getIdsFromFleet() {
+        const ids = [];
+        for (let i = 1; i <= f_length; i++) {
+            const key = "s" + i;
+            if (i_json.f1[key] && i_json.f1[key].hasOwnProperty("id")) {
+                ids.push('' + i_json.f1[key].id); //文字列化
+            }
+        }
+        return ids;
+    }
+    
+    //構成艦数カウント
+    function countShips() {
+        // f1内のsキーの配下にあるオブジェクト数をカウント
+        const count = Object.keys(i_json.f1).filter(key => /^s\d+$/.test(key)).length;
+        return count;
+    }
+    
+    // 索敵計算
+    function calcSeek() {
+        let res = [];
+        let sum_base = 0; //艦娘索敵値によるスコア
+        let f_length_correct = 2 * (6 - f_length); //隻数補正
+        let sum_eq = 0; //装備によるスコア
+        let command = i_json.hqlv * 0.4 //司令部補正
+        for (let i = 0; i < f_length; i++) {
+            //素の索敵値計算
+            const key = "s" + (i + 1);
+            let lv = i_json['f1'][key]['lv'];
+            //索敵値の最大値と最小値を取得
+            let ship = s_data.find(entry => entry.id === f_ids[i]);
+            let min_seek = ship.seek;
+            let max_seek = ship.max_seek;
+            let cur_seek = 0;
+            if(lv > 98) {
+                cur_seek = max_seek;
+            } else {
+                cur_seek = Math.floor((max_seek - min_seek) / 98 * lv + min_seek); //多分不完全
+            }
+            console.log(`艦名 : ${f_names[i]}, 素索敵値 : ${cur_seek}`);
+            //素の索敵値の平方根を加算
+            sum_base += Math.sqrt(cur_seek);
+            
+            //装備id取得
+            let i_ids = getEqIds(f_ids[i]);
+            console.log(`装備id : ${i_ids}`);
+            let bonus = getSeekBonus(ship, i_ids);
+            console.log(`seek_bonus : ${bonus}`);
+            //素の索敵値に加算してみる 要検証
+            sum_base += bonus;
+            //改修値取得
+            let rf = getEqRfs(f_ids[i]);
+            for(let q = 0;q < i_ids.length;q++) {
+                //装備の索敵値が1以上だったらあれこれ
+                let eq = e_data.find(entry => entry.id === i_ids[q]);
+                let seek = eq.seek;
+                if(seek > 0) {
+                    //係数
+                    let coefficient = getEqCo(i_ids[q]);
+                    sum_eq += coefficient[0] * (seek + coefficient[1] * Math.sqrt(rf[q]));
+                }
+            }
+        }
+        let material = sum_base + f_length_correct - command;
+        //係数 四捨五入で小数第二位まで
+        res.push((material + sum_eq).toFixed(2));
+        res.push((material + sum_eq * 2).toFixed(2));
+        res.push((material + sum_eq * 3).toFixed(2));
+        res.push((material + sum_eq * 4).toFixed(2));
+        return res;
+    }
+    
+    //装備ボーナス取得 艦のjson, 装備id(配列)
+    function getSeekBonus(ship, e_ids) {
+        let res = 0;
+        let name = ship.name;
+        let na = ship.na;
+        let type = ship.type;
+        let dup = []; // 重複不可のがきたらこれに追加
+        let e_length = e_ids.length;
+        for(let i = 0;i < e_length;i++) {
+            let e_id = e_ids[i];
+            let eq = e_data.find(entry => entry.id === e_id);
+            switch(e_id) {
+                case 315: //SG初期
+                    if(name === '丹陽' || name === '雪風改二') {
+                        if(!dup.includes(e_id)) {
+                            res += 3;
+                            dup.push(e_id);
+                        }
+                    } else if(na === 1) {
+                        res += 4;
+                    }
+                    break;
+                case 456: //SG後期
+                    if(name === '丹陽' || name === '雪風改二') {
+                        if(!dup.includes(e_id)) {
+                            res += 3;
+                            dup.push(e_id);
+                        }
+                    } else if(na === 1) {
+                        res += 4;
+                    } else if(na === 3) {
+                        res += 2;
+                    }
+                    break;
+                case 278: // SK
+                    if(na === 1) {
+                        if(!dup.includes(e_id)) {
+                            res += 1;
+                            dup.push(e_id);
+                        }
+                    }
+                    break;
+                case 279: //SK+SG
+                    if(na === 1) {
+                        if(!dup.includes(e_id)) {
+                            res += 2;
+                            dup.push(e_id);
+                        }
+                    } else if(na === 3) {
+                        if(!dup.includes(e_id)) {
+                            res += 1;
+                            dup.push(e_id);
+                        }
+                    }
+                    break;
+                case 517: // 清霜逆探
+                    var gifted = ['朝霜改二','清霜改二','初霜改二','潮改二','Верный','霞改二','時雨改三','雪風改二'];
+                    if(name === '清霜改二丁') {
+                        if(!dup.includes(e_id)) {
+                            res += 3;
+                            dup.push(e_id);
+                        }
+                    } else if(gifted.includes(name)) {
+                        if(!dup.includes(e_id)) {
+                            res += 2;
+                            dup.push(e_id);
+                        }
+                    } else if(na === 0 && type === '駆逐艦') {
+                        if(!dup.includes(e_id)) {
+                            res += 1;
+                            dup.push(e_id);
+                        }
+                    }
+                    break;
+                case 30: // 21号対空電探
+                case 410: // 21号対空電探改二
+                    let akizuki = ['秋月','照月','初月','涼月','冬月'];
+                    let mogami = ['最上改','最上改二','最上改二特'];
+                    if(akizuki.some(item => item.includes(name)) || mogami.includes(name)) {
+                        if(!dup.includes(e_id)) {
+                            res += 2;
+                            dup.push(e_id);
+                        }
+                    }
+                    break;
+                case 118: // 紫雲
+                    if(name.includes('大淀')) {
+                        res += 2;
+                        let eq = e_data.find(entry => entry.id === e_id);
+                        if(eq.rf === 10) { // 改修maxで更に+1
+                            res += 1;
+                        }
+                    }
+                    break;
+                case 414: // SOC seagull
+                    if(na === 1) {
+                        if(type === '軽巡洋艦' || type === '重巡洋艦') {
+                            if(!dup.includes(e_id)) {
+                                res += 2;
+                                //改修でさらにボーナス
+                                if(eq.rf > 3) {
+                                    res += 1;
+                                }
+                                dup.push(e_id);
+                            }
+                        } else if(type === '戦艦' || type === '巡洋戦艦') {
+                            if(!dup.includes(e_id)) {
+                                res += 1;
+                                dup.push(e_id);
+                            }
+                        }
+                    }
+                    break; //Fairey Seafox改
+                case 115:
+                    if(name.includes('Bismarck') || name.includes('Prinz Eugen')) {
+                        res += 2;
+                    }
+                    break;
+                case 371:
+                    if(name.includes('Gotland')) {
+                        if(!dup.includes(e_id)) {
+                            res += 6;
+                            dup.push(e_id);
+                        }
+                    } else if(name.includes('Nelson')) {
+                        if(!dup.includes(e_id)) {
+                            res += 5;
+                            dup.push(e_id);
+                        }   
+                    } else if(name.includes('Commandant Teste')) {
+                        if(!dup.includes(e_id)) {
+                            res += 4;
+                            dup.push(e_id);
+                        }
+                    } else if(name.includes('Warspite') || name.includes('Richelieu') || name.includes('Jean Bart')) {
+                        if(!dup.includes(e_id)) {
+                            res += 3;
+                            dup.push(e_id);
+                        }
+                    }
+                    break;
+                case 370: //Swordfish Mk.II改(水偵型)
+                    if(name.includes('Warspite')) {
+                        if(!dup.includes(e_id)) {
+                            res += 3;
+                            dup.push(e_id);
+                        }
+                    } else if(name.includes('Nelson') || name.includes('Sheffield') || name.includes('Gotland')) {
+                        if(!dup.includes(e_id)) {
+                            res += 2;
+                            dup.push(e_id);
+                        }
+                    } else if(name.includes('Commandant Teste') || name.includes('瑞穂') || name.includes('神威')) {
+                        if(!dup.includes(e_id)) {
+                            res += 1;
+                            dup.push(e_id);
+                        }
+                    }
+                    break;
+                case 194: //Laté 298B
+                    var gifted = ['Commandant Teste','Richelieu','Jean Bart','瑞穂','神威'];
+                    if(gifted.some(item => item.includes(name))) {
+                        res += 2;
+                        dup.push(e_id);
+                    }
+                    break;
+                case 415: //SO3C Seamew改
+                    if(na === 1) {
+                        if(type === '軽巡洋艦' || type === '重巡洋艦') {
+                            if(!dup.includes(e_id)) {
+                                res += 2;
+                                dup.push(e_id);
+                            }
+                        } else if(type === '戦艦' || type === '巡洋戦艦') {
+                            if(!dup.includes(e_id)) {
+                                res += 1;
+                                dup.push(e_id);
+                            }
+                        }
+                    }
+                    break;
+                case 369: //Swordfish Mk.III改(水上機型/熟練)
+                    if(name === 'Gotland andra') {
+                        if(dup.filter(item => item === e_id).length === 0) {
+                            res += 4;
+                            dup.push(e_id);
+                        } else if(dup.filter(item => item === e_id).length === 1) {
+                            res += 1;
+                            dup.push(e_id);
+                        }
+                    } else if(name.includes('Gotland') || name.includes('Commandant Teste')) {
+                        if(!dup.includes(e_id)) {
+                            res += 3;
+                            dup.push(e_id);
+                        }
+                    } else if(name.includes('瑞穂') || name.includes('神威')) {
+                        if(!dup.includes(e_id)) {
+                            res += 2;
+                            dup.push(e_id);
+                        }
+                    }
+                    break;
+                case 368: //Swordfish Mk.III改(水上機型)
+                    if(name === 'Gotland andra') {
+                        if(dup.filter(item => item === e_id).length === 0) {
+                            res += 4;
+                            dup.push(e_id);
+                        } else if(dup.filter(item => item === e_id).length < 5) {
+                            res += 3;
+                            dup.push(e_id);
+                        }
+                    } else if(name.includes('Gotland')) {
+                        res += 3;
+                    } else if(name.includes('Commandant Teste') || name.includes('瑞穂') || name.includes('神威')) {
+                        res += 2;
+                    }
+                    break;
+                case 367: //Swordfish(水上機型)
+                    if(name.includes('Gotland') || name.includes('Commandant Teste') || name.includes('瑞穂') || name.includes('神威')) {
+                        res += 1;
+                    }
+                    break;
+                case 408: //装甲艇(AB艇)
+                    if(name.includes('神州丸')) {
+                        res += 2;
+                    } else if(name.includes('あきつ丸') || type === '駆逐艦') {//本来大発の乗る駆逐艦だが、駆逐に乗ってる時点でボーナスつけちゃう
+                        res += 1;
+                    }
+                    break;
+                case 409: //武装大発
+                    if(name.includes('神州丸')) {
+                        res += 2;
+                    } else if(name.includes('あきつ丸')) {//本来大発の乗る駆逐艦だが、駆逐に乗ってる時点でボーナスつけちゃう
+                        res += 1;
+                    }
+                    break;
+            }
+        }
+        return res;
+    }
+    
+    //装備係数&改修係数取得 配列[装備係数, 改修係数]を返す
+    function getEqCo(id) {
+        let res = [];
+        //typeを取得
+        let entry = e_data.find(entry => entry.id === id);
+        //typeの先頭3つを連結してidとして扱う
+        let e_id = entry.type.slice(0, 3).join('');
+        //やや無駄になるが2回に分けた方が見やすくて良いと思う
+        switch(e_id) {
+            //装備係数
+            case '356': //艦戦
+            case '357': //艦爆
+            case '53645': //水戦
+            case '173341': //大型飛行艇
+            case '31626': //対潜哨戒機
+            case '31525': //回転翼機
+            case '34057': //噴式戦闘爆撃機
+            case '111': //小口径主砲
+            case '112': //中口径主砲
+            case '5812': //小型電探
+            case '5813': //大型電探
+            case '244251': //潜水電探
+            case '2332': //潜水魚雷
+            case '71014': //ソナー
+            case '71040': //大型ソナー
+            case '81829': //探照灯
+            case '81842': //大型探照灯
+            case '132335': //航空要員
+            case '162739': //見張員
+            case '122234': //司令部
+            case '2422': //甲標的
+            case '84724': //AB艇
+                res.push(0.6);
+                break;
+            case '358': //艦攻
+                res.push(0.8);
+                break;
+            case '579': //艦偵
+                res.push(1);
+                break;
+            case '54311': //水爆
+                res.push(1.1);
+                break;
+            case '5710': //水偵
+                res.push(1.2);
+                break;
+        }
+        switch(e_id) {
+            //改修係数
+            case '31525': //回転翼機
+                res.push(0);
+                break;
+            case '54311': //水爆
+                res.push(1.15);
+                break;
+            case '579': //艦偵
+            case '173341': //大型飛行艇
+            case '5710': //水偵
+                res.push(1.2);
+                break;
+            case '5812': //小型電探
+                res.push(1.25);
+                break;
+            case '5813': //大型電探
+                res.push(1.4);
+                break;
+            default:
+                res.push(0);
+                break;
+        }
+        return res;
+    }
+    
+    // 艦idから装備idを配列で得る
+    function getEqIds(s_id) {
+        const ids = [];
+        // f1 下の各要素を調べる
+        for (const s_key in i_json.f1) {
+            let ship = i_json.f1[s_key];
+            if (ship.id && ship.id === Number(s_id)) {
+                let items = ship.items;
+                for(const i_key in items) {
+                    if(items[i_key].id) {
+                        ids.push(items[i_key].id);
+                    }
+                }
+            }
+        }
+        return ids;
+    }
+    
+    // 艦idから装備改修値を配列で得る
+    function getEqRfs(s_id) {
+        const rfs = [];
+        // f1 下の各要素を調べる
+        for (const s_key in i_json.f1) {
+            let ship = i_json.f1[s_key];
+            if (ship.id && ship.id === Number(s_id)) {
+                let items = ship.items;
+                for(const i_key in items) {
+                    if(items[i_key].id) {
+                        rfs.push(items[i_key].rf);
+                    }
+                }
+            }
+        }
+        console.log(`改修値 : ${rfs}`);
+        return rfs;
+    }
     
     //変数に反映
     function reflectionCom(types) {
@@ -216,11 +787,23 @@ $(function() {
         }
     }
     
-    //艦名から艦種取得 配列で渡す
-    function getType(names) {
+    //構成艦の名前を配列で返す
+    function getShipName() {
+        let names = [];
+        for (let id of f_ids) {
+            let ship = s_data.find((item) => item.id === id);
+            if (ship) {
+                names.push(ship.name);
+            }
+        }
+        return names;
+    }
+    
+    //idから艦種取得 配列で渡す
+    function getType() {
         let types = [];
-        for (let name of names) {
-            let entry = s_data.find(entry => entry.name === name);
+        for (let id of f_ids) {
+            let entry = s_data.find(entry => entry.id === id);
             if (entry) {
                 types.push(entry.type);
             }
@@ -231,20 +814,12 @@ $(function() {
     //艦隊情報表示
     function reloadImportDisplay() {
         $('#import-display').empty();
-        let json = localStorage.getItem('fleet');
-        if(json) {
-            json = JSON.parse(json);
-            let fleet = json['fleet'];
-            let f_length = fleet.length;
-            let part = `${fleet[0]}`;
-            for(let i = 1;i < f_length;i++) {
-                part += ` | ${fleet[i]}`;
-            }
-            let speed = json['speed'];
-            let search = json['search'];
-            if(fleet && speed && search) {
-                $('#import-display').append(`<p>${speed}</p><p>${part}</p><p>索敵値: <strong>1: </strong>${search[0]} <strong>2: </strong>${search[1]} <strong>3: </strong>${search[2]} <strong>4: </strong>${search[3]}</p>`);
-            }
+        let part = `${f_names[0]}`;
+        for(let i = 1;i < f_length;i++) {
+            part += ` | ${f_names[i]}`;
+        }
+        if(f_names && speed && f_search) {
+            $('#import-display').append(`<p>${speed}</p><p>${part}</p><p>索敵値: <strong>1: </strong>${f_search[0]} <strong>2: </strong>${f_search[1]} <strong>3: </strong>${f_search[2]} <strong>4: </strong>${f_search[3]}</p>`);
         }
     }
     
@@ -275,8 +850,8 @@ $(function() {
     //改、改二等後に続く文字列は許容するが名前が変わる場合は都度呼び出すこと
     function isInclude(name) {
         // 配列をループして各要素を調べる
-        for (let i = 0; i < fleet.length; i++) {
-            const element = fleet[i];
+        for (let i = 0; i < f_length; i++) {
+            const element = f_names[i];
             // 要素内でワードが存在するかチェック
             if (element.includes(name)) {
                 return true; // ワードが見つかった場合、trueを返す
@@ -295,7 +870,7 @@ $(function() {
     }
     //旗艦が軽巡であればtrue
     function isFCL () {
-        var name = fleet[0];
+        var name = f_names[0];
         //先頭一致
         var clsName = ['矢矧','能代','Helena','Brooklyn','Honolulu','神通','Sheffield','L.d.S.D.d.Abruzzi','G.Garibaldi','Perth','大淀','球磨','De Ruyter','長良','名取','川内','那珂','阿賀野','酒匂','天龍','Atlanta','五十鈴','多摩','Gotland','鬼怒','由良','阿武隈','夕張','龍田'];
         //こちらは完全一致
@@ -311,7 +886,7 @@ $(function() {
     function slowBB() {
         var slowBBs = ['扶桑','山城','伊勢','日向','長門','長門改','長門改二','陸奥','陸奥改','陸奥改二','大和','大和改','武蔵','武蔵改','武蔵改二','Conte di Cavour','Nevada','Nevada改','Nevada改 Mod.2','Colorado','Colorado改','Maryland','Marylan改','Warspite','Warspite改','Nelson','Nelson改','Rodney','Rodney改','Гангут','Октябрьская революция','Гангут два'];
         // 配列arr1の要素をセットに変換
-        const set = new Set(fleet);
+        const set = new Set(f_names);
         // 配列arr2の要素を1つずつ調べて、重複があるか確認
         var count = 0;
         for (const element of slowBBs) {
@@ -325,7 +900,7 @@ $(function() {
     function countTaiyo() {
         var taiyos = ['春日丸', '大鷹', '八幡丸', '雲鷹', '神鷹'];
         var count = 0;
-        for (const element of fleet) {
+        for (const element of f_names) {
             for (const name of taiyos) {
                 if (element.startsWith(name)) {
                     count++;
@@ -343,7 +918,7 @@ $(function() {
         track.push(route.split('to')[1]);
     }
     //百分率で指定 小数第一位まで可
-    //指定した確率でture
+    //指定した確率でtrue
     function sai(num) {
         // 0から100までの乱数を生成
         const randomValue = Math.random() * 100;
@@ -861,13 +1436,13 @@ $(function() {
                                 }
                                 break;
                             case 'M':
-                                if(BBV + CA + CVL > 2 || BBV + CAs > 2 || Ds < 3 || search[2] < 28) {
+                                if(BBV + CA + CVL > 2 || BBV + CAs > 2 || Ds < 3 || f_search[2] < 28) {
                                     sum('MtoL');
                                     sum('LtoI');
                                     sum('ItoD');
                                     sum('DtoN');
                                     return null;
-                                } else if(search[2] < 30) {
+                                } else if(f_search[2] < 30) {
                                     if(sai(50)) {
                                         sum('MtoL');
                                         sum('LtoI');
@@ -1790,10 +2365,10 @@ $(function() {
                                 if((BBCVs < 2 && Ds > 3) || (BBCVs === 0 && CL > 0 && DD > 2)) {
                                     sum('GtoI');
                                     return 'I';
-                                } else if(search[0] < 37) {
+                                } else if(f_search[0] < 37) {
                                     sum('GtoK');
                                     return null;
-                                } else if(search[0] < 41 && search[0] >= 37) {
+                                } else if(search[0] < 41 && f_search[0] >= 37) {
                                     if(sai(50)) {
                                         sum('GtoI');
                                         return 'I';
@@ -1807,10 +2382,10 @@ $(function() {
                                 }
                                 break;
                             case 'I':
-                                if(search[0] < 31) {
+                                if(f_search[0] < 31) {
                                     sum('ItoH');
                                     return null;
-                                } else if(search[0] < 34 && search[0] >= 31) {
+                                } else if(f_search[0] < 34 && f_search[0] >= 31) {
                                     if(sai(50)) {
                                         sum('ItoH');
                                         return null;
@@ -1824,10 +2399,10 @@ $(function() {
                                 }
                                 break;
                             case 'J':
-                                if(search[0] < 42) {
+                                if(f_search[0] < 42) {
                                     sum('JtoH');
                                     return null;
-                                } else if(search[0] < 49 && search[0] >= 42) {
+                                } else if(f_search[0] < 49 && f_search[0] >= 42) {
                                     if(BBCVs > 3) {
                                         const num = Math.random().toFixed(2);
                                         if(num <= 33.3) {
@@ -1857,7 +2432,7 @@ $(function() {
                                         sum('JtoO');
                                         return null;
                                     }
-                                } else if(search[0] >= 49) {
+                                } else if(f_search[0] >= 49) {
                                     sum('JtoO');
                                     return null;
                                 }
@@ -2463,10 +3038,10 @@ $(function() {
                                 } //CAsより例外なし
                                 break;
                             case 'G':
-                                if(search[3] < 23) {
+                                if(f_search[3] < 23) {
                                     sum('GtoI');
                                     return null;
-                                } else if(search[3] < 28 && search[3] >= 23) {
+                                } else if(f_search[3] < 28 && f_search[3] >= 23) {
                                     if(sai(50)) {
                                         sum('GtoI');
                                         return null;
@@ -2474,7 +3049,7 @@ $(function() {
                                         sum('GtoK');
                                         return null;
                                     }
-                                } else if(search[3] >= 28) {
+                                } else if(f_search[3] >= 28) {
                                     sum('GtoK');
                                     return null;
                                 } //例外なし
@@ -2483,10 +3058,10 @@ $(function() {
                                 if(BBCVs > 3 || (BBCVs > 1 && LHA > 0)) {
                                     sum('HtoJ');
                                     return null;
-                                } else if(search[3] < 35) {
+                                } else if(f_search[3] < 35) {
                                     sum('HtoJ');
                                     return null;
-                                } else if(search[3] < 40 && search[3] >= 35) {
+                                } else if(f_search[3] < 40 && f_search[3] >= 35) {
                                     if(sai(50)) {
                                         sum('HtoJ');
                                         return null;
@@ -2494,7 +3069,7 @@ $(function() {
                                         sum('HtoK');
                                         return null;
                                     }
-                                } else if(search[3] >= 40) {
+                                } else if(f_search[3] >= 40) {
                                     sum('HtoK');
                                     return null;
                                 } //例外なし
@@ -3366,10 +3941,10 @@ $(function() {
                                 if(track.includes('E') || BBs + CV > 3 || BBCVs > 4 || AO > 0) {
                                     sum('KtoM');
                                     return 'M';
-                                } else if(search[1] < 63) {
+                                } else if(f_search[1] < 63) {
                                     sum('KtoL');
                                     return null;
-                                } else if(search[1] < 70 && search[1] >= 63) {
+                                } else if(f_search[1] < 70 && f_search[1] >= 63) {
                                     if(SS > 0) {
                                         const num = Math.random().toFixed(2);
                                         if(num <= 0.33) {
@@ -3399,7 +3974,7 @@ $(function() {
                                         sum('KtoT');
                                         return null;
                                     }
-                                } else if(search[1] >= 70) {
+                                } else if(f_search[1] >= 70) {
                                     sum('KtoT');
                                     return null;
                                 } //LoSより例外なし
@@ -3445,9 +4020,9 @@ $(function() {
                                 }
                                 break;
                             case 'Q':
-                                if(search[1] < 55) {
+                                if(f_search[1] < 55) {
                                     sum('QtoP');
-                                } else if(search[1] < 59 && search[1] >= 55) {
+                                } else if(f_search[1] < 59 && f_search[1] >= 55) {
                                     if(BBCVs > 4) {
                                         if(sai(50)) {
                                             sum('QtoO');
@@ -3477,7 +4052,7 @@ $(function() {
                                 } else if(BBCVs > 4 || DD === 0) {
                                     sum('QtoO');
                                     return 'O';
-                                } else if(search[1] >= 59) {
+                                } else if(f_search[1] >= 59) {
                                     sum('QtoN');
                                     sum('NtoT');
                                     return null;
@@ -3742,10 +4317,10 @@ $(function() {
                                 }
                                 break;
                             case 'F':
-                                if(search[1] < 63) {
+                                if(f_search[1] < 63) {
                                     sum('FtoH');
                                     return null;
-                                } else if(search[1] < 70 && search >= 63) {
+                                } else if(f_search[1] < 70 && f_search >= 63) {
                                     if(BBs + CV > 4) {
                                         if(sai(50)) {
                                             sum('FtoH');
@@ -3790,7 +4365,7 @@ $(function() {
                                         sum('FtoO');
                                         return null;
                                     }
-                                } else if(search[1] >= 70) {
+                                } else if(f_search[1] >= 70) {
                                     sum('FtoO');
                                     return null;
                                 } //LoSより例外なし
@@ -3827,7 +4402,7 @@ $(function() {
                                             sum('LtoN');
                                             return null;
                                         }
-                                    } else if(search[1] < 60) {
+                                    } else if(f_search[1] < 60) {
                                         if(sai(50)) {
                                             sum('LtoM');
                                             sum('MtoK');
@@ -3837,7 +4412,7 @@ $(function() {
                                             sum('LtoN');
                                             return null;
                                         }
-                                    } else if(search[1] < 62 && search[1] >= 60) {
+                                    } else if(f_search[1] < 62 && f_search[1] >= 60) {
                                         const num = Math.random().toFixed(2);
                                         if(num <= 0.33) {
                                             sum('LtoK');
@@ -3852,7 +4427,7 @@ $(function() {
                                             sum('LtoN');
                                             return null;
                                         }
-                                    } else if(search[1] >= 62) {
+                                    } else if(f_search[1] >= 62) {
                                         if(sai(50)) {
                                             sum('LtoK');
                                             sum('KtoO');
@@ -3866,7 +4441,7 @@ $(function() {
                                     sum('LtoK');
                                     sum('KtoO');
                                     return null;
-                                } else if(search[1] < 62 && search[1] >= 60) {
+                                } else if(f_search[1] < 62 && f_search[1] >= 60) {
                                     if(sai(50)) {
                                         sum('LtoK');
                                         sum('KtoO');
@@ -3877,7 +4452,7 @@ $(function() {
                                         sum('KtoO');
                                         return null;
                                     }
-                                } else if(search[1] >= 62) {
+                                } else if(f_search[1] >= 62) {
                                     sum('LtoK');
                                     sum('KtoO');
                                 } //LoSより例外なし
@@ -4184,10 +4759,10 @@ $(function() {
                                 if(isFaster()) {
                                     sum('LtoP');
                                     return null;
-                                } else if(search[1] < 56) {
+                                } else if(f_search[1] < 56) {
                                     sum('LtoN');
                                     return null;
-                                } else if((search[1] < 60 && search[1] >= 56) || BBs + CV > 4) {
+                                } else if((f_search[1] < 60 && f_search[1] >= 56) || BBs + CV > 4) {
                                     if(sai(50)) {
                                         sum('LtoP');
                                         return null;
@@ -4195,7 +4770,7 @@ $(function() {
                                         sum('LtoN');
                                         return null;
                                     }
-                                } else if(search[1] >= 60) {
+                                } else if(f_search[1] >= 60) {
                                     sum('LtoP');
                                     return null;
                                 } //LoSより例外なし
@@ -4204,10 +4779,10 @@ $(function() {
                                 if(isFaster()) {
                                     sum('MtoP');
                                     return null;
-                                } else if(search[1] < 41) {
+                                } else if(f_search[1] < 41) {
                                     sum('MtoO');
                                     return null;
-                                } else if((search[1] < 45 && search[1] >= 41) || SS > 0) {
+                                } else if((f_search[1] < 45 && f_search[1] >= 41) || SS > 0) {
                                     if(sai(50)) {
                                         sum('MtoP');
                                         return null;
@@ -4215,7 +4790,7 @@ $(function() {
                                         sum('MtoO');
                                         return null;
                                     }
-                                } else if(search[1] >= 45) {
+                                } else if(f_search[1] >= 45) {
                                     sum('MtoP');
                                     return null;
                                 } //LoSより例外なし
@@ -4321,10 +4896,10 @@ $(function() {
                                 if(isFaster()) {
                                     sum('OtoS');
                                     return null;
-                                } else if(search[1] < 63) {
+                                } else if(f_search[1] < 63) {
                                     sum('OtoR');
                                     return null;
-                                } else if((search[1] < 66 & search[1] >= 63) || SS > 0) {
+                                } else if((f_search[1] < 66 & f_search[1] >= 63) || SS > 0) {
                                     if(sai(50)) {
                                         sum('OtoS');
                                         return null;
@@ -4332,7 +4907,7 @@ $(function() {
                                         sum('OtoR');
                                         return null;
                                     }
-                                } else if(search[1] >= 66) {
+                                } else if(f_search[1] >= 66) {
                                     sum('OtoS');
                                     return null;
                                 } //LoSより例外なし
@@ -4362,10 +4937,10 @@ $(function() {
                                             return null;
                                         }
                                     }
-                                } else if(search[1] < 73) {
+                                } else if(f_search[1] < 73) {
                                     sum('PtoQ');
                                     return null;
-                                } else if((search[1] < 80 && search[1] >= 73) || SS > 0 || BBCVs > 4) {
+                                } else if((f_search[1] < 80 && f_search[1] >= 73) || SS > 0 || BBCVs > 4) {
                                     if(sai(66)) {
                                         sum('PtoQ');
                                         return null;
@@ -4373,7 +4948,7 @@ $(function() {
                                         sum('PtoS');
                                         return null;
                                     }
-                                } else if(search[1] >= 80) {
+                                } else if(f_search[1] >= 80) {
                                     sum('PtoS');
                                     return null;
                                 } //LoSより例外なし
@@ -4416,13 +4991,13 @@ $(function() {
                                 }
                                 break;
                             case 'G':
-                                if(SS < 3 || BBCVs + CAs === 2 || search[3] < 12) {
+                                if(SS < 3 || BBCVs + CAs === 2 || f_search[3] < 12) {
                                     sum('GtoI');
                                     return null;
-                                } else if(AS > 0 && search[3] >= 16) {
+                                } else if(AS > 0 && f_search[3] >= 16) {
                                     sum('GtoH');
                                     return 'H';
-                                } else if(AS === 0 && search[3] >= 16) {
+                                } else if(AS === 0 && f_search[3] >= 16) {
                                     if(sai(85)) {
                                         sum('GtoH');
                                         return 'H';
@@ -4441,11 +5016,11 @@ $(function() {
                                 }
                                 break;
                             case 'H':
-                                if(search[3] < 20) {
+                                if(f_search[3] < 20) {
                                     sum('HtoE');
                                     return null;
                                 } else if(AS > 0) {
-                                    if(search[3] < 25 && search[3] >= 20) {
+                                    if(f_search[3] < 25 && f_search[3] >= 20) {
                                         if(sai(50)) {
                                             sum('HtoE');
                                             return null;
@@ -4453,11 +5028,11 @@ $(function() {
                                             sum('HtoK');
                                             return null;
                                         }
-                                    } else if(search[3] >= 25) {
+                                    } else if(f_search[3] >= 25) {
                                         sum('HtoK');
                                         return null;
                                     } //LoSより例外なし
-                                } else if(search[3] < 25 && search[3] >= 20) {
+                                } else if(f_search[3] < 25 && f_search[3] >= 20) {
                                     const num = Math.random().toFixed(2);
                                     if(num <= 0.33) {
                                         sum('HtoE');
@@ -4469,7 +5044,7 @@ $(function() {
                                         sum('HtoK');
                                         return null;
                                     }
-                                } else if(search[3] < 36 && search[3] >= 25) {
+                                } else if(f_search[3] < 36 && f_search[3] >= 25) {
                                     if(sai(50)) {
                                         sum('HtoJ');
                                         return null;
@@ -4477,7 +5052,7 @@ $(function() {
                                         sum('HtoK');
                                         return null;
                                     }
-                                } else if(search[3] >= 36) {
+                                } else if(f_search[3] >= 36) {
                                     sum('HtoK');
                                     return null;
                                 } //LoSより例外なし
@@ -4555,10 +5130,10 @@ $(function() {
                                     sum('EtoF');
                                     sum('FtoI');
                                     return 'I';
-                                } else if(search[2] < 43) {
+                                } else if(f_search[2] < 43) {
                                     sum('EtoI');
                                     return 'I';
-                                } else if(search[2] < 50 && search[2] >= 43) {
+                                } else if(f_search[2] < 50 && f_search[2] >= 43) {
                                     if(sai(50)) {
                                         sum('EtoI');
                                         return 'I';
@@ -4567,14 +5142,14 @@ $(function() {
                                         sum('JtoK');
                                         return null;
                                     }
-                                } else if(search[2] >= 50) {
+                                } else if(f_search[2] >= 50) {
                                     sum('EtoJ');
                                     sum('JtoK');
                                     return null;
                                 } //LoSより例外なし
                                 break;
                             case 'H':
-                                if(search[2] < 32) {
+                                if(f_search[2] < 32) {
                                     sum('HtoG');
                                     return null;
                                 } else {
@@ -4583,10 +5158,10 @@ $(function() {
                                 }
                                 break;
                             case 'I':
-                                if(SS > 3 || search[2] < 35) {
+                                if(SS > 3 || f_search[2] < 35) {
                                     sum('ItoG');
                                     return null;
-                                } else if(search[2] < 40 && search[2] >= 35) {
+                                } else if(f_search[2] < 40 && f_search[2] >= 35) {
                                     if(sai(50)) {
                                         sum('ItoG');
                                         return null;
@@ -4594,7 +5169,7 @@ $(function() {
                                         sum('ItoK');
                                         return null;
                                     }
-                                } else if(search[2] >= 40) {
+                                } else if(f_search[2] >= 40) {
                                     sum('ItoK');
                                     return null;
                                 } //LoSより例外なし
@@ -4647,10 +5222,10 @@ $(function() {
                                 }
                                 break;
                             case 'H':
-                                if(search[2] < 36) {
+                                if(f_search[2] < 36) {
                                     sum('HtoI');
                                     return null;
-                                } else if(search[2] < 38 && search[2] >= 36) {
+                                } else if(f_search[2] < 38 && f_search[2] >= 36) {
                                     if(sai(50)) {
                                         sum('HtoI');
                                         return null;
@@ -4658,7 +5233,7 @@ $(function() {
                                         sum('HtoJ');
                                         return null;
                                     }
-                                } else if(search[2] >= 38) {
+                                } else if(f_search[2] >= 38) {
                                     sum('HtoJ');
                                     return null;
                                 } //LoSより例外なし
@@ -4822,7 +5397,7 @@ $(function() {
                                 }
                                 break;
                             case 'G':
-                                if(search[2] < 50) {
+                                if(f_search[2] < 50) {
                                     sum('GtoK');
                                     return null;
                                 } else {
@@ -4845,7 +5420,7 @@ $(function() {
                                 }
                                 break;
                             case 'J':
-                                if(search[2] < 35) {
+                                if(f_search[2] < 35) {
                                     sum('JtoL');
                                     return null;
                                 } else {
@@ -5132,7 +5707,7 @@ $(function() {
                                 if(f_length < 6 || Ds > 4 || (DD > 0 && DE > 2)) {
                                     sum('EtoG');
                                     return null;
-                                } else if(search[3] < 46) {
+                                } else if(f_search[3] < 46) {
                                     sum('EtoF');
                                     return null;
                                 } else {
@@ -5145,11 +5720,11 @@ $(function() {
                                     sum('ItoJ');
                                     sum('JtoK');
                                     return null;
-                                } else if(search[3] < 63) {
+                                } else if(f_search[3] < 63) {
                                     sum('ItoJ');
                                     sum('JtoK');
                                     return null;
-                                } else if(search[3] < 69 && search[3] >= 63) {
+                                } else if(f_search[3] < 69 && f_search[3] >= 63) {
                                     const num = Math.random().toFixed(2);
                                     if(num <= 0.33) {
                                         sum('ItoJ');
@@ -5162,7 +5737,7 @@ $(function() {
                                         sum('ItoM');
                                         return null;
                                     }
-                                } else if(search[3] >= 69) {
+                                } else if(f_search[3] >= 69) {
                                     sum('ItoM');
                                     return null;
                                 } //LoSより例外なし
@@ -5598,11 +6173,11 @@ $(function() {
                                     sum('KtoM');
                                     return 'M';
                                 } else if(track.includes('E')) {
-                                    if(search[3] < 33) {
+                                    if(f_search[3] < 33) {
                                         sum('JtoK');
                                         sum('KtoM');
                                         return 'M';
-                                    } else if(search[3] < 37 && search[3] >= 33) {
+                                    } else if(f_search[3] < 37 && f_search[3] >= 33) {
                                         if(sai(50)) {
                                             if(CT > 0 && DE > 2 && countTaiyo() + CT + Ds === 5 && f_length === 5) {
                                                 sum('JtoP');
@@ -5617,7 +6192,7 @@ $(function() {
                                             sum('KtoM');
                                             return 'M';
                                         }
-                                    } else if(search[3] >= 37) {
+                                    } else if(f_search[3] >= 37) {
                                         if(CT > 0 && DE > 2 && countTaiyo() + CT + Ds === 5 && f_length === 5) {
                                             sum('JtoP');
                                             return null;
@@ -5633,11 +6208,11 @@ $(function() {
                                 //KtoPは見つかってないらしい 全てMへ
                                 break;
                             case 'M':
-                                if(search[3] < 45) {
+                                if(f_search[3] < 45) {
                                     sum('MtoN');
                                     return null;
                                 } else if((slowBB() > 0 && CV > 0) || (BBs - slowBB() > 1) || BBV > 1 || (CVL > 1 || (CVL === 1 && isInclude('あきつ丸'))) || (BBs - slowBB() + BBV + CVL > 2 || (BBs - slowBB() + BBV + CVL === 2 && isInclude('あきつ丸'))) || Ds < 2) {
-                                    if(search[3] < 47 && search[3] >= 45) {
+                                    if(f_search[3] < 47 && f_search[3] >= 45) {
                                         if(sai(50)) {
                                             sum('MtoN');
                                             return null;
@@ -5645,7 +6220,7 @@ $(function() {
                                             sum('MtoO');
                                             return null;
                                         }
-                                    } else if(search[3] >= 47){
+                                    } else if(f_search[3] >= 47){
                                         sum('MtoO');
                                         return null;
                                     } //LoSより例外なし
@@ -5730,11 +6305,11 @@ $(function() {
                                 }
                                 break;
                             case 'I':
-                                if(search[3] < 53) {
+                                if(f_search[3] < 53) {
                                     sum('ItoL');
                                     sum('LtoM');
                                     return null;
-                                } else if(search[3] < 59 && search[3] >= 53) {
+                                } else if(f_search[3] < 59 && f_search[3] >= 53) {
                                     if(sai(50)) {
                                         sum('ItoL');
                                         sum('LtoM');
@@ -5743,7 +6318,7 @@ $(function() {
                                         sum('ItoM');
                                         return null;
                                     }
-                                } else if(search[3] >= 59) {
+                                } else if(f_search[3] >= 59) {
                                     sum('ItoM');
                                     return null;
                                 } //LoSより例外なし
@@ -5775,10 +6350,10 @@ $(function() {
                                 }
                                 break;
                             case 'P':
-                                if(search[3] < 58) {
+                                if(f_search[3] < 58) {
                                     sum('PtoS');
                                     return null;
-                                } else if(search[3] < 63 && search[3] >= 58) {
+                                } else if(f_search[3] < 63 && f_search[3] >= 58) {
                                     if(sai(33.3)) {
                                         sum('PtoR');
                                         sum('RtoT');
@@ -5796,7 +6371,7 @@ $(function() {
                                             return null;
                                         }
                                     }
-                                } else if(search[3] >= 63) {
+                                } else if(f_search[3] >= 63) {
                                     if(speed === '最速艦隊') {
                                         sum('PtoT');
                                         return null;
@@ -5827,7 +6402,7 @@ $(function() {
         //無限ループ防止
         var safety = 0;
         var count = 0;
-        console.log(`諸元 : ${world}, ${map}, ${edge}`);
+        console.log(`諸元 : ${world}-${map}`);
         console.log('艦種 : ' + com);
         while(count < 10000) {
             edge = judge(world, map, edge);
@@ -5840,7 +6415,7 @@ $(function() {
                 alert('無限ループ防止 バグった');
                 console.log('以下諸元');
                 console.log('艦種 : ' + com);
-                console.log(track);
+                console.log('軌跡' + track);
                 console.log(`safety : ${safety}`);
                 console.log(`count : ${count}`);
                 console.log('drum : ' + getDrum(5, 3));
@@ -5875,9 +6450,9 @@ $(function() {
             }
         }
         console.log(elements);
-        //esges流し込み
         console.log(routes);
         console.log(rate);
+        //esges流し込み
         for (let key in routes) {
             if (routes.hasOwnProperty(key)) {
                 const [source, target] = routes[key];
@@ -5893,7 +6468,6 @@ $(function() {
                 });
             }
         }
-        console.log(elements);
 
         //スタイルシート
         var style = [
