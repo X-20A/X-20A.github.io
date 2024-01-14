@@ -50,7 +50,6 @@
             <div id="input-container">
                 <div id="split">
                     <span class="inputs" style="flex:5;">
-                        <button id="code-copy">copy</button>
                         import<input type="text" class="input" id="fleet-import">
                         海域<input type="text" class="input" id="area">
                     </span>
@@ -119,35 +118,28 @@
                 <div style="padding-bottom: 40px">
                     <details open>
                         <summary>使い方</summary>
-                        <p style="color:red;">※2024/01/11から手順が変更されています。ご注意を</p>
+                        <p style="color:red;">※2024/01/15から手順が変更されています。ご注意を</p>
                         <li>
-                            1.copyボタンをクリック<br>
-                            コードがクリップボードにコピーされます
+                            1.制空シミュの編成ページを開く
                         </li>
                         <li>
-                            2.制空シミュの編成ページを開く
+                            2.[共有] > [デッキビルダー形式データ] コピー
                         </li>
                         <li>
-                            3.「F12」 > 「コンソール」を開く
-                        </li>
-                        <li>
-                            4.コードを貼り付け、Enter
-                        </li>
-                        <li>
-                            5.import欄に貼り付け<br>
+                            3.羅針盤シミュimport欄に貼り付け<br>
                             このとき枠が空欄のままですが正常な挙動です
                         </li>
                         <li>
-                            6.海域をセット<br>
+                            4.海域をセット<br>
                             「3-2」「7-1」のような形式で入力してください(かっこ不要)<br>
                         </li>
                         <li>
-                            7.海域によってオプションがあります(能動分岐、ドラム缶 or 大発 or 電探 搭載艦数)
+                            5.海域によってオプションがあります(能動分岐、ドラム缶 or 大発 or 電探 搭載艦数)
                             ※7-3においては第二ボス解放前と後とで分岐条件が変化します<br>
                             特に解放前について調べたい場合オプションで選択してください
                         </li>
                         <li>
-                            8.「go」をクリック
+                            6.「go」をクリック
                         </li>
                         <li>追記:マップ周りのコーディングは<a href="https://tsunkit.net/nav/" target="_blank">KCNavi</a>を大いに参考にしています。先人に感謝</li>
                         <li>DeepL:The coding around the map is greatly based on KCNavi. Thanks to our predecessors</li>
@@ -161,16 +153,16 @@
                     </details>
                     <details>
                         <summary>アプデ履歴</summary>
+                        <li>2024/01/15_ver.1.1.0  デッキビルダー形式での読込に対応</li>
                         <li>2024/01/11_ver.1.0.2  手順を簡素化</li>
                         <li>2024/01/11_ver.1.0.1  読み込んだ艦隊を表示&amp;バグ修正</li>
                         <li>2023/10/28_ver.1.0.0  公開</li>
                     </details>
                     <details>
                         <summary>所感</summary>
-                        <li>手間のかかることを...</li>
-                        <li>需要は分からんけど無かったから</li>
-                        <li>wikiの記述が曖昧な部分はそれっぽい値を放り込んでるので分かるようにしたい</li>
-                        <li>バグもある 絶対ある</li>
+                        <li>バグの薫る</li>
+                        <li>索敵値が制空シミュとズレますが基本的にあちらを信用してください</li>
+                        <li>索敵逸れは向うで出してくれるので一先ず許容範囲かなあと</li>
                     </details>
                 </div>
             </div>
