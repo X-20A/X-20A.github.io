@@ -334,19 +334,17 @@ $(function() {
             if(lv > 98) {
                 cur_seek = max_seek;
             } else {
-                cur_seek = Math.floor((max_seek - min_seek) / 98 * lv + min_seek); //多分不完全
+                cur_seek = Math.floor((max_seek - min_seek) * lv / 99) + min_seek; //多分不完全 合ってるかも...
             }
             console.log(`艦名 : ${f_names[i]}, 素索敵値 : ${cur_seek}`);
-            //素の索敵値の平方根を加算
-            sum_base += Math.sqrt(cur_seek);
-            
             //装備id取得
             let i_ids = getEqIds(f_ids[i]);
             console.log(`装備id : ${i_ids}`);
+            //装備ボーナス
             let bonus = getSeekBonus(ship, i_ids);
             console.log(`seek_bonus : ${bonus}`);
-            //素の索敵値に加算してみる 要検証
-            sum_base += bonus;
+            //素の索敵値の平方根を加算
+            sum_base += Math.sqrt(cur_seek + bonus);
             //改修値取得
             let rf = getEqRfs(f_ids[i]);
             for(let q = 0;q < i_ids.length;q++) {
@@ -356,6 +354,7 @@ $(function() {
                 if(seek > 0) {
                     //係数
                     let coefficient = getEqCo(i_ids[q]);
+                    console.log(`装備係数 : ${coefficient[0]}, 改修係数 : ${coefficient[1]}`);
                     sum_eq += coefficient[0] * (seek + coefficient[1] * Math.sqrt(rf[q]));
                 }
             }
