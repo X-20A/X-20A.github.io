@@ -6597,4 +6597,14 @@ $(function() {
             $('#fleet-import').trigger('input');
         }
     }
+    //キーボードショートカット
+    $(window).keyup(function(e) {
+        switch (e.keyCode) {
+            case 13: //Enter
+                if(!$('#go').prop('disabled')) {
+                    $('#go').click();
+                }
+                break;
+        }
+    });
 });
