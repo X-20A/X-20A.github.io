@@ -33,11 +33,12 @@ $(function() {
         AR:0 //工作艦
     };
     let i_json = null; //インポートしたjsonを格納
-    let f_ids = null; //艦隊のid
+    //艦隊諸元
+    let f_ids = null; //艦隊構成艦のid
     let f_length = 0; //構成艦数
     let f_names = null; //構成艦艦名
-    let speed = null;
-    let f_search = null;
+    let speed = null; //速度
+    let f_search = null; //索敵値
     
     //値は初期値で実際にはlocalstorageから取得する
     var units = {'2-5':{'D':'0'},'3-2':{'R':'0'},'5-3':{'D':'0','C':'0'},'5-4':{'D':'0','C':'0'},'5-5':{'D':'0','C':'0'}};
@@ -4627,7 +4628,6 @@ $(function() {
                                 break;
                             case 'O':
                                 if(active['5-3']['O'] === 'K') {
-                                    console.log('check:O1');
                                     sum('OtoK');
                                     return 'K';
                                 } else {
@@ -4637,19 +4637,15 @@ $(function() {
                                 }
                                 break;
                             case 'K':
-                                console.log('check:K0');
                                 if(DD > 3 || (DD === 3 && CL === 1)) {
-                                    console.log('check:K1');
                                     sum('KtoH');
                                     sum('HtoE');
                                     return 'E';
                                 } else if(DD === 2 && (isFaster() || BBV + AO + AS > 0 || getDrum(world, map) > 1 || getCraft(world, map) > 1)) {
-                                    console.log('check:K2');
                                     sum('KtoH');
                                     sum('HtoE');
                                     return 'E';
                                 } else {
-                                    console.log('check:K3');
                                     sum('KtoE');
                                     return 'E';
                                 }
@@ -6402,9 +6398,14 @@ $(function() {
         var safety = 0;
         var count = 0;
         console.log(`諸元 : ${world}-${map}`);
-        console.log('艦種 : ' + com);
+        console.log('直後艦種');
+        console.log(com);
         while(count < 10000) {
-            edge = judge(world, map, edge);
+            try {
+                edge = judge(world, map, edge);
+            } catch(e) {
+                alert('バグった ごめんね');
+            }
             if(edge === null) {
                 count++;
                 track = [];
@@ -6413,7 +6414,8 @@ $(function() {
             if(safety > 150000) {
                 alert('無限ループ防止 バグった');
                 console.log('以下諸元');
-                console.log('艦種 : ' + com);
+                console.log('直後艦種');
+                console.log(com);
                 console.log('軌跡' + track);
                 console.log(`safety : ${safety}`);
                 console.log(`count : ${count}`);
@@ -6424,7 +6426,6 @@ $(function() {
                 break;
             }
         }
-        console.log(rate);
         drawMap();
         rate = {};
     });
@@ -6448,9 +6449,6 @@ $(function() {
                 });
             }
         }
-        console.log(elements);
-        console.log(routes);
-        console.log(rate);
         //esges流し込み
         for (let key in routes) {
             if (routes.hasOwnProperty(key)) {
@@ -6561,9 +6559,11 @@ $(function() {
         //能動分岐セット
         if(!a) {
             a = active;
+            localStorage.setItem('active', JSON.stringify(a));
         } else {
             a = JSON.parse(a);
         }
+        //html反映
         for(const key in a) {
             for(const key2 in a[key]) {
                 var val = a[key][key2];
@@ -6575,9 +6575,11 @@ $(function() {
         //ドラム・大発セット
         if(!u) {
             u = units;
+            localStorage.setItem('units', JSON.stringify(u));
         } else {
             u = JSON.parse(u);
         }
+        //html反映
         for(const key in u) {
             for(const key2 in u[key]) {
                 var val = u[key][key2];
