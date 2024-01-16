@@ -319,23 +319,23 @@ $(function() {
     // 索敵計算
     function calcSeek() {
         let res = [];
-        let sum_base = 0; //艦娘索敵値によるスコア
-        let f_length_correct = 2 * (6 - f_length); //隻数補正
-        let sum_eq = 0; //装備によるスコア
-        let command = i_json.hqlv * 0.4 //司令部補正
+        let sum_base = new Decimal(0); //艦娘索敵値によるスコア
+        let f_length_correct = new Decimal(2 * (6 - f_length)); //隻数補正
+        let sum_eq = new Decimal(0); //装備によるスコア
+        let command = new Decimal(i_json.hqlv).times(0.4); //司令部補正
         for (let i = 0; i < f_length; i++) {
             //素の索敵値計算
             const key = "s" + (i + 1);
             let lv = i_json['f1'][key]['lv'];
             //索敵値の最大値と最小値を取得
             let ship = s_data.find(entry => entry.id === f_ids[i]);
-            let min_seek = ship.seek;
-            let max_seek = ship.max_seek;
-            let cur_seek = 0;
+            let min_seek = new Decimal(ship.seek);
+            let max_seek = new Decimal(ship.max_seek);
+            let cur_seek = new Decimal(0);
             if(lv > 98) {
                 cur_seek = max_seek;
             } else {
-                cur_seek = Math.floor((max_seek - min_seek) * lv / 99) + min_seek; //多分不完全 合ってるかも...
+                cur_seek = new Decimal(max_seek).minus(min_seek).times(lv).div(99).floor().plus(min_seek);
             }
             console.log(`艦名 : ${f_names[i]}, 素索敵値 : ${cur_seek}`);
             //装備id取得
@@ -345,27 +345,31 @@ $(function() {
             let bonus = getSeekBonus(ship, i_ids);
             console.log(`seek_bonus : ${bonus}`);
             //素の索敵値の平方根を加算
-            sum_base += Math.sqrt(cur_seek + bonus);
+            sum_base = sum_base.plus(Decimal.sqrt(cur_seek.plus(bonus)));
             //改修値取得
-            let rf = getEqRfs(f_ids[i]);
+            let rfs = getEqRfs(f_ids[i]);
             for(let q = 0;q < i_ids.length;q++) {
                 //装備の索敵値が1以上だったらあれこれ
                 let eq = e_data.find(entry => entry.id === i_ids[q]);
-                let seek = eq.seek;
+                let seek = new Decimal(eq.seek);
                 if(seek > 0) {
                     //係数
                     let coefficient = getEqCo(i_ids[q]);
+                    let eq_co = new Decimal(coefficient[0]); //装備係数
+                    let rf_co = new Decimal(coefficient[1]); //改修係数
+                    let rf = new Decimal(rfs[q]);
                     console.log(`装備係数 : ${coefficient[0]}, 改修係数 : ${coefficient[1]}`);
-                    sum_eq += coefficient[0] * (seek + coefficient[1] * Math.sqrt(rf[q]));
+                    sum_eq = sum_eq.plus(eq_co.times(seek.plus(rf_co.times(Decimal.sqrt(rf)))));
                 }
             }
         }
-        let material = sum_base + f_length_correct - command;
+        let material = sum_base.plus(f_length_correct).minus(command);
         //係数 四捨五入で小数第二位まで
-        res.push((material + sum_eq).toFixed(2));
-        res.push((material + sum_eq * 2).toFixed(2));
-        res.push((material + sum_eq * 3).toFixed(2));
-        res.push((material + sum_eq * 4).toFixed(2));
+        console.log(`検証 : ${material.plus(sum_eq)}`);
+        res.push((material.plus(sum_eq)).toFixed(2));
+        res.push((material.plus(sum_eq.times(2))).toFixed(2));
+        res.push((material.plus(sum_eq.times(3))).toFixed(2));
+        res.push((material.plus(sum_eq.times(4))).toFixed(2));
         return res;
     }
     
@@ -605,6 +609,28 @@ $(function() {
                         res += 1;
                     }
                     break;
+                case 412: //熟練見張員
+                    if(na === 0) {
+                        if(type === '駆逐艦') {
+                            res += 1;
+                        } else if(type='軽巡洋艦') {
+                            res += 3;
+                        } else if(type === '重巡洋艦') {
+                            res += 1;
+                        }
+                    }
+                    break;
+                case 129: //見張員
+                    if(na === 0) {
+                        if(type === '駆逐艦') {
+                            res += 1;
+                        } else if(type='軽巡洋艦') {
+                            res += 3;
+                        } else if(type === '重巡洋艦') {
+                            res += 3;
+                        }
+                    }
+                    break;
             }
         }
         return res;
@@ -662,6 +688,7 @@ $(function() {
             //改修係数
             case '31525': //回転翼機
             case '34425': //S51J & S51J改
+            case '162739': //見張員
                 res.push(0);
                 break;
             case '54311': //水爆
