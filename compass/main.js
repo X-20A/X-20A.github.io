@@ -1165,7 +1165,7 @@ $(function() {
                                     sum('FtoJ');
                                     return null;
                                 } else if(speed !== '低速艦隊') {
-                                    if(speed(60)) {
+                                    if(sai(60)) {
                                         sum('FtoJ');
                                         return null;
                                     } else {
@@ -2556,6 +2556,10 @@ $(function() {
                                     return null;
                                 } else if(AS === 1 && SS === 5) {
                                     sum('DtoG');
+                                    return null;
+                                } else {
+                                    sum('DtoF');
+                                    sum('FtoG');
                                     return null;
                                 }
                                 break;
@@ -6430,11 +6434,7 @@ $(function() {
         console.log('直後艦種');
         console.log(com);
         while(count < 10000) {
-            try {
-                edge = judge(world, map, edge);
-            } catch(e) {
-                alert('バグった ごめんね');
-            }
+            edge = judge(world, map, edge);
             if(edge === null) {
                 count++;
                 track = [];
@@ -6585,6 +6585,7 @@ $(function() {
         var a = localStorage.getItem('active');
         var u = localStorage.getItem('units');
         var f = localStorage.getItem('fleet');
+        var ks = localStorage.getItem('ks');
         //能動分岐セット
         if(!a) {
             a = active;
@@ -6627,15 +6628,78 @@ $(function() {
             $('#fleet-import').val(f);
             $('#fleet-import').trigger('input');
         }
+        //キーボードショートカットON/OFF
+        if(ks) {
+            if(ks === '1') {
+                $('#ks').toggleClass('checked');
+            }
+        }
     }
+    //キーで海域入力 デフォルトではoff
+    function setNumberToArea(num) {
+        let ks = localStorage.getItem('ks');
+        if(ks && ks === '1') {
+            let text = $('#area').val();
+            let pattern = /^[0-9]-[0-9]$/;
+            let pattern_ch = /^[0-9]-$/;
+            if(text && pattern.test(text)) {
+                $('#area').val(`${text.split('-')[1]}-${num}`);
+            } else if(text && pattern_ch.test(text)){
+                $('#area').val(`${text}${num}`);
+            } else {
+                $('#area').val(`${num}-`);
+            }
+            $('#area').trigger('input');
+        }
+    }
+    $('#ks').on('click', function() {
+        $('#ks').toggleClass('checked');
+        if($(this).hasClass('checked')) {
+            localStorage.setItem('ks', '1');
+        } else {
+            localStorage.setItem('ks', '0');
+        }
+    });
     //キーボードショートカット
     $(window).keyup(function(e) {
+        let num = 0;
         switch (e.keyCode) {
             case 13: //Enter
                 if(!$('#go').prop('disabled')) {
                     $('#go').click();
                 }
                 break;
+            case 49:
+            case 97:
+                num = 1;
+                break;
+            case 50:
+            case 98:
+                num = 2;
+                break;
+            case 51:
+            case 99:
+                num = 3;
+                break;
+            case 52:
+            case 100:
+                num = 4;
+                break;
+            case 53:
+            case 101:
+                num = 5;
+                break;
+            case 54:
+            case 102:
+                num = 6;
+                break;
+            case 55:67
+            case 103:
+                num = 7;
+                break;
+        }
+        if(num) {
+            setNumberToArea(num);
         }
     });
 });
