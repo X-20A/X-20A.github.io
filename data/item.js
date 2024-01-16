@@ -513,4 +513,6 @@ var e_data = [{"id":1,"name":"12cm単装砲","type":[1,1,1,1,0],"armor":0,"fire"
 ,{"id":515,"name":"Sea Otter","type":[5,7,10,50,49],"armor":0,"fire":0,"torpedo":0,"bomb":0,"aac":0,"ass":6,"hit":2,"evasion":0,"seek":5,"range":0,"rarity":4,"dismantle":"[3,3,0,5]"}
 ,{"id":516,"name":"Me 262 A-1a/R1","type":[22,39,48,56,55],"armor":0,"fire":0,"torpedo":0,"bomb":3,"aac":15,"ass":0,"hit":6,"evasion":1,"seek":0,"range":0,"rarity":6,"dismantle":"[7,4,11,15]"}
 ,{"id":517,"name":"逆探(E27)+22号対水上電探改四(後期調整型)","type":[5,8,12,11,0],"armor":0,"fire":2,"torpedo":0,"bomb":0,"aac":0,"ass":4,"hit":9,"evasion":5,"seek":8,"range":0,"rarity":5,"dismantle":"[0,0,17,20]"}
+,{"id":518,"name":"14cm連装砲改二","type":[1,1,2,2,0],"armor":1,"fire":5,"torpedo":0,"bomb":0,"aac":0,"ass":0,"hit":3,"evasion":0,"seek":0,"range":2,"rarity":5,"dismantle":"[0,0,17,20]"}
+,{"id":519,"name":"SJレーダー+潜水艦司令塔装備","type":[24,42,51,42,0],"armor":0,"fire":0,"torpedo":5,"bomb":0,"aac":0,"ass":0,"hit":4,"evasion":6,"seek":7,"range":0,"rarity":5,"dismantle":"[0,0,17,20]"}
 ];
