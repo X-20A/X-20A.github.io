@@ -6135,7 +6135,7 @@ $(function() {
                     case 4: //@7-4
                         switch(edge) {
                             case null:
-                                if(BB + CV + SS > 0 || CAs > 1 || CL + CT + CLT) {
+                                if(BB + CV + SS > 0 || CAs > 1 || CL + CT + CLT > 1) {
                                     sum('1toC');
                                     return 'C';
                                 } else if(isInclude('あきつ丸') && DE === 2 && (DD === 1 || DE === 1)) {
