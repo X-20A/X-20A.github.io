@@ -2274,6 +2274,9 @@ $(function() {
                                     sum('LtoP');
                                     return null;
                                 } else if(BBs + CV < 3) {
+                                    sum('LtoP');
+                                    return null;
+                                } else {
                                     if(sai(60)) {
                                         sum('LtoM');
                                         sum('MtoP');
