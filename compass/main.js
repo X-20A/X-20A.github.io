@@ -146,13 +146,17 @@ $(function() {
         //速度
         speed = calcSpeed();
         console.log(`speed : ${speed}`);
-        //丸ごとlocalstorageへ
-        localStorage.setItem('fleet', JSON.stringify(i_json));
-        //ひとまずjsonが正常に読まれればフラグは立てる
-        f_flag = true;
-        checkFlag();
-        //表示
-        reloadImportDisplay();
+        //気休めだけども保存前にチェック
+        if(f_length && f_ids && f_names && f_search && f_search[0] && speed) {
+            //丸ごとlocalstorageへ
+            localStorage.setItem('fleet', JSON.stringify(i_json));
+            f_flag = true;
+            checkFlag();
+            //表示
+            reloadImportDisplay();
+        } else {
+            alert('処理中断:入力値に不備があるかも？');
+        }
     });
     
     //速度を取得 高速+艦隊etc
