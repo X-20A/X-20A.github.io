@@ -3820,7 +3820,8 @@ $(function() {
                             case 'B':
                                 if(BBCVs > 3) {
                                     sum('BtoA');
-                                    return 'A';
+                                    sum('AtoE');
+                                    return 'E';
                                 } else if(CA > 0) {
                                     if(sai(70)) {
                                         sum('BtoD');
