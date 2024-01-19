@@ -2228,7 +2228,7 @@ $(function() {
                                         if(num <= 0.4) {
                                             sum('KtoL');
                                             return 'L';
-                                        } else if(nym <= 0.8) {
+                                        } else if(num <= 0.8) {
                                             sum('KtoN');
                                             return null;
                                         } else {
@@ -4089,6 +4089,7 @@ $(function() {
                             case 'Q':
                                 if(f_search[1] < 55) {
                                     sum('QtoP');
+                                    return null;
                                 } else if(f_search[1] < 59 && f_search[1] >= 55) {
                                     if(BBCVs > 4) {
                                         if(sai(50)) {
@@ -5305,23 +5306,29 @@ $(function() {
                     case 4: //@6-4
                         switch(edge) {
                             case null:
+                                console.log('検証');
                                 if(LHA + CVs > 0 || ((!isInclude('長門改二') && !isInclude('陸奥改二')) && BBs === 2) || CAV > 2) {
+                                    console.log('check2');
                                     sum('2toM');
                                     sum('MtoK');
                                     return 'K';
                                 } else if(speed !== '低速艦隊') {
                                     if((isFCL() && DD === 3) || DD > 3) {
+                                        console.log('check');
                                         sum('1toB');
                                         sum('BtoD');
                                         sum('DtoC');
                                         sum('CtoF');
                                         sum('FtoN');
                                         return null;
+                                    } else {
+                                        console.log('check2');
                                     }
                                 } else if(DD > 1) {
                                     sum('1toA');
                                     return 'A';
                                 } else {
+                                    console.log('check3');
                                     sum('2toM');
                                     sum('MtoK');
                                     return 'K';
