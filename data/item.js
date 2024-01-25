@@ -1,4 +1,10 @@
-// http://kancolle-calc.net/deckbuilder.html 様より失敬
+/* 
+    http://kancolle-calc.net/deckbuilder.html 様より失敬
+    追加
+    14連装砲改二
+    SJレーダー+潜水艦司令塔装備
+    試製20.3cm(4号)連装砲
+*/
 var e_data = [{"id":1,"name":"12cm単装砲","type":[1,1,1,1,0],"armor":0,"fire":1,"torpedo":0,"bomb":0,"aac":1,"ass":0,"hit":0,"evasion":0,"seek":0,"range":1,"rarity":0,"dismantle":"[0,1,1,0]"}
 ,{"id":2,"name":"12.7cm連装砲","type":[1,1,1,1,0],"armor":0,"fire":2,"torpedo":0,"bomb":0,"aac":2,"ass":0,"hit":0,"evasion":0,"seek":0,"range":1,"rarity":0,"dismantle":"[0,1,2,0]"}
 ,{"id":3,"name":"10cm連装高角砲","type":[1,1,1,16,0],"armor":0,"fire":2,"torpedo":0,"bomb":0,"aac":7,"ass":0,"hit":0,"evasion":0,"seek":0,"range":1,"rarity":1,"dismantle":"[0,1,3,0]"}
@@ -515,4 +521,5 @@ var e_data = [{"id":1,"name":"12cm単装砲","type":[1,1,1,1,0],"armor":0,"fire"
 ,{"id":517,"name":"逆探(E27)+22号対水上電探改四(後期調整型)","type":[5,8,12,11,0],"armor":0,"fire":2,"torpedo":0,"bomb":0,"aac":0,"ass":4,"hit":9,"evasion":5,"seek":8,"range":0,"rarity":5,"dismantle":"[0,0,17,20]"}
 ,{"id":518,"name":"14cm連装砲改二","type":[1,1,2,2,0],"armor":1,"fire":5,"torpedo":0,"bomb":0,"aac":0,"ass":0,"hit":3,"evasion":0,"seek":0,"range":2,"rarity":5,"dismantle":"[0,0,17,20]"}
 ,{"id":519,"name":"SJレーダー+潜水艦司令塔装備","type":[24,42,51,42,0],"armor":0,"fire":0,"torpedo":5,"bomb":0,"aac":0,"ass":0,"hit":4,"evasion":6,"seek":7,"range":0,"rarity":5,"dismantle":"[0,0,17,20]"}
+,{"id":520,"name":"試製20.3cm(4号)連装砲","type":[1,1,2,2,0],"armor":1,"fire":11,"torpedo":0,"bomb":0,"aac":4,"ass":0,"hit":2,"evasion":0,"seek":0,"range":2,"rarity":1,"dismantle":"[0,3,4,0]"}
 ];
