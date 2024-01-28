@@ -6793,9 +6793,6 @@ $(function() {
     $(window).keyup(function(e) {
         let num = 0;
         switch (e.keyCode) {
-            case 13: //Enter
-                startSim();
-                break;
             case 49:
             case 97:
                 num = 1;
