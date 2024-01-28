@@ -121,7 +121,7 @@ $(function() {
             i_json = JSON.parse(text);
         } catch(e) {
             f_flag = false;
-            alert('入力値不正');
+            alert('処理中断: 形式不正');
             return;
         }
         //空欄化
@@ -130,30 +130,35 @@ $(function() {
         for (var key in com) {
             com[key] = 0;
         }
-        //艦隊の構成艦数
-        f_length = countShips();
-        console.log(`f_length : ${f_length}`);
-        //構成艦のid
-        f_ids = getIdsFromFleet();
-        console.log(`f_ids : ${f_ids}`);
-        //構成艦の名前
-        f_names = getShipName();
-        console.log(`f_names : ${f_names}`);
-        let types = getType();
-        console.log(`types : ${types}`);
-        //変数反映
-        reflectionCom(types);
-        //索敵値
-        f_search = calcSeek();
-        console.log(`f_search : ${f_search}`);
-        //速度
-        speed = calcSpeed();
-        console.log(`speed : ${speed}`);
-        //ドラム缶、大発、電探搭載艦数カウント 変数にセット
-        countUnits();
-        console.log(`ドラム缶 : ${f_drum}`);
-        console.log(`電探 : ${f_radar}`);
-        console.log(`大発系 : ${f_craft}`);
+        try {
+            //艦隊の構成艦数
+            f_length = countShips();
+            console.log(`f_length : ${f_length}`);
+            //構成艦のid
+            f_ids = getIdsFromFleet();
+            console.log(`f_ids : ${f_ids}`);
+            //構成艦の名前
+            f_names = getShipName();
+            console.log(`f_names : ${f_names}`);
+            let types = getType();
+            console.log(`types : ${types}`);
+            //変数反映
+            reflectionCom(types);
+            //索敵値
+            f_search = calcSeek();
+            console.log(`f_search : ${f_search}`);
+            //速度
+            speed = calcSpeed();
+            console.log(`speed : ${speed}`);
+            //ドラム缶、大発、電探搭載艦数カウント 変数にセット
+            countUnits();
+            console.log(`ドラム缶 : ${f_drum}`);
+            console.log(`電探 : ${f_radar}`);
+            console.log(`大発系 : ${f_craft}`);
+        } catch(e) {
+            alert('処理中断: 艦隊情報の取得に失敗しました');
+            return;
+        }
         //気休めだけども保存前にチェック
         if(f_length && f_ids && f_names && f_search && f_search[0] && speed) {
             //丸ごとlocalstorageへ
@@ -163,7 +168,7 @@ $(function() {
             //表示
             reloadImportDisplay();
         } else {
-            alert('処理中断:入力値に不備があるかも？');
+            alert('処理中断: 入力値に不備があるかも？');
         }
     });
     //ドラム缶、大発、電探搭載艦数カウント
