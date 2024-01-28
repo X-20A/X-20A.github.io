@@ -80,7 +80,7 @@ $(function() {
             a_flag = false;
             $('#option-box').css('display','none');
         }
-        checkFlag();
+        startSim();
     });
     //オプションが変更されたら取得してlocalstorageへ保存
     $('.options > input').on('input', function() {
@@ -113,6 +113,7 @@ $(function() {
             }
             localStorage.setItem('units', JSON.stringify(elem));
         }
+        startSim();
     });
     //自艦隊読み込み
     $('#fleet-import').on('input', function() {
@@ -124,10 +125,12 @@ $(function() {
             alert('処理中断: 形式不正');
             //空欄化
             $(this).val('');
+            $(this).blur();
             return;
         }
         //空欄化
         $(this).val('');
+        $(this).blur();
         //初期化してから
         for (var key in com) {
             com[key] = 0;
@@ -161,6 +164,7 @@ $(function() {
             alert('処理中断: 艦隊情報の取得に失敗しました');
             //空欄化
             $(this).val('');
+            $(this).blur();
             return;
         }
         //気休めだけども保存前にチェック
@@ -168,13 +172,14 @@ $(function() {
             //丸ごとlocalstorageへ
             localStorage.setItem('fleet', JSON.stringify(i_json));
             f_flag = true;
-            checkFlag();
             //表示
             reloadImportDisplay();
+            startSim();
         } else {
             alert('処理中断: 入力値に不備があるかも？');
             //空欄化
             $(this).val('');
+            $(this).blur();
         }
     });
     //ドラム缶、大発、電探搭載艦数カウント
@@ -902,14 +907,6 @@ $(function() {
         }
         if(f_names && speed && f_search) {
             $('#import-display').append(`<p>${speed} | 搭載艦数[ドラム缶:${f_drum},大発系:${f_craft},電探:${f_radar}]</p><p>${part}</p><p>索敵値: <strong>1: </strong>${f_search[0]} <strong>2: </strong>${f_search[1]} <strong>3: </strong>${f_search[2]} <strong>4: </strong>${f_search[3]}</p>`);
-        }
-    }
-    //フラグをチェックして開始ボタン無効 or 有効
-    function checkFlag() {
-        if(a_flag && f_flag) {
-            $('#go').prop('disabled', false);
-        } else {
-            $('#go').prop('disabled', true);
         }
     }
     
@@ -6472,45 +6469,47 @@ $(function() {
     }
 
     //演算開始
-    $('#go').on('click', function() {
-        area = localStorage.getItem('area');
-        var elem = area.split('-');
-        console.log(elem[0] + elem[1]);
-        var world = Number(elem[0]);
-        var map = Number(elem[1]);
-        var edge = null;
-        //無限ループ防止
-        var safety = 0;
-        var count = 0;
-        console.log(`諸元 : ${world}-${map}`);
-        console.log('直後艦種');
-        console.log(com);
-        while(count < 10000) {
-            edge = branch(world, map, edge);
-            if(edge === null) {
-                count++;
-                track = [];
+    function startSim() {
+        if(a_flag && f_flag) {
+            area = localStorage.getItem('area');
+            var elem = area.split('-');
+            console.log(elem[0] + elem[1]);
+            var world = Number(elem[0]);
+            var map = Number(elem[1]);
+            var edge = null;
+            //無限ループ防止
+            var safety = 0;
+            var count = 0;
+            console.log(`諸元 : ${world}-${map}`);
+            console.log('直後艦種');
+            console.log(com);
+            while(count < 10000) {
+                edge = branch(world, map, edge);
+                if(edge === null) {
+                    count++;
+                    track = [];
+                }
+                safety++;
+                if(safety > 150000) {
+                    alert('無限ループ防止 バグった');
+                    console.log('以下諸元');
+                    console.log('直後艦種');
+                    console.log(com);
+                    console.log('軌跡' + track);
+                    console.log(`safety : ${safety}`);
+                    console.log(`count : ${count}`);
+                    console.log(`ドラム缶 : ${f_drum}`);
+                    console.log(`電探 : ${f_radar}`);
+                    console.log(`大発系 : ${f_craft}`);
+                    console.log(`speed : ${speed}`);
+                    console.log('終わり');
+                    break;
+                }
             }
-            safety++;
-            if(safety > 150000) {
-                alert('無限ループ防止 バグった');
-                console.log('以下諸元');
-                console.log('直後艦種');
-                console.log(com);
-                console.log('軌跡' + track);
-                console.log(`safety : ${safety}`);
-                console.log(`count : ${count}`);
-                console.log(`ドラム缶 : ${f_drum}`);
-                console.log(`電探 : ${f_radar}`);
-                console.log(`大発系 : ${f_craft}`);
-                console.log(`speed : ${speed}`);
-                console.log('終わり');
-                break;
-            }
+            drawMap();
+            rate = {};
         }
-        drawMap();
-        rate = {};
-    });
+    }
 
     //マップ描画
     function drawMap() {
@@ -6795,9 +6794,7 @@ $(function() {
         let num = 0;
         switch (e.keyCode) {
             case 13: //Enter
-                if(!$('#go').prop('disabled')) {
-                    $('#go').click();
-                }
+                startSim();
                 break;
             case 49:
             case 97:
