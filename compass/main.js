@@ -122,6 +122,8 @@ $(function() {
         } catch(e) {
             f_flag = false;
             alert('処理中断: 形式不正');
+            //空欄化
+            $(this).val('');
             return;
         }
         //空欄化
@@ -157,6 +159,8 @@ $(function() {
             console.log(`大発系 : ${f_craft}`);
         } catch(e) {
             alert('処理中断: 艦隊情報の取得に失敗しました');
+            //空欄化
+            $(this).val('');
             return;
         }
         //気休めだけども保存前にチェック
@@ -169,6 +173,8 @@ $(function() {
             reloadImportDisplay();
         } else {
             alert('処理中断: 入力値に不備があるかも？');
+            //空欄化
+            $(this).val('');
         }
     });
     //ドラム缶、大発、電探搭載艦数カウント
