@@ -359,9 +359,9 @@ $(function() {
         let res = '';
         if(arr.every(elem => elem === 3)) {
             res = '最速艦隊';
-        } else if(arr.every(elem => elem === 2)) {
+        } else if(arr.every(elem => elem > 1)) {
             res = '高速+艦隊';
-        } else if(arr.every(elem => elem === 1)) {
+        } else if(arr.every(elem => elem > 0)) {
             res = '高速艦隊';
         } else {
             res = '低速艦隊';
