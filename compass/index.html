@@ -49,11 +49,91 @@
             </div>
         </div>
         <!-- end of header -->
+                <div id="area-mask"></div>
+        <div id="area-container">
+            <div id="area-box">
+                <div id="area-inner">
+                    <div>
+                        <div class="world-box">
+                            <span class="world-name">鎮守府海域</span>
+                            <hr class="beside-bar">
+                        </div>
+                        <button class="areas" value="1-1">1-1</button><!--
+                        --><button class="areas" value="1-2">1-2</button><!--
+                        --><button class="areas" value="1-3">1-3</button><!--
+                        --><button class="areas" value="1-4">1-4</button><!--
+                        --><button class="areas" value="1-5">1-5</button><!--
+                        --><button class="areas" value="1-6">1-6</button>
+                        <div class="world-box">
+                            <span class="world-name">南西諸島海域</span>
+                            <hr class="beside-bar">
+                        </div>
+                        <button class="areas" value="2-1">2-1</button><!--
+                        --><button class="areas" value="2-2">2-2</button><!--
+                        --><button class="areas" value="2-3">2-3</button><!--
+                        --><button class="areas" value="2-4">2-4</button><!--
+                        --><button class="areas" value="2-5">2-5</button>
+                        <div class="world-box">
+                            <span class="world-name">北方海域</span>
+                            <hr class="beside-bar">
+                        </div>
+                        <button class="areas" value="3-1">3-1</button><!--
+                        --><button class="areas" value="3-2">3-2</button><!--
+                        --><button class="areas" value="3-3">3-3</button><!--
+                        --><button class="areas" value="3-4">3-4</button><!--
+                        --><button class="areas" value="3-5">3-5</button>
+                        <div class="world-box">
+                            <span class="world-name">西方海域</span>
+                            <hr class="beside-bar">
+                        </div>
+                        <button class="areas" value="4-1">4-1</button><!--
+                        --><button class="areas" value="4-2">4-2</button><!--
+                        --><button class="areas" value="4-3">4-3</button><!--
+                        --><button class="areas" value="4-4">4-4</button><!--
+                        --><button class="areas" value="4-5">4-5</button>
+                        <div class="world-box">
+                            <span class="world-name">南方海域</span>
+                            <hr class="beside-bar">
+                        </div>
+                        <button class="areas" value="5-1">5-1</button><!--
+                        --><button class="areas" value="5-2">5-2</button><!--
+                        --><button class="areas" value="5-3">5-3</button><!--
+                        --><button class="areas" value="5-4">5-4</button><!--
+                        --><button class="areas" value="5-5">5-5</button>
+                        <div class="world-box">
+                            <span class="world-name">中部海域</span>
+                            <hr class="beside-bar">
+                        </div>
+                        <button class="areas" value="6-1">6-1</button><!--
+                        --><button class="areas" value="6-2">6-2</button><!--
+                        --><button class="areas" value="6-3">6-3</button><!--
+                        --><button class="areas" value="6-4">6-4</button><!--
+                        --><button class="areas" value="6-5">6-5</button>
+                        <div class="world-box">
+                            <span class="world-name">南西海域</span>
+                            <hr class="beside-bar">
+                        </div>
+                        <button class="areas" value="7-1">7-1</button><!--
+                        --><button class="areas" value="7-2">7-2</button><!--
+                        --><button class="areas" value="7-3">7-3</button><!--
+                        --><button class="areas" value="7-4">7-4</button><!--
+                        --><button class="areas" value="7-5">7-5</button>
+                    </div>
+                    <div style="flex-grow: 1;">
+                        <div class="world-box">
+                            <span class="world-name">2023夏</span>
+                            <hr class="beside-bar">
+                        </div>
+                        <button class="areas" value="57-7">E-7</button>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        <div id="conf-mask"></div>
         <div id="conf-container">
             <div id="conf-box">
                 <div id="conf-inner">
-                    <p class="conf-title">ショートカット</p>
-                    <input type="checkbox" id="ks">1~7・・・詳細は下部「キーボードショートカット」
                     <p>入力諸元</p>
                     <button class="design-button" id="all-clear">削除</button>
                 </div>
@@ -66,47 +146,174 @@
         <div id="container">
             <div id="input-container">
                 <div id="split">
-                    <span class="inputs" style="flex:1;">
-                        import<input type="text" class="input" id="fleet-import">
-                        海域<input type="text" class="input" id="area">
+                    <span class="inputs" style="flex:1;display: flex">
+                        <span style="flex: 1">
+                            <span style="margin-left: 4px;">import<input type="text" class="input" id="fleet-import"></span>
+                            <select id="type-select">
+                                <option class="fleet-type" value="" selected>艦隊種別</option>
+                                <option class="fleet-type" value="1">第一艦隊</option>
+                                <option class="fleet-type" value="2">第二艦隊</option>
+                                <option class="fleet-type" value="3">第三艦隊</option>
+                                <option class="fleet-type" value="4">第四艦隊</option>
+                                <option class="fleet-type" value="5">空母機動部隊</option>
+                                <option class="fleet-type" value="6">水上打撃部隊</option>
+                                <option class="fleet-type" value="7">輸送護衛部隊</option>
+                            </select>
+                        </span>
+                        <span style="flex: 1;">
+                            <button type="text" class="input" id="area-display">海域</button>
+                            <span id="area"></span>
+                        </span>
                     </span>
-                    <span class="inputs" style="flex:1;position: relative;height:72px;">
+                    <span id="draggable-list" style="position: relative;">
                         <span id="option-box">
                             <span class="options" id="4-5">
-                                Ato: <label>B</label><input type="radio" value="B" name="4-5-A">
-                                <label>D</label><input type="radio" value="D" name="4-5-A"><br>
-                                Cto: <label>D</label><input type="radio" value="D" name="4-5-C">
-                                <label>F</label><input type="radio" value="F" name="4-5-C"><br>
-                                Ito: <label>G</label><input type="radio" value="G" name="4-5-I">
-                                <label>J</label><input type="radio" value="J" name="4-5-I">
+                                <div class="option-inner">
+                                    <p class="option-title">Ato:</p>
+                                    <div class="option-value">
+                                        <p><input type="radio" value="B" name="4-5-A"><label>B</label></p>
+                                        <p><input type="radio" value="D" name="4-5-A"><label>D</label></p>
+                                    </div>
+                                </div>
+                                <hr class="non-margin">
+                                <div class="option-inner">
+                                    <p class="option-title">Cto:</p>
+                                    <div class="option-value">
+                                        <p><input type="radio" value="D" name="4-5-C"><label>D</label></p>
+                                        <p><input type="radio" value="F" name="4-5-C"><label>F</label></p>
+                                    </div>
+                                </div>
+                                <hr class="non-margin">
+                                <div class="option-inner">
+                                    <p class="option-title">Ito:</p>
+                                    <div class="option-value">
+                                        <p><input type="radio" value="G" name="4-5-I"><label>G</label></p>
+                                        <p><input type="radio" value="J" name="4-5-I"><label>J</label></p>
+                                    </div>
+                                </div>
                             </span>
                             <span class="options" id="5-3">
-                                Oto: <label>K</label><input type="radio" value="K" name="5-3-O">
-                                <label>P</label><input type="radio" value="P" name="5-3-O"><br>
+                                <div class="option-inner">
+                                    <p class="option-title">Oto:</p>
+                                    <div class="option-value">
+                                        <p><input type="radio" value="K" name="5-3-O"><label>K</label></p>
+                                        <p><input type="radio" value="P" name="5-3-O"><label>P</label></p>
+                                    </div>
+                                </div>
                             </span>
                             <span class="options" id="5-5">
-                                Fto: <label>D</label><input type="radio" value="D" name="5-5-F">
-                                <label>J</label><input type="radio" value="J" name="5-5-F"><br>
+                                <div class="option-inner">
+                                    <p class="option-title">Fto:</p>
+                                    <div class="option-value">
+                                        <p><input type="radio" value="D" name="5-5-F"><label>D</label></p>
+                                        <p><input type="radio" value="J" name="5-5-F"><label>J</label></p>
+                                    </div>
+                                </div>
                             </span>
                             <span class="options" id="6-3">
-                                Ato: <label>B</label><input type="radio" value="B" name="6-3-A">
-                                <label>C</label><input type="radio" value="C" name="6-3-A">
+                                <div class="option-inner">
+                                    <p class="option-title">Ato:</p>
+                                    <div class="option-value">
+                                        <p><input type="radio" value="B" name="6-3-A"><label>B</label></p>
+                                        <p><input type="radio" value="C" name="6-3-A"><label>C</label></p>
+                                    </div>
+                                </div>
                             </span>
                             <span class="options" id="7-3">
-                                第二ボス解放: <label>前</label><input type="radio" value="0" name="7-3-0">
-                                <label>後</label><input type="radio" value="1" name="7-3-0">
+                                <div class="option-inner">
+                                    <p class="option-title">第二ボス:</p>
+                                    <div class="option-value">
+                                        <p><input type="radio" value="0" name="7-3-0"><label>解放前</label></p>
+                                        <p><input type="radio" value="1" name="7-3-0"><label>解放後</label></p>
+                                    </div>
+                                </div>
                             </span>
                             <span class="options" id="7-4">
-                                Fto: <label>H</label><input type="radio" value="H" name="7-4-F">
-                                <label>J</label><input type="radio" value="J" name="7-4-F">
+                                <div class="option-inner">
+                                    <p class="option-title">Fto:</p>
+                                    <div class="option-value">
+                                        <p><input type="radio" value="H" name="7-4-F"><label>H</label></p>
+                                        <p><input type="radio" value="J" name="7-4-F"><label>J</label></p>
+                                    </div>
+                                </div>
                             </span>
                             <span class="options" id="7-5">
-                                Fto: <label>G</label><input type="radio" value="G" name="7-5-F">
-                                <label>J</label><input type="radio" value="J" name="7-5-F"><br>
-                                Hto: <label>I</label><input type="radio" value="I" name="7-5-H">
-                                <label>K</label><input type="radio" value="K" name="7-5-H"><br>
-                                Oto: <label>P</label><input type="radio" value="P" name="7-5-O">
-                                <label>Q</label><input type="radio" value="Q" name="7-5-O">
+                                <div class="option-inner">
+                                    <p class="option-title">Fto:</p>
+                                    <div class="option-value">
+                                        <p><input type="radio" value="G" name="7-5-F"><label>G</label></p>
+                                        <p><input type="radio" value="J" name="7-5-F"><label>J</label></p>
+                                    </div>
+                                </div>
+                                <hr class="non-margin">
+                                <div class="option-inner">
+                                    <p class="option-title">Hto:</p>
+                                    <div class="option-value">
+                                        <p><input type="radio" value="I" name="7-5-H"><label>I</label></p>
+                                        <p><input type="radio" value="K" name="7-5-H"><label>K</label></p>
+                                    </div>
+                                </div>
+                                <hr class="non-margin">
+                                <div class="option-inner">
+                                    <p class="option-title">Oto:</p>
+                                    <div class="option-value">
+                                        <p><input type="radio" value="P" name="7-5-O"><label>P</label></p>
+                                        <p><input type="radio" value="Q" name="7-5-O"><label>Q</label></p>
+                                    </div>
+                                </div>
+                            </span>
+                            <span class="options" id="57-7">
+                                <div class="option-inner">
+                                    <p class="option-title">Phase:</p>
+                                    <div class="option-value">
+                                        <p><input type="radio" value="1" name="57-7-1"><label>E7-1&amp;2</label></p>
+                                        <p><input type="radio" value="2" name="57-7-1"><label>E7-3</label></p>
+                                        <p><input type="radio" value="3" name="57-7-1"><label>E7-4</label></p>
+                                        <p><input type="radio" value="4" name="57-7-1"><label>ボスマス解放前</label></p>
+                                        <p><input type="radio" value="5" name="57-7-1"><label>ルート短縮前</label></p>
+                                        <p><input type="radio" value="6" name="57-7-1"><label>ルート短縮後</label></p>
+                                    </div>
+                                </div>
+                                <hr class="non-margin">
+                                <div class="option-inner">
+                                    <p class="option-title">A2to:</p>
+                                    <div class="option-value">
+                                        <p><input type="radio" value="A3" name="57-7-A2"><label>A3</label></p>
+                                        <p><input type="radio" value="B" name="57-7-A2"><label>B</label></p>
+                                    </div>
+                                </div>
+                                <hr class="non-margin">
+                                <div class="option-inner">
+                                    <p class="option-title">Bto:</p>
+                                    <div class="option-value">
+                                        <p><input type="radio" value="B1" name="57-7-B"><label>B1</label></p>
+                                        <p><input type="radio" value="B2" name="57-7-B"><label>B2</label></p>
+                                    </div>
+                                </div>
+                                <hr class="non-margin">
+                                <div class="option-inner">
+                                    <p class="option-title">B2to:</p>
+                                    <div class="option-value">
+                                        <p><input type="radio" value="B3" name="57-7-B2"><label>B3</label></p>
+                                        <p><input type="radio" value="B4" name="57-7-B2"><label>B4</label></p>
+                                    </div>
+                                </div>
+                                <hr class="non-margin">
+                                <div class="option-inner">
+                                    <p class="option-title">Cto:</p>
+                                    <div class="option-value">
+                                        <p><input type="radio" value="A3" name="57-7-C"><label>A3</label></p>
+                                        <p><input type="radio" value="C1" name="57-7-C"><label>C1</label></p>
+                                    </div>
+                                </div>
+                                <hr class="non-margin">
+                                <div class="option-inner">
+                                <p class="option-title">Jto:</p>
+                                    <div class="option-value">
+                                        <p><input type="radio" value="K" name="57-7-J"><label>K</label></p>
+                                        <p><input type="radio" value="L" name="57-7-J"><label>L</label></p>
+                                    </div>
+                                </div>
                             </span>
                         </span>
                     </span>
@@ -149,10 +356,6 @@
                         <li></li>
                     </details>
                     <details>
-                        <summary>キーボードショートカット</summary>
-                        <li>1~7:海域入力補助 例:「75」と打てば海域欄に「7-5」と入力されます。フォームにフォーカスする必要もありません。<br>仮に「76」等打ち損じても続けて「75」と入力できます。<br>初めは混乱しそうなのでデフォルトではoffです</li>
-                    </details>
-                    <details>
                         <summary>分岐法則について</summary>
                         <li>分岐法則は日本語版wikiに則ります</li>
                         <li>表示されたマップの分岐マスをクリックすると分岐条件が表示されます</li>
@@ -172,8 +375,7 @@
                     </details>
                     <details>
                         <summary>所感</summary>
-                        <li>バグの薫る</li>
-                        <li>ここらでレイアウトを整えたいような</li>
+                        <li>オプション邪魔！</li>
                     </details>
                 </div>
             </div>
