@@ -8054,23 +8054,7 @@ $(function() {
             }
         } */
     }
-    //キーで海域入力 デフォルトではoff
-    function setNumberToArea(num) {
-        let ks = localStorage.getItem('ks');
-        if(ks && ks === '1') {
-            let text = $('#area').val();
-            let pattern = /^[0-9]-[0-9]$/;
-            let pattern_ch = /^[0-9]-$/;
-            if(text && pattern.test(text)) {
-                $('#area').val(`${text.split('-')[1]}-${num}`);
-            } else if(text && pattern_ch.test(text)){
-                $('#area').val(`${text}${num}`);
-            } else {
-                $('#area').val(`${num}-`);
-            }
-            $('#area').trigger('input');
-        }
-    }
+    
     //localStorageのデータをキーを指定して削除
     function removeData(key) {
         localStorage.removeItem(key);
@@ -8166,4 +8150,21 @@ $(function() {
             setNumberToArea(num);
         }
     }); */
+    /*キーで海域入力 デフォルトではoff
+    function setNumberToArea(num) {
+        let ks = localStorage.getItem('ks');
+        if(ks && ks === '1') {
+            let text = $('#area').val();
+            let pattern = /^[0-9]-[0-9]$/;
+            let pattern_ch = /^[0-9]-$/;
+            if(text && pattern.test(text)) {
+                $('#area').val(`${text.split('-')[1]}-${num}`);
+            } else if(text && pattern_ch.test(text)){
+                $('#area').val(`${text}${num}`);
+            } else {
+                $('#area').val(`${num}-`);
+            }
+            $('#area').trigger('input');
+        }
+    } */
 });
