@@ -6825,9 +6825,10 @@ $(function() {
                         } else if(active['57-7']['1'] === '2') {
                             switch(edge) {
                                 case null:
-                                    if(f_united === '通常艦隊' || f_united === '遊撃部隊') {
-                                        sum('1toA');
-                                        return 'A';
+                                    if(f_united === '空母機動部隊') {
+                                        sum('2toI');
+                                        sum('ItoJ');
+                                        return 'J';
                                     } else {
                                         sum('1toC');
                                         return 'C';
@@ -6967,9 +6968,16 @@ $(function() {
                                     if(f_united === '通常艦隊' || f_united === '遊撃部隊') {
                                         sum('1toA');
                                         return 'A';
-                                    } else {
+                                    } else if(f_united === '水上打撃部隊' && BBs > 3) {
                                         sum('1toC');
                                         return 'C';
+                                    } else if(f_united === '輸送護衛部隊') {
+                                        sum('3toQ');
+                                        return 'Q';
+                                    } else {
+                                        sum('2toI');
+                                        sum('ItoJ');
+                                        return 'J';
                                     }
                                     break;
                                 case 'A':
@@ -7127,9 +7135,16 @@ $(function() {
                                     if(f_united === '通常艦隊' || f_united === '遊撃部隊') {
                                         sum('1toA');
                                         return 'A';
-                                    } else {
+                                    } else if(f_united === '水上打撃部隊' && BBs > 3) {
                                         sum('1toC');
                                         return 'C';
+                                    } else if(f_united === '輸送護衛部隊') {
+                                        sum('3toQ');
+                                        return 'Q';
+                                    } else {
+                                        sum('2toI');
+                                        sum('ItoJ');
+                                        return 'J';
                                     }
                                     break;
                                 case 'A':
@@ -7320,9 +7335,16 @@ $(function() {
                                     if(f_united === '通常艦隊' || f_united === '遊撃部隊') {
                                         sum('1toA');
                                         return 'A';
-                                    } else {
+                                    } else if(f_united === '水上打撃部隊' && BBs > 3) {
                                         sum('1toC');
                                         return 'C';
+                                    } else if(f_united === '輸送護衛部隊') {
+                                        sum('3toQ');
+                                        return 'Q';
+                                    } else {
+                                        sum('2toI');
+                                        sum('ItoJ');
+                                        return 'J';
                                     }
                                     break;
                                 case 'A':
@@ -7435,10 +7457,10 @@ $(function() {
                                 case 'J':
                                     if(active['57-7']['J'] === 'K') {
                                         sum('JtoK');
-                                        return K;
+                                        return 'K';
                                     } else {
                                         sum('JtoL');
-                                        return null;
+                                        return 'L';
                                     }
                                     break;
                                 case 'L': //追加
@@ -7500,10 +7522,10 @@ $(function() {
                                     if(BBs > 4) {
                                         sum('UtoV');
                                         sum('VtoX');
-                                        return null;
+                                        return 'X';
                                     } else {
                                         sum('UtoX');
-                                        return null;
+                                        return 'X';
                                     }
                                     break;
                                 case 'X':
@@ -7523,9 +7545,16 @@ $(function() {
                                     if(f_united === '通常艦隊' || f_united === '遊撃部隊') {
                                         sum('1toA');
                                         return 'A';
-                                    } else {
+                                    } else if(f_united === '水上打撃部隊' && BBs > 3) {
                                         sum('1toC');
                                         return 'C';
+                                    } else if(f_united === '輸送護衛部隊') {
+                                        sum('3toQ');
+                                        return 'Q';
+                                    } else {
+                                        sum('2toI');
+                                        sum('ItoJ');
+                                        return 'J';
                                     }
                                     break;
                                 case 'A':
@@ -7713,10 +7742,10 @@ $(function() {
                                     if(BBs > 4) {
                                         sum('UtoV');
                                         sum('VtoX');
-                                        return null;
+                                        return 'X';
                                     } else {
                                         sum('UtoX');
-                                        return null;
+                                        return 'X';
                                     }
                                     break;
                                 case 'X':
@@ -7742,7 +7771,6 @@ $(function() {
         if(a_flag && f_flag) {
             area = localStorage.getItem('area');
             var elem = area.split('-');
-            console.log(elem[0] + elem[1]);
             var world = Number(elem[0]);
             var map = Number(elem[1]);
             var edge = null;
@@ -7775,6 +7803,7 @@ $(function() {
                     return;
                 }
             }
+            console.log('軌跡' + track);
             drawMap();
             rate = {};
         }
