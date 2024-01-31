@@ -20,18 +20,84 @@ li {
 }
 .inputs {
     flex: 1;
+    text-align: left;
 }
 .input {
     margin:0 10px 0 2px;
 }
 .options {
-    /*display: none;*/
+    cursor: move;
+    border-radius: 3px;
+    padding: 5px;
+    border: 1px solid #2196F3;
     left: 0;
     z-index: 0;
     background: #ffff;
-    width: 100%;
-    height:100%;
     position: absolute;
+}
+.option-inner {
+    display: flex;
+}
+.option-title {
+    width: 80px;
+    border-right: 1px solid black;
+}
+.option-value {
+    width: 140px;
+    flex-grow: 1;
+    cursor: default;
+}
+.non-margin {
+    margin: 0;
+    border-bottom: 0;
+    cursor: default;
+}
+.world-box {
+    display:flex;
+    align-items: center;
+}
+.world-name {
+    line-height: inherit;
+    user-select: none;
+    margin: 0px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+.beside-bar {
+    margin: 0px 0px 2px 8px;
+    flex-shrink: 0;
+    border-width: 0px 0px thin;
+    border-style: solid;
+    border-color: rgba(255, 255, 255, 0.12);
+    -webkit-box-flex: 1;
+    flex-grow: 1;
+}
+.areas {
+    letter-spacing: 0.01em;
+    background-color: transparent;
+    border: 0px currentcolor;
+    margin: 0px;
+    cursor: pointer;
+    user-select: none;
+    vertical-align: middle;
+    appearance: none;
+    text-decoration: none;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    line-height: 1.75;
+    padding: 6px 8px;
+    border-radius: 4px;
+    transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    color: inherit;
+    text-transform: none;
+    min-width: 0px;
+    font-weight: 400;
+}
+.areas:hover {
+    text-decoration: none;
+    background-color: rgba(255, 255, 255, 0.08);
 }
 #conf-container {
     justify-content: center;
@@ -91,8 +157,91 @@ li {
 }
 #input-container {
     text-align: center;
-    padding:20px 20px 0 20px;
+    padding:20px 120px 20 215px;
 }
+#type-select {
+    display: none;
+    margin-left: 3px;
+    width: 114px;
+}
+#area-container {
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    z-index: 999999999;
+    position: fixed;
+    display: none;
+}
+#area-mask {
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    opacity: 0.4;
+    display: none;
+    position: fixed;
+    z-index: 999999998;
+}
+#area-box {
+    margin-top: 120px;
+    border-radius: 4px;
+    height: 396px;
+    min-width: 570px;
+    background-color: #202129;
+    position: fixed;
+    display: none;
+    opacity: 1;
+    color: white;
+}
+#area-inner {
+    padding: 16px;
+    gap: 16px;
+    display: flex;
+}
+#area-display {
+    user-select: none;
+    border: 0;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    display: inline-block;
+    background: #2196F3;
+    color: #fff;
+    padding: 7px 20px;
+    border-radius: 4px;
+    outline: none;
+    line-height: 19px;
+}
+
+#area-display:hover {
+    text-decoration: none;
+    background-color: rgb(25, 118, 210);
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 4px -1px, rgba(0, 0, 0, 0.14) 0px 4px 5px 0px, rgba(0, 0, 0, 0.12) 0px 1px 10px 0px;
+}
+
+#area-display:after {
+    content: "";
+    /* 絶対配置で波紋位置を決める */
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    /* 波紋の形状 */
+    background: radial-gradient(circle, #fff 10%, transparent 10%) no-repeat 50%;
+    transform: scale(0, 0); /* はじめは透過0に */
+    opacity: 0;
+    /* アニメーションの設定 */
+    transition: transform 0.01s, opacity 0.1s;
+}
+
+#area-display:active:after {
+    transform: scale(10, 10);
+    opacity: 0.3;
+    transition: transform 0.1s, opacity 0.3s;
+}
+
 #import-display {
     padding-left: 220px;
 }
@@ -102,7 +251,10 @@ li {
 }
 #split {
     display: flex;
-    padding: 0 170px;
+}
+#draggable-list {
+    z-index: 9999;
+    min-width: 200px;
 }
 #cy {
     display:flex;
