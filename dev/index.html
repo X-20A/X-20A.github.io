@@ -1,0 +1,404 @@
+<html>
+    <head>
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-NMWCJ4LM9T"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-NMWCJ4LM9T');
+        </script>
+        <meta name="keywords" content="羅針盤シミュ,ツール,アプリ,艦これ,艦隊これくしょん">
+        <meta name="description" content="艦これのルート分岐をシミュレート">
+        <title>羅針盤シミュ ｜ poyopoyo工具箱</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/decimal.js/9.0.0/decimal.min.js"></script>
+        <script type="text/javascript" src="/commons/header.js"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300&display=swap" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="/commons/header.css">
+        <link rel="stylesheet" type="text/css" href="main.css">
+    </head>
+    <body>
+        <!-- header body直後に貼り付けること -->
+        <div id="side-bar-container">
+            <span id="header-side-close">
+                <svg class="side-bar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z" /></svg>
+            </span>
+            <div id="side-menu">
+                <p class="side-menu-title">kancolle</p>
+                <a href="/index"><p class="side-menu-content">ツールを探す</p></a>
+                <a href="/compass"><p class="side-menu-content">羅針盤シミュ</p></a>
+                <a href="/judge"><p class="side-menu-content">B勝利ヨシ！</p></a>
+                <a href="/suzu"><p class="side-menu-content">涼月タイマー</p></a>
+                <p class="side-menu-title">other</p>
+                <a href="/tmd"><p class="side-menu-content" style="font-size:13px;">twitter media downloader</p></a>
+                <a href="/ciy"><p class="side-menu-content" style="font-size:13px;">chapter in youtube</p></a>
+            </div>
+        </div>
+        <div id="mask">
+        </div>
+        <div id="header-container">
+            <div id="header-inner-container">
+                <span id="header-side-open">
+                    <svg class="side-bar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z" /></svg>
+                </span>
+                <a href="/index"><span id="header-title">poyopoyo工具箱</span></a>
+            </div>
+        </div>
+        <!-- end of header -->
+        <div id="area-mask"></div>
+        <div id="area-container">
+            <div id="area-box">
+                <div id="area-inner">
+                    <div>
+                        <div class="world-box">
+                            <span class="world-name">鎮守府海域</span>
+                            <hr class="beside-bar">
+                        </div>
+                        <button class="areas" value="1-1">1-1</button><!--
+                        --><button class="areas" value="1-2">1-2</button><!--
+                        --><button class="areas" value="1-3">1-3</button><!--
+                        --><button class="areas" value="1-4">1-4</button><!--
+                        --><button class="areas" value="1-5">1-5</button><!--
+                        --><button class="areas" value="1-6">1-6</button>
+                        <div class="world-box">
+                            <span class="world-name">南西諸島海域</span>
+                            <hr class="beside-bar">
+                        </div>
+                        <button class="areas" value="2-1">2-1</button><!--
+                        --><button class="areas" value="2-2">2-2</button><!--
+                        --><button class="areas" value="2-3">2-3</button><!--
+                        --><button class="areas" value="2-4">2-4</button><!--
+                        --><button class="areas" value="2-5">2-5</button>
+                        <div class="world-box">
+                            <span class="world-name">北方海域</span>
+                            <hr class="beside-bar">
+                        </div>
+                        <button class="areas" value="3-1">3-1</button><!--
+                        --><button class="areas" value="3-2">3-2</button><!--
+                        --><button class="areas" value="3-3">3-3</button><!--
+                        --><button class="areas" value="3-4">3-4</button><!--
+                        --><button class="areas" value="3-5">3-5</button>
+                        <div class="world-box">
+                            <span class="world-name">西方海域</span>
+                            <hr class="beside-bar">
+                        </div>
+                        <button class="areas" value="4-1">4-1</button><!--
+                        --><button class="areas" value="4-2">4-2</button><!--
+                        --><button class="areas" value="4-3">4-3</button><!--
+                        --><button class="areas" value="4-4">4-4</button><!--
+                        --><button class="areas" value="4-5">4-5</button>
+                        <div class="world-box">
+                            <span class="world-name">南方海域</span>
+                            <hr class="beside-bar">
+                        </div>
+                        <button class="areas" value="5-1">5-1</button><!--
+                        --><button class="areas" value="5-2">5-2</button><!--
+                        --><button class="areas" value="5-3">5-3</button><!--
+                        --><button class="areas" value="5-4">5-4</button><!--
+                        --><button class="areas" value="5-5">5-5</button>
+                        <div class="world-box">
+                            <span class="world-name">中部海域</span>
+                            <hr class="beside-bar">
+                        </div>
+                        <button class="areas" value="6-1">6-1</button><!--
+                        --><button class="areas" value="6-2">6-2</button><!--
+                        --><button class="areas" value="6-3">6-3</button><!--
+                        --><button class="areas" value="6-4">6-4</button><!--
+                        --><button class="areas" value="6-5">6-5</button>
+                        <div class="world-box">
+                            <span class="world-name">南西海域</span>
+                            <hr class="beside-bar">
+                        </div>
+                        <button class="areas" value="7-1">7-1</button><!--
+                        --><button class="areas" value="7-2">7-2</button><!--
+                        --><button class="areas" value="7-3">7-3</button><!--
+                        --><button class="areas" value="7-4">7-4</button><!--
+                        --><button class="areas" value="7-5">7-5</button>
+                    </div>
+                    <div style="flex-grow: 1;">
+                        <div class="world-box">
+                            <span class="world-name">2023夏</span>
+                            <hr class="beside-bar">
+                        </div>
+                        <button class="areas" value="57-7">E-7</button>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        <div id="conf-mask"></div>
+        <div id="conf-container">
+            <div id="conf-box">
+                <div id="conf-inner">
+                    <p>入力諸元</p>
+                    <button class="design-button" id="all-clear">削除</button>
+                </div>
+            </div>
+        </div>
+        <div id="conf-mask"></div>
+        <span id="conf-icon-box">
+            <svg id="conf-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8M12,10A2,2 0 0,0 10,12A2,2 0 0,0 12,14A2,2 0 0,0 14,12A2,2 0 0,0 12,10M10,22C9.75,22 9.54,21.82 9.5,21.58L9.13,18.93C8.5,18.68 7.96,18.34 7.44,17.94L4.95,18.95C4.73,19.03 4.46,18.95 4.34,18.73L2.34,15.27C2.21,15.05 2.27,14.78 2.46,14.63L4.57,12.97L4.5,12L4.57,11L2.46,9.37C2.27,9.22 2.21,8.95 2.34,8.73L4.34,5.27C4.46,5.05 4.73,4.96 4.95,5.05L7.44,6.05C7.96,5.66 8.5,5.32 9.13,5.07L9.5,2.42C9.54,2.18 9.75,2 10,2H14C14.25,2 14.46,2.18 14.5,2.42L14.87,5.07C15.5,5.32 16.04,5.66 16.56,6.05L19.05,5.05C19.27,4.96 19.54,5.05 19.66,5.27L21.66,8.73C21.79,8.95 21.73,9.22 21.54,9.37L19.43,11L19.5,12L19.43,13L21.54,14.63C21.73,14.78 21.79,15.05 21.66,15.27L19.66,18.73C19.54,18.95 19.27,19.04 19.05,18.95L16.56,17.95C16.04,18.34 15.5,18.68 14.87,18.93L14.5,21.58C14.46,21.82 14.25,22 14,22H10M11.25,4L10.88,6.61C9.68,6.86 8.62,7.5 7.85,8.39L5.44,7.35L4.69,8.65L6.8,10.2C6.4,11.37 6.4,12.64 6.8,13.8L4.68,15.36L5.43,16.66L7.86,15.62C8.63,16.5 9.68,17.14 10.87,17.38L11.24,20H12.76L13.13,17.39C14.32,17.14 15.37,16.5 16.14,15.62L18.57,16.66L19.32,15.36L17.2,13.81C17.6,12.64 17.6,11.37 17.2,10.2L19.31,8.65L18.56,7.35L16.15,8.39C15.38,7.5 14.32,6.86 13.12,6.62L12.75,4H11.25Z" /></svg>
+        </span>
+        <div id="container">
+            <div id="input-container">
+                <div id="split">
+                    <span class="inputs" style="flex:1;display: flex">
+                        <span style="flex: 1">
+                            <span style="margin-left: 4px;">import<input type="text" class="input" id="fleet-import"></span>
+                            <select id="type-select">
+                                <option class="fleet-type" value="" selected>艦隊種別</option>
+                                <option class="fleet-type" value="1">第一艦隊</option>
+                                <option class="fleet-type" value="2">第二艦隊</option>
+                                <option class="fleet-type" value="3">第三艦隊</option>
+                                <option class="fleet-type" value="4">第四艦隊</option>
+                                <option class="fleet-type" value="5">空母機動部隊</option>
+                                <option class="fleet-type" value="6">水上打撃部隊</option>
+                                <option class="fleet-type" value="7">輸送護衛部隊</option>
+                            </select>
+                        </span>
+                        <span style="flex: 1;">
+                            <button type="text" class="input" id="area-display">海域</button>
+                            <span id="area"></span>
+                        </span>
+                    </span>
+                    <span id="draggable-list" style="position: relative;">
+                        <span id="option-box">
+                            <span style="position: absolute;top: 0;right: -28px;z-index:1;cursor: pointer;">
+                                <svg style="width: 18px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" /></svg>
+                            </span>
+                            <span class="options" id="4-5">
+                                <div class="option-inner">
+                                    <p class="option-title">Ato:</p>
+                                    <div class="option-value">
+                                        <p><input type="radio" value="B" name="4-5-A"><label>B</label></p>
+                                        <p><input type="radio" value="D" name="4-5-A"><label>D</label></p>
+                                    </div>
+                                </div>
+                                <hr class="non-margin">
+                                <div class="option-inner">
+                                    <p class="option-title">Cto:</p>
+                                    <div class="option-value">
+                                        <p><input type="radio" value="D" name="4-5-C"><label>D</label></p>
+                                        <p><input type="radio" value="F" name="4-5-C"><label>F</label></p>
+                                    </div>
+                                </div>
+                                <hr class="non-margin">
+                                <div class="option-inner">
+                                    <p class="option-title">Ito:</p>
+                                    <div class="option-value">
+                                        <p><input type="radio" value="G" name="4-5-I"><label>G</label></p>
+                                        <p><input type="radio" value="J" name="4-5-I"><label>J</label></p>
+                                    </div>
+                                </div>
+                            </span>
+                            <span class="options" id="5-3">
+                                <div class="option-inner">
+                                    <p class="option-title">Oto:</p>
+                                    <div class="option-value">
+                                        <p><input type="radio" value="K" name="5-3-O"><label>K</label></p>
+                                        <p><input type="radio" value="P" name="5-3-O"><label>P</label></p>
+                                    </div>
+                                </div>
+                            </span>
+                            <span class="options" id="5-5">
+                                <div class="option-inner">
+                                    <p class="option-title">Fto:</p>
+                                    <div class="option-value">
+                                        <p><input type="radio" value="D" name="5-5-F"><label>D</label></p>
+                                        <p><input type="radio" value="J" name="5-5-F"><label>J</label></p>
+                                    </div>
+                                </div>
+                            </span>
+                            <span class="options" id="6-3">
+                                <div class="option-inner">
+                                    <p class="option-title">Ato:</p>
+                                    <div class="option-value">
+                                        <p><input type="radio" value="B" name="6-3-A"><label>B</label></p>
+                                        <p><input type="radio" value="C" name="6-3-A"><label>C</label></p>
+                                    </div>
+                                </div>
+                            </span>
+                            <span class="options" id="7-3">
+                                <div class="option-inner">
+                                    <p class="option-title">第二ボス:</p>
+                                    <div class="option-value">
+                                        <p><input type="radio" value="0" name="7-3-1"><label>解放前</label></p>
+                                        <p><input type="radio" value="1" name="7-3-1"><label>解放後</label></p>
+                                    </div>
+                                </div>
+                            </span>
+                            <span class="options" id="7-4">
+                                <div class="option-inner">
+                                    <p class="option-title">Fto:</p>
+                                    <div class="option-value">
+                                        <p><input type="radio" value="H" name="7-4-F"><label>H</label></p>
+                                        <p><input type="radio" value="J" name="7-4-F"><label>J</label></p>
+                                    </div>
+                                </div>
+                            </span>
+                            <span class="options" id="7-5">
+                                <div class="option-inner">
+                                    <p class="option-title">Fto:</p>
+                                    <div class="option-value">
+                                        <p><input type="radio" value="G" name="7-5-F"><label>G</label></p>
+                                        <p><input type="radio" value="J" name="7-5-F"><label>J</label></p>
+                                    </div>
+                                </div>
+                                <hr class="non-margin">
+                                <div class="option-inner">
+                                    <p class="option-title">Hto:</p>
+                                    <div class="option-value">
+                                        <p><input type="radio" value="I" name="7-5-H"><label>I</label></p>
+                                        <p><input type="radio" value="K" name="7-5-H"><label>K</label></p>
+                                    </div>
+                                </div>
+                                <hr class="non-margin">
+                                <div class="option-inner">
+                                    <p class="option-title">Oto:</p>
+                                    <div class="option-value">
+                                        <p><input type="radio" value="P" name="7-5-O"><label>P</label></p>
+                                        <p><input type="radio" value="Q" name="7-5-O"><label>Q</label></p>
+                                    </div>
+                                </div>
+                            </span>
+                            <span class="options" id="57-7">
+                                <div class="option-inner">
+                                    <p class="option-title">Phase:</p>
+                                    <div class="option-value">
+                                        <p><input type="radio" value="1" name="57-7-1"><label>E7-1&amp;2</label></p>
+                                        <p><input type="radio" value="2" name="57-7-1"><label>E7-3</label></p>
+                                        <p><input type="radio" value="3" name="57-7-1"><label>E7-4</label></p>
+                                        <p><input type="radio" value="4" name="57-7-1"><label>ボスマス解放前</label></p>
+                                        <p><input type="radio" value="5" name="57-7-1"><label>ルート短縮前</label></p>
+                                        <p><input type="radio" value="6" name="57-7-1"><label>ルート短縮後</label></p>
+                                    </div>
+                                </div>
+                                <hr class="non-margin">
+                                <div class="option-inner">
+                                    <p class="option-title">A2to:</p>
+                                    <div class="option-value">
+                                        <p><input type="radio" value="A3" name="57-7-A2"><label>A3</label></p>
+                                        <p><input type="radio" value="B" name="57-7-A2"><label>B</label></p>
+                                    </div>
+                                </div>
+                                <hr class="non-margin">
+                                <div class="option-inner">
+                                    <p class="option-title">Bto:</p>
+                                    <div class="option-value">
+                                        <p><input type="radio" value="B1" name="57-7-B"><label>B1</label></p>
+                                        <p><input type="radio" value="B2" name="57-7-B"><label>B2</label></p>
+                                    </div>
+                                </div>
+                                <hr class="non-margin">
+                                <div class="option-inner">
+                                    <p class="option-title">B2to:</p>
+                                    <div class="option-value">
+                                        <p><input type="radio" value="B3" name="57-7-B2"><label>B3</label></p>
+                                        <p><input type="radio" value="B4" name="57-7-B2"><label>B4</label></p>
+                                    </div>
+                                </div>
+                                <hr class="non-margin">
+                                <div class="option-inner">
+                                    <p class="option-title">Cto:</p>
+                                    <div class="option-value">
+                                        <p><input type="radio" value="A3" name="57-7-C"><label>A3</label></p>
+                                        <p><input type="radio" value="C1" name="57-7-C"><label>C1</label></p>
+                                    </div>
+                                </div>
+                                <hr class="non-margin">
+                                <div class="option-inner">
+                                <p class="option-title">Jto:</p>
+                                    <div class="option-value">
+                                        <p><input type="radio" value="K" name="57-7-J"><label>K</label></p>
+                                        <p><input type="radio" value="L" name="57-7-J"><label>L</label></p>
+                                    </div>
+                                </div>
+                            </span>
+                        </span>
+                    </span>
+                </div>
+            </div>
+            <div id="import-display">
+            </div>
+            <div id="cy"></div>
+            <div style="margin: auto;max-width: 460px;">
+                <div style="padding-bottom: 40px">
+                    <details open>
+                        <summary>使い方</summary>
+                        <li>
+                            1.制空シミュの編成ページを開く
+                        </li>
+                        <li>
+                            2.[共有] > [デッキビルダー形式データ] コピー
+                        </li>
+                        <li>
+                            3.羅針盤シミュimport欄に貼り付け
+                        </li>
+                        <li>
+                            4.海域をセット
+                        </li>
+                        <li>
+                            5.海域によってオプションがあります(能動分岐)<br>
+                            ※7-3においては第二ボス解放前と後で分岐条件が変化します<br>
+                            特に解放前について調べたい場合オプションで選択してください
+                        </li>
+                    </details>
+                    <details>
+                        <summary>謝辞</summary>
+                        <li><a href="https://tsunkit.net/nav/" target="_blank">KCNav</a>:マップ周り</li>
+                        <li><a href="http://kancolle-calc.net/deckbuilder.html" target="_blank">デッキビルダー</a>:艦/装備データ</li>
+                        <li><a href="https://noro6.github.io/kc-web/#/" target="_blank">制空権シミュレーター</a>:速度演算</li>
+                        <li>本ツールは以上のサイトを大いに参考にして制作しました。先人に感謝。</li>
+                        <li>DeepL:This tool was created with great reference to the above sites. Thanks to our predecessors.</li>
+                        <li></li>
+                    </details>
+                    <details>
+                        <summary>分岐法則について</summary>
+                        <li>分岐法則は日本語版wikiに則ります</li>
+                        <li>表示されたマップの分岐マスをクリックすると分岐条件が表示されます</li>
+                        <li>ランダムとあって確率の記載がない場合、進行可能なマスへ等分しています</li>
+                        <li>20%~25%のように表記されている場合、中間値を採用しています(この場合22.5%)</li>
+                        <li>赤字は本シミュにおいて採用している暫定値です</li>
+                        <li>n寄りランダム のように確率の記載がない場合、開発者がそれっぽい値を暫定的にセットしています。根拠は基本的にありません</li>
+                    </details>
+                    <details>
+                        <summary>アプデ履歴</summary>
+                        <li>2024/01/31_ver.1.1.3  連合艦隊読込&amp;イベント海域試験実装</li>
+                        <li>2024/01/18_ver.1.1.2  分岐マスをクリックで条件表示</li>
+                        <li>2024/01/16_ver.1.1.1  キーボードショートカット追加</li>
+                        <li>2024/01/15_ver.1.1.0  デッキビルダー形式での読込に対応</li>
+                        <li>2024/01/11_ver.1.0.2  手順を簡素化</li>
+                        <li>2024/01/11_ver.1.0.1  読み込んだ艦隊を表示&amp;バグ修正</li>
+                        <li>2023/10/28_ver.1.0.0  公開</li>
+                    </details>
+                    <details>
+                        <summary>所感</summary>
+                        <li>オプション邪魔！</li>
+                    </details>
+                </div>
+            </div>
+        </div>
+        <!-- footer -->
+        <div id="footer">
+            <span>
+                バグ報告、要望等は<a id="odaibako" href="https://odaibako.net/u/__poyo" target="_blank">お題箱</a>まで
+            </span>
+            <span>
+                作者:<a href="https://kancolle.social/@momemi" target="_blank"><img id="kancolle-don" src="https://icongr.am/simple/mastodon.svg?size=16&colored=true"></a>
+            </span>
+        </div>
+        <!-- end of footer -->
+        <script type="text/javascript" src="/data/ship.js"></script>
+        <script type="text/javascript" src="/data/item.js"></script>
+        <script type="text/javascript" src="/data/map.js"></script>
+        <script type="text/javascript" src="/data/branch.js"></script>
+        <script type="text/javascript" src="main.js"></script>
+    </body>
+</html>
