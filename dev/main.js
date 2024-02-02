@@ -7863,7 +7863,7 @@ $(function() {
             }, //マスの分類ごとに表示分岐
             { selector: 'node[label = "st"]', 
                  style: {
-                     'background-image': '/start.png',
+                     'background-image': '/images/start.png',
                      'font-weight': '600',
                      'text-outline-width': '2px',
                      'font-size': '20pt',
@@ -7876,7 +7876,7 @@ $(function() {
             },
             { selector: 'node[label = "po"]', 
                  style: {
-                     'background-image': '/port.png',
+                     'background-image': '/images/port.png',
                      'width': '3em',
                      'height': '3em',
                      'background-opacity': 0,
@@ -7886,7 +7886,7 @@ $(function() {
             },
             { selector: 'node[label = "bo"]', 
                  style: {
-                     'background-image': '/boss.png',
+                     'background-image': '/images/boss.png',
                      'width': '3em',
                      'height': '3em',
                      'background-opacity': 0,
@@ -7896,7 +7896,7 @@ $(function() {
             },
             { selector: 'node[label = "ab"]', 
                  style: {
-                     'background-image': '/air-b.png',
+                     'background-image': '/images/air-b.png',
                      'width': '48px',
                      'height': '48px',
                      'background-opacity': 0,
@@ -7905,7 +7905,7 @@ $(function() {
             },
             { selector: 'node[label = "ad"]', 
                  style: {
-                     'background-image': '/air-d.png',
+                     'background-image': '/images/air-d.png',
                      'width': '48px',
                      'height': '48px',
                      'background-opacity': 0,
@@ -7913,7 +7913,7 @@ $(function() {
             },
             { selector: 'node[label = "ac"]', 
                  style: {
-                     'background-image': '/calm.png',
+                     'background-image': '/images/calm.png',
                      'border-width': 3, // ボーダーの太さ
                      'border-color': '#9D3998',
                      'width': '1.75em',
@@ -7924,7 +7924,7 @@ $(function() {
             },
             { selector: 'node[label = "en"]', //基本設定
                  style: {
-                     'background-image': '/enemy.png',  //サイズ27px x 27px
+                     'background-image': '/images/enemy.png',  //サイズ27px x 27px
                      'width': '27px', //enemy系
                      'height': '27px',
                      'background-opacity': 0,
@@ -7934,7 +7934,7 @@ $(function() {
             },
             { selector: 'node[label = "ca"]', 
                  style: {
-                     'background-image': '/calm.png',
+                     'background-image': '/images/calm.png',
                      'width': '27px', //enemy系
                      'height': '27px',
                      'background-opacity': 0,
@@ -7944,7 +7944,7 @@ $(function() {
             },
             { selector: 'node[label = "wh"]', 
                  style: {
-                     'background-image': '/whirl.png',
+                     'background-image': '/images/whirl.png',
                      'width': '27px', //enemy系
                      'height': '27px',
                      'background-opacity': 0,
@@ -7954,7 +7954,7 @@ $(function() {
             },
             { selector: 'node[label = "re"]', 
                  style: {
-                     'background-image': '/resource.png',
+                     'background-image': '/images/resource.png',
                      'width': '27px', //enemy系
                      'height': '27px',
                      'background-opacity': 0,
@@ -7964,7 +7964,7 @@ $(function() {
             },
             { selector: 'node[label = "ni"]', 
                  style: {
-                     'background-image': '/night.png',
+                     'background-image': '/images/night.png',
                      'width': '27px', //enemy系
                      'height': '27px',
                      'background-opacity': 0,
@@ -7974,7 +7974,7 @@ $(function() {
             },
             { selector: 'node[label = "sc"]', 
                  style: {
-                     'background-image': '/scout.png',
+                     'background-image': '/images/scout.png',
                      'width': '27px', //enemy系
                      'height': '27px',
                      'background-opacity': 0,
