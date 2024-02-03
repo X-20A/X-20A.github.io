@@ -1,56 +1,4 @@
-<html>
-    <head>
-        <!-- Google tag (gtag.js) -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-W196CSZLNV"></script>
-        <script>
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-        
-          gtag('config', 'G-W196CSZLNV');
-        </script>
-        <meta name="keywords" content="羅針盤シミュ,ツール,アプリ,艦これ,艦隊これくしょん">
-        <meta name="description" content="艦これのルート分岐をシミュレート">
-        <title>羅針盤シミュ ｜ poyopoyo工具箱</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/decimal.js/9.0.0/decimal.min.js"></script>
-        <script type="text/javascript" src="/commons/header.js"></script>
-        <link rel="stylesheet" type="text/css" href="/commons/header.css">
-        <script type="text/javascript" src="/data/ship.js"></script>
-        <script type="text/javascript" src="/data/item.js"></script>
-        <script type="text/javascript" src="/data/map.js"></script>
-        <script type="text/javascript" src="/data/branch.js"></script>
-        <script type="text/javascript" src="main.js"></script>
-        <link rel="stylesheet" type="text/css" href="main.css">
-    </head>
-    <body>
-        <!-- header body直後に貼り付けること -->
-        <div id="side-bar-container">
-            <span id="header-side-close">
-                <svg class="side-bar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z" /></svg>
-            </span>
-            <div id="side-menu">
-                <a href="/index"><p class="side-menu-content">ツールを探す</p></a>
-                <a href="/compass"><p class="side-menu-content">羅針盤シミュ</p></a>
-                <a href="/judge"><p class="side-menu-content">B勝利ヨシ！</p></a>
-                <a href="/suzu"><p class="side-menu-content">涼月タイマー</p></a>
-            </div>
-        </div>
-        <div id="mask">
-        </div>
-        <div id="header-container">
-            <div id="header-inner-container">
-                <span id="header-side-open">
-                    <svg class="side-bar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z" /></svg>
-                </span>
-                <a href="/index"><span id="header-title">poyopoyo工具箱</span></a>
-            </div>
-        </div>
-        <!-- end of header -->
-                <div id="area-mask"></div>
+<div id="area-mask"></div>
         <div id="area-container">
             <div id="area-box">
                 <div id="area-inner">
@@ -162,157 +110,165 @@
                             </select>
                         </span>
                         <span style="flex: 1;">
-                            <button type="text" class="input" id="area-display">海域</button>
+                            <button type="text" class="input design-button" id="area-display">海域</button>
                             <span id="area"></span>
                         </span>
                     </span>
                     <span id="draggable-list" style="position: relative;">
                         <span id="option-box">
+                            <span id="fold">
+                                <svg id="option-up" style="width: 18px"xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path d="M7.41,15.41L12,10.83L16.59,15.41L18,14L12,8L6,14L7.41,15.41Z" />
+                                </svg>
+                                <svg id="option-down" style="width: 18px;display: none;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" />
+                                </svg>
+                            </span>
                             <span class="options" id="4-5">
                                 <div class="option-inner">
                                     <p class="option-title">Ato:</p>
-                                    <div class="option-value">
-                                        <p><input type="radio" value="B" name="4-5-A"><label>B</label></p>
-                                        <p><input type="radio" value="D" name="4-5-A"><label>D</label></p>
+                                    <div class="option-value-box">
+                                        <p><label><input class="option-value" type="radio" value="B" name="4-5-A">B</label></p>
+                                        <p><label><input class="option-value" type="radio" value="D" name="4-5-A">D</label></p>
                                     </div>
                                 </div>
                                 <hr class="non-margin">
                                 <div class="option-inner">
                                     <p class="option-title">Cto:</p>
-                                    <div class="option-value">
-                                        <p><input type="radio" value="D" name="4-5-C"><label>D</label></p>
-                                        <p><input type="radio" value="F" name="4-5-C"><label>F</label></p>
+                                    <div class="option-value-box">
+                                        <p><label><input class="option-value" type="radio" value="D" name="4-5-C">D</label></p>
+                                        <p><label><input class="option-value" type="radio" value="F" name="4-5-C">F</label></p>
                                     </div>
                                 </div>
                                 <hr class="non-margin">
                                 <div class="option-inner">
                                     <p class="option-title">Ito:</p>
-                                    <div class="option-value">
-                                        <p><input type="radio" value="G" name="4-5-I"><label>G</label></p>
-                                        <p><input type="radio" value="J" name="4-5-I"><label>J</label></p>
+                                    <div class="option-value-box">
+                                        <p><label><input class="option-value" type="radio" value="G" name="4-5-I">G</label></p>
+                                        <p><label><input class="option-value" type="radio" value="J" name="4-5-I">J</label></p>
                                     </div>
                                 </div>
                             </span>
                             <span class="options" id="5-3">
                                 <div class="option-inner">
                                     <p class="option-title">Oto:</p>
-                                    <div class="option-value">
-                                        <p><input type="radio" value="K" name="5-3-O"><label>K</label></p>
-                                        <p><input type="radio" value="P" name="5-3-O"><label>P</label></p>
+                                    <div class="option-value-box">
+                                        <p><label><input class="option-value" type="radio" value="K" name="5-3-O">K</label></p>
+                                        <p><label><input class="option-value" type="radio" value="P" name="5-3-O">P</label></p>
                                     </div>
                                 </div>
                             </span>
                             <span class="options" id="5-5">
                                 <div class="option-inner">
                                     <p class="option-title">Fto:</p>
-                                    <div class="option-value">
-                                        <p><input type="radio" value="D" name="5-5-F"><label>D</label></p>
-                                        <p><input type="radio" value="J" name="5-5-F"><label>J</label></p>
+                                    <div class="option-value-box">
+                                        <p><label><input class="option-value" type="radio" value="D" name="5-5-F">D</label></p>
+                                        <p><label><input class="option-value" type="radio" value="J" name="5-5-F">J</label></p>
                                     </div>
                                 </div>
                             </span>
                             <span class="options" id="6-3">
                                 <div class="option-inner">
                                     <p class="option-title">Ato:</p>
-                                    <div class="option-value">
-                                        <p><input type="radio" value="B" name="6-3-A"><label>B</label></p>
-                                        <p><input type="radio" value="C" name="6-3-A"><label>C</label></p>
+                                    <div class="option-value-box">
+                                        <p><label><input class="option-value" type="radio" value="B" name="6-3-A">B</label></p>
+                                        <p><label><input class="option-value" type="radio" value="C" name="6-3-A">C</label></p>
                                     </div>
                                 </div>
                             </span>
                             <span class="options" id="7-3">
                                 <div class="option-inner">
                                     <p class="option-title">第二ボス:</p>
-                                    <div class="option-value">
-                                        <p><input type="radio" value="0" name="7-3-0"><label>解放前</label></p>
-                                        <p><input type="radio" value="1" name="7-3-0"><label>解放後</label></p>
+                                    <div class="option-value-box">
+                                        <p><label><input class="option-value" type="radio" value="0" name="7-3-1">解放前</label></p>
+                                        <p><label><input class="option-value" type="radio" value="1" name="7-3-1">解放後</label></p>
                                     </div>
                                 </div>
                             </span>
                             <span class="options" id="7-4">
                                 <div class="option-inner">
                                     <p class="option-title">Fto:</p>
-                                    <div class="option-value">
-                                        <p><input type="radio" value="H" name="7-4-F"><label>H</label></p>
-                                        <p><input type="radio" value="J" name="7-4-F"><label>J</label></p>
+                                    <div class="option-value-box">
+                                        <p><label><input class="option-value" type="radio" value="H" name="7-4-F">H</label></p>
+                                        <p><label><input class="option-value" type="radio" value="J" name="7-4-F">J</label></p>
                                     </div>
                                 </div>
                             </span>
                             <span class="options" id="7-5">
                                 <div class="option-inner">
                                     <p class="option-title">Fto:</p>
-                                    <div class="option-value">
-                                        <p><input type="radio" value="G" name="7-5-F"><label>G</label></p>
-                                        <p><input type="radio" value="J" name="7-5-F"><label>J</label></p>
+                                    <div class="option-value-box">
+                                        <p><label><input class="option-value" type="radio" value="G" name="7-5-F">G</label></p>
+                                        <p><label><input class="option-value" type="radio" value="J" name="7-5-F">J</label></p>
                                     </div>
                                 </div>
                                 <hr class="non-margin">
                                 <div class="option-inner">
                                     <p class="option-title">Hto:</p>
-                                    <div class="option-value">
-                                        <p><input type="radio" value="I" name="7-5-H"><label>I</label></p>
-                                        <p><input type="radio" value="K" name="7-5-H"><label>K</label></p>
+                                    <div class="option-value-box">
+                                        <p><label><input class="option-value" type="radio" value="I" name="7-5-H">I</label></p>
+                                        <p><label><input class="option-value" type="radio" value="K" name="7-5-H">K</label></p>
                                     </div>
                                 </div>
                                 <hr class="non-margin">
                                 <div class="option-inner">
                                     <p class="option-title">Oto:</p>
-                                    <div class="option-value">
-                                        <p><input type="radio" value="P" name="7-5-O"><label>P</label></p>
-                                        <p><input type="radio" value="Q" name="7-5-O"><label>Q</label></p>
+                                    <div class="option-value-box">
+                                        <p><label><input class="option-value" type="radio" value="P" name="7-5-O">P</label></p>
+                                        <p><label><input class="option-value" type="radio" value="Q" name="7-5-O">Q</label></p>
                                     </div>
                                 </div>
                             </span>
                             <span class="options" id="57-7">
                                 <div class="option-inner">
                                     <p class="option-title">Phase:</p>
-                                    <div class="option-value">
-                                        <p><input type="radio" value="1" name="57-7-1"><label>E7-1&amp;2</label></p>
-                                        <p><input type="radio" value="2" name="57-7-1"><label>E7-3</label></p>
-                                        <p><input type="radio" value="3" name="57-7-1"><label>E7-4</label></p>
-                                        <p><input type="radio" value="4" name="57-7-1"><label>ボスマス解放前</label></p>
-                                        <p><input type="radio" value="5" name="57-7-1"><label>ルート短縮前</label></p>
-                                        <p><input type="radio" value="6" name="57-7-1"><label>ルート短縮後</label></p>
+                                    <div class="option-value-box">
+                                        <p><label><input class="option-value" type="radio" value="1" name="57-7-1">E7-1&amp;2</label></p>
+                                        <p><label><input class="option-value" type="radio" value="2" name="57-7-1">E7-3</label></p>
+                                        <p><label><input class="option-value" type="radio" value="3" name="57-7-1">E7-4</label></p>
+                                        <p><label><input class="option-value" type="radio" value="4" name="57-7-1">ボスマス解放前</label></p>
+                                        <p><label><input class="option-value" type="radio" value="5" name="57-7-1">ルート短縮前</label></p>
+                                        <p><label><input class="option-value" type="radio" value="6" name="57-7-1">ルート短縮後</label></p>
                                     </div>
                                 </div>
                                 <hr class="non-margin">
                                 <div class="option-inner">
                                     <p class="option-title">A2to:</p>
-                                    <div class="option-value">
-                                        <p><input type="radio" value="A3" name="57-7-A2"><label>A3</label></p>
-                                        <p><input type="radio" value="B" name="57-7-A2"><label>B</label></p>
+                                    <div class="option-value-box">
+                                        <p><label><input class="option-value" type="radio" value="A3" name="57-7-A2">A3</label></p>
+                                        <p><label><input class="option-value" type="radio" value="B" name="57-7-A2">B</label></p>
                                     </div>
                                 </div>
                                 <hr class="non-margin">
                                 <div class="option-inner">
                                     <p class="option-title">Bto:</p>
-                                    <div class="option-value">
-                                        <p><input type="radio" value="B1" name="57-7-B"><label>B1</label></p>
-                                        <p><input type="radio" value="B2" name="57-7-B"><label>B2</label></p>
+                                    <div class="option-value-box">
+                                        <p><label><input class="option-value" type="radio" value="B1" name="57-7-B">B1</label></p>
+                                        <p><label><input class="option-value" type="radio" value="B2" name="57-7-B">B2</label></p>
                                     </div>
                                 </div>
                                 <hr class="non-margin">
                                 <div class="option-inner">
                                     <p class="option-title">B2to:</p>
-                                    <div class="option-value">
-                                        <p><input type="radio" value="B3" name="57-7-B2"><label>B3</label></p>
-                                        <p><input type="radio" value="B4" name="57-7-B2"><label>B4</label></p>
+                                    <div class="option-value-box">
+                                        <p><label><input class="option-value" type="radio" value="B3" name="57-7-B2">B3</label></p>
+                                        <p><label><input class="option-value" type="radio" value="B4" name="57-7-B2">B4</label></p>
                                     </div>
                                 </div>
                                 <hr class="non-margin">
                                 <div class="option-inner">
                                     <p class="option-title">Cto:</p>
-                                    <div class="option-value">
-                                        <p><input type="radio" value="A3" name="57-7-C"><label>A3</label></p>
-                                        <p><input type="radio" value="C1" name="57-7-C"><label>C1</label></p>
+                                    <div class="option-value-box">
+                                        <p><label><input class="option-value" type="radio" value="A3" name="57-7-C">A3</label></p>
+                                        <p><label><input class="option-value" type="radio" value="C1" name="57-7-C">C1</label></p>
                                     </div>
                                 </div>
                                 <hr class="non-margin">
                                 <div class="option-inner">
                                 <p class="option-title">Jto:</p>
-                                    <div class="option-value">
-                                        <p><input type="radio" value="K" name="57-7-J"><label>K</label></p>
-                                        <p><input type="radio" value="L" name="57-7-J"><label>L</label></p>
+                                    <div class="option-value-box">
+                                        <p><label><input class="option-value" type="radio" value="K" name="57-7-J">K</label></p>
+                                        <p><label><input class="option-value" type="radio" value="L" name="57-7-J">L</label></p>
                                     </div>
                                 </div>
                             </span>
@@ -327,7 +283,6 @@
                 <div style="padding-bottom: 40px">
                     <details open>
                         <summary>使い方</summary>
-                        <p style="color:red;">※2024/01/15から手順が変更されています。ご注意を</p>
                         <li>
                             1.制空シミュの編成ページを開く
                         </li>
@@ -335,11 +290,10 @@
                             2.[共有] > [デッキビルダー形式データ] コピー
                         </li>
                         <li>
-                            3.羅針盤シミュimport欄に貼り付け<br>
+                            3.羅針盤シミュimport欄に貼り付け
                         </li>
                         <li>
-                            4.海域をセット<br>
-                            「3-2」「7-1」のような形式で入力してください(かっこ不要)<br>
+                            4.海域をセット
                         </li>
                         <li>
                             5.海域によってオプションがあります(能動分岐)<br>
@@ -367,7 +321,7 @@
                     </details>
                     <details>
                         <summary>アプデ履歴</summary>
-                        <li>2024/01/18_ver.1.1.3  連合艦隊読込&amp;イベント海域試験実装</li>
+                        <li>2024/01/31_ver.1.1.3  連合艦隊読込&amp;イベント海域試験実装</li>
                         <li>2024/01/18_ver.1.1.2  分岐マスをクリックで条件表示</li>
                         <li>2024/01/16_ver.1.1.1  キーボードショートカット追加</li>
                         <li>2024/01/15_ver.1.1.0  デッキビルダー形式での読込に対応</li>
@@ -382,15 +336,3 @@
                 </div>
             </div>
         </div>
-        <!-- footer -->
-        <div id="footer">
-            <span>
-                バグ報告、要望等は<a id="odaibako" href="https://odaibako.net/u/__poyo" target="_blank">お題箱</a>まで
-            </span>
-            <span>
-                作者:<a href="https://kancolle.social/@momemi" target="_blank"><img id="kancolle-don" src="https://icongr.am/simple/mastodon.svg?size=16&colored=true"></a>
-            </span>
-        </div>
-        <!-- end of footer -->
-    </body>
-</html>
