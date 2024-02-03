@@ -75,8 +75,8 @@ $(function() {
     const areas = ['1-1','1-2','1-3','1-4','1-5','1-6','2-1','2-2','2-3','2-4','2-5','3-1','3-2','3-3','3-4','3-5','4-1','4-2','4-3','4-4','4-5','5-1','5-2','5-3','5-4','5-5','6-1','6-2','6-3','6-4','6-5','7-1','7-2','7-3','7-3-1','7-4','7-5','57-7'];
     const op_areas = ['4-5','5-3','5-5','6-3','7-3','7-4','7-5','57-7'];
     
-    //値は初期値で実際にはlocalstorageから取得する
-    let active = {'4-5':{'A':'D','C':'F','I':'J'},'5-3':{'O':'K'}, '5-5':{'F':'D'}, '6-3':{'A':'B'},'7-3':{'0':'0'},'7-4':{'F':'H'},'7-5':{'F':'G','H':'I','O':'P'},'57-7':{'1':'1','A2':'A3','B2':'B3','C':'A3','J':'K'}, '57-7':{'1':'1','A2':'A3','B':'B1','B2':'B3','C':'A3','J':'K'}};
+    //1がキーの値はPhase
+    let active = {'4-5':{'A':'D','C':'F','I':'J'},'5-3':{'O':'K'}, '5-5':{'F':'D'}, '6-3':{'A':'B'},'7-3':{'1':'0'},'7-4':{'F':'H'},'7-5':{'F':'G','H':'I','O':'P'},'57-7':{'1':'1','A2':'A3','B2':'B3','C':'A3','J':'K'}, '57-7':{'1':'1','A2':'A3','B':'B1','B2':'B3','C':'A3','J':'K'}};
     
     let area = null; //入力で切り替えるの
     let drew_area = null; //表示中の海域
@@ -127,25 +127,16 @@ $(function() {
     //オプションドラッグ
     $('#draggable-list').draggable({ containment: 'window', scroll: false });
     //オプションが変更されたら取得してlocalstorageへ保存
-    $('.option-value > p > input').on('input', function() {
+    $('.option-value').on('input', function() {
         var name = $(this).attr('name');
         var type = $(this).attr('type');
         const namePattern = /^([\dA-Z]+-[\dA-Z]+)-([\dA-Z]+)$/i;
         const match = name.match(namePattern);
         var key = match[1];
         var char = match[2];
+        let value = $(this).val();
         if($(this).attr('type') === 'radio') {
-            //能動分岐&7-3解放如何
-            var elem = localStorage.getItem('active');
-            if(elem) {
-                elem = JSON.parse(elem);
-                elem[key][char] = $(this).val();
-            } else {
-                elem = active;
-                elem[key][char] = $(this).val();
-            }
-            active = elem;
-            localStorage.setItem('active', JSON.stringify(elem));
+            updateActive(key, char, value);
         }
         startSim();
     });
@@ -226,7 +217,6 @@ $(function() {
         let options = $('#type-select option');
         if(selected_type) {
             for (let option of options) {
-                console.log(`option.value : ${option.value}`);
                 if(option.value === selected_type + '') { //文字列化してから比較
                     option.selected = true;
                 }
@@ -3881,8 +3871,8 @@ $(function() {
                                     sum('DtoH');
                                     return 'H';
                                 } else if(CVL > 0) {
-                                    sum('AtoG');
-                                    return 'G';
+                                    sum('AtoB');
+                                    return 'B';
                                 } else {
                                     if(sai(50)) {
                                         sum('AtoB');
@@ -5560,17 +5550,13 @@ $(function() {
                                     sum('2toM');
                                     sum('MtoK');
                                     return 'K';
-                                } else if(speed !== '低速艦隊') {
-                                    if((isFCL() && DD === 3) || DD > 3) {
-                                        sum('1toB');
-                                        sum('BtoD');
-                                        sum('DtoC');
-                                        sum('CtoF');
-                                        sum('FtoN');
-                                        return null;
-                                    } else {
-                                        console.log('check2');
-                                    }
+                                } else if(speed !== '低速艦隊' && ((isFCL() && DD === 3) || DD > 3)) {
+                                    sum('1toB');
+                                    sum('BtoD');
+                                    sum('DtoC');
+                                    sum('CtoF');
+                                    sum('FtoN');
+                                    return null;
                                 } else if(DD > 1) {
                                     sum('1toA');
                                     return 'A';
@@ -6061,7 +6047,7 @@ $(function() {
                         }
                         break;
                     case 3: //@7-3
-                        if(active['7-3']['0'] === '0') {
+                        if(active['7-3']['1'] === '0') {
                             //解放前
                             switch(edge) {
                                 case null:
@@ -6941,7 +6927,7 @@ $(function() {
                                 case 'J':
                                     if(active['57-7']['J'] === 'K') {
                                         sum('JtoK');
-                                        return K;
+                                        return 'K';
                                     } else {
                                         sum('JtoL');
                                         return null;
@@ -7087,7 +7073,7 @@ $(function() {
                                 case 'J':
                                     if(active['57-7']['J'] === 'K') {
                                         sum('JtoK');
-                                        return K;
+                                        return 'K';
                                     } else {
                                         sum('JtoL');
                                         return null;
@@ -7257,7 +7243,7 @@ $(function() {
                                 case 'J':
                                     if(active['57-7']['J'] === 'K') {
                                         sum('JtoK');
-                                        return K;
+                                        return 'K';
                                     } else {
                                         sum('JtoL');
                                         return null;
@@ -7667,10 +7653,10 @@ $(function() {
                                 case 'J':
                                     if(active['57-7']['J'] === 'K') {
                                         sum('JtoK');
-                                        return K;
+                                        return 'K';
                                     } else {
                                         sum('JtoL');
-                                        return null;
+                                        return 'L';
                                     }
                                     break;
                                 case 'L': //更新
@@ -7822,6 +7808,7 @@ $(function() {
         //nodes流し込み
         for (let key in spots) {
             if (spots.hasOwnProperty(key)) {
+                //座標,マスの種類
                 const [x, y, label] = spots[key];
                 elements.nodes.push({
                     data: {id:key, name:key, label:label},
@@ -7850,17 +7837,139 @@ $(function() {
         var style = [
             { selector: 'node', 
                 style: {
+                    'color': 'rgb(250,250,250)',
+                    'font-weight': '100',
+                    'text-outline-color': 'rgba(20,20,20)',
+                    'text-outline-opacity': '.85',
+                    'text-outline-width': '1.5px',
                     'content': 'data(name)',
                     'text-valign': 'center',
                     'text-halign': 'center',
-                    'width': '1.5em',
-                    'height': '1.5em',
                     'padding': '0pt',
-                    'font-size': '14pt',
-                    'font-weight': 'bold',
-                    'color': 'rgb(50,50,50)',
-                    'background-color': 'rgb(230,230,230)',
+                    'font-size': '15pt',
+                    'background-clip': 'none',//z-indexでedgesの下に潜り込ませるは上手くいかなかった
                 }
+            }, //マスの分類ごとに表示分岐
+            { selector: 'node[label = "st"]', 
+                 style: {
+                     'background-image': '/media/nodes/start.png', //本番では/media/nodes/start.pngの形に
+                     'font-weight': '600',
+                     'text-outline-width': '2px',
+                     'font-size': '20pt',
+                     'width': '3em',
+                     'height': '3em',
+                     'background-opacity': 0,
+                     'background-position-x': '1px', //位置微調整
+                     'background-position-y': '-1px'
+                 }
+            },
+            { selector: 'node[label = "po"]', 
+                 style: {
+                     'background-image': '/media/nodes/port.png',
+                     'width': '3em',
+                     'height': '3em',
+                     'background-opacity': 0,
+                     'background-position-x': '2px',
+                     'background-position-y': '-1px'
+                 }
+            },
+            { selector: 'node[label = "bo"]', 
+                 style: {
+                     'background-image': '/media/nodes/boss.png',
+                     'width': '3em',
+                     'height': '3em',
+                     'background-opacity': 0,
+                     'background-position-x': '5px',
+                     'background-position-y': '1px'
+                 }
+            },
+            { selector: 'node[label = "ab"]', 
+                 style: {
+                     'background-image': '/media/nodes/air-b.png',
+                     'width': '48px',
+                     'height': '27px',
+                     'background-opacity': 0,
+                     'background-position-x': '1px' //位置微調整
+                 }
+            },
+            { selector: 'node[label = "ad"]', 
+                 style: {
+                     'background-image': '/media/nodes/air-d.png',
+                     'width': '44px',
+                     'height': '25px',
+                     'background-opacity': 0,
+                 }
+            },
+            { selector: 'node[label = "ac"]', 
+                 style: {
+                     'background-image': '/media/nodes/calm.png',
+                     'border-width': 3, // ボーダーの太さ
+                     'border-color': '#9D3998',
+                     'width': '1.75em',
+                     'height': '1.75em',
+                     'background-position-x': '0.05em',
+                     'background-position-y': '0.05em'
+                 }
+            },
+            { selector: 'node[label = "en"]', //基本設定
+                 style: {
+                     'background-image': '/media/nodes/enemy.png',  //サイズ27px x 27px
+                     'width': '27px', //enemy系
+                     'height': '27px',
+                     'background-opacity': 0,
+                     'background-position-x': '-0.5px',
+                     'background-position-y': '-1px'
+                 }
+            },
+            { selector: 'node[label = "ca"]', 
+                 style: {
+                     'background-image': '/media/nodes/calm.png',
+                     'width': '27px', //enemy系
+                     'height': '27px',
+                     'background-opacity': 0,
+                     'background-position-x': '-0.5px',
+                     'background-position-y': '-1px'
+                 }
+            },
+            { selector: 'node[label = "wh"]', 
+                 style: {
+                     'background-image': '/media/nodes/whirl.png',
+                     'width': '27px', //enemy系
+                     'height': '27px',
+                     'background-opacity': 0,
+                     'background-position-x': '-0.5px',
+                     'background-position-y': '-1px'
+                 }
+            },
+            { selector: 'node[label = "re"]', 
+                 style: {
+                     'background-image': '/media/nodes/resource.png',
+                     'width': '27px', //enemy系
+                     'height': '27px',
+                     'background-opacity': 0,
+                     'background-position-x': '-0.5px',
+                     'background-position-y': '-1px'
+                 }
+            },
+            { selector: 'node[label = "ni"]', 
+                 style: {
+                     'background-image': '/media/nodes/night.png',
+                     'width': '27px', //enemy系
+                     'height': '27px',
+                     'background-opacity': 0,
+                     'background-position-x': '-0.5px',
+                     'background-position-y': '-1px'
+                 }
+            },
+            { selector: 'node[label = "sc"]', 
+                 style: {
+                     'background-image': '/media/nodes/scout.png',
+                     'width': '27px', //enemy系
+                     'height': '27px',
+                     'background-opacity': 0,
+                     'background-position-x': '-0.5px',
+                     'background-position-y': '-1px'
+                 }
             },
             { selector: 'edge', 
                 style: {
@@ -7877,32 +7986,38 @@ $(function() {
             }, //割合によって色分け
             { selector: 'edge[ratio = 100]', 
                 style: {
-                    'line-color': 'rgb(220,20,60)'
+                    'line-color': 'rgb(220,20,60)',
+                    'target-arrow-color': 'rgb(220,20,60)',
                 }
             },
             { selector: 'edge[ratio < 100][ratio >= 80]', 
                 style: {
-                    'line-color': 'rgb(255,99,71)'
+                    'line-color': 'rgb(255,99,71)',
+                    'target-arrow-color': 'rgb(255,99,71)',
                 }
             },
             { selector: 'edge[ratio < 80][ratio >= 60]', 
                 style: {
-                    'line-color': 'rgb(255,165,0)'
+                    'line-color': 'rgb(255,165,0)',
+                    'target-arrow-color': 'rgb(255,165,0)',
                 }
             },
             { selector: 'edge[ratio < 60][ratio >= 40]', 
                 style: {
-                    'line-color': 'rgb(255,215,0)'
+                    'line-color': 'rgb(255,215,0)',
+                    'target-arrow-color': 'rgb(255,215,0)',
                 }
             },
             { selector: 'edge[ratio < 40][ratio >= 20]', 
                 style: {
-                    'line-color': 'rgb(255,215,0)'
+                    'line-color': 'rgb(255,215,0)',
+                    'target-arrow-color': 'rgb(255,215,0)',
                 }
             },
             { selector: 'edge[ratio < 20][ratio > 0]', 
                  style: {
-                     'line-color': 'rgb(240,230,140)'
+                     'line-color': 'rgb(240,230,140)',
+                     'target-arrow-color': 'rgb(240,230,140)',
                  }
             },
             { selector: 'edge[ratio = 0]', 
@@ -7925,8 +8040,7 @@ $(function() {
             style: style,
             layout:layout,
             autoungrabify: true, //nodeのドラッグ不可
-            maxZoom: 2.0,
-            minZoom: 1.0
+            userZoomingEnabled: false
         });
         //更新
         drew_area = area;
@@ -7937,12 +8051,13 @@ $(function() {
                 let node = tar.data('name');
                 let nodeData = map['spots'][drew_area][node];
                 let n_length = nodeData.length;
+                //Phase
                 let b_area = null;
-                if(drew_area === '7-3') {
-                    if(active['7-3']['0'] === '0') {
-                        b_area = branch_info[drew_area + '-0'];
+                if(active.hasOwnProperty(drew_area)) {
+                    if(active[drew_area].hasOwnProperty('1')) {
+                        b_area = branch_info[`${drew_area}-${active[drew_area]['1']}`];
                     } else {
-                        b_area = branch_info[drew_area + '-1'];
+                        b_area = branch_info[drew_area];
                     }
                 } else {
                     b_area = branch_info[drew_area];
@@ -7961,6 +8076,7 @@ $(function() {
                     text = text.replaceAll('e', '<br>');
                     text = text.replaceAll('co', '<span style="color:red;">');
                     text = text.replaceAll('oc', '</span>');
+                    text = text.replaceAll('sw', `<button class="design-button remote-active" value="${drew_area}-${node}" style="padding:3px 15px;margin-left:5px;">切替</button>`);
                     text = `<p>${text}</p>`;
                     let popup = $('<div>').html(text).attr('id', 'popup-info');
                     let top = position.y + cyContainer.top - 10;
@@ -7991,6 +8107,14 @@ $(function() {
                 removePopupInfo();
             }
         });
+        //図上スクロールをページスクロールに変換
+        $('#cy').on('wheel', function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            var delta = e.originalEvent.deltaY;
+            //がくつくけどsmoothにすると連続スクロール時にもたる
+            window.scrollBy(0, delta);
+        });
     }
     //popup-infoが存在すれば削除
     function removePopupInfo() {
@@ -8001,6 +8125,8 @@ $(function() {
     //読み込み時にlocalstorageから諸々の設定を読込、反映
     //上に置くとtrigger()が不発する 謎
     setup();
+    
+    //以下ストレージ関連
     function setup() {
         var a = localStorage.getItem('active');
         var f = localStorage.getItem('fleet');
@@ -8012,18 +8138,18 @@ $(function() {
         } else {
             try {
                 a = JSON.parse(a);
+                //全てのキーが存在するかチェック
+                //無いのがあればそこだけ初期値を設定
+                for (const key in active) {
+                    if (!a.hasOwnProperty(key)) {
+                        a[key] = active[key];
+                    }
+                }
+                localStorage.setItem('active', JSON.stringify(a));
             } catch(e) {
                 alert('データ異常:当該データを初期化します');
                 a = active;
                 localStorage.setItem('active', JSON.stringify(a));
-            }
-            //全てのキーが存在するかチェック
-            //無いのがあればそこだけ初期値を設定
-            for (const key in active) {
-                if (!a.hasOwnProperty(key)) {
-                    a[key] = active[key];
-                    localStorage.setItem('active', JSON.stringify(a));
-                }
             }
         }
         //html反映
@@ -8054,21 +8180,51 @@ $(function() {
             }
         } */
     }
-    
+
+    /*
+        key:海域
+        char:node
+        value:値
+        変数、ストレージ双方更新
+    */
+    function updateActive(key, char, value) {
+        var elem = localStorage.getItem('active');
+        if(elem) {
+            elem = JSON.parse(elem);
+            elem[key][char] = value;
+        } else {
+            elem = active;
+            elem[key][char] = value;
+        }
+        active = elem;
+        localStorage.setItem('active', JSON.stringify(elem));
+    }
     //localStorageのデータをキーを指定して削除
     function removeData(key) {
         localStorage.removeItem(key);
     }
     //localStorage内を全削除
     function allClear() {
+        let res = alert('本当に?\n特に問題はありませんが');
         if(res) {
-            alert('本当に?\n特に問題はありませんが');
             //ローカルストレージ全削除
             localStorage.clear();
             //リロード
             location.reload();
         }
     }
+    //popupから能動分岐切り替え
+    $('body').on('click', '.remote-active', function() {
+        let name = $(this).val();
+        let inputs = $(`input[name="${name}"]`);
+        if(inputs.eq(0).prop('checked')) {
+            inputs.eq(1).prop('checked', true);
+            inputs.eq(1).trigger('input');
+        } else {
+            inputs.eq(0).prop('checked', true);
+            inputs.eq(0).trigger('input');
+        }
+    });
     //海域入力画面表示
     $('#area-display').on('click', function() {
         $('#area-mask').css('display', 'block');
@@ -8103,68 +8259,18 @@ $(function() {
     $('#all-clear').on('click', function() {
         allClear();
     });
-    //トグルボタン切替
-    $('#ks').on('click', function() {
-        $('#ks').toggleClass('checked');
-        if($(this).hasClass('checked')) {
-            localStorage.setItem('ks', '1');
+    //オプションリスト折り畳み/展開
+    $('#fold').on('click', function() {
+        let isFolding = $(this).children('#option-up').css('display') === 'none';
+        var listContainer = $('#option-box > .options:visible');
+        if (isFolding) {
+            $(this).children('#option-down').css('display', 'none');
+            $(this).children('#option-up').css('display', 'block');
+            listContainer.css('height', '');
         } else {
-            localStorage.setItem('ks', '0');
+            $(this).children('#option-up').css('display', 'none');
+            $(this).children('#option-down').css('display', 'block');
+            listContainer.css('height', '23px');
         }
     });
-    //キーボードショートカット
-    /*
-    $(window).keyup(function(e) {
-        let num = 0;
-        switch (e.keyCode) {
-            case 97:
-                num = 1;
-                break;
-            case 50:
-            case 98:
-                num = 2;
-                break;
-            case 51:
-            case 99:
-                num = 3;
-                break;
-            case 52:
-            case 100:
-                num = 4;
-                break;
-            case 53:
-            case 101:
-                num = 5;
-                break;
-            case 54:
-            case 102:
-                num = 6;
-                break;
-            case 55:67
-            case 103:
-                num = 7;
-                break;
-                
-        }
-        if(num) {
-            setNumberToArea(num);
-        }
-    }); */
-    /*キーで海域入力 デフォルトではoff
-    function setNumberToArea(num) {
-        let ks = localStorage.getItem('ks');
-        if(ks && ks === '1') {
-            let text = $('#area').val();
-            let pattern = /^[0-9]-[0-9]$/;
-            let pattern_ch = /^[0-9]-$/;
-            if(text && pattern.test(text)) {
-                $('#area').val(`${text.split('-')[1]}-${num}`);
-            } else if(text && pattern_ch.test(text)){
-                $('#area').val(`${text}${num}`);
-            } else {
-                $('#area').val(`${num}-`);
-            }
-            $('#area').trigger('input');
-        }
-    } */
 });
