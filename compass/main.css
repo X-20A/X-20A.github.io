@@ -34,6 +34,7 @@ li {
     z-index: 0;
     background: #ffff;
     position: absolute;
+    overflow: hidden;
 }
 .option-inner {
     display: flex;
@@ -42,7 +43,7 @@ li {
     width: 80px;
     border-right: 1px solid black;
 }
-.option-value {
+.option-value-box {
     width: 140px;
     flex-grow: 1;
     cursor: default;
@@ -157,7 +158,7 @@ li {
 }
 #input-container {
     text-align: center;
-    padding:20px 120px 20 215px;
+    padding:20px 120px 20 216px;
 }
 #type-select {
     display: none;
@@ -198,50 +199,6 @@ li {
     gap: 16px;
     display: flex;
 }
-#area-display {
-    user-select: none;
-    border: 0;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    text-decoration: none;
-    display: inline-block;
-    background: #2196F3;
-    color: #fff;
-    padding: 7px 20px;
-    border-radius: 4px;
-    outline: none;
-    line-height: 19px;
-}
-
-#area-display:hover {
-    text-decoration: none;
-    background-color: rgb(25, 118, 210);
-    box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 4px -1px, rgba(0, 0, 0, 0.14) 0px 4px 5px 0px, rgba(0, 0, 0, 0.12) 0px 1px 10px 0px;
-}
-
-#area-display:after {
-    content: "";
-    /* 絶対配置で波紋位置を決める */
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    /* 波紋の形状 */
-    background: radial-gradient(circle, #fff 10%, transparent 10%) no-repeat 50%;
-    transform: scale(0, 0); /* はじめは透過0に */
-    opacity: 0;
-    /* アニメーションの設定 */
-    transition: transform 0.01s, opacity 0.1s;
-}
-
-#area-display:active:after {
-    transform: scale(10, 10);
-    opacity: 0.3;
-    transition: transform 0.1s, opacity 0.3s;
-}
-
 #import-display {
     padding-left: 220px;
 }
@@ -255,6 +212,16 @@ li {
 #draggable-list {
     z-index: 9999;
     min-width: 200px;
+}
+#fold {
+    position: absolute;
+    top: 2px;
+    right: -28px;
+    z-index:1;
+    cursor: pointer;
+}
+#fold:hover {
+    background-color: #d3d3d3;
 }
 #cy {
     display:flex;
@@ -316,12 +283,42 @@ li {
 }
 /*デザインボタン*/
 .design-button {
-    height: 36px;
-    min-width: 64px;
-    padding: 0 16px;
-    background-color: #2196f3;
-    align-items: center;
-    border-radius: 4px;
-    color: white;
+    user-select: none;
+    border: 0;
     cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    display: inline-block;
+    background: #2196F3;
+    color: #fff;
+    padding: 7px 20px;
+    border-radius: 4px;
+    outline: none;
+    line-height: 19px;
+}
+.design-button:hover {
+    text-decoration: none;
+    background-color: rgb(25, 118, 210);
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 4px -1px, rgba(0, 0, 0, 0.14) 0px 4px 5px 0px, rgba(0, 0, 0, 0.12) 0px 1px 10px 0px;
+}
+.design-button:after {
+    content: "";
+    /* 絶対配置で波紋位置を決める */
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    /* 波紋の形状 */
+    background: radial-gradient(circle, #fff 10%, transparent 10%) no-repeat 50%;
+    transform: scale(0, 0); /* はじめは透過0に */
+    opacity: 0;
+    /* アニメーションの設定 */
+    transition: transform 0.01s, opacity 0.1s;
+}
+.design-button:active:after {
+    transform: scale(10, 10);
+    opacity: 0.3;
+    transition: transform 0.1s, opacity 0.3s;
 }
