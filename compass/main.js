@@ -4,6 +4,10 @@ $(function() {
     e_dataはitem.jsより
     idがs_dataは文字列
     e_dataは数字であることに注意
+    
+    制空シミュを基準にしたときの本家デッキビルダー差異・注意点
+    艦ID'のみ'文字列
+    改修値が0のとき、キーがそもそもない
     */
     //艦隊諸元
     let com = {
@@ -146,6 +150,7 @@ $(function() {
         try {
             i_json = JSON.parse(text);
         } catch(e) {
+            console.log(e);
             f_flag = false;
             alert('処理中断: 形式不正');
             //空欄化
@@ -425,19 +430,22 @@ $(function() {
     function calcSpeed(num) {
         let arr = [];
         for(let i = 0;i < c_lengths[num - 1];i++) {
-            let e_ids = getEqIds(c_ids[num - 1][i]);
-            let rf = getEqIds(c_ids[num - 1][i]);
+            let e_ids = getEqIds(c_ids[num - 1][i], num);
+            let rf = getEqRfs(c_ids[num - 1][i], num);
             /*
             33:タービン
             34:強化缶
             87:新型缶
             */
-            let tur = e_ids.includes(33); //タービン
+            let tur = 0; //タービン
             let kan = 0; //強化缶
             let n_kan = 0; //新型缶
             let pow = 0; //新型缶☆7↑
+            console.log(`e_ids : ${e_ids}`);
             for(let q = 0;q < e_ids.length;q++) {
-                if(e_ids[q] === 34) {
+                if(e_ids[q] === 33) {
+                    tur++;
+                } else if(e_ids[q] === 34) {
                     kan++;
                 } else if(e_ids[q] === 87) {
                     n_kan++;
@@ -450,6 +458,8 @@ $(function() {
             let ship = s_data.find(entry => entry.id === c_ids[num - 1][i]);
             let sg = ship.sg;
             let val = 0;
+            console.log(`sg : ${sg}`);
+            console.log(`tur : ${tur}, n_kan : ${n_kan}, pow : ${pow}`);
             switch(sg) { //thanks to Aerial Combat Simulator 無駄がなく美しい
                 case 0: //高速A
                     val = 1;
@@ -591,7 +601,11 @@ $(function() {
         let sum_base = new Decimal(0); //艦娘索敵値によるスコア
         let f_length_correct = new Decimal(2 * (6 - c_lengths[num - 1])); //隻数補正
         let sum_eq = new Decimal(0); //装備によるスコア
-        let command = new Decimal(i_json.hqlv).times(0.4); //司令部補正
+        let command = 120;
+        if(i_json.hqlv) { //オリジナルのデッキビルダーには司令レベルが無いみたい
+            command = i_json.hqlv;
+        }
+        command = new Decimal(command).times(0.4); //司令部補正
         for (let i = 0; i < c_lengths[num - 1]; i++) {
             //素の索敵値計算
             const key = 's' + (i + 1);
@@ -752,13 +766,13 @@ $(function() {
                             }
                         }
                     }
-                    break; //Fairey Seafox改
-                case 115:
+                    break;
+                case 115: // Ar196改
                     if(name.includes('Bismarck') || name.includes('Prinz Eugen')) {
                         res += 2;
                     }
                     break;
-                case 371:
+                case 371: //Fairey Seafox改
                     if(name.includes('Gotland')) {
                         if(!dup.includes(e_id)) {
                             res += 6;
@@ -978,10 +992,9 @@ $(function() {
     //艦idと艦隊番号から装備idを配列で得る
     function getEqIds(s_id, num) {
         const ids = [];
-        // f1 下の各要素を調べる
         for (const s_key in i_json[`f${num}`]) {
             let ship = i_json[`f${num}`][s_key];
-            if (ship.id && ship.id === Number(s_id)) {
+            if (Number(ship.id) && Number(ship.id) === Number(s_id)) { //本家デッキビルダーへの対応で艦IDは数値化
                 let items = ship.items;
                 for(const i_key in items) {
                     if(items[i_key].id) {
@@ -995,19 +1008,19 @@ $(function() {
     //艦idから装備改修値を配列で得る
     function getEqRfs(s_id, num) {
         const rfs = [];
-        // f1 下の各要素を調べる
         for (const s_key in i_json[`f${num}`]) {
             let ship = i_json[`f${num}`][s_key];
-            if (ship.id && ship.id === Number(s_id)) {
+            if (Number(ship.id) && Number(ship.id) === Number(s_id)) { //本家デッキビルダーへの対応で艦IDは数値化
                 let items = ship.items;
                 for(const i_key in items) {
-                    if(items[i_key].id) {
+                    if(items[i_key].rf) {
                         rfs.push(items[i_key].rf);
+                    } else { //デッキビルダー本家は改修値ゼロはキーがない
+                        rfs.push(0);
                     }
                 }
             }
         }
-        console.log(`改修値 : ${rfs}`);
         return rfs;
     }
     //艦種を変数に反映
@@ -2030,6 +2043,7 @@ $(function() {
                             case null:
                                 if(SS + AS === f_length) {
                                     sum('1toC');
+                                    return 'C';
                                 } else {
                                     if(sai(50)) {
                                         sum('1toB');
@@ -2566,15 +2580,13 @@ $(function() {
                                 if(SS > 3) {
                                     sum('1toB');
                                     return 'B';
-                                } else if(SS > 0 && BBs < 4) {
-                                    if(CVs > 0 || AV > 1) {
-                                        if(sai(50)) {
-                                            sum('1toB');
-                                            return 'B';
-                                        } else {
-                                            sum('1toC');
-                                            return 'C';
-                                        }
+                                } else if(SS > 0 && BBs < 4 && (CVs > 0 || AV > 1)) {
+                                    if(sai(50)) {
+                                        sum('1toB');
+                                        return 'B';
+                                    } else {
+                                        sum('1toC');
+                                        return 'C';
                                     }
                                 } else if(CVs > 0 || AV > 1) {
                                     sum('1toC');
@@ -6387,7 +6399,10 @@ $(function() {
                                     } else if(DD === 1) {
                                         sum('JtoM');
                                         return 'M';
-                                    } //DDより例外なし
+                                    } else { //wikiに記載なし
+                                        sum('JtoM');
+                                        return 'M';
+                                    }
                                     break;
                                 case 'M':
                                     if(CV > 0 || BBCVs > 1 || SS > 3) {
@@ -7846,7 +7861,7 @@ $(function() {
                     'text-valign': 'center',
                     'text-halign': 'center',
                     'padding': '0pt',
-                    'font-size': '15pt',
+                    'font-size': '15px',
                     'background-clip': 'none',//z-indexでedgesの下に潜り込ませるは上手くいかなかった
                 }
             }, //マスの分類ごとに表示分岐
@@ -7855,9 +7870,9 @@ $(function() {
                      'background-image': '/media/nodes/start.png', //本番では/media/nodes/start.pngの形に
                      'font-weight': '600',
                      'text-outline-width': '2px',
-                     'font-size': '20pt',
-                     'width': '3em',
-                     'height': '3em',
+                     'font-size': '20px',
+                     'width': '48px',
+                     'height': '48px',
                      'background-opacity': 0,
                      'background-position-x': '1px', //位置微調整
                      'background-position-y': '-1px'
@@ -7866,8 +7881,8 @@ $(function() {
             { selector: 'node[label = "po"]', 
                  style: {
                      'background-image': '/media/nodes/port.png',
-                     'width': '3em',
-                     'height': '3em',
+                     'width': '48px',
+                     'height': '48px',
                      'background-opacity': 0,
                      'background-position-x': '2px',
                      'background-position-y': '-1px'
@@ -7876,8 +7891,8 @@ $(function() {
             { selector: 'node[label = "bo"]', 
                  style: {
                      'background-image': '/media/nodes/boss.png',
-                     'width': '3em',
-                     'height': '3em',
+                     'width': '48px',
+                     'height': '48px',
                      'background-opacity': 0,
                      'background-position-x': '5px',
                      'background-position-y': '1px'
@@ -7904,11 +7919,11 @@ $(function() {
                  style: {
                      'background-image': '/media/nodes/calm.png',
                      'border-width': 3, // ボーダーの太さ
-                     'border-color': '#9D3998',
-                     'width': '1.75em',
-                     'height': '1.75em',
-                     'background-position-x': '0.05em',
-                     'background-position-y': '0.05em'
+                     'border-color': '#904A64',
+                     'width': '27px',
+                     'height': '27px',
+                     'background-position-x': '0px',
+                     'background-position-y': '-1px'
                  }
             },
             { selector: 'node[label = "en"]', //基本設定
@@ -8205,7 +8220,7 @@ $(function() {
     }
     //localStorage内を全削除
     function allClear() {
-        let res = alert('本当に?\n特に問題はありませんが');
+        let res = confirm('本当に?\n特に問題はありませんが');
         if(res) {
             //ローカルストレージ全削除
             localStorage.clear();
