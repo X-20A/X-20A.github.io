@@ -614,12 +614,7 @@ $(function() {
             let ship = s_data.find(entry => entry.id === c_ids[num - 1][i]);
             let min_seek = new Decimal(ship.seek);
             let max_seek = new Decimal(ship.max_seek);
-            let cur_seek = new Decimal(0);
-            if(lv > 98) {
-                cur_seek = max_seek;
-            } else {
-                cur_seek = new Decimal(max_seek).minus(min_seek).times(lv).div(99).floor().plus(min_seek);
-            }
+            let cur_seek = new Decimal(max_seek).minus(min_seek).times(lv).div(99).floor().plus(min_seek);
             console.log(`艦名 : ${c_names[num - 1][i]}, 素索敵値 : ${cur_seek}`);
             //装備id取得
             let i_ids = getEqIds(c_ids[num - 1][i], num);
@@ -648,10 +643,10 @@ $(function() {
         }
         let material = sum_base.plus(f_length_correct).minus(command);
         //係数 四捨五入で小数第二位まで
-        res.push((material.plus(sum_eq)).toFixed(2));
-        res.push((material.plus(sum_eq.times(2))).toFixed(2));
-        res.push((material.plus(sum_eq.times(3))).toFixed(2));
-        res.push((material.plus(sum_eq.times(4))).toFixed(2));
+        res.push((material.plus(sum_eq)).toDecimalPlaces(2, Decimal.ROUND_DOWN));
+        res.push((material.plus(sum_eq.times(2))).toDecimalPlaces(2, Decimal.ROUND_DOWN));
+        res.push((material.plus(sum_eq.times(3))).toDecimalPlaces(2, Decimal.ROUND_DOWN));
+        res.push((material.plus(sum_eq.times(4))).toDecimalPlaces(2, Decimal.ROUND_DOWN));
         return res;
     }
     //装備ボーナス取得 艦のjson, 装備id(配列)
