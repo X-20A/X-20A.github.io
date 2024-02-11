@@ -28,6 +28,8 @@
         max_seek:56 to 57
     高波改
         max_seek:52 to 54
+    高波改二
+        max-seel:58 to 60
     妙高改二
         max_seek:59 to 61
     那智改二
@@ -76,6 +78,8 @@
         max_seek:48 to 49
     涼月改
         max_seek:48 to 49
+    瑞穂改
+        max_seek:92 to 94
     三隈改二,三隈改二特追加
     索敵以外のパラメータは未着手です
 */
@@ -412,7 +416,7 @@ var s_data = [{"id":"1","no":"31","name":"睦月","pron":"むつき","type":"駆
               ,{"id":"345","no":"1425","name":"高波改","pron":"たかなみ","type":"駆逐艦","hp":32,"max_hp":49,"armor":14,"fire":12,"torpedo":28,"aac":16,"ass":29,"evasion":48,"seek":13,"luck":10,"max_armor":49,"max_fire":51,"max_torpedo":80,"max_aac":50,"max_ass":67,"max_evasion":90,"max_seek":54,"max_luck":57,"speed":10,"range":1,"slot":3,"fuel":15,"bullet":20,"carry":[0,0,0],"equip":[129,28,27], "na":0, "sg":2}
               ,{"id":"346","no":"1426","name":"照月改","pron":"てるづき","type":"駆逐艦","hp":37,"max_hp":57,"armor":16,"fire":24,"torpedo":25,"aac":80,"ass":30,"evasion":48,"seek":10,"luck":11,"max_armor":52,"max_fire":58,"max_torpedo":56,"max_aac":114,"max_ass":72,"max_evasion":87,"max_seek":49,"max_luck":59,"speed":10,"range":1,"slot":3,"fuel":20,"bullet":25,"carry":[0,0,0],"equip":[122,106,40], "na":0, "sg":2}
               ,{"id":"347","no":"1427","name":"Libeccio改","pron":"リベッチオ","type":"駆逐艦","hp":29,"max_hp":46,"armor":15,"fire":11,"torpedo":27,"aac":20,"ass":40,"evasion":50,"seek":10,"luck":16,"max_armor":50,"max_fire":48,"max_torpedo":72,"max_aac":59,"max_ass":80,"max_evasion":92,"max_seek":46,"max_luck":69,"speed":10,"range":1,"slot":3,"fuel":15,"bullet":20,"carry":[0,0,0],"equip":[147,147], "na":2, "sg":2}
-              ,{"id":"348","no":"1428","name":"瑞穂改","pron":"みずほ","type":"水上機母艦","hp":42,"max_hp":62,"armor":24,"fire":18,"torpedo":15,"aac":18,"ass":0,"evasion":24,"seek":36,"luck":10,"max_armor":48,"max_fire":45,"max_torpedo":72,"max_aac":44,"max_ass":0,"max_evasion":42,"max_seek":92,"max_luck":54,"speed":5,"range":1,"slot":3,"fuel":40,"bullet":45,"carry":[12,12,8],"equip":[59,41,39], "na":0, "sg":3}
+              ,{"id":"348","no":"1428","name":"瑞穂改","pron":"みずほ","type":"水上機母艦","hp":42,"max_hp":62,"armor":24,"fire":18,"torpedo":15,"aac":18,"ass":0,"evasion":24,"seek":38,"luck":10,"max_armor":48,"max_fire":45,"max_torpedo":72,"max_aac":44,"max_ass":0,"max_evasion":42,"max_seek":94,"max_luck":54,"speed":5,"range":1,"slot":3,"fuel":40,"bullet":45,"carry":[12,12,8],"equip":[59,41,39], "na":0, "sg":3}
               ,{"id":"349","no":"1429","name":"風雲改","pron":"かざぐも","type":"駆逐艦","hp":32,"max_hp":49,"armor":14,"fire":12,"torpedo":29,"aac":17,"ass":29,"evasion":48,"seek":10,"luck":14,"max_armor":49,"max_fire":50,"max_torpedo":81,"max_aac":51,"max_ass":69,"max_evasion":90,"max_seek":42,"max_luck":69,"speed":10,"range":1,"slot":3,"fuel":15,"bullet":20,"carry":[0,0,0],"equip":[129,28,27], "na":0, "sg":2}
               ,{"id":"350","no":"1430","name":"海風改","pron":"うみかぜ","type":"駆逐艦","hp":30,"max_hp":48,"armor":14,"fire":12,"torpedo":28,"aac":16,"ass":27,"evasion":46,"seek":8,"luck":13,"max_armor":49,"max_fire":49,"max_torpedo":79,"max_aac":50,"max_ass":63,"max_evasion":89,"max_seek":40,"max_luck":64,"speed":10,"range":1,"slot":3,"fuel":15,"bullet":20,"carry":[0,0,0],"equip":[63,44], "na":0, "sg":2}
               ,{"id":"351","no":"1431","name":"江風改","pron":"かわかぜ","type":"駆逐艦","hp":30,"max_hp":48,"armor":14,"fire":12,"torpedo":29,"aac":15,"ass":24,"evasion":46,"seek":8,"luck":12,"max_armor":49,"max_fire":49,"max_torpedo":80,"max_aac":49,"max_ass":59,"max_evasion":89,"max_seek":40,"max_luck":59,"speed":10,"range":1,"slot":3,"fuel":15,"bullet":20,"carry":[0,0,0],"equip":[63,28], "na":0, "sg":2}
@@ -704,7 +708,7 @@ var s_data = [{"id":"1","no":"31","name":"睦月","pron":"むつき","type":"駆
               ,{"id":"646","no":"446","name":"加賀改二護","pron":"かが","type":"正規空母","hp":84,"max_hp":98,"armor":41,"fire":36,"torpedo":0,"aac":40,"ass":72,"evasion":26,"seek":54,"luck":18,"max_armor":84,"max_fire":60,"max_torpedo":0,"max_aac":84,"max_ass":84,"max_evasion":68,"max_seek":93,"max_luck":74,"speed":10,"range":2,"slot":5,"fuel":105,"bullet":105,"carry":[16,16,18,8,6],"equip":[], "na":0, "sg":3}
               ,{"id":"647","no":"447","name":"浦波改二","pron":"うらなみ","type":"駆逐艦","hp":31,"max_hp":49,"armor":14,"fire":14,"torpedo":28,"aac":28,"ass":25,"evasion":47,"seek":12,"luck":29,"max_armor":51,"max_fire":59,"max_torpedo":85,"max_aac":72,"max_ass":66,"max_evasion":93,"max_seek":44,"max_luck":99,"speed":10,"range":1,"slot":3,"fuel":15,"bullet":20,"carry":[0,0,0],"equip":[294,125,68], "na":0, "sg":2}
               ,{"id":"648","no":"448","name":"秋雲改二","pron":"あきぐも","type":"駆逐艦","hp":33,"max_hp":56,"armor":15,"fire":18,"torpedo":30,"aac":18,"ass":28,"evasion":47,"seek":10,"luck":18,"max_armor":53,"max_fire":65,"max_torpedo":91,"max_aac":64,"max_ass":75,"max_evasion":91,"max_seek":42,"max_luck":76,"speed":10,"range":1,"slot":3,"fuel":15,"bullet":20,"carry":[0,0,0],"equip":[266,15,227], "na":0, "sg":2}
-              ,{"id":"649","no":"449","name":"高波改二","pron":"たかなみ","type":"駆逐艦","hp":33,"max_hp":56,"armor":15,"fire":16,"torpedo":30,"aac":20,"ass":30,"evasion":48,"seek":14,"luck":12,"max_armor":54,"max_fire":68,"max_torpedo":86,"max_aac":64,"max_ass":72,"max_evasion":90,"max_seek":58,"max_luck":73,"speed":10,"range":1,"slot":3,"fuel":15,"bullet":20,"carry":[0,0,0],"equip":[267,15,129], "na":0, "sg":2}
+              ,{"id":"649","no":"449","name":"高波改二","pron":"たかなみ","type":"駆逐艦","hp":33,"max_hp":56,"armor":15,"fire":16,"torpedo":30,"aac":20,"ass":30,"evasion":48,"seek":14,"luck":12,"max_armor":54,"max_fire":68,"max_torpedo":86,"max_aac":64,"max_ass":72,"max_evasion":90,"max_seek":60,"max_luck":73,"speed":10,"range":1,"slot":3,"fuel":15,"bullet":20,"carry":[0,0,0],"equip":[267,15,129], "na":0, "sg":2}
               ,{"id":"650","no":"450","name":"宗谷","pron":"そうや","type":"補給艦","hp":26,"max_hp":38,"armor":15,"fire":0,"torpedo":0,"aac":0,"ass":8,"evasion":27,"seek":2,"luck":77,"max_armor":62,"max_fire":1,"max_torpedo":0,"max_aac":0,"max_ass":32,"max_evasion":77,"max_seek":12,"max_luck":155,"speed":5,"range":1,"slot":3,"fuel":25,"bullet":5,"carry":[1,2,3],"equip":[49], "na":0, "sg":5}
               ,{"id":"651","no":"451","name":"丹陽","pron":"ゆきかぜ","type":"駆逐艦","hp":35,"max_hp":55,"armor":16,"fire":18,"torpedo":0,"aac":40,"ass":26,"evasion":65,"seek":15,"luck":60,"max_armor":60,"max_fire":68,"max_torpedo":56,"max_aac":88,"max_ass":60,"max_evasion":97,"max_seek":50,"max_luck":100,"speed":10,"range":1,"slot":3,"fuel":15,"bullet":20,"carry":[0,0,0],"equip":[397,398], "na":0, "sg":2}
               ,{"id":"652","no":"452","name":"球磨改二","pron":"くま","type":"軽巡洋艦","hp":46,"max_hp":59,"armor":29,"fire":22,"torpedo":32,"aac":32,"ass":40,"evasion":42,"seek":13,"luck":16,"max_armor":70,"max_fire":70,"max_torpedo":92,"max_aac":80,"max_ass":80,"max_evasion":82,"max_seek":58,"max_luck":86,"speed":10,"range":1,"slot":3,"fuel":25,"bullet":35,"carry":[1,1,1],"equip":[], "na":0, "sg":2}
