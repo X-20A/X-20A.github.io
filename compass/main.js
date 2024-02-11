@@ -8286,11 +8286,11 @@ $(function() {
         e.stopPropagation();
     });
     // マウスオーバー時に索敵注意書きを表示
-    $('#asterisk').mouseover(function() {
+    $('body').on('mouseover', '#asterisk', function() {
         $('#seek-message').show();
     });
     // マウスリーブ時にメッセージを非表示
-    $('#asterisk').mouseleave(function() {
+    $('body').on('mouseleave', '#asterisk', function() {
         $('#seek-message').hide();
     });
     //localstorage全削除
