@@ -236,6 +236,8 @@ li {
     user-select: none;
 }
 #seek-message {
+    padding: 0px 4px;
+    border: 1px solid black;
     font-size: 12px;
     position: absolute;
     background-color: white;
