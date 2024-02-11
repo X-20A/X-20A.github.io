@@ -620,7 +620,7 @@ $(function() {
             let i_ids = getEqIds(c_ids[num - 1][i], num);
             console.log(`装備id : ${i_ids}`);
             //装備ボーナス
-            let bonus = getSeekBonus(ship, i_ids);
+            let bonus = getSeekBonus(ship, i_ids, num);
             console.log(`seek_bonus : ${bonus}`);
             //素の索敵値の平方根を加算
             sum_base = sum_base.plus(Decimal.sqrt(cur_seek.plus(bonus)));
@@ -650,8 +650,10 @@ $(function() {
         return res;
     }
     //装備ボーナス取得 艦のjson, 装備id(配列)
-    function getSeekBonus(ship, e_ids) {
+    function getSeekBonus(ship, e_ids, num) {
+        console.log(ship);
         let res = 0;
+        let id = ship.id;
         let name = ship.name;
         let na = ship.na;
         let type = ship.type;
@@ -737,8 +739,8 @@ $(function() {
                 case 118: // 紫雲
                     if(name.includes('大淀')) {
                         res += 2;
-                        let eq = e_data.find(entry => entry.id === e_id);
-                        if(eq.rf === 10) { // 改修maxで更に+1
+                        let rf = getEqRfs(id, num)[i];
+                        if(rf === 10) { // 改修maxで更に+1
                             res += 1;
                         }
                     }
@@ -746,10 +748,11 @@ $(function() {
                 case 414: // SOC seagull
                     if(na === 1) {
                         if(type === '軽巡洋艦' || type === '重巡洋艦') {
+                            let rf = getEqRfs(id, num)[i];
                             if(!dup.includes(e_id)) {
                                 res += 2;
                                 //改修でさらにボーナス
-                                if(eq.rf > 3) {
+                                if(rf > 3) {
                                     res += 1;
                                 }
                                 dup.push(e_id);
@@ -904,6 +907,22 @@ $(function() {
                             res += 3;
                         } else if(type === '重巡洋艦') {
                             res += 3;
+                        }
+                    }
+                    break;
+                case 521: //紫雲(熟練)
+                    if(name.includes('大淀改')) {
+                        let rf = getEqRfs(id, num)[i];
+                        if(rf > 0) { // 改修1以上で+5
+                            res += 5;
+                        }
+                        if(rf > 3) { //☆4以上で更に+1
+                            res += 1;
+                        }
+                    } else if(name.includes('三隈改二特')) {
+                        let rf = getEqRfs(id, num)[i];
+                        if(rf > 0) { // 改修1以上で+4
+                            res += 4;
                         }
                     }
                     break;
@@ -1133,7 +1152,7 @@ $(function() {
             u += `<p>${f_united}</p>`;
         }
         if(f_names && speed && f_search) {
-            $('#import-display').append(`${u}<p>${speed} | 搭載艦数[ドラム缶:${f_drum},大発系:${f_craft},電探:${f_radar}]</p><p>${part}</p><p>索敵値: <strong>1: </strong>${f_search[0]} <strong>2: </strong>${f_search[1]} <strong>3: </strong>${f_search[2]} <strong>4: </strong>${f_search[3]}</p>`);
+            $('#import-display').append(`${u}<p>${speed} | 搭載艦数[ドラム缶:${f_drum},大発系:${f_craft},電探:${f_radar}]</p><p>${part}</p><p id="seek-info"><span id="asterisk">*</span><span id="seek-message">一致しない場合は制空シミュを信用してください</span>索敵値: <strong>1: </strong>${f_search[0]} <strong>2: </strong>${f_search[1]} <strong>3: </strong>${f_search[2]} <strong>4: </strong>${f_search[3]}</p>`);
         }
     }
     
@@ -8264,6 +8283,14 @@ $(function() {
     //バブリング阻止
     $('#conf-box').on('click', function(e) {
         e.stopPropagation();
+    });
+    // マウスオーバー時に索敵注意書きを表示
+    $('#asterisk').mouseover(function() {
+        $('#seek-message').show();
+    });
+    // マウスリーブ時にメッセージを非表示
+    $('#asterisk').mouseleave(function() {
+        $('#seek-message').hide();
     });
     //localstorage全削除
     $('#all-clear').on('click', function() {
