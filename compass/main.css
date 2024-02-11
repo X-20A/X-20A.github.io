@@ -223,6 +223,27 @@ li {
 #fold:hover {
     background-color: #d3d3d3;
 }
+#seek-info {
+    position: relative;
+}
+#asterisk {
+    position: absolute;
+    color: red;
+    top: -4px;
+    left: -6px;
+    cursor: default;
+    height: 12px;
+    user-select: none;
+}
+#seek-message {
+    font-size: 12px;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    left: 10px;
+    color: red;
+    display: none;
+}
 #cy {
     display:flex;
     position:relative;
