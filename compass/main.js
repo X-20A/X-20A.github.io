@@ -5050,7 +5050,14 @@ $(function() {
                                 }
                                 break;
                             case 'D':
-                                if(Ss > 0 || slowBB() > 1 || BBs > 2 || DD > 1) {
+                                if(Ss > 0 || slowBB() > 1 || BBs > 2) {
+                                    sum('DtoF');
+                                    sum('FtoH');
+                                    sum('HtoI');
+                                    sum('ItoJ');
+                                    sum('JtoM');
+                                    return 'M';
+                                } else if(DD > 1) {
                                     sum('DtoE');
                                     sum('EtoH');
                                     sum('HtoI');
