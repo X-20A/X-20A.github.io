@@ -246,6 +246,17 @@ li {
     color: red;
     display: none;
 }
+#screen-shot {
+    cursor: pointer;
+    padding: 3px;
+    border-radius: 100%;
+    width: 22px;
+    right: 4px;
+    top: 4px;
+    position: absolute;
+    z-index: 9999;
+    background-color: #cccccc;
+}
 #cy {
     display:flex;
     position:relative;
