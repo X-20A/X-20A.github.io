@@ -5119,7 +5119,7 @@ $(function() {
                                 } else if(f_search[1] < 41) {
                                     sum('MtoO');
                                     return null;
-                                } else if((f_search[1] < 45 && f_search[1] >= 41) || Ss > 0) {
+                                } else if((f_search[1] < 45 && f_search[1] >= 41)) {
                                     if(sai(50)) {
                                         sum('MtoP');
                                         return null;
@@ -5128,8 +5128,18 @@ $(function() {
                                         return null;
                                     }
                                 } else if(f_search[1] >= 45) {
-                                    sum('MtoP');
-                                    return null;
+                                    if(Ss > 0) {
+                                        if(sai(66.6)) {
+                                            sum('MtoP');
+                                            return null;
+                                        } else {
+                                            sum('MtoO');
+                                            return null;
+                                        }
+                                    } else {
+                                        sum('MtoP');
+                                        return null;
+                                    }
                                 } //LoSより例外なし
                                 break;
                         }
