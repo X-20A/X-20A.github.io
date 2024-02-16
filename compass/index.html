@@ -13,13 +13,10 @@
         <meta name="description" content="艦これのルート分岐をシミュレート">
         <title>羅針盤シミュ ｜ poyopoyo工具箱</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/decimal.js/9.0.0/decimal.min.js"></script>
         <script type="text/javascript" src="/commons/header.js"></script>
         <link rel="stylesheet" type="text/css" href="/commons/header.css">
         <link rel="stylesheet" type="text/css" href="main.css">
+        <link rel="icon" href="data:,">
     </head>
     <body>
         <!-- header body直後に貼り付けること -->
@@ -325,7 +322,13 @@
             </div>
             <div id="import-display">
             </div>
-            <div id="cy"></div>
+            <div style="position: relative;">
+                <span id="screen-shot">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M20,4H16.83L15,2H9L7.17,4H4A2,2 0 0,0 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6A2,2 0 0,0 20,4M20,18H4V6H8.05L9.88,4H14.12L15.95,6H20V18M12,7A5,5 0 0,0 7,12A5,5 0 0,0 12,17A5,5 0 0,0 17,12A5,5 0 0,0 12,7M12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15Z" /></svg>
+                </span>
+                <div id="cy">
+                </div>
+            </div>
             <div style="margin: auto;max-width: 460px;">
                 <div style="padding-bottom: 40px">
                     <details open>
@@ -353,6 +356,7 @@
                         <li><a href="https://tsunkit.net/nav/" target="_blank">KCNav</a>:マップ周り</li>
                         <li><a href="http://kancolle-calc.net/deckbuilder.html" target="_blank">デッキビルダー</a>:艦/装備データ</li>
                         <li><a href="https://noro6.github.io/kc-web/#/" target="_blank">制空権シミュレーター</a>:速度演算</li>
+                        <li><a href="https://github.com/Nishisonic/gkcoi" target="_blank">gkcoi</a>:編成のグラフィック出力</li>
                         <li>本ツールは以上のサイトを大いに参考にして制作しました。先人に感謝。</li>
                         <li>DeepL:This tool was created with great reference to the above sites. Thanks to our predecessors.</li>
                         <li></li>
@@ -368,7 +372,8 @@
                     </details>
                     <details>
                         <summary>アプデ履歴</summary>
-                        <li>2024/02/03_ver.1.1.4  マス点灯&amp;図上における能動分岐切替</li>
+                        <li>2024/02/16_ver.1.1.5  スクショ機能の実装</li>
+                        <li>2024/02/03_ver.1.1.4  マス点灯&amp;図上における能動分岐切り替え</li>
                         <li>2024/01/31_ver.1.1.3  連合艦隊読込&amp;イベント海域試験実装</li>
                         <li>2024/01/18_ver.1.1.2  分岐マスをクリックで条件表示</li>
                         <li>2024/01/16_ver.1.1.1  キーボードショートカット追加</li>
@@ -398,6 +403,6 @@
         <script type="text/javascript" src="/data/item.js"></script>
         <script type="text/javascript" src="/data/map.js"></script>
         <script type="text/javascript" src="/data/branch.js"></script>
-        <script type="text/javascript" src="main.js"></script>
+        <script type="text/javascript" src="dist/main.js"></script>
     </body>
 </html>
