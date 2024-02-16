@@ -44,6 +44,16 @@ ul {
     text-align: center;
     color: white;
 }
+.side-menu-title {
+    font-style: italic;
+    font-family: 'Cormorant Garamond', serif;
+    padding-left: 10px;
+    text-align: left;
+    font-size: 15px;
+    border-bottom: 1px solid white;
+    color: white;
+    user-select: none;
+}
 #mask {
     top: 0;
     width: 100%;
@@ -89,6 +99,7 @@ ul {
 }
 /*以下footer*/
 #footer {
+    z-index: 9999;
     padding: 2px;
     font-size: 13px;
     color: white;
