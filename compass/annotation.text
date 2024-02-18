@@ -117,7 +117,7 @@ async function createAsync(deckbuilder, f_speed, f_seek, options) {
  * @param options 画像取得オプション
  * @return 編成画像
  */
-//艦隊速度(f_speed)と艦隊索敵値(f_seek)を呼び出し元から指定する形に編集しました by momemi
+//艦隊速度(f_speed)と艦隊索敵値(f_seek)を呼び出し元から指定する形に編集 by momemi
 export async function generate(deckbuilder, f_speed, f_seek, options) {
     if (options?.masterUrl) {
         config.masterUrl = options?.masterUrl;
