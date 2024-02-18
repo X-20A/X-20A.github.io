@@ -397,7 +397,7 @@ $(function() {
             let d = true;
             let r = true;
             let c = true;
-            for(e_id of e_ids) {
+            for(let e_id of e_ids) {
                 if(e_id === 75) { //ドラム缶
                     if(d) {
                         drum++;
