@@ -2,6 +2,9 @@
 body {
     margin:0;
 }
+body::-webkit-scrollbar {
+    display: none;
+}
 input {
     width: 60px;
 }
@@ -163,7 +166,7 @@ li {
 #type-select {
     display: none;
     margin-left: 3px;
-    width: 114px;
+    width: 115px;
 }
 #area-container {
     justify-content: center;
