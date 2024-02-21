@@ -2,9 +2,6 @@
 body {
     margin: 0;
 }
-body::-webkit-scrollbar {
-    display: none;
-}
 p {
     margin:3px; 
 }
@@ -113,6 +110,6 @@ ul {
     color: #82b1ff;
     text-decoration: underline;
 }
-#kancolle-don {
+.sns-icon {
     vertical-align: middle;
 }
