@@ -6,7 +6,7 @@ $(function() {
     let e_arr = [];
     let completed = false;
 
-    node = extractDirectoryFromUrl();
+    node = extractCodeFromUrl();
     console.log(`node : ${node}`);
 
     if(node) {
@@ -256,19 +256,20 @@ $(function() {
         return null;
     }
     //urlから最後のディレクトリを取得
-    function extractDirectoryFromUrl() {
-        // URLから指定の位置のディレクトリを抽出する正規表現
-        const regex = /\/([^\/]+)\/$/;
-        // 正規表現を使用してURLを解析
-        const matches = location.href.match(regex);
+    function extractCodeFromUrl() {
+        // URLをスラッシュで分割
+        var parts = location.href.split('/');
 
-        // マッチしたディレクトリがあれば返す
-        if (matches && matches[1]) {
-            return matches[1];
-        }
-        // マッチしなかった場合はnullを返すか、適当なデフォルト値を返す
-        return null;
+        // 配列の最後の要素を取得
+        var lastPart = parts[parts.length - 2];
+        return lastPart;
     }
+
+    // テスト用例
+    var url = 'https://x-20a.github.io/analysis/7-5-D/';
+    var code = extractCodeFromUrl(url);
+    console.log(code); // 出力: 7-5-D
+
 
     //2023-10-11T02:10:37.344968 を 2023-10-11 11:10
     function convertDateTime(dateTimeString) {
