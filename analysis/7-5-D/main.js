@@ -6,7 +6,7 @@ $(function() {
     let e_arr = [];
     let completed = false;
 
-    node = getLastDirectoryFromUrl();
+    node = extractDirectoryFromUrl();
     console.log(`node : ${node}`);
 
     if(node) {
@@ -256,17 +256,16 @@ $(function() {
         return null;
     }
     //urlから最後のディレクトリを取得
-    function getLastDirectoryFromUrl() {
-        const regex = /\/([^\/]+)\/index\.html$/;
-
-        // 正規表現を使用してファイルパスを解析
+    function extractDirectoryFromUrl() {
+        // URLから指定の位置のディレクトリを抽出する正規表現
+        const regex = /\/([^\/]+)\/$/;
+        // 正規表現を使用してURLを解析
         const matches = location.href.match(regex);
 
         // マッチしたディレクトリがあれば返す
         if (matches && matches[1]) {
             return matches[1];
         }
-
         // マッチしなかった場合はnullを返すか、適当なデフォルト値を返す
         return null;
     }
