@@ -10,7 +10,7 @@ $(function() {
     e_dataはitem.jsより
     idがs_dataは文字列
     e_dataは数字であることに注意
-    
+
     制空シミュを基準にしたときの本家デッキビルダー差異・注意点
     艦ID'のみ'文字列
     改修値が0のとき、キーがそもそもない
@@ -67,7 +67,7 @@ $(function() {
         判定も少しはするけど殆ど自己申告
     */
     let f_united = null;
-    
+
     //読込時の計算に使うあれこれ
     let c_lengths = [];
     let c_ids = [];
@@ -78,29 +78,29 @@ $(function() {
     let c_drums = [];
     let c_radars = [];
     let c_crafts = [];
-    
+
     let selected_type = null; //艦隊種別選択したやつをひかえる
-    
+
     //受け付ける海域
     const areas = ['1-1','1-2','1-3','1-4','1-5','1-6','2-1','2-2','2-3','2-4','2-5','3-1','3-2','3-3','3-4','3-5','4-1','4-2','4-3','4-4','4-5','5-1','5-2','5-3','5-4','5-5','6-1','6-2','6-3','6-4','6-5','7-1','7-2','7-3','7-3-1','7-4','7-5','57-7'];
     const op_areas = ['4-5','5-3','5-5','6-3','7-3','7-4','7-5','57-7'];
-    
+
     //1がキーの値はPhase
     let active = {'4-5':{'A':'D','C':'F','I':'J'},'5-3':{'O':'K'}, '5-5':{'F':'D'}, '6-3':{'A':'B'},'7-3':{'1':'0'},'7-4':{'F':'H'},'7-5':{'F':'G','H':'I','O':'P'},'57-7':{'1':'1','A2':'A3','B2':'B3','C':'A3','J':'K'}, '57-7':{'1':'1','A2':'A3','B':'B1','B2':'B3','C':'A3','J':'K'}};
-    
+
     let area = null; //入力で切り替えるの
     let drew_area = null; //表示中の海域
-    
+
     //オプション表示の為のz-index
     let z_value = 10;
-    
+
     //演算開始の為のフラグ
     let a_flag = false;
     let f_flag = false;
-    
+
     let rate = {}; //これにルート情報を詰め込んでいく
     let track = []; //最後の軌跡
-    
+
     let cy = null;
 
     //海域が入力されたら適正かチェックしてフラグ切替
@@ -945,7 +945,7 @@ $(function() {
         let e_id = getEqType(id);
         //やや無駄になるが2回に分けた方が見やすくて良いと思う
         switch(e_id) {
-            //装備係数
+                //装備係数
             case 356: //艦戦
             case 357: //艦爆
             case 53645: //水戦
@@ -985,7 +985,7 @@ $(function() {
                 break;
         }
         switch(e_id) {
-            //改修係数
+                //改修係数
             case 31525: //回転翼機
             case 34425: //S51J & S51J改
             case 162739: //見張員
@@ -1163,7 +1163,7 @@ $(function() {
             $('#import-display').append(`${u}<p>${speed} | 搭載艦数[ドラム缶:${f_drum},大発系:${f_craft},電探:${f_radar}]</p><p>${part}</p><p id="seek-info"><span id="asterisk">*</span><span id="seek-message">一致しない場合は制空シミュを信用してください</span>索敵値: <strong>1: </strong>${f_search[0]} <strong>2: </strong>${f_search[1]} <strong>3: </strong>${f_search[2]} <strong>4: </strong>${f_search[3]}</p>`);
         }
     }
-    
+
     //以下分岐判定に必要な関数
 
     //特定の艦が含まれるかチェック
@@ -1291,7 +1291,7 @@ $(function() {
         const LST = com['LST']; //戦車揚陸艦
         const AS = com['AS']; //潜水母艦
         const AR = com['AR']; //工作艦
-        
+
         const BBs = BB + BBV; //戦艦級
         const CVs = CV + CVL + CVB; //空母系
         const BBCVs = BBs + CVs; //戦艦級+空母系
@@ -1362,7 +1362,7 @@ $(function() {
                                             break;
                                         case 4:
                                             if(sai(60)) {
-                                               sum('1toA');
+                                                sum('1toA');
                                                 return 'A';
                                             } else {
                                                 sum('1toB');
@@ -1372,7 +1372,7 @@ $(function() {
                                             break;
                                         default:
                                             if(sai(70)) {
-                                               sum('1toA');
+                                                sum('1toA');
                                                 return 'A';
                                             } else {
                                                 sum('1toB');
@@ -1404,7 +1404,7 @@ $(function() {
                                     }
                                 }
                                 return null;
-                            }
+                        }
                         break;
                     case 3: //@1-3
                         switch(edge) {
@@ -1892,174 +1892,174 @@ $(function() {
                         }
                         break;
                     case 2: //@2-2
-                            switch(edge) {
-                                case null:
-                                    sum('1toC');
-                                    return 'C';
-                                    break;
-                                case 'C':
-                                    if(CVs > 2 || BBV > 1 || (AO > 0 && Ss === 0)) {
-                                        sum('CtoB');
-                                        sum('BtoA');
-                                        return null;
-                                    } else if(BBV > 0) {
-                                        if(AV + AS > 0) {
-                                            if(sai(70)) {
-                                                sum('CtoB');
-                                                sum('BtoA');
-                                                return null;
-                                            } else {
-                                                sum('CtoE');
-                                                return 'E';
-                                            }
-                                        } else {
-                                            if(sai(50)) {
-                                                sum('CtoB');
-                                                sum('BtoA');
-                                                return null;
-                                            } else {
-                                                sum('CtoD');
-                                                return null;
-                                            }
-                                        }
-                                    } else if(AV +AS > 0) {
-                                        sum('CtoE');
-                                        return 'E';
-                                    } else {
-                                        if(sai(50)) {
-                                            sum('CtoD');
+                        switch(edge) {
+                            case null:
+                                sum('1toC');
+                                return 'C';
+                                break;
+                            case 'C':
+                                if(CVs > 2 || BBV > 1 || (AO > 0 && Ss === 0)) {
+                                    sum('CtoB');
+                                    sum('BtoA');
+                                    return null;
+                                } else if(BBV > 0) {
+                                    if(AV + AS > 0) {
+                                        if(sai(70)) {
+                                            sum('CtoB');
+                                            sum('BtoA');
                                             return null;
                                         } else {
                                             sum('CtoE');
                                             return 'E';
                                         }
-                                    }
-                                    break;
-                                case 'E':
-                                    if(BBCVs > 3) {
-                                        sum('EtoG');
-                                        return 'G';
-                                    } else if(DE > 1) {
-                                        sum('EtoF');
-                                        sum('FtoH');
-                                        return 'H';
-                                    } else if(BBCVs === 3) {
-                                        if(sai(70)) {
-                                            sum('EtoG');
-                                            return 'G';
-                                        } else {
-                                            sum('EtoK');
-                                            return null;
-                                        }
-                                    } else if(BBCVs === 2) {
-                                        if(sai(50)) {
-                                            sum('EtoG');
-                                            return 'G';
-                                        } else {
-                                            sum('EtoK');
-                                            return null;
-                                        }
-                                    } else if(BBCVs === 1) {
-                                        if(sai(70)) {
-                                            sum('EtoK');
-                                            return null;
-                                        } else {
-                                            sum('EtoG');
-                                            return 'G';
-                                        }
-                                    } else if(Ds > 2 && AS > 0) {
-                                        sum('EtoF');
-                                        sum('FtoH');
-                                        return 'H';
-                                    } else if(Ds > 1) {
-                                        if(CL > 0 && speed !== '低速艦隊') {
-                                            sum('EtoK');
-                                            return null;
-                                        } else {
-                                            if(sai(70)) {
-                                                sum('EtoK');
-                                                return null;
-                                            } else {
-                                                sum('EtoF');
-                                                sum('FtoH');
-                                                return 'H';
-                                            }
-                                        }
                                     } else {
                                         if(sai(50)) {
-                                            sum('EtoG');
-                                            return 'G';
+                                            sum('CtoB');
+                                            sum('BtoA');
+                                            return null;
                                         } else {
-                                            sum('EtoK');
+                                            sum('CtoD');
                                             return null;
                                         }
                                     }
-                                    break;
-                                case 'G':
-                                    if(CVs > 0 || DD === 0) {
+                                } else if(AV +AS > 0) {
+                                    sum('CtoE');
+                                    return 'E';
+                                } else {
+                                    if(sai(50)) {
+                                        sum('CtoD');
+                                        return null;
+                                    } else {
+                                        sum('CtoE');
+                                        return 'E';
+                                    }
+                                }
+                                break;
+                            case 'E':
+                                if(BBCVs > 3) {
+                                    sum('EtoG');
+                                    return 'G';
+                                } else if(DE > 1) {
+                                    sum('EtoF');
+                                    sum('FtoH');
+                                    return 'H';
+                                } else if(BBCVs === 3) {
+                                    if(sai(70)) {
+                                        sum('EtoG');
+                                        return 'G';
+                                    } else {
+                                        sum('EtoK');
+                                        return null;
+                                    }
+                                } else if(BBCVs === 2) {
+                                    if(sai(50)) {
+                                        sum('EtoG');
+                                        return 'G';
+                                    } else {
+                                        sum('EtoK');
+                                        return null;
+                                    }
+                                } else if(BBCVs === 1) {
+                                    if(sai(70)) {
+                                        sum('EtoK');
+                                        return null;
+                                    } else {
+                                        sum('EtoG');
+                                        return 'G';
+                                    }
+                                } else if(Ds > 2 && AS > 0) {
+                                    sum('EtoF');
+                                    sum('FtoH');
+                                    return 'H';
+                                } else if(Ds > 1) {
+                                    if(CL > 0 && speed !== '低速艦隊') {
+                                        sum('EtoK');
+                                        return null;
+                                    } else {
+                                        if(sai(70)) {
+                                            sum('EtoK');
+                                            return null;
+                                        } else {
+                                            sum('EtoF');
+                                            sum('FtoH');
+                                            return 'H';
+                                        }
+                                    }
+                                } else {
+                                    if(sai(50)) {
+                                        sum('EtoG');
+                                        return 'G';
+                                    } else {
+                                        sum('EtoK');
+                                        return null;
+                                    }
+                                }
+                                break;
+                            case 'G':
+                                if(CVs > 0 || DD === 0) {
+                                    sum('GtoH');
+                                    return 'H';
+                                } else {
+                                    if(sai(50)) {
                                         sum('GtoH');
                                         return 'H';
                                     } else {
-                                        if(sai(50)) {
-                                            sum('GtoH');
-                                            return 'H';
-                                        } else {
-                                            sum('GtoK');
-                                            return null;
-                                        }
+                                        sum('GtoK');
+                                        return null;
                                     }
-                                    break;
-                                case 'H':
-                                    if(BBCVs > 3) {
-                                        if(sai(70)) {
-                                            sum('HtoI');
-                                            return null;
-                                        } else {
-                                            sum('HtoK');
-                                            return null;
-                                        }
-                                    } else if(CVs + CAV + AV > 0) {
+                                }
+                                break;
+                            case 'H':
+                                if(BBCVs > 3) {
+                                    if(sai(70)) {
+                                        sum('HtoI');
+                                        return null;
+                                    } else {
                                         sum('HtoK');
                                         return null;
-                                    } else if(Ss > 0) {
-                                        if(sai(70)) {
-                                            sum('HtoI');
-                                            return null;
-                                        } else {
-                                            sum('HtoK');
-                                            return null;
-                                        }
-                                    } else if(Ds > 1) {
-                                        if(sai(50)) {
-                                            sum('HtoJ');
-                                            return null;
-                                        } else {
-                                            sum('HtoK');
-                                            return null;
-                                        }
-                                    } else if(Ds === 1) {
-                                        const num = Math.random().toFixed(2);
-                                        if(num <= 0.33) {
-                                            sum('HtoI');
-                                            return null;
-                                        } else if(num <= 0.66) {
-                                            sum('HtoJ');
-                                            return null;
-                                        } else {
-                                            sum('HtoK');
-                                            return null;
-                                        }
-                                    } else {
-                                        if(sai(50)) {
-                                            sum('HtoI');
-                                            return null;
-                                        } else {
-                                            sum('HtoK');
-                                            return null;
-                                        }
                                     }
-                                    break;
-                            }
+                                } else if(CVs + CAV + AV > 0) {
+                                    sum('HtoK');
+                                    return null;
+                                } else if(Ss > 0) {
+                                    if(sai(70)) {
+                                        sum('HtoI');
+                                        return null;
+                                    } else {
+                                        sum('HtoK');
+                                        return null;
+                                    }
+                                } else if(Ds > 1) {
+                                    if(sai(50)) {
+                                        sum('HtoJ');
+                                        return null;
+                                    } else {
+                                        sum('HtoK');
+                                        return null;
+                                    }
+                                } else if(Ds === 1) {
+                                    const num = Math.random().toFixed(2);
+                                    if(num <= 0.33) {
+                                        sum('HtoI');
+                                        return null;
+                                    } else if(num <= 0.66) {
+                                        sum('HtoJ');
+                                        return null;
+                                    } else {
+                                        sum('HtoK');
+                                        return null;
+                                    }
+                                } else {
+                                    if(sai(50)) {
+                                        sum('HtoI');
+                                        return null;
+                                    } else {
+                                        sum('HtoK');
+                                        return null;
+                                    }
+                                }
+                                break;
+                        }
                         break;
                     case 3: //@2-3
                         switch(edge) {
@@ -2252,7 +2252,7 @@ $(function() {
                                         return null;
                                     } else {
                                         sum('JtoM');
-                                         return null;
+                                        return null;
                                     }
                                 } else if(Ss > 0) {
                                     const num = Math.random().toFixed(2);
@@ -3998,13 +3998,13 @@ $(function() {
                                         return null;
                                     }
                                 } else if(CVs === 0 && CA === 2) {
-                                        if(sai(80)) { //@
-                                            sum('HtoN');
-                                            return null;
-                                        } else {
-                                            sum('HtoI');
-                                            return null;
-                                        }
+                                    if(sai(80)) { //@
+                                        sum('HtoN');
+                                        return null;
+                                    } else {
+                                        sum('HtoI');
+                                        return null;
+                                    }
                                 } else {
                                     if(sai(70)) {
                                         sum('HtoN');
@@ -4139,7 +4139,7 @@ $(function() {
                                         } else {
                                             sum('EtoG');
                                             return 'G';
-                                            
+
                                         }
                                     } //BBCVsより例外なし
                                 } else if(Ss > 3) {
@@ -5161,7 +5161,7 @@ $(function() {
                                     sum('CtoE');
                                     return 'E';
                                 } else {
-                                     sum('1toB');
+                                    sum('1toB');
                                     return 'B';
                                 }
                                 break;
@@ -7891,195 +7891,195 @@ $(function() {
         //スタイルシート
         var style = [
             { selector: 'node', 
-                style: {
-                    'color': 'rgb(250,250,250)',
-                    'font-weight': '100',
-                    'text-outline-color': 'rgba(20,20,20)',
-                    'text-outline-opacity': '.85',
-                    'text-outline-width': '1.5px',
-                    'content': 'data(name)',
-                    'text-valign': 'center',
-                    'text-halign': 'center',
-                    'padding': '0pt',
-                    'font-size': '15px',
-                    'background-clip': 'none',//z-indexでedgesの下に潜り込ませるは上手くいかなかった
-                }
+             style: {
+                 'color': 'rgb(250,250,250)',
+                 'font-weight': '100',
+                 'text-outline-color': 'rgba(20,20,20)',
+                 'text-outline-opacity': '.85',
+                 'text-outline-width': '1.5px',
+                 'content': 'data(name)',
+                 'text-valign': 'center',
+                 'text-halign': 'center',
+                 'padding': '0pt',
+                 'font-size': '15px',
+                 'background-clip': 'none',//z-indexでedgesの下に潜り込ませるは上手くいかなかった
+             }
             }, //マスの分類ごとに表示分岐
             { selector: 'node[label = "st"]', 
-                 style: {
-                     'background-image': '/media/nodes/start.png',
-                     'font-weight': '600',
-                     'text-outline-width': '2px',
-                     'font-size': '20px',
-                     'width': '48px',
-                     'height': '48px',
-                     'background-opacity': 0,
-                     'background-position-x': '1px', //位置微調整
-                     'background-position-y': '-1px'
-                 }
+             style: {
+                 'background-image': '/media/nodes/start.png',
+                 'font-weight': '600',
+                 'text-outline-width': '2px',
+                 'font-size': '20px',
+                 'width': '48px',
+                 'height': '48px',
+                 'background-opacity': 0,
+                 'background-position-x': '1px', //位置微調整
+                 'background-position-y': '-1px'
+             }
             },
             { selector: 'node[label = "po"]', 
-                 style: {
-                     'background-image': '/media/nodes/port.png',
-                     'width': '48px',
-                     'height': '48px',
-                     'background-opacity': 0,
-                     'background-position-x': '2px',
-                     'background-position-y': '-1px'
-                 }
+             style: {
+                 'background-image': '/media/nodes/port.png',
+                 'width': '48px',
+                 'height': '48px',
+                 'background-opacity': 0,
+                 'background-position-x': '2px',
+                 'background-position-y': '-1px'
+             }
             },
             { selector: 'node[label = "bo"]', 
-                 style: {
-                     'background-image': '/media/nodes/boss.png',
-                     'width': '48px',
-                     'height': '48px',
-                     'background-opacity': 0,
-                     'background-position-x': '5px',
-                     'background-position-y': '1px'
-                 }
+             style: {
+                 'background-image': '/media/nodes/boss.png',
+                 'width': '48px',
+                 'height': '48px',
+                 'background-opacity': 0,
+                 'background-position-x': '5px',
+                 'background-position-y': '1px'
+             }
             },
             { selector: 'node[label = "ab"]', 
-                 style: {
-                     'background-image': '/media/nodes/air-b.png',
-                     'width': '48px',
-                     'height': '27px',
-                     'background-opacity': 0,
-                     'background-position-x': '1px' //位置微調整
-                 }
+             style: {
+                 'background-image': '/media/nodes/air-b.png',
+                 'width': '48px',
+                 'height': '27px',
+                 'background-opacity': 0,
+                 'background-position-x': '1px' //位置微調整
+             }
             },
             { selector: 'node[label = "ad"]', 
-                 style: {
-                     'background-image': '/media/nodes/air-d.png',
-                     'width': '44px',
-                     'height': '25px',
-                     'background-opacity': 0,
-                 }
+             style: {
+                 'background-image': '/media/nodes/air-d.png',
+                 'width': '44px',
+                 'height': '25px',
+                 'background-opacity': 0,
+             }
             },
             { selector: 'node[label = "ac"]', 
-                 style: {
-                     'background-image': '/media/nodes/calm.png',
-                     'border-width': 3, // ボーダーの太さ
-                     'border-color': '#904A64',
-                     'width': '27px',
-                     'height': '27px',
-                     'background-position-x': '0px',
-                     'background-position-y': '-1px'
-                 }
+             style: {
+                 'background-image': '/media/nodes/calm.png',
+                 'border-width': 3, // ボーダーの太さ
+                 'border-color': '#904A64',
+                 'width': '27px',
+                 'height': '27px',
+                 'background-position-x': '0px',
+                 'background-position-y': '-1px',
+             }
             },
             { selector: 'node[label = "en"]', //基本設定
-                 style: {
-                     'background-image': '/media/nodes/enemy.png',  //サイズ27px x 27px
-                     'width': '27px', //enemy系
-                     'height': '27px',
-                     'background-opacity': 0,
-                     'background-position-x': '-0.5px',
-                     'background-position-y': '-1px'
-                 }
+             style: {
+                 'background-image': '/media/nodes/enemy.png',  //サイズ27px x 27px
+                 'width': '27px', //enemy系
+                 'height': '27px',
+                 'background-opacity': 0,
+                 'background-position-x': '-0.5px',
+                 'background-position-y': '-1px'
+             }
             },
             { selector: 'node[label = "ca"]', 
-                 style: {
-                     'background-image': '/media/nodes/calm.png',
-                     'width': '27px', //enemy系
-                     'height': '27px',
-                     'background-opacity': 0,
-                     'background-position-x': '-0.5px',
-                     'background-position-y': '-1px'
-                 }
+             style: {
+                 'background-image': '/media/nodes/calm.png',
+                 'width': '27px', //enemy系
+                 'height': '27px',
+                 'background-opacity': 0,
+                 'background-position-x': '-0.5px',
+                 'background-position-y': '-1px'
+             }
             },
             { selector: 'node[label = "wh"]', 
-                 style: {
-                     'background-image': '/media/nodes/whirl.png',
-                     'width': '27px', //enemy系
-                     'height': '27px',
-                     'background-opacity': 0,
-                     'background-position-x': '-0.5px',
-                     'background-position-y': '-1px'
-                 }
+             style: {
+                 'background-image': '/media/nodes/whirl.png',
+                 'width': '27px', //enemy系
+                 'height': '27px',
+                 'background-opacity': 0,
+                 'background-position-x': '-0.5px',
+                 'background-position-y': '-1px'
+             }
             },
             { selector: 'node[label = "re"]', 
-                 style: {
-                     'background-image': '/media/nodes/resource.png',
-                     'width': '27px', //enemy系
-                     'height': '27px',
-                     'background-opacity': 0,
-                     'background-position-x': '-0.5px',
-                     'background-position-y': '-1px'
-                 }
+             style: {
+                 'background-image': '/media/nodes/resource.png',
+                 'width': '27px', //enemy系
+                 'height': '27px',
+                 'background-opacity': 0,
+                 'background-position-x': '-0.5px',
+                 'background-position-y': '-1px'
+             }
             },
             { selector: 'node[label = "ni"]', 
-                 style: {
-                     'background-image': '/media/nodes/night.png',
-                     'width': '27px', //enemy系
-                     'height': '27px',
-                     'background-opacity': 0,
-                     'background-position-x': '-0.5px',
-                     'background-position-y': '-1px'
-                 }
+             style: {
+                 'background-image': '/media/nodes/night.png',
+                 'width': '27px', //enemy系
+                 'height': '27px',
+                 'background-opacity': 0,
+                 'background-position-x': '-0.5px',
+                 'background-position-y': '-1px'
+             }
             },
             { selector: 'node[label = "sc"]', 
-                 style: {
-                     'background-image': '/media/nodes/scout.png',
-                     'width': '27px', //enemy系
-                     'height': '27px',
-                     'background-opacity': 0,
-                     'background-position-x': '-0.5px',
-                     'background-position-y': '-1px'
-                 }
+             style: {
+                 'background-image': '/media/nodes/scout.png',
+                 'width': '27px', //enemy系
+                 'height': '27px',
+                 'background-opacity': 0,
+                 'background-position-x': '-0.5px',
+                 'background-position-y': '-1px'
+             }
             },
             { selector: 'edge', 
-                style: {
-                    'color': 'rgb(250,250,250)',
-                    'font-weight': '100',
-                    'text-outline-color': 'rgba(20,20,20)',
-                    'text-outline-opacity': '.85',
-                    'text-outline-width': '1.5px',
-                    'width': '4px',
-                    'curve-style': 'bezier', //こいつが無いと矢印にならないっぽい
-                    'target-arrow-shape': 'triangle',
-                    'content':'data(ratio)'
-                }
+             style: {
+                 'color': 'rgb(250,250,250)',
+                 'font-weight': '100',
+                 'text-outline-color': 'rgba(20,20,20)',
+                 'text-outline-opacity': '.85',
+                 'text-outline-width': '1.5px',
+                 'width': '4px',
+                 'curve-style': 'bezier', //こいつが無いと矢印にならないっぽい
+                 'target-arrow-shape': 'triangle',
+                 'content':'data(ratio)'
+             }
             }, //割合によって色分け
             { selector: 'edge[ratio = 100]', 
-                style: {
-                    'line-color': 'rgb(220,20,60)',
-                    'target-arrow-color': 'rgb(220,20,60)',
-                }
+             style: {
+                 'line-color': 'rgb(220,20,60)',
+                 'target-arrow-color': 'rgb(220,20,60)',
+             }
             },
             { selector: 'edge[ratio < 100][ratio >= 80]', 
-                style: {
-                    'line-color': 'rgb(255,99,71)',
-                    'target-arrow-color': 'rgb(255,99,71)',
-                }
+             style: {
+                 'line-color': 'rgb(255,99,71)',
+                 'target-arrow-color': 'rgb(255,99,71)',
+             }
             },
             { selector: 'edge[ratio < 80][ratio >= 60]', 
-                style: {
-                    'line-color': 'rgb(255,165,0)',
-                    'target-arrow-color': 'rgb(255,165,0)',
-                }
+             style: {
+                 'line-color': 'rgb(255,165,0)',
+                 'target-arrow-color': 'rgb(255,165,0)',
+             }
             },
             { selector: 'edge[ratio < 60][ratio >= 40]', 
-                style: {
-                    'line-color': 'rgb(255,215,0)',
-                    'target-arrow-color': 'rgb(255,215,0)',
-                }
+             style: {
+                 'line-color': 'rgb(255,215,0)',
+                 'target-arrow-color': 'rgb(255,215,0)',
+             }
             },
             { selector: 'edge[ratio < 40][ratio >= 20]', 
-                style: {
-                    'line-color': 'rgb(255,215,0)',
-                    'target-arrow-color': 'rgb(255,215,0)',
-                }
+             style: {
+                 'line-color': 'rgb(255,215,0)',
+                 'target-arrow-color': 'rgb(255,215,0)',
+             }
             },
             { selector: 'edge[ratio < 20][ratio > 0]', 
-                 style: {
-                     'line-color': 'rgb(240,230,140)',
-                     'target-arrow-color': 'rgb(240,230,140)',
-                 }
+             style: {
+                 'line-color': 'rgb(240,230,140)',
+                 'target-arrow-color': 'rgb(240,230,140)',
+             }
             },
             { selector: 'edge[ratio = 0]', 
-                 style: {
-                     'line-color': 'rgb(169,169,169)',
-                     'content':'' //0の場合表示なし
-                 }
+             style: {
+                 'line-color': 'rgb(169,169,169)',
+                 'content':'' //0の場合表示なし
+             }
             }
         ];
 
@@ -8128,12 +8128,14 @@ $(function() {
 
                     let text = b_area[node];
                     //改行、赤字置換
-                    text = text.replaceAll('e', '<br>');
-                    text = text.replaceAll('co', '<span style="color:red;">');
-                    text = text.replaceAll('oc', '</span>');
-                    text = text.replaceAll('sw', `<button class="design-button remote-active" value="${drew_area}-${node}" style="padding:3px 15px;margin-left:5px;">切替</button>`);
-                    text = text.replaceAll('or', `<a href="https://x-20a.github.io/reference/?topic=${drew_area}-${node}" style="color:blue;" target="_blank" rel="noopener noreferrer">`);
-                    text = text.replaceAll('ro', '</a>');
+                    text = text.replaceAll('$e', '<br>');
+                    text = text.replaceAll('$co', '<span style="color:red;">');
+                    text = text.replaceAll('$oc', '</span>');
+                    text = text.replaceAll('$bo', '<span style="font-weight:bold;">');
+                    text = text.replaceAll('$ob', '</span>');
+                    text = text.replaceAll('$sw', `<button class="design-button remote-active" value="${drew_area}-${node}" style="padding:3px 15px;margin-left:5px;">切替</button>`);
+                    text = text.replaceAll('$or', `<a href="https://x-20a.github.io/reference/?topic=${drew_area}-${node}" style="color:blue;" target="_blank" rel="noopener noreferrer">`);
+                    text = text.replaceAll('$ro', '</a>');
                     text = `<p>${text}</p>`;
                     let popup = $('<div>').html(text).attr('id', 'popup-info');
                     let top = position.y + cyContainer.top - 10;
@@ -8182,7 +8184,7 @@ $(function() {
     //読み込み時にlocalstorageから諸々の設定を読込、反映
     //上に置くとtrigger()が不発する 謎
     setup();
-    
+
     //以下ストレージ関連
     function setup() {
         var a = localStorage.getItem('active');
