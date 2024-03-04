@@ -1,4 +1,5 @@
 /* http://kancolle-calc.net/deckbuilder.html 様より失敬
+    分岐に関与しない部分はかなりいい加減なので気を付けてください
     国籍(na)を追加
     0: 日本
     1: アメリカ
@@ -80,7 +81,16 @@
         max_seek:48 to 49
     瑞穂改
         max_seek:92 to 94
-    三隈改二,三隈改二特追加
+        
+    追加
+    三隈改二,三隈改二特
+    
+    以下索敵未対応
+    伊36,伊36改
+    Drum,Drum改
+    平安丸,平安丸改
+    伊41,伊41改
+    
     索敵以外のパラメータは未着手です
 */
 var s_data = [{"id":"1","no":"31","name":"睦月","pron":"むつき","type":"駆逐艦","hp":13,"max_hp":24,"armor":5,"fire":6,"torpedo":18,"aac":7,"ass":16,"evasion":37,"seek":4,"luck":12,"max_armor":18,"max_fire":29,"max_torpedo":59,"max_aac":29,"max_ass":39,"max_evasion":79,"max_seek":17,"max_luck":49,"speed":10,"range":1,"slot":2,"fuel":15,"bullet":15,"carry":[0,0],"equip":[1,37], "na":0, "sg":2}
@@ -849,4 +859,12 @@ var s_data = [{"id":"1","no":"31","name":"睦月","pron":"むつき","type":"駆
               ,{"id":"1496","no":"406","name":"Colorado改","pron":"コロラド","type":"戦艦","hp":91,"max_hp":98,"armor":83,"fire":80,"torpedo":0,"aac":36,"ass":0,"evasion":22,"seek":16,"luck":40,"max_armor":99,"max_fire":105,"max_torpedo":0,"max_aac":100,"max_ass":0,"max_evasion":54,"max_seek":52,"max_luck":110,"speed":5,"range":3,"slot":4,"fuel":95,"bullet":165,"carry":[1,1,1,2],"equip":[331,315], "na":1, "sg":5}
               ,{"id":"502","no":"302","name":"三隈改二","pron":"みくま","type":"航空巡洋艦","hp":59,"max_hp":68,"armor":73,"fire":77,"torpedo":87,"aac":36,"ass":0,"evasion":80,"seek":21,"luck":40,"max_armor":99,"max_fire":105,"max_torpedo":0,"max_aac":100,"max_ass":0,"max_evasion":54,"max_seek":82,"max_luck":110,"speed":5,"range":3,"slot":4,"fuel":95,"bullet":165,"carry":[1,1,1,2],"equip":[331,315], "na":0, "sg":0}
               ,{"id":"507","no":"307","name":"三隈改二特","pron":"みくま","type":"水上機母艦","hp":59,"max_hp":68,"armor":73,"fire":77,"torpedo":87,"aac":36,"ass":0,"evasion":80,"seek":28,"luck":40,"max_armor":99,"max_fire":105,"max_torpedo":0,"max_aac":100,"max_ass":0,"max_evasion":54,"max_seek":89,"max_luck":110,"speed":5,"range":3,"slot":4,"fuel":95,"bullet":165,"carry":[1,1,1,2],"equip":[331,315], "na":0, "sg":0}
+              ,{"id":"971","no":"571","name":"伊36","pron":"い36","type":"潜水艦","hp":14,"max_hp":18,"armor":19,"fire":7,"torpedo":71,"aac":0,"ass":0,"evasion":0,"seek":0,"luck":13,"max_armor":19,"max_fire":29,"max_torpedo":71,"max_aac":40,"max_ass":49,"max_evasion":79,"max_seek":1,"max_luck":49,"speed":10,"range":1,"slot":2,"fuel":15,"bullet":20,"carry":[0,0],"equip":[2,44], "na":0, "sg":6} //索敵未対応
+              ,{"id":"976","no":"576","name":"伊36改","pron":"い36","type":"潜水空母","hp":14,"max_hp":18,"armor":19,"fire":7,"torpedo":71,"aac":0,"ass":0,"evasion":0,"seek":0,"luck":13,"max_armor":19,"max_fire":29,"max_torpedo":71,"max_aac":40,"max_ass":49,"max_evasion":79,"max_seek":1,"max_luck":49,"speed":10,"range":1,"slot":2,"fuel":15,"bullet":20,"carry":[0,0],"equip":[2,44], "na":0, "sg":6} //索敵未対応
+              ,{"id":"944","no":"544","name":"平安丸","pron":"へいあんまる","type":"潜水母艦","hp":39,"max_hp":55,"armor":15,"fire":5,"torpedo":0,"aac":16,"ass":0,"evasion":24,"seek":0,"luck":20,"max_armor":37,"max_fire":15,"max_torpedo":0,"max_aac":36,"max_ass":0,"max_evasion":39,"max_seek":1,"max_luck":59,"speed":5,"range":1,"slot":3,"fuel":35,"bullet":10,"carry":[2,3,3],"equip":[10,92], "na":0, "sg":5} //索敵未対応
+              ,{"id":"949","no":"549","name":"平安丸改","pron":"へいあんまる","type":"潜水母艦","hp":39,"max_hp":55,"armor":15,"fire":5,"torpedo":0,"aac":16,"ass":0,"evasion":24,"seek":0,"luck":20,"max_armor":37,"max_fire":15,"max_torpedo":0,"max_aac":36,"max_ass":0,"max_evasion":39,"max_seek":1,"max_luck":59,"speed":5,"range":1,"slot":3,"fuel":35,"bullet":10,"carry":[2,3,3],"equip":[10,92], "na":0, "sg":5} //索敵未対応
+              ,{"id":"892","no":"492","name":"Drum","pron":"どらむ","type":"潜水母艦","hp":39,"max_hp":55,"armor":15,"fire":5,"torpedo":0,"aac":16,"ass":0,"evasion":24,"seek":0,"luck":20,"max_armor":37,"max_fire":15,"max_torpedo":0,"max_aac":36,"max_ass":0,"max_evasion":39,"max_seek":1,"max_luck":59,"speed":5,"range":1,"slot":3,"fuel":35,"bullet":10,"carry":[2,3,3],"equip":[10,92], "na":0, "sg":6} //索敵未対応
+              ,{"id":"732","no":"1732","name":"Drum改","pron":"どらむ","type":"潜水艦","hp":14,"max_hp":18,"armor":19,"fire":7,"torpedo":71,"aac":0,"ass":0,"evasion":0,"seek":0,"luck":13,"max_armor":19,"max_fire":29,"max_torpedo":71,"max_aac":40,"max_ass":49,"max_evasion":79,"max_seek":1,"max_luck":49,"speed":10,"range":1,"slot":2,"fuel":15,"bullet":20,"carry":[0,0],"equip":[2,44], "na":0, "sg":6} //索敵未対応
+              ,{"id":"972","no":"572","name":"伊41","pron":"い41","type":"潜水空母","hp":14,"max_hp":18,"armor":19,"fire":7,"torpedo":71,"aac":0,"ass":0,"evasion":0,"seek":0,"luck":13,"max_armor":19,"max_fire":29,"max_torpedo":71,"max_aac":40,"max_ass":49,"max_evasion":79,"max_seek":1,"max_luck":49,"speed":10,"range":1,"slot":2,"fuel":15,"bullet":20,"carry":[0,0],"equip":[2,44], "na":0, "sg":6} //索敵未対応
+              ,{"id":"977","no":"577","name":"伊41改","pron":"い41","type":"潜水空母","hp":14,"max_hp":18,"armor":19,"fire":7,"torpedo":71,"aac":0,"ass":0,"evasion":0,"seek":0,"luck":13,"max_armor":19,"max_fire":29,"max_torpedo":71,"max_aac":40,"max_ass":49,"max_evasion":79,"max_seek":1,"max_luck":49,"speed":10,"range":1,"slot":2,"fuel":15,"bullet":20,"carry":[0,0],"equip":[2,44], "na":0, "sg":6} //索敵未対応
              ];
