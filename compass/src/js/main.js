@@ -88,7 +88,7 @@ $(function() {
     const op_areas = ['4-5','5-3','5-5','6-3','7-3','7-4','7-5','57-7','58-1','58-2','58-3','58-4'];
     
     //1がキーの値はPhase
-    let active = {'4-5':{'A':'D','C':'F','I':'J'},'5-3':{'O':'K'}, '5-5':{'F':'D'}, '6-3':{'A':'B'},'7-3':{'1':'0'},'7-4':{'F':'H'},'7-5':{'F':'G','H':'I','O':'P'},'57-7':{'1':'1','A2':'A3','B2':'B3','C':'A3','J':'K'}, '57-7':{'1':'1','A2':'A3','B':'B1','B2':'B3','C':'A3','J':'K'},'58-1':{'1':'1','A':'D','I':'N1','F':'G'},'58-2':{'1':'1','B':'E'},'58-3':{'1':'1','M':'P'},'58-4':{'1':'1','B':'D'}};
+    let active = {'4-5':{'A':'D','C':'F','I':'J'},'5-3':{'O':'K'}, '5-5':{'F':'D'}, '6-3':{'A':'B'},'7-3':{'1':'0'},'7-4':{'F':'H'},'7-5':{'F':'G','H':'I','O':'P'},'57-7':{'1':'1','A2':'A3','B2':'B3','C':'A3','J':'K'}, '57-7':{'1':'1','A2':'A3','B':'B1','B2':'B3','C':'A3','J':'K'},'58-1':{'1':'1','A':'D','I':'N1','F':'G'},'58-2':{'1':'1','2':'1','B':'E'},'58-3':{'1':'1','2':'1','M':'P'},'58-4':{'1':'1','2':'1','B':'D'}};
     
     let area = null; //入力で切り替えるの
     let drew_area = null; //表示中の海域
@@ -8056,6 +8056,7 @@ $(function() {
                         break;
                     case 2: //@58-2
                         var phase = Number(active['58-2']['1']);
+                        var difficulty = Number(active['58-2']['2']);
                         var kanko_carrier = CVs + f_names.filter(v => v.includes('あきつ丸')).length;
                         switch(edge) {
                             case null:
@@ -8085,7 +8086,15 @@ $(function() {
                                             sum('1toA');
                                             sum('AtoB');
                                             return 'B';
-                                        } else if(Ss < 3) {
+                                        } else if(difficulty === 1 && Ss < 3) {
+                                            sum('1toA');
+                                            sum('AtoB');
+                                            return 'B';
+                                        } else if(difficulty === 2 && Ss < 2) {
+                                            sum('1toA');
+                                            sum('AtoB');
+                                            return 'B';
+                                        } else if(difficulty > 2 && Ss === 0) {
                                             sum('1toA');
                                             sum('AtoB');
                                             return 'B';
@@ -8264,7 +8273,19 @@ $(function() {
                                 }
                                 break;
                             case 'V':
-                                if(Ss > 3) {
+                                if(difficulty === 1 && Ss > 3) {
+                                    sum('VtoX');
+                                    sum('XtoY');
+                                    return null;
+                                } else if(difficulty === 2 && Ss > 2) {
+                                    sum('VtoX');
+                                    sum('XtoY');
+                                    return null;
+                                } else if(difficulty === 3 && Ss > 1) {
+                                    sum('VtoX');
+                                    sum('XtoY');
+                                    return null;
+                                } else if(difficulty === 4) {
                                     sum('VtoX');
                                     sum('XtoY');
                                     return null;
@@ -8288,6 +8309,7 @@ $(function() {
                         break;
                     case 3: //@58-3
                         var phase = Number(active['58-3']['1']);
+                        var difficulty = Number(active['58-3']['2']);
                         var kanko_carrier = CVs + f_names.filter(v => v.includes('あきつ丸')).length;
                         switch(edge) {
                             case null:
@@ -8319,7 +8341,23 @@ $(function() {
                                             sum('3toI');
                                             return 'I';
                                         } else {
-                                            if(AS > 0 && Ss > 2) {
+                                            if(difficulty === 1 && AS > 0 && Ss > 2) {
+                                                sum('4toV');
+                                                sum('VtoW');
+                                                return 'W';
+                                            } if(difficulty === 2 && Ss > 2) {
+                                                sum('4toV');
+                                                sum('VtoW');
+                                                return 'W';
+                                            } if(difficulty === 3 && Ss > 1) {
+                                                sum('4toV');
+                                                sum('VtoW');
+                                                return 'W';
+                                            } if(difficulty === 4 && Ss > 0) {
+                                                sum('4toV');
+                                                sum('VtoW');
+                                                return 'W';
+                                            } if(difficulty === 4 && Ds > 2) {
                                                 sum('4toV');
                                                 sum('VtoW');
                                                 return 'W';
@@ -8472,10 +8510,13 @@ $(function() {
                                     sum('WtoX');
                                     sum('XtoY');
                                     return 'Y';
-                                } else if(AS + Ss > 4) {
+                                } else if(difficulty === 1 && AS + Ss > 4) {
                                     sum('WtoY');
                                     return 'Y';
-                                } else if(DD > 1) {
+                                } else if(difficulty === 1 && DD > 1) {
+                                    sum('WtoY');
+                                    return 'Y';
+                                } else if(difficulty > 1) {
                                     sum('WtoY');
                                     return 'Y';
                                 } else {
@@ -8527,6 +8568,7 @@ $(function() {
                         break;
                     case 4:
                         var phase = Number(active['58-4']['1']);
+                        var difficulty = Number(active['58-4']['2']);
                         switch(edge) {
                             case null:
                                 if(phase < 4) {
@@ -8744,9 +8786,12 @@ $(function() {
                                 } else if(CVs > 0) {
                                     sum('JtoF');
                                     return 'F';
-                                } else if(Ss > 3) {
+                                } else if(difficulty === 1 && Ss > 3) {
                                     sum('JtoJ1');
                                     return 'J1';
+                                } else if(difficulty !== 1 && Ss > 2) {
+                                    sum('JtoJ1');
+                                    return 'J1'; 
                                 } else {
                                     sum('JtoF');
                                     return 'F';
@@ -8921,6 +8966,7 @@ $(function() {
                 }
             }
             console.log('軌跡' + track);
+            console.log(countYamato());
             drawMap();
             rate = {};
         }
