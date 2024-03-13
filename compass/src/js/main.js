@@ -230,6 +230,7 @@ $(function() {
             return;
         }
         $('#type-select').css('display', 'block');
+        $('#type-select').text('艦隊種別');
         //空欄化
         $(this).val('');
         $(this).blur();

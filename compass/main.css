@@ -25,6 +25,7 @@ li {
     cursor: pointer;
     padding-left: 2px;
     display: block;
+    user-select: none;
 }
 .fleet-type:hover{
     background-color: rgb(0 0 0 / 8%);
