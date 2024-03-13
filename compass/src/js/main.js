@@ -189,11 +189,24 @@ $(function() {
             }
             if(count) {
                 c_ids.push(getIdsFromFleet(i));
+                console.log(c_ids);
                 c_names.push(getShipName(i));
                 c_types.push(getType(i));
                 c_searchs.push(calcSeek(i));
                 c_speeds.push(calcSpeed(i));
                 countUnits(i);
+            } else {
+                //第一・第二艦隊が空で第三艦隊だけあるみたいな場合
+                //空を入れてやる
+                c_ids.push([]);
+                c_names.push([]);
+                c_types.push([]);
+                c_searchs.push([]);
+                c_speeds.push([]);
+                c_drums.push(0);
+                c_radars.push(0);
+                c_crafts.push(0);
+                c_kanko.push(0);
             }
         }
         console.log(`c_lengths : ${c_lengths}`);
@@ -221,23 +234,34 @@ $(function() {
         $(this).val('');
         $(this).blur();
     });
+    //
+    $('#type-select').on('mouseover', function() {
+        console.log('発火');
+        $('#fleet-option-box').css('display', 'block');
+    });
+    $('#fleet-option-box').on('mouseleave', function() {
+        $('#fleet-option-box').css('display', 'none');
+    });
     //艦隊形式が選択されたら該当する計算データを変数反映して演算開始
-    $('#type-select').on('change', function() {
-        let type = $(this).val();
+    $('.fleet-type').on('click', function() {
+        $('#type-select').text($(this).text());
+        $('#fleet-option-box').css('display', 'none');
+        let type = $(this).data('type');
         setFleetInfo(type);
     });
     //セレクトの値を一つ前に戻す
     //読込がまずったときに
     function setBackSelect() {
-        let options = $('#type-select option');
+        console.log('setBackSelect');
+        let options = $('.fleet-type');
         if(selected_type) {
             for (let option of options) {
-                if(option.value === selected_type + '') { //文字列化してから比較
-                    option.selected = true;
+                if(option.dataset.type === selected_type + '') { //文字列化してから比較
+                    $('#type-select').text(option.textContent);
                 }
             }
         } else {
-            options[0].selected = true;
+            $('#type-select').text('艦隊種別');
         }
     }
     //計算結果から抜き出して変数セット

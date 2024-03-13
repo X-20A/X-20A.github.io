@@ -148,19 +148,20 @@
         <div id="container">
             <div id="input-container">
                 <div id="split">
-                    <span class="inputs" style="flex:1;display: flex">
-                        <span style="flex: 1">
+                    <span class="inputs" style="flex:1;display: flex;">
+                        <span style="flex: 1;position: relative;">
                             <span style="margin-left: 4px;">import<input type="text" class="input" id="fleet-import"></span>
-                            <select id="type-select">
-                                <option class="fleet-type" value="" selected>艦隊種別</option>
-                                <option class="fleet-type" value="1">第一艦隊</option>
-                                <option class="fleet-type" value="2">第二艦隊</option>
-                                <option class="fleet-type" value="3">第三艦隊</option>
-                                <option class="fleet-type" value="4">第四艦隊</option>
-                                <option class="fleet-type" value="5">空母機動部隊</option>
-                                <option class="fleet-type" value="6">水上打撃部隊</option>
-                                <option class="fleet-type" value="7">輸送護衛部隊</option>
-                            </select>
+                            <span id="type-select">艦隊種別</span>
+                            <div id="fleet-option-box">
+                                <span class="fleet-type" data-type="1">第一艦隊</span>
+                                <span class="fleet-type" data-type="2">第二艦隊</span>
+                                <span class="fleet-type" data-type="3">第三艦隊</span>
+                                <span class="fleet-type" data-type="4">第四艦隊</span>
+                                <span class="fleet-type" data-type="5">空母機動部隊</span>
+                                <span class="fleet-type" data-type="6">水上打撃部隊</span>
+                                <span class="fleet-type" data-type="7">輸送護衛部隊</span>
+                            </div>
+                            
                         </span>
                         <span style="flex: 1;">
                             <button type="text" class="input design-button" id="area-display">海域</button>
