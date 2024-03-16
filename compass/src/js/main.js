@@ -8715,19 +8715,28 @@ $(function() {
                                 break;
                             case 'D':
                                 if(BB > 0) {
+                                    if (isOnce) return 1;
                                     sum('DtoD2');
                                     return null;
                                 } else if(CL + CT > 2) {
+                                    if (isOnce) return 2;
                                     sum('DtoD1');
                                     return null;
                                 } else if(CVL > 0 && Ds > 3) {
+                                    if (isOnce) return 3;
                                     sum('DtoD1');
                                     return null;
                                 } else if(CVL === 0 && BBV === 0 && CL + CT > 1) {
+                                    if (isOnce) return 4;
                                     sum('DtoD1');
                                     return null;
                                 } else if(CVL === 0 && CL + CT > 1 && Ds > 3) {
+                                    if (isOnce) return 5;
                                     sum('DtoD1');
+                                    return null;
+                                } else {
+                                    if (isOnce) return 6;
+                                    sum('DtoD2');
                                     return null;
                                 }
                                 break;
