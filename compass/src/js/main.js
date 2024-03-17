@@ -81,7 +81,17 @@ $(function() {
     let c_crafts = [];
     let c_kanko = [];
     
-    let selected_type = null; //艦隊種別選択したやつをひかえる
+    /*
+        艦隊種別選択したやつ(数値)が入る
+        1:第一艦隊
+        2:第二艦隊
+        3:第三艦隊
+        4:第四艦隊
+        5:空母機動部隊
+        6:水上打撃部隊
+        7:輸送護衛部隊
+    */
+    let selected_type = null;
     
     //受け付ける海域
     const areas = ['1-1','1-2','1-3','1-4','1-5','1-6','2-1','2-2','2-3','2-4','2-5','3-1','3-2','3-3','3-4','3-5','4-1','4-2','4-3','4-4','4-5','5-1','5-2','5-3','5-4','5-5','6-1','6-2','6-3','6-4','6-5','7-1','7-2','7-3','7-3-1','7-4','7-5','57-7','58-1','58-2','58-3','58-4'];
@@ -229,15 +239,53 @@ $(function() {
             $(this).blur();
             return;
         }
+        //
+        let view = '艦隊種別';
+        console.log(`selected_type : ${selected_type}`);
+        if(selected_type) {
+            if(selected_type > 4) {
+                if(c_lengths[0] && c_lengths[1]) { //第一と第二に少なくとも1艦
+                    switch(selected_type) {
+                        case 5:
+                            view = '空母機動部隊';
+                            break;
+                        case 6:
+                            view = '水上打撃部隊';
+                            break;
+                        case 7:
+                            view = '輸送護衛部隊';
+                            break;
+                    }
+                } else {
+                    alert('第一艦隊もしくは第二艦隊が空?');
+                    setBackSelect();
+                }
+            } else {
+                switch(selected_type) {
+                    case 1:
+                        view = '第一艦隊';
+                        break;
+                    case 2:
+                        view = '第二艦隊';
+                        break;
+                    case 3:
+                        view = '第三艦隊';
+                        break;
+                    case 4:
+                        view = '第四艦隊';
+                        break; 
+                }
+            }
+            setFleetInfo(selected_type);
+        }
         $('#type-select').css('display', 'block');
-        $('#type-select').text('艦隊種別');
+        $('#type-select').text(view);
         //空欄化
         $(this).val('');
         $(this).blur();
     });
     //
     $('#type-select').on('mouseover', function() {
-        console.log('発火');
         $('#fleet-option-box').css('display', 'block');
     });
     $('#fleet-option-box').on('mouseleave', function() {
@@ -250,18 +298,6 @@ $(function() {
         let type = $(this).data('type');
         setFleetInfo(type);
     });
-    //空母機動部隊チェック
-    function isCTF() {
-        
-    }
-    //水上打撃部隊チェック
-    function isSTF() {
-        
-    }
-    //輸送護衛部隊チェック
-    function isTCF() {
-        
-    }
     //セレクトの値を一つ前に戻す
     //読込がまずったときに
     function setBackSelect() {
@@ -275,6 +311,7 @@ $(function() {
             }
         } else {
             $('#type-select').text('艦隊種別');
+            localStorage.removeItem('selected_type');
         }
     }
     //計算結果から抜き出して変数セット
@@ -338,6 +375,7 @@ $(function() {
                 console.log(`f_length : ${f_length}`);
                 if(!c_lengths[0] || !c_lengths[1]) {
                     alert('処理中断: 艦隊が空かも？');
+                    setBackSelect();
                     //空欄化
                     $('#fleet-import').val('');
                     $('#fleet-import').blur();
@@ -404,7 +442,8 @@ $(function() {
             //丸ごとlocalstorageへ
             localStorage.setItem('fleet', JSON.stringify(i_json));
             f_flag = true;
-            selected_type = f + 1;
+            selected_type = f + 1; //配列司偵の為に引いた分足しなおす
+            localStorage.setItem('selected_type', selected_type);
             //表示
             reloadImportDisplay();
             startSim();
@@ -8224,19 +8263,19 @@ $(function() {
                                 break;
                             case 'D':
                                 if(!isCom()) {
-                                    if (isOnce) return 1;
-                                    sum('DtoN');
-                                    return 'N';
-                                } else {
                                     if(f_search[3] >= 98) {
-                                        if (isOnce) return 2;
+                                        if (isOnce) return 1;
                                         sum('DtoD2');
                                         return null;
                                     } else {
-                                        if (isOnce) return 3;
+                                        if (isOnce) return 2;
                                         sum('DtoD1');
                                         return null;
                                     }
+                                } else {
+                                    if (isOnce) return 3;
+                                    sum('DtoN');
+                                    return 'N';
                                 }
                                 break;
                             case 'E':
@@ -9657,6 +9696,7 @@ $(function() {
                                 console.log('終わり');
                                 return;
                             }
+                            count++;
                         }
                         let matchNum = branch(world, map, node, true);
                         if(!matchNum && !isNaN(node)) {
@@ -9723,6 +9763,7 @@ $(function() {
     //以下ストレージ関連
     function setup() {
         var a = localStorage.getItem('active');
+        var s = localStorage.getItem('selected_type');
         var f = localStorage.getItem('fleet');
         //var ks = localStorage.getItem('ks');
         //能動分岐セット
@@ -9760,6 +9801,9 @@ $(function() {
         if(ar) {
             $('#area-display').text(`海域 : ${ar}`);
             setArea(ar);
+        }
+        if(s) {
+            selected_type = Number(s);
         }
         //艦隊セット
         if(f) {

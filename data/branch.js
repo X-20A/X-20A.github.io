@@ -484,7 +484,7 @@ var branch_info = {
         "H":"$bl/*1から来た場合、*/$e・分岐点係数4の索敵値80未満はK$lb$bl$e・低速艦隊はJ$lb$bl$e・戦艦級2以上はJ$lb$bl$e・軽空母+あきつ丸2以上はJ$lb$bl$e・それ以外はI$lb",
         "I":"$blI-D3が未開通の場合、帰還$lb$bl$e潜水系1以上はU$lb$bl$eそれ以外はD3$lb",
         "J":"$bl通常艦隊&遊撃部隊はP$lb$bl$e低速艦隊はN$lb$bl$e戦艦級3以上はN$lb$bl$e空母系3以上はN$lb$bl$e軽巡2以上 かつ$e駆逐5以上はP$lb$bl$eそれ以外はN$lb",
-        "L":"$bl空母機動部隊はM$e水上打撃部隊はD$lb",
+        "L":"$bl空母機動部隊はM$lb$bl$e水上打撃部隊はD$lb",
         "N":"$bl空母+装甲空母1以上はO$lb$bl$e軽空母3以上はO$lb$bl$e高速艦隊はP$lb$bl$e軽巡2以上 かつ$e駆逐3以上はP$lb$bl$eそれ以外はO$lb",
         "P":"$bl分岐点係数2の索敵値62以上はR$lb$bl$eそれ以外はQ$lb",
         "T":"$bl重巡系2以上はC$lb$bl$e軽巡2以上はC$lb$bl$eそれ以外はU$lb$bl",
