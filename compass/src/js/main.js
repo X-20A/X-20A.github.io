@@ -9324,16 +9324,21 @@ $(function() {
             var map = Number(elem[1]);
             var edge = null;
             //無限ループ防止
+            let max_c = 10000; //何回回すか
+            let max_s = 15000;
+            if(area.includes('58')) {
+                max_c = 1; //イベは1回だけ
+            }
             var safety = 0;
             var count = 0;
-            while(count < 10000) {
+            while(count < max_c) {
                 edge = branch(world, map, edge, false);
                 if(edge === null) {
                     count++;
                     track = [];
                 }
                 safety++;
-                if(safety > 150000) {
+                if(safety > max_s) {
                     alert('無限ループ防止 バグった');
                     console.log('無限ループ');
                     console.log('以下諸元');
@@ -9355,13 +9360,13 @@ $(function() {
             }
             console.log('軌跡' + track);
             console.log(countYamato());
-            drawMap();
+            drawMap(max_c);
             rate = {};
         }
     }
 
     //マップ描画
-    function drawMap() {
+    function drawMap(max_c) {
         removePopupInfo();
         let map = map_info; //map.jsより
         var spots = map['spots'][area];
@@ -9386,7 +9391,7 @@ $(function() {
             if (routes.hasOwnProperty(key)) {
                 const [source, target] = routes[key];
                 //通っていないルートはrateに無いので0に置き換え
-                var ratio = ((rate[source + 'to' + target] / 10000) * 100).toFixed(1);
+                var ratio = ((rate[source + 'to' + target] / max_c) * 100).toFixed(1);
                 ratio = isNaN(ratio) ? 0 : parseFloat(ratio);
                 elements.edges.push({
                     data: {
