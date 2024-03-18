@@ -9434,7 +9434,7 @@ $(function() {
             if (routes.hasOwnProperty(key)) {
                 const [source, target] = routes[key];
                 //通っていないルートはrateに無いので0に置き換え
-                var ratio = ((rate[source + 'to' + target] / max_c) * 100).toFixed(1);
+                var ratio = ((rate[source + 'to' + target] / 10000) * 100).toFixed(1);
                 ratio = isNaN(ratio) ? 0 : parseFloat(ratio);
                 elements.edges.push({
                     data: {
