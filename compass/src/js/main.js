@@ -9324,6 +9324,48 @@ $(function() {
             var map = Number(elem[1]);
             var edge = null;
             //無限ループ防止
+            var safety = 0;
+            var count = 0;
+            while(count < 10000) {
+                edge = branch(world, map, edge, false);
+                if(edge === null) {
+                    count++;
+                    track = [];
+                }
+                safety++;
+                if(safety > 150000) {
+                    alert('無限ループ防止 バグった');
+                    console.log('無限ループ');
+                    console.log('以下諸元');
+                    console.log(`海域 : ${world}-${map}`);
+                    console.log('直後艦種');
+                    console.log(com);
+                    console.log('軌跡' + track);
+                    console.log(`safety : ${safety}`);
+                    console.log(`count : ${count}`);
+                    console.log(`ドラム缶 : ${f_drum}`);
+                    console.log(`電探 : ${f_radar}`);
+                    console.log(`大発系 : ${f_craft}`);
+                    console.log(`寒甲 : ${f_kanko}`);
+                    console.log(`speed : ${speed}`);
+                    console.log(rate);
+                    console.log('終わり');
+                    return;
+                }
+            }
+            console.log('軌跡' + track);
+            console.log(countYamato());
+            drawMap();
+            rate = {};
+        }
+        /*
+        if(a_flag && f_flag) {
+            area = localStorage.getItem('area');
+            var elem = area.split('-');
+            var world = Number(elem[0]);
+            var map = Number(elem[1]);
+            var edge = null;
+            //無限ループ防止
             let max_c = 10000; //何回回すか
             let max_s = 15000;
             if(area.includes('58')) {
@@ -9363,6 +9405,7 @@ $(function() {
             drawMap(max_c);
             rate = {};
         }
+        */
     }
 
     //マップ描画
