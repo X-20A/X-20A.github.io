@@ -180,13 +180,14 @@ $(function() {
         }
         /*
             処理の流れ
-            貼り付けられた時点で第四艦隊まで読み込んで計算まで済ます
-            一艦隊しか情報が無ければそのまま演算開始
+            1.貼り付けられた時点で第四艦隊まで読み込んで計算まで済ます
+            2.一艦隊しか情報が無ければそのまま演算開始
+            3.key:tに値があればその形式で演算開始
             それ以外は艦隊形式の選択を待つ
         */
         //cシリーズ初期化
         inCs();
-        //艦隊の構成艦数
+        // 1
         let zeroCount = 0;
         let tar = null;
         for(let i = 1;i < 5;i++) {
@@ -225,7 +226,7 @@ $(function() {
         console.log(`c_speeds : ${c_speeds}`);
         console.log(`c_drums : ${c_drums}, c_radars : ${c_radars}, c_crafts : ${c_crafts}, c_kanko : ${c_kanko}`);
         if(zeroCount === 3) {
-            //情報の有る艦隊が一つだけの場合はそのまま読み込み
+            // 2.情報の有る艦隊が一つだけの場合はそのまま読み込み
             setFleetInfo(tar);
             $('#type-select').css('display', 'none');
             //空欄化
@@ -239,7 +240,23 @@ $(function() {
             $(this).blur();
             return;
         }
-        //
+        // 3
+        let t = null;
+        if(i_json['f1']['t']) {
+            t = Number(i_json['f1']['t']);
+            switch(t) {
+                case 1:
+                    selected_type = 5;
+                    break;
+                case 2:
+                    selected_type = 6;
+                    break;
+                case 3:
+                    selected_type = 7;
+                    break;
+            }
+        }
+        console.log(`t ${t}`);
         let view = '艦隊種別';
         console.log(`selected_type : ${selected_type}`);
         if(selected_type) {
@@ -9319,60 +9336,18 @@ $(function() {
     function startSim() {
         if(a_flag && f_flag) {
             area = localStorage.getItem('area');
-            var elem = area.split('-');
-            var world = Number(elem[0]);
-            var map = Number(elem[1]);
-            var edge = null;
-            //無限ループ防止
-            var safety = 0;
-            var count = 0;
-            while(count < 10000) {
-                edge = branch(world, map, edge, false);
-                if(edge === null) {
-                    count++;
-                    track = [];
-                }
-                safety++;
-                if(safety > 150000) {
-                    alert('無限ループ防止 バグった');
-                    console.log('無限ループ');
-                    console.log('以下諸元');
-                    console.log(`海域 : ${world}-${map}`);
-                    console.log('直後艦種');
-                    console.log(com);
-                    console.log('軌跡' + track);
-                    console.log(`safety : ${safety}`);
-                    console.log(`count : ${count}`);
-                    console.log(`ドラム缶 : ${f_drum}`);
-                    console.log(`電探 : ${f_radar}`);
-                    console.log(`大発系 : ${f_craft}`);
-                    console.log(`寒甲 : ${f_kanko}`);
-                    console.log(`speed : ${speed}`);
-                    console.log(rate);
-                    console.log('終わり');
-                    return;
-                }
-            }
-            console.log('軌跡' + track);
-            console.log(countYamato());
-            drawMap();
-            rate = {};
-        }
-        /*
-        if(a_flag && f_flag) {
-            area = localStorage.getItem('area');
-            var elem = area.split('-');
-            var world = Number(elem[0]);
-            var map = Number(elem[1]);
-            var edge = null;
+            let elem = area.split('-');
+            let world = Number(elem[0]);
+            let map = Number(elem[1]);
+            let edge = null;
             //無限ループ防止
             let max_c = 10000; //何回回すか
-            let max_s = 15000;
+            let max_s = 150000;
             if(area.includes('58')) {
                 max_c = 1; //イベは1回だけ
             }
-            var safety = 0;
-            var count = 0;
+            let safety = 0;
+            let count = 0;
             while(count < max_c) {
                 edge = branch(world, map, edge, false);
                 if(edge === null) {
@@ -9401,11 +9376,11 @@ $(function() {
                 }
             }
             console.log('軌跡' + track);
+            console.log(rate);
             console.log(countYamato());
             drawMap(max_c);
             rate = {};
         }
-        */
     }
 
     //マップ描画
@@ -9434,7 +9409,7 @@ $(function() {
             if (routes.hasOwnProperty(key)) {
                 const [source, target] = routes[key];
                 //通っていないルートはrateに無いので0に置き換え
-                var ratio = ((rate[source + 'to' + target] / 10000) * 100).toFixed(1);
+                var ratio = ((rate[source + 'to' + target] / max_c) * 100).toFixed(1);
                 ratio = isNaN(ratio) ? 0 : parseFloat(ratio);
                 elements.edges.push({
                     data: {
