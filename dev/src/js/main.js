@@ -10145,6 +10145,6 @@ $(function() {
     }
     //エラーログ送信
     async function postErrorLog() {
-        await addDoc(collection(db, "cities"), {name: '東京'});
+        await addDoc(collection(db, "cities"), {name: '大阪'});
     }
 });
