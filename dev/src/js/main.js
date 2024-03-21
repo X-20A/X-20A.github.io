@@ -4,6 +4,8 @@ import 'jquery-ui/ui/widgets/resizable';
 import Decimal from 'decimal.js';
 import cytoscape from 'cytoscape';
 import { generate } from "gkcoi";
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, addDoc } from "firebase/firestore";
 $(function() {
     /*
     s_dataはship.js
@@ -114,6 +116,19 @@ $(function() {
     let track = []; //最後の軌跡
     
     let cy = null;
+    
+    //firebase(エラーログ)関連
+    const firebaseConfig = {
+        apiKey: "AIzaSyDyh01YFd5B_HmBHHKyT9FFj2MVLIqHWkY",
+        authDomain: "compass-sim-error-log.firebaseapp.com",
+        projectId: "compass-sim-error-log",
+        storageBucket: "compass-sim-error-log.appspot.com",
+        messagingSenderId: "340060275816",
+        appId: "1:340060275816:web:7843f0d752e8387787a7dd",
+        measurementId: "G-GR0L54BP2M"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
     //海域が入力されたら適正かチェックしてフラグ切替
     $('.areas').on('click', function() {
@@ -9372,6 +9387,7 @@ $(function() {
                     console.log(`speed : ${speed}`);
                     console.log(rate);
                     console.log('終わり');
+                    postErrorLog();
                     return;
                 }
             }
@@ -10126,5 +10142,12 @@ $(function() {
                 break;
         }
         return res;
+    }
+    //エラーログ送信
+    async function postErrorLog() {
+        await addDoc(collection(db, "logs"),{
+            area: area,
+            deck: JSON.stringify(i_json)
+        });
     }
 });
