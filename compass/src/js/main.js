@@ -9387,7 +9387,7 @@ $(function() {
                     console.log(`speed : ${speed}`);
                     console.log(rate);
                     console.log('終わり');
-                    postErrorLog();
+                    //postErrorLog();
                     return;
                 }
             }
