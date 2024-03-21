@@ -10145,8 +10145,7 @@ $(function() {
     }
     //エラーログ送信
     async function postErrorLog() {
-        await addDoc(collection(db, "logs"),{
-            area: area,
+        await addDoc(collection(db, area),{
             deck: JSON.stringify(i_json)
         });
     }
