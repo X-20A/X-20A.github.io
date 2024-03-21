@@ -1,8 +1,11 @@
 import $ from 'jquery';
 import 'jquery-ui/ui/widgets/draggable';
+import 'jquery-ui/ui/widgets/resizable';
 import Decimal from 'decimal.js';
 import cytoscape from 'cytoscape';
 import { generate } from "gkcoi";
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, addDoc } from "firebase/firestore";
 $(function() {
     /*
     s_dataはship.js
@@ -52,8 +55,9 @@ $(function() {
     let f_search = null; //索敵値
     //ドラム缶、大発系、電探搭載艦数
     let f_drum = 0;
-    let f_craft = 0;
     let f_radar = 0;
+    let f_craft = 0;
+    let f_kanko = 0;
     /*
         読込モード
         1:第一艦隊
@@ -77,15 +81,26 @@ $(function() {
     let c_drums = [];
     let c_radars = [];
     let c_crafts = [];
+    let c_kanko = [];
     
-    let selected_type = null; //艦隊種別選択したやつをひかえる
+    /*
+        艦隊種別選択したやつ(数値)が入る
+        1:第一艦隊
+        2:第二艦隊
+        3:第三艦隊
+        4:第四艦隊
+        5:空母機動部隊
+        6:水上打撃部隊
+        7:輸送護衛部隊
+    */
+    let selected_type = null;
     
     //受け付ける海域
-    const areas = ['1-1','1-2','1-3','1-4','1-5','1-6','2-1','2-2','2-3','2-4','2-5','3-1','3-2','3-3','3-4','3-5','4-1','4-2','4-3','4-4','4-5','5-1','5-2','5-3','5-4','5-5','6-1','6-2','6-3','6-4','6-5','7-1','7-2','7-3','7-3-1','7-4','7-5','57-7'];
-    const op_areas = ['4-5','5-3','5-5','6-3','7-3','7-4','7-5','57-7'];
+    const areas = ['1-1','1-2','1-3','1-4','1-5','1-6','2-1','2-2','2-3','2-4','2-5','3-1','3-2','3-3','3-4','3-5','4-1','4-2','4-3','4-4','4-5','5-1','5-2','5-3','5-4','5-5','6-1','6-2','6-3','6-4','6-5','7-1','7-2','7-3','7-3-1','7-4','7-5','57-7','58-1','58-2','58-3','58-4'];
+    const op_areas = ['4-5','5-3','5-5','6-3','7-3','7-4','7-5','57-7','58-1','58-2','58-3','58-4'];
     
     //1がキーの値はPhase
-    let active = {'4-5':{'A':'D','C':'F','I':'J'},'5-3':{'O':'K'}, '5-5':{'F':'D'}, '6-3':{'A':'B'},'7-3':{'1':'0'},'7-4':{'F':'H'},'7-5':{'F':'G','H':'I','O':'P'},'57-7':{'1':'1','A2':'A3','B2':'B3','C':'A3','J':'K'}, '57-7':{'1':'1','A2':'A3','B':'B1','B2':'B3','C':'A3','J':'K'}};
+    let active = {'4-5':{'A':'D','C':'F','I':'J'},'5-3':{'O':'K'}, '5-5':{'F':'D'}, '6-3':{'A':'B'},'7-3':{'1':'0'},'7-4':{'F':'H'},'7-5':{'F':'G','H':'I','O':'P'},'57-7':{'1':'1','A2':'A3','B2':'B3','C':'A3','J':'K'}, '57-7':{'1':'1','A2':'A3','B':'B1','B2':'B3','C':'A3','J':'K'},'58-1':{'1':'1','A':'D','I':'N1','F':'G'},'58-2':{'1':'1','2':'1','B':'E'},'58-3':{'1':'1','2':'1','M':'P'},'58-4':{'1':'1','2':'1','B':'D'}};
     
     let area = null; //入力で切り替えるの
     let drew_area = null; //表示中の海域
@@ -101,6 +116,19 @@ $(function() {
     let track = []; //最後の軌跡
     
     let cy = null;
+    
+    //firebase(エラーログ)関連
+    const firebaseConfig = {
+        apiKey: "AIzaSyDyh01YFd5B_HmBHHKyT9FFj2MVLIqHWkY",
+        authDomain: "compass-sim-error-log.firebaseapp.com",
+        projectId: "compass-sim-error-log",
+        storageBucket: "compass-sim-error-log.appspot.com",
+        messagingSenderId: "340060275816",
+        appId: "1:340060275816:web:7843f0d752e8387787a7dd",
+        measurementId: "G-GR0L54BP2M"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
     //海域が入力されたら適正かチェックしてフラグ切替
     $('.areas').on('click', function() {
@@ -167,13 +195,14 @@ $(function() {
         }
         /*
             処理の流れ
-            貼り付けられた時点で第四艦隊まで読み込んで計算まで済ます
-            一艦隊しか情報が無ければそのまま演算開始
+            1.貼り付けられた時点で第四艦隊まで読み込んで計算まで済ます
+            2.一艦隊しか情報が無ければそのまま演算開始
+            3.key:tに値があればその形式で演算開始
             それ以外は艦隊形式の選択を待つ
         */
         //cシリーズ初期化
         inCs();
-        //艦隊の構成艦数
+        // 1
         let zeroCount = 0;
         let tar = null;
         for(let i = 1;i < 5;i++) {
@@ -186,20 +215,33 @@ $(function() {
             }
             if(count) {
                 c_ids.push(getIdsFromFleet(i));
+                console.log(c_ids);
                 c_names.push(getShipName(i));
                 c_types.push(getType(i));
                 c_searchs.push(calcSeek(i));
                 c_speeds.push(calcSpeed(i));
                 countUnits(i);
+            } else {
+                //第一・第二艦隊が空で第三艦隊だけあるみたいな場合
+                //空を入れてやる
+                c_ids.push([]);
+                c_names.push([]);
+                c_types.push([]);
+                c_searchs.push([]);
+                c_speeds.push([]);
+                c_drums.push(0);
+                c_radars.push(0);
+                c_crafts.push(0);
+                c_kanko.push(0);
             }
         }
         console.log(`c_lengths : ${c_lengths}`);
         console.log(`c_ids : ${c_ids}`);
         console.log(`c_searchs : ${c_searchs}`);
         console.log(`c_speeds : ${c_speeds}`);
-        console.log(`c_drums : ${c_drums}, c_radars : ${c_radars}, c_crafts : ${c_crafts}`);
+        console.log(`c_drums : ${c_drums}, c_radars : ${c_radars}, c_crafts : ${c_crafts}, c_kanko : ${c_kanko}`);
         if(zeroCount === 3) {
-            //情報の有る艦隊が一つだけの場合はそのまま読み込み
+            // 2.情報の有る艦隊が一つだけの場合はそのまま読み込み
             setFleetInfo(tar);
             $('#type-select').css('display', 'none');
             //空欄化
@@ -213,28 +255,95 @@ $(function() {
             $(this).blur();
             return;
         }
+        // 3
+        let t = null;
+        if(i_json['f1']['t']) {
+            t = Number(i_json['f1']['t']);
+            switch(t) {
+                case 1:
+                    selected_type = 5;
+                    break;
+                case 2:
+                    selected_type = 6;
+                    break;
+                case 3:
+                    selected_type = 7;
+                    break;
+            }
+        }
+        console.log(`t ${t}`);
+        let view = '艦隊種別';
+        console.log(`selected_type : ${selected_type}`);
+        if(selected_type) {
+            if(selected_type > 4) {
+                if(c_lengths[0] && c_lengths[1]) { //第一と第二に少なくとも1艦
+                    switch(selected_type) {
+                        case 5:
+                            view = '空母機動部隊';
+                            break;
+                        case 6:
+                            view = '水上打撃部隊';
+                            break;
+                        case 7:
+                            view = '輸送護衛部隊';
+                            break;
+                    }
+                } else {
+                    alert('第一艦隊もしくは第二艦隊が空?');
+                    setBackSelect();
+                }
+            } else {
+                switch(selected_type) {
+                    case 1:
+                        view = '第一艦隊';
+                        break;
+                    case 2:
+                        view = '第二艦隊';
+                        break;
+                    case 3:
+                        view = '第三艦隊';
+                        break;
+                    case 4:
+                        view = '第四艦隊';
+                        break; 
+                }
+            }
+            setFleetInfo(selected_type);
+        }
         $('#type-select').css('display', 'block');
+        $('#type-select').text(view);
         //空欄化
         $(this).val('');
         $(this).blur();
     });
+    //
+    $('#type-select').on('mouseover', function() {
+        $('#fleet-option-box').css('display', 'block');
+    });
+    $('#fleet-option-box').on('mouseleave', function() {
+        $('#fleet-option-box').css('display', 'none');
+    });
     //艦隊形式が選択されたら該当する計算データを変数反映して演算開始
-    $('#type-select').on('change', function() {
-        let type = $(this).val();
+    $('.fleet-type').on('click', function() {
+        $('#type-select').text($(this).text());
+        $('#fleet-option-box').css('display', 'none');
+        let type = $(this).data('type');
         setFleetInfo(type);
     });
     //セレクトの値を一つ前に戻す
     //読込がまずったときに
     function setBackSelect() {
-        let options = $('#type-select option');
+        console.log('setBackSelect');
+        let options = $('.fleet-type');
         if(selected_type) {
             for (let option of options) {
-                if(option.value === selected_type + '') { //文字列化してから比較
-                    option.selected = true;
+                if(option.dataset.type === selected_type + '') { //文字列化してから比較
+                    $('#type-select').text(option.textContent);
                 }
             }
         } else {
-            options[0].selected = true;
+            $('#type-select').text('艦隊種別');
+            localStorage.removeItem('selected_type');
         }
     }
     //計算結果から抜き出して変数セット
@@ -279,9 +388,11 @@ $(function() {
                 f_drum = c_drums[f];
                 f_radar = c_radars[f];
                 f_craft = c_crafts[f];
+                f_kanko = c_kanko[f];
                 console.log(`ドラム缶 : ${f_drum}`);
                 console.log(`電探 : ${f_radar}`);
                 console.log(`大発系 : ${f_craft}`);
+                console.log(`寒甲 : ${f_kanko}`);
                 if(f_length === 7) {
                     f_united = '遊撃部隊';
                 } else {
@@ -296,6 +407,7 @@ $(function() {
                 console.log(`f_length : ${f_length}`);
                 if(!c_lengths[0] || !c_lengths[1]) {
                     alert('処理中断: 艦隊が空かも？');
+                    setBackSelect();
                     //空欄化
                     $('#fleet-import').val('');
                     $('#fleet-import').blur();
@@ -334,6 +446,7 @@ $(function() {
                 f_drum = c_drums[0] + c_drums[1];
                 f_radar = c_radars[0] + c_radars[1];
                 f_craft = c_crafts[0] + c_crafts[1];
+                f_kanko = c_kanko[0] + c_kanko[1];
                 console.log(`ドラム缶 : ${f_drum}`);
                 console.log(`電探 : ${f_radar}`);
                 console.log(`大発系 : ${f_craft}`);
@@ -361,7 +474,8 @@ $(function() {
             //丸ごとlocalstorageへ
             localStorage.setItem('fleet', JSON.stringify(i_json));
             f_flag = true;
-            selected_type = f + 1;
+            selected_type = f + 1; //配列司偵の為に引いた分足しなおす
+            localStorage.setItem('selected_type', selected_type);
             //表示
             reloadImportDisplay();
             startSim();
@@ -384,20 +498,23 @@ $(function() {
         c_drums = [];
         c_radars = [];
         c_crafts = [];
+        c_kanko = [];
     }
-    //ドラム缶、大発、電探搭載艦数カウント
+    //ドラム缶、大発、電探搭載艦数, 寒甲カウント
     function countUnits(num) {
         //先ず初期化
         let drum = 0;
         let radar = 0;
         let craft = 0;
+        let kanko = 0;
         for(let i = 0;i < c_lengths[num - 1];i++) {
-            let e_ids = getEqIds(c_ids[num - 1][i]);
+            let e_ids = getEqIds(c_ids[num - 1][i], num);
             //一隻につき1回だけカウント
             let d = true;
             let r = true;
             let c = true;
-            for(e_id of e_ids) {
+            let k = true;
+            for(let e_id of e_ids) {
                 if(e_id === 75) { //ドラム缶
                     if(d) {
                         drum++;
@@ -421,12 +538,18 @@ $(function() {
                             c = false;
                         }
                     }
+                } else if(e_id === 402) { //寒甲
+                    if(k) {
+                        kanko++;
+                        k = false;
+                    }
                 }
             }
         }
         c_drums.push(drum);
         c_radars.push(radar);
         c_crafts.push(craft);
+        c_kanko.push(kanko);
     }
     //typeの先頭3つを連結してidとして返す(数値型)
     function getEqType(e_id) {
@@ -933,6 +1056,16 @@ $(function() {
                         }
                     }
                     break;
+                case 522: //零式小型水上機
+                    if(type === '潜水艦' || type === '潜水空母') {
+                        res += 3;
+                    }
+                    break;
+                case 523: //零式小型水上機(熟練)
+                    if(type === '潜水艦' || type === '潜水空母') {
+                        res += 4;
+                    }
+                    break;
             }
         }
         return res;
@@ -1234,7 +1367,7 @@ $(function() {
         var yamatos = ['大和', '武蔵'];
         var count = 0;
         for (const element of f_names) {
-            for (const name of taiyos) {
+            for (const name of yamatos) {
                 if (element.startsWith(name)) {
                     count++;
                     break; // 一致した場合、内側のループを抜けます
@@ -1243,12 +1376,25 @@ $(function() {
         }
         return count;
     }
+    //艦隊が連合艦隊であるか
+    function isCom() {
+        if(f_united === '空母機動部隊' || f_united === '水上打撃部隊' || f_united === '輸送護衛部隊') {
+            return true;
+        } else {
+            return false;
+        }
+    }
     //ルートカウント
     function sum(route) {
         //無ければ追加、あれば加算
         rate[route] ? rate[route] += 1:rate[route] = 1;
         //追跡
-        track.push(route.split('to')[1]);
+        if(track.length) {
+            track.push(route.split('to')[1]);
+        } else {
+            track.push(route.split('to')[0]);
+            track.push(route.split('to')[1]);
+        }
     }
     //百分率で指定 小数第一位まで可
     //指定した確率でtrue
@@ -1265,7 +1411,7 @@ $(function() {
     //再帰にするとスタックする
     //纏められそうなのもあるが実装優先で愚直に書く
     //但し条件から漏れると即無限ループなので必ずelse等で拾うこと
-    function branch(world, map, edge) {
+    function branch(world, map, edge, isOnce) {
         const BB = com['BB']; //戦艦
         const BBV = com['BBV'];//航空戦艦&改装航空戦艦
         const CV = com['CV']; //正規空母
@@ -1296,7 +1442,7 @@ $(function() {
         const BBCVs = BBs + CVs; //戦艦級+空母系
         const CAs = CA + CAV; //重巡級
         const Ds = DD + DE; //駆逐艦 + 海防艦
-        const Ss = SS + SSV //潜水艦 + 潜水空母
+        const Ss = SS + SSV; //潜水艦 + 潜水空母
         switch(world) {
             case 1:
                 switch(map) {
@@ -7803,6 +7949,1401 @@ $(function() {
                         break;
                 }
                 break;
+            case 58:
+                switch(map) {
+                    case 1: //@58-1
+                        var phase = Number(active['58-1']['1']);
+                        var kanko_carrier = CVs + f_names.filter(v => v.includes('あきつ丸')).length;
+                        switch(edge) {
+                            case null:
+                                if(kanko_carrier === 0 && Ds > 3) {
+                                    if (isOnce) return 1;
+                                    return '2';
+                                } else if(kanko_carrier > f_kanko) {
+                                    if (isOnce) return 2;
+                                    return '2';
+                                } else if(AO + LHA > 0 && Ds > 2) {
+                                    if (isOnce) return 3;
+                                    return '2';
+                                } else if(AV > 1 && Ds > 2) {
+                                    if (isOnce) return 4;
+                                    return '2';
+                                } else if(phase === 3 && kanko_carrier > 0) {
+                                    if (isOnce) return 5;
+                                    sum('3toV');
+                                    sum('VtoW');
+                                    return 'W';
+                                } else if(kanko_carrier > 2) {
+                                    if (isOnce) return 6;
+                                    sum('1toA');
+                                    return 'A';
+                                } else if(BBs > 0) {
+                                    if (isOnce) return 7;
+                                    sum('1toA');
+                                    return 'A';
+                                } else if(Ss > 0 && AS === 0) {
+                                    if (isOnce) return 8;
+                                    return '2';
+                                } else if(AS > 1) {
+                                    if (isOnce) return 9;
+                                    return '2';
+                                } else if(phase === 3 && CA > 1 && Ds > 1 && CL + CT > 0) {
+                                    if (isOnce) return 10;
+                                    sum('3toV');
+                                    sum('VtoW');
+                                    return 'W';
+                                } else if(kanko_carrier > 0 && Ds > 2) {
+                                    if (isOnce) return 11;
+                                    return '2';
+                                } else {
+                                    if (isOnce) return 12;
+                                    sum('1toA');
+                                    return 'A';
+                                }
+                                break;
+                            case '2':
+                                if(AV > 0) {
+                                    if (isOnce) return 1;
+                                    sum('2toI');
+                                    return 'I';
+                                } else if(isFaster()) {
+                                    if (isOnce) return 2;
+                                    sum('2toN');
+                                    sum('NtoO');
+                                    sum('OtoP');
+                                    sum('PtoQ');
+                                    return null;
+                                } else if(AO + LHA === 2 && AO + LHA + Ds === 6) {
+                                    if (isOnce) return 3;
+                                    sum('2toN');
+                                    sum('NtoO');
+                                    sum('OtoP');
+                                    sum('PtoQ');
+                                    return null;
+                                } else if(AO + LHA === 1 && AO + LHA + Ds === f_length && f_length < 6) {
+                                    if (isOnce) return 4;
+                                    sum('2toN');
+                                    sum('NtoO');
+                                    sum('OtoP');
+                                    sum('PtoQ');
+                                    return null;
+                                } else {
+                                    if (isOnce) return 5;
+                                    sum('2toI');
+                                    return 'I';
+                                }
+                                break;
+                            case 'B':
+                                if(phase === 2) {
+                                    if (isOnce) return 1;
+                                    sum('BtoC');
+                                    sum('CtoR');
+                                    return 'R';
+                                } else if(CL > 0 && DD > 2 && speed === '高速艦隊') {
+                                    if (isOnce) return 2;
+                                    sum('BtoW');
+                                    return 'W';
+                                } else {
+                                    if (isOnce) return 3;
+                                    sum('BtoC');
+                                    sum('CtoR');
+                                    return 'R';
+                                }
+                                break;
+                            case 'D':
+                                if(track.includes('A')) {
+                                    if (isOnce) return 1;
+                                    sum('DtoE');
+                                    sum('EtoF');
+                                    return 'F';
+                                } else if(track.includes('I')) {
+                                    if(CVs > 2) {
+                                        if (isOnce) return 2;
+                                        sum('DtoJ');
+                                        sum('JtoK');
+                                        return 'K';
+                                    } else if(DD < 2) {
+                                        if (isOnce) return 3;
+                                        sum('DtoJ');
+                                        sum('JtoK');
+                                        return 'K';
+                                    } else if(speed === '低速艦隊') {
+                                        if (isOnce) return 4;
+                                        sum('DtoJ');
+                                        sum('JtoK');
+                                        return 'K';
+                                    } else {
+                                        if (isOnce) return 5;
+                                        sum('DtoK');
+                                        return 'K';
+                                    }
+                                }
+                                break;
+                            case 'K':
+                                if(f_search[3] >= 68) {
+                                    if (isOnce) return 1;
+                                    sum('KtoM');
+                                    return null;
+                                } else {
+                                    if (isOnce) return 2;
+                                    sum('KtoL');
+                                    return null;
+                                }
+                                break;
+                            case 'R':
+                                if(BBs < 3 && CL + AV > 0 && DD > 1 && speed === '高速艦隊') {
+                                    if (isOnce) return 1;
+                                    sum('RtoR2');
+                                    return 'R2';
+                                } else {
+                                    if (isOnce) return 2;
+                                    sum('RtoR1');
+                                    sum('R1toR2');
+                                    return 'R2';
+                                }
+                                break;
+                            case 'R2':
+                                if(DD > 4) {
+                                    if (isOnce) return 1;
+                                    sum('R2toT');
+                                    sum('TtoX');
+                                    return null;
+                                } else if(CL > 0 && DD > 3 && speed === '高速艦隊') {
+                                    if (isOnce) return 2;
+                                    sum('R2toT');
+                                    sum('TtoX');
+                                    return null;
+                                } else {
+                                    if (isOnce) return 3;
+                                    sum('R2toS');
+                                    return 'S';
+                                }
+                                break;
+                            case 'S':
+                                if(f_search[3] >= 80) {
+                                    if (isOnce) return 1;
+                                    sum('StoT');
+                                    sum('TtoX');
+                                    return null;
+                                } else {
+                                    if (isOnce) return 2;
+                                    sum('StoU');
+                                    return null;
+                                }
+                                break;
+                            case 'W':
+                                if(CA > 1 && DD > 1) {
+                                    if (isOnce) return 1;
+                                    sum('WtoR2');
+                                    return 'R2';
+                                } else if(speed === '低速艦隊') {
+                                    if (isOnce) return 2;
+                                    sum('WtoR');
+                                    return 'R';
+                                } else if(BBs > 0 && CV + CVB > 1) {
+                                    if (isOnce) return 3;
+                                    sum('WtoR');
+                                    return 'R';
+                                } else if(DD > 2) {
+                                    if (isOnce) return 4;
+                                    sum('WtoR2');
+                                    return 'R2';
+                                } else if(DD < 2) {
+                                    if (isOnce) return 5;
+                                    sum('WtoR');
+                                    return 'R';
+                                } else if(CL === 0) {
+                                    if (isOnce) return 6;
+                                    sum('WtoR');
+                                    return 'R';
+                                } else if(CV + CVB > 2) {
+                                    if (isOnce) return 7;
+                                    sum('WtoR2');
+                                    return 'R2';
+                                } else if(CV + CVB < 2) {
+                                    if (isOnce) return 8;
+                                    sum('WtoR2');
+                                    return 'R2';
+                                } else if(BBs === 0) {
+                                    if (isOnce) return 9;
+                                    sum('WtoR2');
+                                    return 'R2';
+                                } else if(f_search[3] >= 100) {
+                                    if (isOnce) return 10;
+                                    sum('WtoR2');
+                                    return 'R2';
+                                } else {
+                                    if (isOnce) return 11;
+                                    sum('WtoR');
+                                    return 'R';
+                                }
+                                break;
+                            case 'A':
+                                if(active['58-1']['A'] === 'B') {
+                                    sum('AtoB');
+                                    return 'B';
+                                } else {
+                                    sum('AtoD');
+                                    return 'D';
+                                }
+                                break;
+                            case 'I':
+                                if(active['58-1']['I'] === 'D') {
+                                    sum('ItoD');
+                                    return 'D';
+                                } else {
+                                    sum('ItoN1');
+                                    sum('N1toN2');
+                                    sum('N2toO');
+                                    sum('OtoP');
+                                    sum('PtoQ');
+                                    return null;
+                                }
+                                break;
+                            case 'F':
+                                if(active['58-1']['F'] === 'G') {
+                                    sum('FtoG');
+                                    return null;
+                                } else {
+                                    sum('FtoH');
+                                    return null;
+                                }
+                        }
+                        break;
+                    case 2: //@58-2
+                        var phase = Number(active['58-2']['1']);
+                        var difficulty = Number(active['58-2']['2']);
+                        var kanko_carrier = CVs + f_names.filter(v => v.includes('あきつ丸')).length;
+                        switch(edge) {
+                            case null:
+                                if(phase === 1) {
+                                    if (isOnce) return 1;
+                                    sum('1toA');
+                                    sum('AtoB');
+                                    return 'B';
+                                } else if(phase === 2) {
+                                    if(isCom()) {
+                                        if (isOnce) return 2;
+                                        sum('2toL');
+                                        return 'L';
+                                    } else {
+                                        if (isOnce) return 3;
+                                        sum('1toA');
+                                        sum('AtoB');
+                                        return 'B';
+                                    }
+                                } else if(phase === 3) {
+                                    if(isCom()) {
+                                        if (isOnce) return 4;
+                                        sum('2toL');
+                                        return 'L';
+                                    } else {
+                                        if(BBs > 0) {
+                                            if (isOnce) return 5;
+                                            sum('1toA');
+                                            sum('AtoB');
+                                            return 'B';
+                                        } else if(kanko_carrier > 0) {
+                                            if (isOnce) return 6;
+                                            sum('1toA');
+                                            sum('AtoB');
+                                            return 'B';
+                                        } else if(difficulty === 1 && Ss < 3) {
+                                            if (isOnce) return 7;
+                                            sum('1toA');
+                                            sum('AtoB');
+                                            return 'B';
+                                        } else if(difficulty === 2 && Ss < 2) {
+                                            if (isOnce) return 8;
+                                            sum('1toA');
+                                            sum('AtoB');
+                                            return 'B';
+                                        } else if(difficulty > 2 && Ss === 0) {
+                                            if (isOnce) return 9;
+                                            sum('1toA');
+                                            sum('AtoB');
+                                            return 'B';
+                                        } else {
+                                            if (isOnce) return 10;
+                                            sum('3toS');
+                                            sum('StoT');
+                                            return 'T';
+                                        }
+                                    }
+                                }
+                                break;
+                            case 'C':
+                                if(track.includes('A')) {
+                                    if(speed === '低速艦隊') {
+                                        if (isOnce) return 1;
+                                        sum('CtoF');
+                                        return null;
+                                    } else if(CV + CVB > 0) {
+                                        if (isOnce) return 2;
+                                        sum('CtoF');
+                                        return null;
+                                    } else {
+                                        if (isOnce) return 3;
+                                        sum('CtoD');
+                                        return 'D';
+                                    }
+                                } else if(track.includes('S')) {
+                                    if (isOnce) return 4;
+                                    sum('CtoI');
+                                    return 'I';
+                                }
+                                break;
+                            case 'D':
+                                if(!isCom()) {
+                                    if(f_search[3] >= 98) {
+                                        if (isOnce) return 1;
+                                        sum('DtoD2');
+                                        return null;
+                                    } else {
+                                        if (isOnce) return 2;
+                                        sum('DtoD1');
+                                        return null;
+                                    }
+                                } else {
+                                    if (isOnce) return 3;
+                                    sum('DtoN');
+                                    return 'N';
+                                }
+                                break;
+                            case 'E':
+                                if(CV + CVB > 0) {
+                                    if (isOnce) return 1;
+                                    sum('EtoF');
+                                    return null;
+                                } else if(speed === '高速艦隊') {
+                                    if (isOnce) return 2;
+                                    sum('EtoG');
+                                    sum('GtoH');
+                                    return 'H';
+                                } else if(BBs > 1) {
+                                    if (isOnce) return 3;
+                                    sum('EtoF');
+                                    return null;
+                                } else if(CL > 0 && Ds > 1) {
+                                    if (isOnce) return 4;
+                                    sum('EtoG');
+                                    sum('GtoH');
+                                    return 'H';
+                                } else {
+                                    if (isOnce) return 5;
+                                    sum('EtoF');
+                                    return null;
+                                }
+                                break;
+                            case 'H':
+                                if(track.includes('A')) {
+                                    if(f_search[3] < 80) {
+                                        if (isOnce) return 1;
+                                        sum('HtoK');
+                                        return null;
+                                    } else if(speed === '低速艦隊') {
+                                        if (isOnce) return 2;
+                                        sum('HtoJ');
+                                        return 'J';
+                                    } else if(BBs > 1) {
+                                        if (isOnce) return 3;
+                                        sum('HtoJ');
+                                        return 'J';
+                                    } else if(CVL + f_names.filter(v => v.includes('あきつ丸')).length > 1) {
+                                        if (isOnce) return 4;
+                                        sum('HtoJ');
+                                        return 'J';
+                                    } else {
+                                        if (isOnce) return 5;
+                                        sum('HtoI');
+                                        return 'I';
+                                    }
+                                }
+                                break;
+                            case 'I':
+                                if(phase < 3) {
+                                    if (isOnce) return 1;
+                                    return null;
+                                } else if(Ss > 0) {
+                                    if (isOnce) return 2;
+                                    sum('ItoU');
+                                    return 'U';
+                                } else {
+                                    if (isOnce) return 3;
+                                    sum('ItoD3');
+                                    return null;
+                                }
+                                break;
+                            case 'J':
+                                if(!isCom()) {
+                                    if (isOnce) return 1;
+                                    sum('JtoP');
+                                    return 'P';
+                                } else if(speed === '低速艦隊') {
+                                    if (isOnce) return 2;
+                                    sum('JtoN');
+                                    return 'N';
+                                } else if(BBs > 2) {
+                                    if (isOnce) return 3;
+                                    sum('JtoN');
+                                    return 'N';
+                                } else if(CVs > 2) {
+                                    if (isOnce) return 4;
+                                    sum('JtoN');
+                                    return 'N';
+                                } else if(CL > 1 && DD > 4) {
+                                    if (isOnce) return 5;
+                                    sum('JtoP');
+                                    return 'P';
+                                } else {
+                                    if (isOnce) return 6;
+                                    sum('JtoN');
+                                    return 'N';
+                                }
+                                break;
+                            case 'L':
+                                if(f_united === '空母機動部隊') {
+                                    if (isOnce) return 1;
+                                    sum('LtoM');
+                                    sum('MtoJ');
+                                    return 'J';
+                                } else if(f_united === '水上打撃部隊') {
+                                    if (isOnce) return 2;
+                                    sum('LtoD');
+                                    return 'D';
+                                }
+                                break;
+                            case 'N':
+                                if(CV + CVB > 0) {
+                                    if (isOnce) return 1;
+                                    sum('NtoO');
+                                    sum('OtoP');
+                                    return 'P';
+                                } else if(CVL > 2) {
+                                    if (isOnce) return 2;
+                                    sum('NtoO');
+                                    sum('OtoP');
+                                    return 'P';
+                                } else if(speed === '高速艦隊') {
+                                    if (isOnce) return 3;
+                                    sum('NtoP');
+                                    return 'P';
+                                } else if(CL > 1 && DD > 2) {
+                                    if (isOnce) return 4;
+                                    sum('NtoP');
+                                    return 'P';
+                                } else {
+                                    if (isOnce) return 5;
+                                    sum('NtoO');
+                                    sum('OtoP');
+                                    return 'P';
+                                }
+                                break;
+                            case 'P':
+                                if(f_search[1] >= 62) {
+                                    if (isOnce) return 1;
+                                    sum('PtoR');
+                                    return null;
+                                } else {
+                                    if (isOnce) return 2;
+                                    sum('PtoQ');
+                                    return null;
+                                }
+                                break;
+                            case 'T':
+                                if(CAs > 1) {
+                                    if (isOnce) return 1;
+                                    sum('TtoC');
+                                    return 'C';
+                                } else if(CL > 1) {
+                                    if (isOnce) return 2;
+                                    sum('TtoC');
+                                    return 'C';
+                                } else {
+                                    if (isOnce) return 3;
+                                    sum('TtoU');
+                                    return 'U';
+                                }
+                                break;
+                            case 'U':
+                                if(CAs > 0) {
+                                    if (isOnce) return 1;
+                                    sum('UtoH');
+                                    return 'H';
+                                } else if(CL > 1) {
+                                    if (isOnce) return 2;
+                                    sum('UtoH');
+                                    return 'H';
+                                } else if(difficulty === 4) {
+                                    if (isOnce) return 3;
+                                    sum('UtoV');
+                                    return 'V';
+                                } else if(AV > 0) {
+                                    if (isOnce) return 4;
+                                    sum('UtoH');
+                                    return 'H';
+                                } else if(AS > 0) {
+                                    if (isOnce) return 5;
+                                    sum('UtoV');
+                                    return 'V';
+                                } else {
+                                    if (isOnce) return 6;
+                                    sum('UtoH');
+                                    return 'H';
+                                }
+                                break;
+                            case 'V':
+                                if(CAs + AV > 1) {
+                                    if (isOnce) return 1;
+                                    sum('VtoW');
+                                    sum('WtoX');
+                                    sum('XtoY');
+                                    return null;
+                                } else if(difficulty === 1 && Ss > 3) {
+                                    if (isOnce) return 2;
+                                    sum('VtoX');
+                                    sum('XtoY');
+                                    return null;
+                                } else if(difficulty === 2 && Ss > 2) {
+                                    if (isOnce) return 3;
+                                    sum('VtoX');
+                                    sum('XtoY');
+                                    return null;
+                                } else if(difficulty === 3 && Ss > 1) {
+                                    if (isOnce) return 4;
+                                    sum('VtoX');
+                                    sum('XtoY');
+                                    return null;
+                                } else if(difficulty === 4) {
+                                    if (isOnce) return 5;
+                                    sum('VtoX');
+                                    sum('XtoY');
+                                    return null;
+                                } else {
+                                    if (isOnce) return 6;
+                                    sum('VtoW');
+                                    sum('WtoX');
+                                    sum('XtoY');
+                                    return null;
+                                }
+                                break;
+                            case 'B':
+                                if(active['58-2']['B'] === 'C') {
+                                    sum('BtoC');
+                                    return 'C';
+                                } else {
+                                    sum('BtoE');
+                                    return 'E';
+                                }
+                                break;
+                        }
+                        break;
+                    case 3: //@58-3
+                        var phase = Number(active['58-3']['1']);
+                        var difficulty = Number(active['58-3']['2']);
+                        var kanko_carrier = CVs + f_names.filter(v => v.includes('あきつ丸')).length;
+                        switch(edge) {
+                            case null:
+                                if(isCom()) {
+                                    if (isOnce) return 1;
+                                    sum('1toA');
+                                    sum('AtoB');
+                                    return 'B';
+                                } else {
+                                    if(phase < 3) {
+                                        if (isOnce) return 2;
+                                        sum('2toH');
+                                        return 'H';
+                                    } else {
+                                        if(AO > 0) {
+                                            if (isOnce) return 3;
+                                            sum('3toI');
+                                            return 'I';
+                                        } else if(CL > 0 && DD > 2 && speed !== '低速艦隊') {
+                                            if (isOnce) return 4;
+                                            sum('3toI');
+                                            return 'I';
+                                        } else if(kanko_carrier > 0) {
+                                            if (isOnce) return 5;
+                                            sum('2toH');
+                                            return 'H';
+                                        } else if(BBs > 0) {
+                                            if (isOnce) return 6;
+                                            sum('2toH');
+                                            return 'H';
+                                        } else if(AO + LHA + AV > 1) {
+                                            if (isOnce) return 7;
+                                            sum('2toH');
+                                            return 'H';   
+                                        } else if(phase < 4) {
+                                            if (isOnce) return 8;
+                                            sum('3toI');
+                                            return 'I';
+                                        } else {
+                                            if(difficulty === 1 && AS > 0 && Ss > 2) {
+                                                if (isOnce) return 9;
+                                                sum('4toV');
+                                                sum('VtoW');
+                                                return 'W';
+                                            } if(difficulty === 2 && Ss > 2) {
+                                                if (isOnce) return 10;
+                                                sum('4toV');
+                                                sum('VtoW');
+                                                return 'W';
+                                            } if(difficulty === 3 && Ss > 1) {
+                                                if (isOnce) return 11;
+                                                sum('4toV');
+                                                sum('VtoW');
+                                                return 'W';
+                                            } if(difficulty === 4 && Ss > 0) {
+                                                if (isOnce) return 12;
+                                                sum('4toV');
+                                                sum('VtoW');
+                                                return 'W';
+                                            } if(difficulty === 4 && Ds > 2) {
+                                                if (isOnce) return 13;
+                                                sum('4toV');
+                                                sum('VtoW');
+                                                return 'W';
+                                            } else {
+                                                if (isOnce) return 14;
+                                                sum('2toH');
+                                                return 'H';
+                                            }
+                                        }
+                                    }
+                                }
+                                break;
+                            case 'B':
+                                if(BBCVs > 5) {
+                                    if (isOnce) return 1;
+                                    sum('BtoC');
+                                    sum('CtoD');
+                                    return 'D';
+                                } else if(speed !== '低速艦隊') {
+                                    if (isOnce) return 2;
+                                    sum('BtoD');
+                                    return 'D';
+                                } else if(CL > 1 && Ds > 3) {
+                                    if (isOnce) return 3;
+                                    sum('BtoD');
+                                    return 'D';
+                                } else {
+                                    if (isOnce) return 4;
+                                    sum('BtoC');
+                                    sum('CtoD');
+                                    return 'D';
+                                }
+                                break;
+                            case 'D':
+                                if(BBCVs > 6) {
+                                    if (isOnce) return 1;
+                                    sum('DtoE');
+                                    sum('EtoF');
+                                    return 'F';
+                                } else if(BBs > 3) {
+                                    if (isOnce) return 2;
+                                    sum('DtoE');
+                                    sum('EtoF');
+                                    return 'F';
+                                } else if(CV + CVB > 2) {
+                                    if (isOnce) return 3;
+                                    sum('DtoE');
+                                    sum('EtoF');
+                                    return 'F';
+                                } else {
+                                    if (isOnce) return 4;
+                                    sum('DtoF');
+                                    return 'F';
+                                }
+                                break;
+                            case 'F':
+                                if(f_search[1] >= 65) {
+                                    if (isOnce) return 1;
+                                    sum('FtoO');
+                                    return 'O';
+                                } else {
+                                    if (isOnce) return 2;
+                                    sum('FtoG');
+                                    return null;
+                                }
+                                break;
+                            case 'H':
+                                if(CL > 0 && DD > 3 && speed !== '低速艦隊') {
+                                    if (isOnce) return 1;
+                                    sum('HtoJ');
+                                    return 'J';
+                                } else {
+                                    if (isOnce) return 2;
+                                    sum('HtoI');
+                                    return 'I';
+                                }
+                                break;
+                            case 'I':
+                                if(BBCVs > 4) {
+                                    if (isOnce) return 1;
+                                    sum('ItoL');
+                                    return 'L';
+                                } else if(Ds < 2) {
+                                    if (isOnce) return 2;
+                                    sum('ItoL');
+                                    return 'L';
+                                } else if(speed !== '低速艦隊') {
+                                    if (isOnce) return 3;
+                                    sum('ItoM');
+                                    return 'M';
+                                } else if(BBs > 1) {
+                                    if (isOnce) return 4;
+                                    sum('ItoL');
+                                    return 'L';
+                                } else if(Ds > 1) {
+                                    if (isOnce) return 5;
+                                    sum('ItoL');
+                                    return 'L';
+                                } else {
+                                    if (isOnce) return 6;
+                                    sum('ItoM');
+                                    return 'M';
+                                }
+                                break;
+                            case 'J':
+                                if(f_search[1] >= 45) {
+                                    if (isOnce) return 1;
+                                    sum('JtoN');
+                                    return null;
+                                } else {
+                                    if (isOnce) return 2;
+                                    sum('JtoK');
+                                    return null;
+                                }
+                                break;
+                            case 'L':
+                                if(f_search[1] >= 58) {
+                                    if (isOnce) return 1;
+                                    sum('LtoM');
+                                    return 'M';
+                                } else {
+                                    if (isOnce) return 2;
+                                    sum('LtoG');
+                                    return null;
+                                }
+                                break;
+                            case 'O':
+                                if(f_search[1] < 75) {
+                                    if (isOnce) return 1;
+                                    sum('OtoO1');
+                                    return null;
+                                } else if(BBs < 3) {
+                                    if (isOnce) return 2;
+                                    sum('OtoO3');
+                                    return null;
+                                } else if(CL > 1) {
+                                    if (isOnce) return 3;
+                                    sum('OtoO3');
+                                    return null;
+                                } else {
+                                    if (isOnce) return 4;
+                                    sum('OtoO2');
+                                    sum('O2toO3');
+                                    return null;
+                                }
+                                break;
+                            case 'P':
+                                if(f_search[3] >= 98) {
+                                    if (isOnce) return 1;
+                                    sum('PtoR');
+                                    return 'R';
+                                } else {
+                                    if (isOnce) return 2;
+                                    sum('PtoQ');
+                                    return null;
+                                }
+                                break;
+                            case 'R':
+                                if(isFaster()) {
+                                    if (isOnce) return 1;
+                                    sum('RtoU');
+                                    return null;
+                                } else {
+                                    if (isOnce) return 2;
+                                    sum('RtoS');
+                                    return 'S';
+                                }
+                                break;
+                            case 'S':
+                                if(speed === '低速艦隊') {
+                                    if (isOnce) return 1;
+                                    sum('StoT');
+                                    sum('TtoU');
+                                    return null;
+                                } else {
+                                    if (isOnce) return 2;
+                                    sum('StoU');
+                                    return null;
+                                }
+                                break;
+                            case 'W':
+                                if(AV + LHA > 0) {
+                                    if (isOnce) return 1;
+                                    sum('WtoX');
+                                    sum('XtoY');
+                                    return 'Y';
+                                } else if(difficulty === 1 && AS > 0 && Ss > 3) {
+                                    if (isOnce) return 2;
+                                    sum('WtoY');
+                                    return 'Y';
+                                } else if(difficulty === 1 && DD > 1) {
+                                    if (isOnce) return 3;
+                                    sum('WtoY');
+                                    return 'Y';
+                                } else if(difficulty > 1) {
+                                    if (isOnce) return 4;
+                                    sum('WtoY');
+                                    return 'Y';
+                                } else {
+                                    if (isOnce) return 5;
+                                    sum('WtoX');
+                                    sum('XtoY');
+                                    return 'Y';
+                                }
+                                break;
+                            case 'Y':
+                                if(CAs + CL + CT + CLT  + AV + LHA > 2) {
+                                    if (isOnce) return 1;
+                                    sum('YtoY1');
+                                    sum('Y1toY2');
+                                    sum('Y2toZ');
+                                    return null;
+                                } else if(CAs + AV === 2) {
+                                    if (isOnce) return 2;
+                                    sum('YtoY1');
+                                    sum('Y1toY2');
+                                    sum('Y2toZ');
+                                    return null;
+                                } else if(DD > 0) {
+                                    if (isOnce) return 3;
+                                    sum('YtoY2');
+                                    sum('Y2toZ');
+                                    return null;
+                                } else if(Ss > 4) {
+                                    if (isOnce) return 4;
+                                    sum('YtoY2');
+                                    sum('Y2toZ');
+                                    return null;
+                                } else if(CAs + CL + CT + CLT  + AV + LHA === 2) {
+                                    if (isOnce) return 5;
+                                    sum('YtoY1');
+                                    sum('Y1toY2');
+                                    sum('Y2toZ');
+                                    return null;
+                                } else if(Ss < 4) {
+                                    if (isOnce) return 6;
+                                    sum('YtoY1');
+                                    sum('Y1toY2');
+                                    sum('Y2toZ');
+                                    return null;
+                                } else {
+                                    if (isOnce) return 7;
+                                    sum('YtoY2');
+                                    sum('Y2toZ');
+                                    return null;
+                                }
+                                break;
+                            case 'M':
+                                if(active['58-3']['M'] === 'P') {
+                                    if (isOnce) return 1;
+                                    sum('MtoP');
+                                    return 'P';
+                                } else {
+                                    if (isOnce) return 2;
+                                    sum('MtoN');
+                                    return null;
+                                }
+                                break;
+                        }
+                        break;
+                    case 4:
+                        var phase = Number(active['58-4']['1']);
+                        var difficulty = Number(active['58-4']['2']);
+                        switch(edge) {
+                            case null:
+                                if(phase < 4) {
+                                    if (isOnce) return 1;
+                                    return '1';
+                                } else if(phase > 3) {
+                                    if (isOnce) return 2;
+                                    if(!isCom()) {
+                                        return '1';
+                                    } else if(f_united === '輸送護衛部隊') {
+                                        if (isOnce) return 3;
+                                        sum('2toH');
+                                        return 'H';
+                                    } else if(f_united === '水上打撃部隊') {
+                                        if(BBV + CAV === 2 && CL === 1 && BBV + CL + Ds + AO + AS + LHA === 12) {
+                                            if (isOnce) return 4;
+                                            sum('2toH');
+                                            return 'H';
+                                        } else if(((BBV + CAV === 1) || (BBV + CAV === 2)) && CL + CT === 2 && BBV + CAV + CL + CT + Ds + AO + AS + LHA === 12) {
+                                            if (isOnce) return 5;
+                                            sum('2toH');
+                                            return 'H';
+                                        } else if(phase < 6) {
+                                            if (isOnce) return 6;
+                                            return '1';
+                                        } else if(phase === 6) {
+                                            if (isOnce) return 7;
+                                            return '3';
+                                        }
+                                    } else if(f_united === '空母機動部隊') {
+                                        if (isOnce) return 8;
+                                        return '1';
+                                    }
+                                }
+                                break;
+                            case '1':
+                                if(phase > 4 && Ss > 3) {
+                                    if (isOnce) return 1;
+                                    sum('1toP');
+                                    sum('PtoJ');
+                                    return 'J';
+                                } else if(CV + CVB > 3) {
+                                    if (isOnce) return 2;
+                                    sum('1toA');
+                                    return 'A';
+                                } else if(speed === '高速艦隊') {
+                                    if (isOnce) return 3;
+                                    sum('1toA1');
+                                    return 'A1';
+                                } else if(isCom()) {
+                                    if(countYamato() > 1) {
+                                        if (isOnce) return 4;
+                                        sum('1toA');
+                                        return 'A';
+                                    } else {
+                                        if (isOnce) return 5;
+                                        sum('1toA1');
+                                        return 'A1';
+                                    }
+                                } else if(!isCom()) {
+                                    if(countYamato() > 1) {
+                                        if (isOnce) return 6;
+                                        sum('1toA');
+                                        return 'A';
+                                    } else if(AS + Ss > 0) {
+                                        if (isOnce) return 7;
+                                        sum('1toA1');
+                                        return 'A1';
+                                    } else if(difficulty === 4) {
+                                        if (isOnce) return 8;
+                                        sum('1toA');
+                                        return 'A';
+                                    } else {
+                                        if (isOnce) return 9;
+                                        sum('1toA');
+                                        return 'A';
+                                    }
+                                }
+                                break;
+                            case '3':
+                                if(speed === '高速艦隊') {
+                                    if (isOnce) return 1;
+                                    sum('3toT');
+                                    sum('TtoU');
+                                    return 'U';
+                                } else if(Ds > 4) {
+                                    if (isOnce) return 2;
+                                    sum('3toT');
+                                    sum('TtoU');
+                                    return 'U';
+                                } else if(CVs > 2) {
+                                    if (isOnce) return 3;
+                                    sum('3toF');
+                                    return 'F';
+                                } else if(countYamato() > 0) {
+                                    if (isOnce) return 4;
+                                    sum('3toF');
+                                    return 'F';
+                                } else {
+                                    if (isOnce) return 5;
+                                    sum('3toF');
+                                    return 'F';
+                                }
+                                break;
+                            case 'A':
+                                if(!isCom()) {
+                                    if (isOnce) return 1;
+                                    sum('AtoA1');
+                                    return 'A1';
+                                } else if(CV + CVB > 3) {
+                                    if (isOnce) return 2;
+                                    sum('AtoA1');
+                                    return 'A1';
+                                } else if(Ds > 3) {
+                                    if (isOnce) return 3;
+                                    sum('AtoB');
+                                    return 'B';
+                                } else {
+                                    if (isOnce) return 4;
+                                    sum('AtoA1');
+                                    return 'A1';
+                                }
+                                break;
+                            case 'A1':
+                                if(!isCom()) {
+                                    if (isOnce) return 1;
+                                    sum('A1toA2');
+                                    sum('A2toA3');
+                                    return null;
+                                } else {
+                                    if (isOnce) return 2;
+                                    sum('A1toB');
+                                    return 'B';
+                                }
+                                break;
+                            case 'C':
+                                if(AV > 1) {
+                                    if (isOnce) return 1;
+                                    sum('CtoC2');
+                                    return null;
+                                } else if(speed === '高速艦隊') {
+                                    if (isOnce) return 2;
+                                    sum('CtoC1');
+                                    sum('C1toE');
+                                    return 'E';
+                                } else if(CVs > 3) {
+                                    if (isOnce) return 3;
+                                    sum('CtoC2');
+                                    return null;
+                                } else if(CAs > 2) {
+                                    if (isOnce) return 4;
+                                    sum('CtoC2');
+                                    return null;
+                                } else {
+                                    if (isOnce) return 5;
+                                    sum('CtoC1');
+                                    sum('C1toE');
+                                    return 'E';
+                                }
+                                break;
+                            case 'D':
+                                if(BB > 0) {
+                                    if (isOnce) return 1;
+                                    sum('DtoD2');
+                                    return null;
+                                } else if(CL + CT > 2) {
+                                    if (isOnce) return 2;
+                                    sum('DtoD1');
+                                    return null;
+                                } else if(CVL > 0 && Ds > 3) {
+                                    if (isOnce) return 3;
+                                    sum('DtoD1');
+                                    return null;
+                                } else if(CVL === 0 && BBV === 0 && CL + CT > 1) {
+                                    if (isOnce) return 4;
+                                    sum('DtoD1');
+                                    return null;
+                                } else if(CVL === 0 && CL + CT > 1 && Ds > 3) {
+                                    if (isOnce) return 5;
+                                    sum('DtoD1');
+                                    return null;
+                                } else {
+                                    if (isOnce) return 6;
+                                    sum('DtoD2');
+                                    return null;
+                                }
+                                break;
+                            case 'E':
+                                if(countYamato() === 2 && DD < 5) {
+                                    if (isOnce) return 1;
+                                    sum('EtoF');
+                                    return 'F';
+                                } else if(countYamato() === 1 && DD < 4) {
+                                    if (isOnce) return 2;
+                                    sum('EtoF');
+                                    return 'F';
+                                } else if(countYamato() === 0 && DD < 3) {
+                                    if (isOnce) return 3;
+                                    sum('EtoF');
+                                    return 'F';
+                                } else if(BBCVs < 5) {
+                                    if (isOnce) return 4;
+                                    sum('EtoF1');
+                                    return 'F1';
+                                } else if(speed === '低速艦隊') {
+                                    if (isOnce) return 5;
+                                    sum('EtoF');
+                                    return 'F';
+                                } else if(BBCVs === 5) {
+                                    if (isOnce) return 6;
+                                    sum('EtoF1');
+                                    return 'F1';
+                                } else if(CL > 1) {
+                                    if (isOnce) return 7;
+                                    sum('EtoF1');
+                                    return 'F1';
+                                } else {
+                                    if (isOnce) return 8;
+                                    sum('EtoF');
+                                    return 'F';
+                                }
+                                break;
+                            case 'F':
+                                if(!isCom()) {
+                                    if (isOnce) return 1;
+                                    sum('FtoJ1');
+                                    return 'J1';
+                                } else if(f_united === '輸送護衛部隊') {
+                                    if (isOnce) return 2;
+                                    sum('FtoJ1');
+                                    return 'J1';
+                                } else if(track.includes('P')) {
+                                    if (isOnce) return 3;
+                                    sum('FtoJ1');
+                                    return 'J1';
+                                } else if(track.includes('1')) {
+                                    if (isOnce) return 4;
+                                    sum('FtoF1');
+                                    return 'F1';
+                                } else if(track.includes('3')) {
+                                    if (isOnce) return 5;
+                                    sum('FtoU');
+                                    return 'U';
+                                }
+                                break;
+                            case 'F1':
+                                if(f_search[1] >= 98) {
+                                    if (isOnce) return 1;
+                                    sum('F1toG');
+                                    return null;
+                                } else {
+                                    if (isOnce) return 2;
+                                    sum('F1toF2');
+                                    return null;
+                                }
+                                break;
+                            case 'H':
+                                if(speed === '低速艦隊') {
+                                    if (isOnce) return 1;
+                                    sum('HtoI');
+                                    sum('ItoI1');
+                                    return 'I1';
+                                } else {
+                                    if (isOnce) return 2;
+                                    sum('HtoJ');
+                                    return 'J';
+                                }
+                                break;
+                            case 'I1':
+                                if(DD > 7) {
+                                    if (isOnce) return 1;
+                                    sum('ItoI3');
+                                    sum('I3toL');
+                                    return 'L';
+                                } else {
+                                    if (isOnce) return 2;
+                                    sum('I1toI2');
+                                    sum('I2toK');
+                                    sum('KtoL');
+                                    return 'L';
+                                }
+                                break;
+                            case 'J':
+                                if(phase < 5) {
+                                    if (isOnce) return 1;
+                                    sum('JtoJ1');
+                                    return 'J1';
+                                } else if(BBCVs > 0) {
+                                    if (isOnce) return 2;
+                                    sum('JtoF');
+                                    return 'F';
+                                } else if(difficulty === 1 && Ss > 3) {
+                                    if (isOnce) return 3;
+                                    sum('JtoJ1');
+                                    return 'J1';
+                                } else if(difficulty === 2 && Ss > 2) {
+                                    if (isOnce) return 4;
+                                    sum('JtoJ1');
+                                    return 'J1'; 
+                                } else if(difficulty === 3 && Ss > 1) {
+                                    if (isOnce) return 5;
+                                    sum('JtoJ1');
+                                    return 'J1'; 
+                                } else if(difficulty === 4) {
+                                    if (isOnce) return 6;
+                                    sum('JtoJ1');
+                                    return 'J1'; 
+                                } else {
+                                    if (isOnce) return 7;
+                                    sum('JtoF');
+                                    return 'F';
+                                }
+                                break;
+                            case 'J1':
+                                if(isCom()) {
+                                    if (isOnce) return 1;
+                                    sum('J1toJ2');
+                                    return 'J2';
+                                } else if(BBCVs > 0) {
+                                    if (isOnce) return 2;
+                                    sum('J1toQ');
+                                    sum('QtoR');
+                                    sum('RtoS');
+                                    return null;
+                                } else if(CL === 1 && DD === 2 && AS === 1 && Ss === 3) {
+                                    if (isOnce) return 3;
+                                    sum('J1toR');
+                                    sum('RtoS');
+                                    return null;
+                                } else if(CL > 0 && DD > 2) {
+                                    if (isOnce) return 4;
+                                    sum('J1toR');
+                                    sum('RtoS');
+                                    return null;
+                                } else if(AS === 0) {
+                                    if (isOnce) return 5;
+                                    sum('J1toQ');
+                                    sum('QtoR');
+                                    sum('RtoS');
+                                    return null;
+                                } else if(CAs + CL > 0) {
+                                    if (isOnce) return 6;
+                                    sum('J1toQ');
+                                    sum('QtoR');
+                                    sum('RtoS');
+                                    return null;
+                                } else if(AV > 1) {
+                                    if (isOnce) return 7;
+                                    sum('J1toQ');
+                                    sum('QtoR');
+                                    sum('RtoS');
+                                    return null;
+                                } else if(DD > 2){
+                                    if (isOnce) return 8;
+                                    sum('J1toQ');
+                                    sum('QtoR');
+                                    sum('RtoS');
+                                    return null;
+                                } else if(Ss > 3) {
+                                    if (isOnce) return 9;
+                                    sum('J1toR');
+                                    sum('RtoS');
+                                    return null;
+                                } else if(AV === 0) {
+                                    if (isOnce) return 10;
+                                    sum('J1toR');
+                                    sum('RtoS');
+                                    return null;
+                                } else {
+                                    if (isOnce) return 11;
+                                    sum('J1toQ');
+                                    sum('QtoR');
+                                    sum('RtoS');
+                                    return null;
+                                }
+                                break;
+                            case 'J2':
+                                if(track.includes('2')) {
+                                    if(DD > 7) {
+                                        if (isOnce) return 1;
+                                        sum('J2toM');
+                                        return 'M';
+                                    } else {
+                                        if (isOnce) return 2;
+                                        sum('J2toL');
+                                        return 'L';
+                                    }
+                                } else if(track.includes('3')) {
+                                    if (isOnce) return 3;
+                                    sum('J2toV');
+                                    return 'V';
+                                }
+                                break;
+                            case 'L':
+                                if(track.includes('2')) {
+                                    if (isOnce) return 1;
+                                    sum('LtoM');
+                                    return 'M';
+                                } else if(track.includes('3')) {
+                                    if (isOnce) return 2;
+                                    sum('LtoV');
+                                    return 'V';
+                                }
+                                break;
+                            case 'M':
+                                if(f_search[1] >= 52) {
+                                    if (isOnce) return 1;
+                                    sum('MtoO');
+                                    return null;
+                                } else {
+                                    if (isOnce) return 2;
+                                    sum('MtoN');
+                                    return null;
+                                }
+                                break;
+                            case 'U':
+                                if(countYamato() < 2 && CL > 1 && DD > 3 && speed === '高速艦隊') {
+                                    if (isOnce) return 1;
+                                    sum('UtoV');
+                                    return 'V';
+                                } else if(CV + CVB > 0) {
+                                    if (isOnce) return 2;
+                                    sum('UtoJ2');
+                                    return 'J2';
+                                } else if(Ds > 5) {
+                                    if (isOnce) return 3;
+                                    sum('UtoV');
+                                    return 'V';
+                                } else if(CVL > 1) {
+                                    if (isOnce) return 4;
+                                    sum('UtoJ2');
+                                    return 'J2';
+                                } else if(Ds > 3) {
+                                    if (isOnce) return 5;
+                                    sum('UtoV');
+                                    return 'V';
+                                } else {
+                                    if (isOnce) return 6;
+                                    sum('UtoJ2');
+                                    return 'J2';
+                                }
+                                break;
+                            case 'V':
+                                if(f_names.includes('明石改') || f_names.includes('朝日改') || f_names.includes('秋津洲改')) {
+                                    if (isOnce) return 1;
+                                    sum('VtoW');
+                                    sum('WtoX');
+                                    return 'X';
+                                } else {
+                                    if (isOnce) return 2;
+                                    sum('VtoX');
+                                    return 'X';
+                                }
+                                break;
+                            case 'X':
+                                if(f_search[1] >= 84) {
+                                    if (isOnce) return 1;
+                                    sum('XtoZ');
+                                    return null;
+                                } else {
+                                    if (isOnce) return 2;
+                                    sum('XtoY');
+                                    return null;
+                                }
+                                break;
+                            case 'B':
+                                if(active['58-4']['B'] === 'C') {
+                                    if (isOnce) return 1;
+                                    sum('BtoC');
+                                    return 'C';
+                                } else {
+                                    if (isOnce) return 2;
+                                    sum('BtoD');
+                                    return 'D';
+                                }
+                                break;
+                        }
+                }
+                break;
         }
     }
 
@@ -7810,21 +9351,26 @@ $(function() {
     function startSim() {
         if(a_flag && f_flag) {
             area = localStorage.getItem('area');
-            var elem = area.split('-');
-            var world = Number(elem[0]);
-            var map = Number(elem[1]);
-            var edge = null;
+            let elem = area.split('-');
+            let world = Number(elem[0]);
+            let map = Number(elem[1]);
+            let edge = null;
             //無限ループ防止
-            var safety = 0;
-            var count = 0;
-            while(count < 10000) {
-                edge = branch(world, map, edge);
+            let max_c = 10000; //何回回すか
+            let max_s = 150000;
+            if(area.includes('58')) {
+                max_c = 1; //イベは1回だけ
+            }
+            let safety = 0;
+            let count = 0;
+            while(count < max_c) {
+                edge = branch(world, map, edge, false);
                 if(edge === null) {
                     count++;
                     track = [];
                 }
                 safety++;
-                if(safety > 150000) {
+                if(safety > max_s) {
                     alert('無限ループ防止 バグった');
                     console.log('無限ループ');
                     console.log('以下諸元');
@@ -7837,20 +9383,24 @@ $(function() {
                     console.log(`ドラム缶 : ${f_drum}`);
                     console.log(`電探 : ${f_radar}`);
                     console.log(`大発系 : ${f_craft}`);
+                    console.log(`寒甲 : ${f_kanko}`);
                     console.log(`speed : ${speed}`);
                     console.log(rate);
                     console.log('終わり');
+                    postErrorLog();
                     return;
                 }
             }
             console.log('軌跡' + track);
-            drawMap();
+            console.log(rate);
+            console.log(countYamato());
+            drawMap(max_c);
             rate = {};
         }
     }
 
     //マップ描画
-    function drawMap() {
+    function drawMap(max_c) {
         removePopupInfo();
         let map = map_info; //map.jsより
         var spots = map['spots'][area];
@@ -7875,7 +9425,7 @@ $(function() {
             if (routes.hasOwnProperty(key)) {
                 const [source, target] = routes[key];
                 //通っていないルートはrateに無いので0に置き換え
-                var ratio = ((rate[source + 'to' + target] / 10000) * 100).toFixed(1);
+                var ratio = ((rate[source + 'to' + target] / max_c) * 100).toFixed(1);
                 ratio = isNaN(ratio) ? 0 : parseFloat(ratio);
                 elements.edges.push({
                     data: {
@@ -7906,7 +9456,7 @@ $(function() {
             }, //マスの分類ごとに表示分岐
             { selector: 'node[label = "st"]', 
                  style: {
-                     'background-image': '/media/nodes/start.png', //本番では/media/nodes/start.pngの形に
+                     'background-image': '/media/nodes/start.png',
                      'font-weight': '600',
                      'text-outline-width': '2px',
                      'font-size': '20px',
@@ -7962,7 +9512,7 @@ $(function() {
                      'width': '27px',
                      'height': '27px',
                      'background-position-x': '0px',
-                     'background-position-y': '-1px'
+                     'background-position-y': '-1px',
                  }
             },
             { selector: 'node[label = "en"]', //基本設定
@@ -8024,6 +9574,16 @@ $(function() {
                      'background-position-x': '-0.5px',
                      'background-position-y': '-1px'
                  }
+            },
+            { selector: 'node[label = "un"]', 
+             style: {
+                 'background-image': '/media/nodes/unknown.png',
+                 'width': '27px', //enemy系
+                 'height': '27px',
+                 'background-opacity': 0,
+                 'background-position-x': '-0.5px',
+                 'background-position-y': '-1px'
+             }
             },
             { selector: 'edge', 
                 style: {
@@ -8098,6 +9658,7 @@ $(function() {
         });
         //更新
         drew_area = area;
+        console.log(`drew_area : ${drew_area}`);
         let node = null;
         cy.on('mousedown', function (e) {
             let tar = e.target;
@@ -8106,9 +9667,11 @@ $(function() {
                 let nodeData = map['spots'][drew_area][node];
                 let n_length = nodeData.length;
                 //Phase
+                //2023夏はフェイズごとに記述したが以降は分からない
                 let b_area = null;
                 if(active.hasOwnProperty(drew_area)) {
-                    if(active[drew_area].hasOwnProperty('1')) {
+                    if(active[drew_area].hasOwnProperty('1') && drew_area.includes('57')) {
+                        console.log('check1');
                         b_area = branch_info[`${drew_area}-${active[drew_area]['1']}`];
                     } else {
                         b_area = branch_info[drew_area];
@@ -8127,12 +9690,68 @@ $(function() {
 
                     let text = b_area[node];
                     //改行、赤字置換
-                    text = text.replaceAll('e', '<br>');
-                    text = text.replaceAll('co', '<span style="color:red;">');
-                    text = text.replaceAll('oc', '</span>');
-                    text = text.replaceAll('sw', `<button class="design-button remote-active" value="${drew_area}-${node}" style="padding:3px 15px;margin-left:5px;">切替</button>`);
+                    text = text.replaceAll('$e', '<br>');
+                    text = text.replaceAll('$co', '<span style="color:red;">');
+                    text = text.replaceAll('$oc', '</span>');
+                    text = text.replaceAll('$bo', '<span style="font-weight:bold;">');
+                    text = text.replaceAll('$ob', '</span>');
+                    text = text.replaceAll('$sw', `<button class="design-button remote-active" value="${drew_area}-${node}" style="padding:3px 15px;margin-left:5px;">切替</button>`);
+                    text = text.replaceAll('$or', `<a href="https://x-20a.github.io/reference/?topic=${drew_area}-${node}" style="color:blue;" target="_blank" rel="noopener noreferrer">`);
+                    text = text.replaceAll('$ro', '</a>');
+                    if(drew_area.includes('58')) {
+                        let blocks = text.split(/\$bl(.*?)\$lb/g).filter(Boolean);
+                        let split_area = drew_area.split('-');
+                        let world = Number(split_area[0]);
+                        let map = Number(split_area[1]);
+                        console.log(`world : ${world}`);
+                        console.log(`map : ${map}`);
+                        console.log(`node : ${node}`);
+                        //先ず1周してtrackを作る
+                        var edge = null;
+                        //無限ループ防止
+                        var safety = 0;
+                        var count = 0;
+                        while(count < 15) {
+                            edge = branch(world, map, edge, false);
+                            if(edge === null) {
+                                break;
+                            }
+                            if(count === 14) {
+                                alert('無限ループ防止 バグった');
+                                console.log('無限ループ');
+                                console.log('以下諸元');
+                                console.log(`海域 : ${world}-${map}`);
+                                console.log('直後艦種');
+                                console.log(com);
+                                console.log('軌跡' + track);
+                                console.log(`safety : ${safety}`);
+                                console.log(`count : ${count}`);
+                                console.log(`ドラム缶 : ${f_drum}`);
+                                console.log(`電探 : ${f_radar}`);
+                                console.log(`大発系 : ${f_craft}`);
+                                console.log(`寒甲 : ${f_kanko}`);
+                                console.log(`speed : ${speed}`);
+                                console.log(rate);
+                                console.log('終わり');
+                                return;
+                            }
+                            count++;
+                        }
+                        let matchNum = branch(world, map, node, true);
+                        if(!matchNum && !isNaN(node)) {
+                            matchNum = branch(world, map, null, true);
+                        }
+                        console.log(`matchNum : ${matchNum}`);
+                        if(blocks[matchNum - 1]) {
+                            blocks[matchNum - 1] = `<span style="text-decoration:underline;text-decoration-color: red;">${blocks[matchNum - 1]}</span>`;
+                        }
+                        text = blocks.join('');
+                    }
+                    text = text.replaceAll('/*', '<span style="text-decoration:underline;text-decoration-color: white;">');
+                    text = text.replaceAll('*/', '</span>');
                     text = `<p>${text}</p>`;
                     let popup = $('<div>').html(text).attr('id', 'popup-info');
+                    //表示位置調整
                     let top = position.y + cyContainer.top - 10;
                     let left = position.x + cyContainer.left + 20;
                     if(position.x >= 650) {
@@ -8183,6 +9802,7 @@ $(function() {
     //以下ストレージ関連
     function setup() {
         var a = localStorage.getItem('active');
+        var s = localStorage.getItem('selected_type');
         var f = localStorage.getItem('fleet');
         //var ks = localStorage.getItem('ks');
         //能動分岐セット
@@ -8220,6 +9840,9 @@ $(function() {
         if(ar) {
             $('#area-display').text(`海域 : ${ar}`);
             setArea(ar);
+        }
+        if(s) {
+            selected_type = Number(s);
         }
         //艦隊セット
         if(f) {
@@ -8348,7 +9971,9 @@ $(function() {
             let fileName = `${drew_area}_${time}`;
             const deck = generateDeck();
             console.log(deck);
-            generate(deck).then((canvas) => {
+            //gkcoi出力
+            let g_speed = getFleetSpeedWithNum(speed);
+            generate(deck, g_speed, f_search).then((canvas) => {
                 let g_blob = getGkcoiBlob(canvas);
                 let cy_blob = getCyBlob();
                 combineAndDownloadBlobs(cy_blob, g_blob, fileName);
@@ -8357,6 +9982,7 @@ $(function() {
             });
         }
     });
+    //gkcoiに渡すデッキビルダー生成
     function generateDeck() {
         let res = {
             lang: "jp",
@@ -8497,5 +10123,28 @@ $(function() {
         };
         // 1つ目の画像を読み込む
         img1.src = URL.createObjectURL(blob1);
+    }
+    //数値から艦隊速度を文字列で取得
+    function getFleetSpeedWithNum(text) {
+        let res = 0;
+        switch(text) {
+            case '低速艦隊':
+                res = 5;
+                break;
+            case '高速艦隊':
+                res = 10;
+                break;
+            case '高速+艦隊':
+                res = 15
+                break;
+            case '最速艦隊':
+                res = 20;
+                break;
+        }
+        return res;
+    }
+    //エラーログ送信
+    async function postErrorLog() {
+        await addDoc(collection(db, "cities"), {name: '東京'});
     }
 });

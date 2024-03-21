@@ -2,6 +2,9 @@
 body {
     margin:0;
 }
+body::-webkit-scrollbar {
+    display: none;
+}
 input {
     width: 60px;
 }
@@ -17,6 +20,15 @@ details {
 }
 li {
     padding: 1px;
+}
+.fleet-type {
+    cursor: pointer;
+    padding-left: 2px;
+    display: block;
+    user-select: none;
+}
+.fleet-type:hover{
+    background-color: rgb(0 0 0 / 8%);
 }
 .inputs {
     flex: 1;
@@ -163,7 +175,21 @@ li {
 #type-select {
     display: none;
     margin-left: 3px;
-    width: 114px;
+    width:110px;
+    border: solid 1px;
+    font-size: 14px;
+    padding-left: 2px;
+}
+#fleet-option-box {
+    width: 112px;
+    font-size: 14px;
+    z-index: 9999;
+    background-color: white;
+    left: 3px;
+    top: 24px;
+    position: absolute;
+    border: 1px solid;
+    display: none;
 }
 #area-container {
     justify-content: center;
