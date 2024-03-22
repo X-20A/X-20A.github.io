@@ -5,7 +5,7 @@ import Decimal from 'decimal.js';
 import cytoscape from 'cytoscape';
 import { generate } from "gkcoi";
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc } from "firebase/firestore";
+import { getFirestore, collection, addDoc, doc, getDocs, query, where } from "firebase/firestore";
 $(function() {
     /*
     s_dataはship.js
@@ -9387,7 +9387,7 @@ $(function() {
                     console.log(`speed : ${speed}`);
                     console.log(rate);
                     console.log('終わり');
-                    //postErrorLog();
+                    postErrorLog();
                     return;
                 }
             }
@@ -9804,7 +9804,7 @@ $(function() {
         var a = localStorage.getItem('active');
         var s = localStorage.getItem('selected_type');
         var f = localStorage.getItem('fleet');
-        //var ks = localStorage.getItem('ks');
+        var e = localStorage.getItem('error_log');
         //能動分岐セット
         if(!a) {
             a = active;
@@ -9850,12 +9850,11 @@ $(function() {
             $('#fleet-import').val(f);
             $('#fleet-import').trigger('input');
         }
-        /*キーボードショートカットON/OFF
-        if(ks) {
-            if(ks === '1') {
-                $('#ks').toggleClass('checked');
+        if(e) {
+            if(e === '1') {
+                $('#error-log').prop('checked', true);
             }
-        } */
+        }
     }
 
     /*
@@ -9980,6 +9979,16 @@ $(function() {
             }).catch((error) => {
                 console.error(error);
             });
+        }
+    });
+    //エラーログ送信許可/拒否
+    $('#error-log').on('click', function() {
+        let isChecked = $(this).prop('checked');
+        console.log(isChecked);
+        if(isChecked) {
+            localStorage.setItem('error_log', '1');
+        } else {
+            localStorage.setItem('error_log', '0');
         }
     });
     //gkcoiに渡すデッキビルダー生成
@@ -10145,9 +10154,46 @@ $(function() {
     }
     //エラーログ送信
     async function postErrorLog() {
-        await addDoc(collection(db, area),{
-            area: area,
-            deck: JSON.stringify(i_json)
-        });
+        let permission = localStorage.getItem('error_log');
+        if(permission && permission === '1') { //送信許可確認
+            let deck = localStorage.getItem('fleet');
+            //基地航空隊切り落とし
+            deck = deck.split(',"a1')[0] + '}';
+            let hash = null;
+            hash = await hashString(deck);
+            console.log(deck);
+            console.log(`hash : ${hash}`);
+            if(hash && await isLogExists(hash)) { //重複チェック
+                await addDoc(collection(db, area), {
+                    deck: deck,
+                    hash: hash
+                });
+                console.log('送信完了');
+            } else {
+                console.log('送信中断:重複');
+            }
+        }
+    }
+    //重複チェック
+    //deckが大きすぎてクエリに乗らないのでhashで比較
+    //重複が無ければtrue
+    async function isLogExists(hash) {
+        const q = query(collection(db, area), where("hash", "==", hash));
+
+        const querySnapshot = await getDocs(q);
+        console.log(querySnapshot);
+        if(querySnapshot._snapshot.docChanges.length > 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    async function hashString(inputString) {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(inputString);
+        const hashBuffer = await window.crypto.subtle.digest('SHA-256', data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashedString = hashArray.map(byte => ('00' + byte.toString(16)).slice(-2)).join('');
+        return hashedString;
     }
 });

@@ -135,9 +135,19 @@
         <div id="conf-mask"></div>
         <div id="conf-container">
             <div id="conf-box">
-                <div id="conf-inner">
-                    <p>入力諸元</p>
-                    <button class="design-button" id="all-clear">削除</button>
+                <div class="conf-inner">
+                    <p class="conf-name">入力諸元</p>
+                    <hr class="beside-bar">
+                </div>
+                <button class="design-button" id="all-clear" style="margin: 0 20px 10px 20px;">削除</button>
+                <hr class="beside-bar" style="margin: 0 20px 2px 20px;">
+                <div class="conf-inner" style="padding-left: 23px;">
+                    <p class="conf-name" style="position: relative;">
+                        <input type="checkbox" id="error-log" style="margin: 0;width: 13px;position: absolute;top: 2.5px;">
+                        <label for="error-log" style="padding: 20px">
+                            エラーログを送信
+                        </label>
+                    </p>
                 </div>
             </div>
         </div>

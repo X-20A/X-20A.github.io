@@ -65,11 +65,14 @@ li {
     border-bottom: 0;
     cursor: default;
 }
-.world-box {
+.world-box, .conf-inner {
     display:flex;
     align-items: center;
 }
-.world-name {
+.conf-inner {
+    padding: 10px 20px;
+}
+.world-name, .conf-name {
     line-height: inherit;
     user-select: none;
     margin: 0px;
@@ -124,14 +127,11 @@ li {
 #conf-box {
     background-color: #202129;
     position: fixed;
-    width: 700px;
+    width: 400px;
     height: 500px;
     display: none;
     opacity: 1;
     color: white;
-}
-#conf-inner {
-    padding: 20px;
 }
 #conf-mask {
     top: 0;
@@ -292,54 +292,6 @@ li {
     height:100%;
     z-index:999;
     background: blanchedalmond;
-}
-/*以下トグルボタン*/
-#ks {
-    position: relative;
-    width: 45px;
-    height: 22px;
-    overflow: hidden;
-    cursor: pointer;
-    margin: 0 3px 0 0;
-    vertical-align: -5px;
-}
-#ks input[type=checkbox] {
-    display: none;
-}
-#ks:before {
-    border-radius: 20px;
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: block;
-    background: #e9e9eb;
-    -webkit-transition: 0.2s ease-out;
-    transition: 0.2s ease-out;
-}
-#ks:after {
-    content: "";
-    position: absolute;
-    top: 2px;
-    left: 3px;
-    width: 18px;
-    height: 18px;
-    display: block;
-    border-radius: 50px;
-    background: #fff;
-    box-shadow: 0 9px 28px -6px rgba(0, 0, 0, 0.3);
-    -webkit-transition: 0.2s ease-out;
-    transition: 0.2s ease-out;
-}
-#ks.checked:before {
-    background: #35c759;
-    border-radius: 20px;
-}
-#ks.checked:after {
-    left: 23px;
-    box-shadow: 0 9px 28px -6px rgba(0, 0, 0, 0.5);
 }
 /*デザインボタン*/
 .design-button {
