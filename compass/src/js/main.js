@@ -10158,7 +10158,7 @@ $(function() {
         if(permission && permission === '1') { //送信許可確認
             let deck = localStorage.getItem('fleet');
             //基地航空隊切り落とし
-            deck = deck.split(',"a1')[0] + '}';
+            deck = deck.split(',"a1')[0];
             let hash = null;
             hash = await hashString(deck);
             console.log(deck);
