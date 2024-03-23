@@ -1336,7 +1336,7 @@ $(function() {
     }
     //低速戦艦をカウント
     function slowBB() {
-        var slowBBs = ['扶桑','山城','伊勢','日向','長門','長門改','長門改二','陸奥','陸奥改','陸奥改二','大和','大和改','武蔵','武蔵改','武蔵改二','Conte di Cavour','Nevada','Nevada改','Nevada改 Mod.2','Colorado','Colorado改','Maryland','Marylan改','Warspite','Warspite改','Nelson','Nelson改','Rodney','Rodney改','Гангут','Октябрьская революция','Гангут два'];
+        var slowBBs = ['扶桑','扶桑改','扶桑改二','山城','山城改','山城改二','伊勢','伊勢改','伊勢改二','日向','日向改','日向改二','長門','長門改','長門改二','陸奥','陸奥改','陸奥改二','大和','大和改','大和改二重','武蔵','武蔵改','武蔵改二','Conte di Cavour','Nevada','Nevada改','Nevada改 Mod.2','Colorado','Colorado改','Maryland','Marylan改','Warspite','Warspite改','Nelson','Nelson改','Rodney','Rodney改','Гангут','Октябрьская революция','Гангут два'];
         // 配列arr1の要素をセットに変換
         const set = new Set(f_names);
         // 配列arr2の要素を1つずつ調べて、重複があるか確認
