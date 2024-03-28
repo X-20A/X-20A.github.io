@@ -14,6 +14,8 @@
     特四式内火艇改
     零式小型水上機
     零式小型水上機(熟練)
+    Type281 レーダー
+    Type274 射撃管制レーダー
 */
 var e_data = [{"id":1,"name":"12cm単装砲","type":[1,1,1,1,0],"armor":0,"fire":1,"torpedo":0,"bomb":0,"aac":1,"ass":0,"hit":0,"evasion":0,"seek":0,"range":1}
 ,{"id":2,"name":"12.7cm連装砲","type":[1,1,1,1,0],"armor":0,"fire":2,"torpedo":0,"bomb":0,"aac":2,"ass":0,"hit":0,"evasion":0,"seek":0,"range":1}
@@ -538,4 +540,6 @@ var e_data = [{"id":1,"name":"12cm単装砲","type":[1,1,1,1,0],"armor":0,"fire"
 ,{"id":526,"name":"特四式内火艇","type":[20,37,46,36,0],"armor":0,"fire":0,"torpedo":3,"bomb":0,"aac":2,"ass":0,"hit":1,"evasion":0,"seek":0,"range":0}
 ,{"id":522,"name":"零式水上偵察機","type":[5,7,10,10,2],"armor":0,"fire":0,"torpedo":0,"bomb":1,"aac":0,"ass":1,"hit":0,"evasion":1,"seek":3,"range":0}
 ,{"id":523,"name":"零式水上偵察機(熟練)","type":[5,7,10,10,2],"armor":0,"fire":0,"torpedo":0,"bomb":1,"aac":0,"ass":2,"hit":1,"evasion":2,"seek":4,"range":0}
+,{"id":527,"name":"Type281 レーダー","type":[5,8,13,11,0],"armor":0,"fire":0,"torpedo":0,"bomb":0,"aac":7,"ass":0,"hit":1,"evasion":2,"seek":8,"range":0}
+,{"id":528,"name":"Type274 射撃管制レーダー","type":[5,8,13,11,0],"armor":1,"fire":2,"torpedo":0,"bomb":0,"aac":3,"ass":0,"hit":8,"evasion":2,"seek":5,"range":2}
 ];

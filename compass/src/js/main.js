@@ -218,7 +218,15 @@ $(function() {
                 console.log(c_ids);
                 c_names.push(getShipName(i));
                 c_types.push(getType(i));
-                c_searchs.push(calcSeek(i));
+                try {
+                    c_searchs.push(calcSeek(i));
+                } catch(e) {
+                    alert('処理中断:未対応の艦、装備が含まれるかも？');
+                    //空欄化
+                    $(this).val('');
+                    $(this).blur();
+                    return;
+                }
                 c_speeds.push(calcSpeed(i));
                 countUnits(i);
             } else {
