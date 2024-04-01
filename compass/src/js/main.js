@@ -8366,6 +8366,9 @@ $(function() {
                                         sum('HtoI');
                                         return 'I';
                                     }
+                                } else if(track.includes('3')) {
+                                    sum('HtoV');
+                                    return 'V';
                                 }
                                 break;
                             case 'I':
