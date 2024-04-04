@@ -17,6 +17,7 @@ $(function() {
     艦ID'のみ'文字列
     改修値が0のとき、キーがそもそもない
     */
+    let isParamExists = false;
     //艦隊諸元
     let com = {
         BB:0, //戦艦
@@ -484,6 +485,10 @@ $(function() {
             f_flag = true;
             selected_type = f + 1; //配列司偵の為に引いた分足しなおす
             localStorage.setItem('selected_type', selected_type);
+            // urlパラメータからの読み込みならこの時点でパラメータなしでリロード
+            if(isParamExists) {
+                location.href = 'https://x-20a.github.io/compass/';
+            }
             //表示
             reloadImportDisplay();
             startSim();
@@ -9856,16 +9861,40 @@ $(function() {
             selected_type = Number(s);
         }
         //艦隊セット
-        if(f) {
+        let deck = getParam('predeck');
+        if(deck) {
+            isParamExists = true;
+            deck = decodeURIComponent(deck);
+            $('#fleet-import').val(deck);
+            $('#fleet-import').trigger('input');
+        } else if(f) {
             //艦隊は文字列のまま貼る
             $('#fleet-import').val(f);
             $('#fleet-import').trigger('input');
         }
+        
         if(e) {
             if(e === '1') {
                 $('#error-log').prop('checked', true);
             }
         }
+        
+    }
+    // URLから任意のパラメータを取得
+    function getParam(name, url) {
+        if (!url) {
+            url = window.location.href;
+        }
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) {
+            return null;
+        }
+        if (!results[2]) {
+            return '';
+        }
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
     }
 
     /*
