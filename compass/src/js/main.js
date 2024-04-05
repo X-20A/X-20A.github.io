@@ -1079,6 +1079,11 @@ $(function() {
                         res += 4;
                     }
                     break;
+                case 527: //Type281 レーダー
+                    if(na === 3) { // 英(大型)組
+                        res += 2;
+                    }
+                    break;
             }
         }
         return res;
