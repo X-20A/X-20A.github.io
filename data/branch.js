@@ -487,7 +487,7 @@ var branch_info = {
         "L":"$bl空母機動部隊はM$lb$bl$e水上打撃部隊はD$lb",
         "N":"$bl空母+装甲空母1以上はO$lb$bl$e軽空母3以上はO$lb$bl$e高速艦隊はP$lb$bl$e軽巡2以上 かつ$e駆逐3以上はP$lb$bl$eそれ以外はO$lb",
         "P":"$bl分岐点係数2の索敵値62以上はR$lb$bl$eそれ以外はQ$lb",
-        "T":"$bl重巡系2以上はC$lb$bl$e軽巡2以上はC$lb$bl$eそれ以外はU$lb$bl",
+        "T":"$bl重巡系2以上はC$lb$bl$e軽巡2以上はC$lb$bl$eそれ以外はU$lb",
         "U":"$bl重巡系1以上はH$lb$bl$e水母1以上はH$lb$bl$e潜水母艦1以上はV$lb$bl$eそれ以外はH$lb",
         "V":"$bl甲:潜水系4以上はX$lb$bl$e乙:潜水系3以上はX$lb$bl$e丙:潜水系2以上はX$lb$bl$e丁:無条件でX$lb$bl$eそれ以外はW$lb",
         "B":"能動分岐$sw",
