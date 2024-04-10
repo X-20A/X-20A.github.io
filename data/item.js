@@ -542,4 +542,5 @@ var e_data = [{"id":1,"name":"12cm単装砲","type":[1,1,1,1,0],"armor":0,"fire"
 ,{"id":523,"name":"零式水上偵察機(熟練)","type":[5,7,10,10,2],"armor":0,"fire":0,"torpedo":0,"bomb":1,"aac":0,"ass":2,"hit":1,"evasion":2,"seek":4,"range":0}
 ,{"id":527,"name":"Type281 レーダー","type":[5,8,13,11,0],"armor":0,"fire":0,"torpedo":0,"bomb":0,"aac":7,"ass":0,"hit":1,"evasion":2,"seek":8,"range":0}
 ,{"id":528,"name":"Type274 射撃管制レーダー","type":[5,8,13,11,0],"armor":1,"fire":2,"torpedo":0,"bomb":0,"aac":3,"ass":0,"hit":8,"evasion":2,"seek":5,"range":2}
+,{"id":529,"name":"12.7cm連装砲C型改三H","type":[1,1,1,1,0],"armor":1,"fire":3,"torpedo":0,"bomb":0,"aac":5,"ass":3,"hit":1,"evasion":1,"seek":0,"range":1}
 ];
