@@ -488,10 +488,11 @@ $(function() {
             // urlパラメータからの読み込みならこの時点でパラメータなしでリロード
             if(isParamExists) {
                 location.href = 'https://x-20a.github.io/compass/';
+            } else {
+                //表示
+                reloadImportDisplay();
+                startSim();
             }
-            //表示
-            reloadImportDisplay();
-            startSim();
         } else {
             alert('処理中断: 入力値に不備があるかも？');
             //空欄化
