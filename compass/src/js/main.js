@@ -1,3 +1,31 @@
+/*
+    更新手続き
+    
+    イベなど新海域
+        1.関数
+            branch
+            countUnits・・・搭載艦数で何か新しく数えたいのがあれば
+            他分岐条件に必要なもの
+        2.変数
+            areas
+            op_areas・・・何かしらオプションがあれば
+            active
+                1が攻略段階
+                2が難易度 飽くまで慣例
+        3.データ
+            data/map.js
+            data/branch.js
+        4.表示系
+            index.html
+                #area-inner・・・海域
+                #option-box・・・オプション
+                
+        このへん追加すれば動くはず、たぶん
+        
+    新艦・新装備
+        data/ship.js
+        data/item.js
+*/
 import $ from 'jquery';
 import 'jquery-ui/ui/widgets/draggable';
 import 'jquery-ui/ui/widgets/resizable';
