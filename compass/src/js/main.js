@@ -45,7 +45,6 @@ $(function() {
     艦ID'のみ'文字列
     改修値が0のとき、キーがそもそもない
     */
-    let isParamExists = false;
     //艦隊諸元
     let com = {
         BB:0, //戦艦
@@ -511,16 +510,11 @@ $(function() {
             //丸ごとlocalstorageへ
             localStorage.setItem('fleet', JSON.stringify(i_json));
             f_flag = true;
-            selected_type = f + 1; //配列司偵の為に引いた分足しなおす
+            selected_type = f + 1; //配列指定の為に引いた分足しなおす
             localStorage.setItem('selected_type', selected_type);
-            // urlパラメータからの読み込みならこの時点でパラメータなしでリロード
-            if(isParamExists) {
-                location.href = 'https://x-20a.github.io/compass/';
-            } else {
-                //表示
-                reloadImportDisplay();
-                startSim();
-            }
+            //表示
+            reloadImportDisplay();
+            startSim();
         } else {
             alert('処理中断: 入力値に不備があるかも？');
             //空欄化
@@ -9894,19 +9888,19 @@ $(function() {
         if(s) {
             selected_type = Number(s);
         }
-        //艦隊セット
+        // 艦隊セット
+        // urlパラメータからの読み込みならlocalstorageに入れてパラメータなしでリロード
+        // 入力チェックはsetFleetInfoあたりでやる
         let deck = getParam('predeck');
         if(deck) {
-            isParamExists = true;
             deck = decodeURIComponent(deck);
-            $('#fleet-import').val(deck);
-            $('#fleet-import').trigger('input');
+            localStorage.setItem('fleet', deck);
+            location.href = location.origin + location.pathname;
         } else if(f) {
             //艦隊は文字列のまま貼る
             $('#fleet-import').val(f);
             $('#fleet-import').trigger('input');
         }
-        
         if(e) {
             if(e === '1') {
                 $('#error-log').prop('checked', true);
