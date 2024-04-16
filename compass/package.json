@@ -14,6 +14,8 @@
   "license": "ISC",
   "dependencies": {
     "cytoscape": "^3.28.1",
+    "cytoscape-context-menus": "^4.1.0",
+    "cytoscape-cxtmenu": "^3.5.0",
     "decimal.js": "^10.4.3",
     "firebase": "^10.9.0",
     "gkcoi": "^1.5.2",

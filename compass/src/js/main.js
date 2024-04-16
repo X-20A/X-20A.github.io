@@ -31,6 +31,8 @@ import 'jquery-ui/ui/widgets/draggable';
 import 'jquery-ui/ui/widgets/resizable';
 import Decimal from 'decimal.js';
 import cytoscape from 'cytoscape';
+import contextMenus from 'cytoscape-context-menus';
+cytoscape.use(contextMenus);
 import { generate } from "gkcoi";
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, addDoc, doc, getDocs, query, where } from "firebase/firestore";
@@ -144,6 +146,9 @@ $(function() {
     let track = []; //最後の軌跡
     
     let cy = null;
+    
+    let isIgnoreSeek = false; //索敵無視状態
+    let fs_copy = null;
     
     //firebase(エラーログ)関連
     const firebaseConfig = {
@@ -514,6 +519,7 @@ $(function() {
             localStorage.setItem('selected_type', selected_type);
             //表示
             reloadImportDisplay();
+            isIgnoreSeek = false;
             startSim();
         } else {
             alert('処理中断: 入力値に不備があるかも？');
@@ -9704,6 +9710,7 @@ $(function() {
         //更新
         drew_area = area;
         console.log(`drew_area : ${drew_area}`);
+        //分岐条件表示
         let node = null;
         cy.on('mousedown', function (e) {
             let tar = e.target;
@@ -9824,6 +9831,30 @@ $(function() {
             } else {
                 removePopupInfo();
             }
+        });
+        //図上で右クリック
+        cy.contextMenus({
+            menuItems: [
+                {
+                    id: 'customMenuItem',
+                    content: '索敵無視',
+                    coreAsWell: true,
+                    show: true,
+                    onClickFunction: function (event) {
+                        if(isIgnoreSeek) {
+                            f_search = fs_copy;
+                            isIgnoreSeek = false;
+                        } else {
+                            //退避
+                            fs_copy = f_search;
+                            f_search = [999,999,999,999];
+                            isIgnoreSeek = true;
+                        }
+                        reloadImportDisplay();
+                        startSim();
+                    }
+                }
+            ]
         });
         //図上スクロールをページスクロールに変換
         $('#cy').on('wheel', function(e){
