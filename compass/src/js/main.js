@@ -254,6 +254,7 @@ $(function() {
                 try {
                     c_searchs.push(calcSeek(i));
                 } catch(e) {
+                    console.error(e);
                     alert('処理中断:未対応の艦、装備が含まれるかも？');
                     //空欄化
                     $(this).val('');
@@ -815,10 +816,15 @@ $(function() {
         }
         let material = sum_base.plus(f_length_correct).minus(command);
         //係数 四捨五入で小数第二位まで
-        res.push((material.plus(sum_eq)).toDecimalPlaces(2, Decimal.ROUND_DOWN));
-        res.push((material.plus(sum_eq.times(2))).toDecimalPlaces(2, Decimal.ROUND_DOWN));
-        res.push((material.plus(sum_eq.times(3))).toDecimalPlaces(2, Decimal.ROUND_DOWN));
-        res.push((material.plus(sum_eq.times(4))).toDecimalPlaces(2, Decimal.ROUND_DOWN));
+        for(let j = 1;j < 5;j++) {
+            let elem = material.plus(sum_eq.times(j));
+            //値の正負で丸めの挙動を揃える
+            if(elem < 0) {
+                res.push(elem.negated().toDecimalPlaces(2, Decimal.ROUND_UP).negated());
+            } else {
+                res.push(elem.toDecimalPlaces(2, Decimal.ROUND_DOWN));
+            }
+        }
         return res;
     }
     //装備ボーナス取得 艦のjson, 装備id(配列)
