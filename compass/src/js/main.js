@@ -1345,7 +1345,7 @@ $(function() {
             u += `<p>${f_united}</p>`;
         }
         if(f_names && speed && f_search) {
-            $('#import-display').append(`${u}<p>${speed} | 搭載艦数[ドラム缶:${f_drum},大発系:${f_craft},電探:${f_radar}]</p><p>${part}</p><p id="seek-info"><span id="asterisk">*</span><span id="seek-message">一致しない場合は制空シミュを信用してください</span>索敵値: <strong>1: </strong>${f_search[0]} <strong>2: </strong>${f_search[1]} <strong>3: </strong>${f_search[2]} <strong>4: </strong>${f_search[3]}</p>`);
+            $('#import-display').append(`${u}<p>${speed} | 搭載艦数[ドラム缶:${f_drum},大発系:${f_craft},電探:${f_radar}]</p><p>${part}</p><p id="seek-info">索敵値: <strong>1: </strong>${f_search[0]} <strong>2: </strong>${f_search[1]} <strong>3: </strong>${f_search[2]} <strong>4: </strong>${f_search[3]}</p>`);/*<span id="asterisk">*</span><span id="seek-message">一致しない場合は制空シミュを信用してください</span>*/
         }
     }
     
