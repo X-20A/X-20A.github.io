@@ -1066,11 +1066,11 @@ $(function() {
                         res += 1;
                     }
                     break;
-                case 412: //熟練見張員
+                case 412: //水雷見張員
                     if(na === 0) {
                         if(type === '駆逐艦') {
                             res += 1;
-                        } else if(type='軽巡洋艦') {
+                        } else if(type === '軽巡洋艦') {
                             res += 3;
                         } else if(type === '重巡洋艦') {
                             res += 1;
@@ -1081,7 +1081,7 @@ $(function() {
                     if(na === 0) {
                         if(type === '駆逐艦') {
                             res += 1;
-                        } else if(type='軽巡洋艦') {
+                        } else if(type === '軽巡洋艦') {
                             res += 3;
                         } else if(type === '重巡洋艦') {
                             res += 3;
