@@ -6683,7 +6683,7 @@ $(function() {
                                 }
                                 break;
                             case 'C':
-                                if(BB + CV + Ss > 0 || BBV > 2 || (CVL > 2 || (CVL === 2 && isInclude('あきつ丸')))) {
+                                if(BB + CV + Ss > 0 || (CVL > 2 || (CVL === 2 && isInclude('あきつ丸')))) {
                                     sum('CtoD');
                                     sum('DtoF');
                                     return 'F';
