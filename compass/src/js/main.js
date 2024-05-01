@@ -6554,7 +6554,7 @@ $(function() {
                                         } else if(DD < 3) {
                                             sum('GtoJ');
                                             return 'J';
-                                        } else if(isFaster) {
+                                        } else if(isFaster()) {
                                             sum('GtoP');
                                             return null;
                                         } else if(CAs > 2 || speed === '低速艦隊') {
@@ -9728,7 +9728,7 @@ $(function() {
                 //2023夏はフェイズごとに記述したが以降は分からない
                 let b_area = null;
                 if(active.hasOwnProperty(drew_area)) {
-                    if(active[drew_area].hasOwnProperty('1') && drew_area.includes('57')) {
+                    if(active[drew_area].hasOwnProperty('1') && (drew_area.includes('7') || drew_area.includes('57'))) {
                         console.log('check1');
                         b_area = branch_info[`${drew_area}-${active[drew_area]['1']}`];
                     } else {
