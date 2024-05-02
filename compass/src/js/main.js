@@ -38,52 +38,52 @@ import { initializeApp } from "firebase/app";
 import { getFirestore, collection, addDoc, doc, getDocs, query, where } from "firebase/firestore";
 $(function() {
     /*
-    s_dataはship.js
-    e_dataはitem.jsより
-    idがs_dataは文字列
-    e_dataは数字であることに注意
-    
-    制空シミュを基準にしたときの本家デッキビルダー差異・注意点
-    艦ID'のみ'文字列
-    改修値が0のとき、キーがそもそもない
+        s_dataはship.js
+        e_dataはitem.jsより
+        idがs_dataは文字列
+        e_dataは数字であることに注意
+
+        制空シミュを基準にしたときの本家デッキビルダー差異・注意点
+        艦ID'のみ'文字列
+        改修値が0のとき、キーがそもそもない
     */
-    //艦隊諸元
+    // 艦隊諸元
     let com = {
-        BB:0, //戦艦
-        BBV:0, //航空戦艦&改装航空戦艦
-        CV:0, //正規空母
-        CVB:0, //装甲空母
-        CVL:0, //軽空母
-        CA:0, //重巡
-        CAV:0, //航巡
-        CL:0, //軽巡
-        CLT:0, //雷巡
-        ATU:0, //練習特務艦 欠番
-        CT:0, //練習巡洋艦
-        DD:0, //駆逐艦
-        DE:0, //海防艦
-        SS:0, //潜水艦
-        SSV:0, //潜水空母
-        AV:0, //水母
-        AO:0, //補給艦
-        ASU:0, //特務艦 欠番
-        LHT:0, //灯台補給船 欠番
-        CVE:0, //特設護衛空母 欠番
-        LHA:0, //揚陸艦
-        LST:0, //戦車揚陸艦 欠番
-        AS:0, //潜水母艦
-        AR:0 //工作艦
+        BB:0, // 戦艦
+        BBV:0, // 航空戦艦&改装航空戦艦
+        CV:0, // 正規空母
+        CVB:0, // 装甲空母
+        CVL:0, // 軽空母
+        CA:0, // 重巡
+        CAV:0, // 航巡
+        CL:0, // 軽巡
+        CLT:0, // 雷巡
+        ATU:0, // 練習特務艦 欠番
+        CT:0, // 練習巡洋艦
+        DD:0, // 駆逐艦
+        DE:0, // 海防艦
+        SS:0, // 潜水艦
+        SSV:0, // 潜水空母
+        AV:0, // 水母
+        AO:0, // 補給艦
+        ASU:0, // 特務艦 欠番
+        LHT:0, // 灯台補給船 欠番
+        CVE:0, // 特設護衛空母 欠番
+        LHA:0, // 揚陸艦
+        LST:0, // 戦車揚陸艦 欠番
+        AS:0, // 潜水母艦
+        AR:0 // 工作艦
     };
-    let i_json = null; //インポートしたjsonを格納
-    //艦隊諸元 分岐演算に使う
-    let f_length = 0; //構成艦数
+    let i_json = null; // インポートしたjsonを格納
+    // 艦隊諸元 分岐演算に使う
+    let f_length = 0; // 構成艦数
     let f_ids = null;
-    let f_names = null; //構成艦艦名
-    let f2_names = null; //随伴艦隊構成艦名 表示の為だけ
+    let f_names = null; // 構成艦艦名
+    let f2_names = null; // 随伴艦隊構成艦名 表示の為だけ
     let f2_length = 0;
-    let speed = null; //速度
-    let f_search = null; //索敵値
-    //ドラム缶、大発系、電探搭載艦数
+    let speed = null; // 速度
+    let f_search = null; // 索敵値
+    // ドラム缶、大発系、電探搭載艦数
     let f_drum = 0;
     let f_radar = 0;
     let f_craft = 0;
@@ -101,7 +101,11 @@ $(function() {
     */
     let f_united = null;
     
-    //読込時の計算に使うあれこれ
+    // 資源マス計算に使う(分岐判定には使わない)装備の累計
+    let ft_drum = 0;
+    let ft_craft = 0;
+    
+    // 読込時の計算に使うあれこれ
     let c_lengths = [];
     let c_ids = [];
     let c_names = [];
@@ -112,6 +116,12 @@ $(function() {
     let c_radars = [];
     let c_crafts = [];
     let c_kanko = [];
+    
+    // 資源マス計算に使う(分岐判定には使わない)装備の累計
+    // 大発動艇, 大発動艇(八九式中戦車&陸戦隊), 特に式内火艇, 特大発動艇, 装甲艇(AB艇), 武装大発, 大発動艇(II号戦車/北アフリカ仕様), 特大発動艇+一式砲戦車, 特四式内火艇, 特四式内火艇改
+    let valid_crafts = [68,166,167,193,408,409,436,449,525,526];
+    let ct_drums = [];
+    let ct_crafts = [];
     
     /*
         艦隊種別選択したやつ(数値)が入る
@@ -125,32 +135,34 @@ $(function() {
     */
     let selected_type = null;
     
-    //受け付ける海域
+    // 受け付ける海域
     const areas = ['1-1','1-2','1-3','1-4','1-5','1-6','2-1','2-2','2-3','2-4','2-5','3-1','3-2','3-3','3-4','3-5','4-1','4-2','4-3','4-4','4-5','5-1','5-2','5-3','5-4','5-5','6-1','6-2','6-3','6-4','6-5','7-1','7-2','7-3','7-3-1','7-4','7-5','57-7','58-1','58-2','58-3','58-4'];
+    //optionがある海域
     const op_areas = ['4-5','5-3','5-5','6-3','7-3','7-4','7-5','57-7','58-1','58-2','58-3','58-4'];
     
-    //1がキーの値はPhase
+    // 1がキーの値はPhase
     let active = {'4-5':{'A':'D','C':'F','I':'J'},'5-3':{'O':'K'}, '5-5':{'F':'D'}, '6-3':{'A':'B'},'7-3':{'1':'0'},'7-4':{'F':'H'},'7-5':{'F':'G','H':'I','O':'P'},'57-7':{'1':'1','A2':'A3','B2':'B3','C':'A3','J':'K'}, '57-7':{'1':'1','A2':'A3','B':'B1','B2':'B3','C':'A3','J':'K'},'58-1':{'1':'1','A':'D','I':'N1','F':'G'},'58-2':{'1':'1','2':'1','B':'E'},'58-3':{'1':'1','2':'1','M':'P'},'58-4':{'1':'1','2':'1','B':'D'}};
     
-    let area = null; //入力で切り替えるの
-    let drew_area = null; //表示中の海域
+    let area = null; // 入力で切り替えるの
+    let drew_area = null; // 表示中の海域
     
-    //オプション表示の為のz-index
+    // オプション表示の為のz-index
     let z_value = 10;
     
-    //演算開始の為のフラグ
+    // 演算開始の為のフラグ
     let a_flag = false;
     let f_flag = false;
     
-    let rate = {}; //これにルート情報を詰め込んでいく
-    let track = []; //最後の軌跡
+    let rate = {}; // これにルート情報を詰め込んでいく
+    let track = []; // 最後の軌跡
     
     let cy = null;
     
-    let isIgnoreSeek = false; //索敵無視状態
+    // 索敵無視フラグと退避用変数
+    let is_ignore_seek = false;
     let fs_copy = null;
     
-    //firebase(エラーログ)関連
+    // firebase(エラーログ)関連
     const firebaseConfig = {
         apiKey: "AIzaSyDyh01YFd5B_HmBHHKyT9FFj2MVLIqHWkY",
         authDomain: "compass-sim-error-log.firebaseapp.com",
@@ -163,7 +175,7 @@ $(function() {
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    //海域が入力されたら適正かチェックしてフラグ切替
+    // 海域が入力されたら適正かチェックしてフラグ切替
     $('.areas').on('click', function() {
         setArea($(this).val());
     });
@@ -196,9 +208,9 @@ $(function() {
         }
         startSim();
     }
-    //オプションドラッグ
+    // オプションドラッグ
     $('#draggable-list').draggable({ containment: 'window', scroll: false });
-    //オプションが変更されたら取得してlocalstorageへ保存
+    // オプションが変更されたら取得してlocalstorageへ保存
     $('.option-value').on('input', function() {
         var name = $(this).attr('name');
         var type = $(this).attr('type');
@@ -212,7 +224,7 @@ $(function() {
         }
         startSim();
     });
-    //デッキビルダー読み込み
+    // デッキビルダー読み込み
     $('#fleet-import').on('input', function() {
         var text = $(this).val();
         try {
@@ -231,9 +243,9 @@ $(function() {
             1.貼り付けられた時点で第四艦隊まで読み込んで計算まで済ます
             2.一艦隊しか情報が無ければそのまま演算開始
             3.key:tに値があればその形式で演算開始
-            それ以外は艦隊形式の選択を待つ
+            4.それ以外は艦隊形式の選択を待つ
         */
-        //cシリーズ初期化
+        // cシリーズ初期化
         inCs();
         // 1
         let zeroCount = 0;
@@ -262,10 +274,11 @@ $(function() {
                     return;
                 }
                 c_speeds.push(calcSpeed(i));
-                countUnits(i);
+                countUnits(i, false);
+                countUnits(i, true);
             } else {
-                //第一・第二艦隊が空で第三艦隊だけあるみたいな場合
-                //空を入れてやる
+                // 第一・第二艦隊が空で第三艦隊だけあるみたいな場合
+                // 空を入れてやる
                 c_ids.push([]);
                 c_names.push([]);
                 c_types.push([]);
@@ -275,6 +288,9 @@ $(function() {
                 c_radars.push(0);
                 c_crafts.push(0);
                 c_kanko.push(0);
+                
+                ct_drums.push(0);
+                ct_crafts.push(0);
             }
         }
         console.log(`c_lengths : ${c_lengths}`);
@@ -358,7 +374,6 @@ $(function() {
         $(this).val('');
         $(this).blur();
     });
-    //
     $('#type-select').on('mouseover', function() {
         $('#fleet-option-box').css('display', 'block');
     });
@@ -372,8 +387,8 @@ $(function() {
         let type = $(this).data('type');
         setFleetInfo(type);
     });
-    //セレクトの値を一つ前に戻す
-    //読込がまずったときに
+    // セレクトの値を一つ前に戻す
+    // 読込がまずったときに
     function setBackSelect() {
         console.log('setBackSelect');
         let options = $('.fleet-type');
@@ -388,8 +403,8 @@ $(function() {
             localStorage.removeItem('selected_type');
         }
     }
-    //計算結果から抜き出して変数セット
-    //引数:艦隊種別
+    // 計算結果から抜き出して変数セット
+    // 引数:艦隊種別
     function setFleetInfo(f) {
         console.log(`f : ${f}`);
         f--; //配列指定の為
@@ -399,34 +414,34 @@ $(function() {
         }
         try {
             if(f < 4) {
-                //通常艦隊
+                // 通常艦隊
                 f_length = c_lengths[f];
                 console.log(`f_length : ${f_length}`);
                 if(!f_length) {
                     alert('処理中断: 艦隊が空かも？');
-                    //空欄化
+                    // 空欄化
                     $('#fleet-import').val('');
                     $('#fleet-import').blur();
                     setBackSelect();
                     return;
                 }
-                //構成艦のid
+                // 構成艦のid
                 f_ids = c_ids[f];
                 console.log(`f_ids : ${f_ids}`);
-                //構成艦の名前
+                // 構成艦の名前
                 f_names = c_names[f];
                 console.log(`f_names : ${f_names}`);
                 let types = c_types[f];
                 console.log(`types : ${types}`);
-                //変数反映
+                // 変数反映
                 reflectionCom(types);
-                //索敵値
+                // 索敵値
                 f_search = c_searchs[f];
                 console.log(`f_search : ${f_search}`);
-                //速度
+                // 速度
                 speed = c_speeds[f];
                 console.log(`speed : ${speed}`);
-                //ドラム缶、大発、電探搭載艦数カウント 変数にセット
+                // ドラム缶、大発、電探搭載艦数カウント 変数にセット
                 f_drum = c_drums[f];
                 f_radar = c_radars[f];
                 f_craft = c_crafts[f];
@@ -435,6 +450,11 @@ $(function() {
                 console.log(`電探 : ${f_radar}`);
                 console.log(`大発系 : ${f_craft}`);
                 console.log(`寒甲 : ${f_kanko}`);
+                
+                ft_drum = ct_drums[f];
+                ft_craft = ct_crafts[f];
+                console.log(`ドラム缶累計 : ${ft_drum}`);
+                console.log(`大発系累計 : ${ft_craft}`);
                 if(f_length === 7) {
                     f_united = '遊撃部隊';
                 } else {
@@ -442,8 +462,8 @@ $(function() {
                 }
                 console.log(`f_united : ${f_united}`);
             } else {
-                //連合艦隊
-                //第一艦隊と第二艦隊を足したり
+                // 連合艦隊
+                // 第一艦隊と第二艦隊を足したり
                 f_length = c_lengths[0] + c_lengths[1];
                 f2_length = c_lengths[1];
                 console.log(`f_length : ${f_length}`);
@@ -455,25 +475,25 @@ $(function() {
                     $('#fleet-import').blur();
                     return;
                 }
-                //構成艦のid
+                // 構成艦のid
                 f_ids = c_ids[0].concat(c_ids[1]);
                 console.log(`f_ids : ${f_ids}`);
-                //構成艦の名前
+                // 構成艦の名前
                 f_names = c_names[0].concat(c_names[1]);
                 f2_names = c_names[1];
                 console.log(`f_names : ${f_names}`);
                 let types = c_types[0].concat(c_types[1]);
                 console.log(`types : ${types}`);
-                //変数反映
+                // 変数反映
                 reflectionCom(types);
-                //索敵値 各項足し合わせ
+                // 索敵値 各項足し合わせ
                 f_search = [];
                 for (var i = 0; i < 4; i++) {
                     f_search.push(new Decimal(c_searchs[0][i]).plus(new Decimal(c_searchs[1][i])));
                 }
                 console.log(`f_search : ${f_search}`);
-                //速度
-                //低い方から適用
+                // 速度
+                // 低い方から適用
                 if(c_speeds[0] === '低速艦隊' || c_speeds[1] === '低速艦隊') {
                     speed = '低速艦隊';
                 } else if(c_speeds[0] === '高速艦隊' || c_speeds[1] === '高速艦隊') {
@@ -484,7 +504,7 @@ $(function() {
                     speed = '最速艦隊';
                 }
                 console.log(`speed : ${speed}`);
-                //ドラム缶、大発、電探搭載艦数カウント 変数にセット
+                // ドラム缶、大発、電探搭載艦数カウント 変数にセット
                 f_drum = c_drums[0] + c_drums[1];
                 f_radar = c_radars[0] + c_radars[1];
                 f_craft = c_crafts[0] + c_crafts[1];
@@ -492,7 +512,10 @@ $(function() {
                 console.log(`ドラム缶 : ${f_drum}`);
                 console.log(`電探 : ${f_radar}`);
                 console.log(`大発系 : ${f_craft}`);
-                //艦隊種別
+                
+                ft_drum = ct_drums[0] + ct_drums[1];
+                ft_craft = ct_crafts[0] + ct_crafts[1];
+                // 艦隊種別
                 if(f === 4) {
                     f_united = '空母機動部隊';
                 } else if(f === 5) {
@@ -511,20 +534,20 @@ $(function() {
             setBackSelect();
             return;
         }
-        //気休めだけども保存前にチェック
+        // 気休めだけども保存前にチェック
         if(f_length && f_ids && f_names && f_search && f_search[0] && speed) {
-            //丸ごとlocalstorageへ
+            // 丸ごとlocalstorageへ
             localStorage.setItem('fleet', JSON.stringify(i_json));
             f_flag = true;
             selected_type = f + 1; //配列指定の為に引いた分足しなおす
             localStorage.setItem('selected_type', selected_type);
-            //表示
+            // 表示
             reloadImportDisplay();
-            isIgnoreSeek = false;
+            is_ignore_seek = false;
             startSim();
         } else {
             alert('処理中断: 入力値に不備があるかも？');
-            //空欄化
+            // 空欄化
             $('#fleet-import').val('');
             $('#fleet-import').blur();
             setBackSelect();
@@ -542,64 +565,83 @@ $(function() {
         c_radars = [];
         c_crafts = [];
         c_kanko = [];
+        
+        ct_drums = [];
+        ct_crafts = [];
     }
-    //ドラム缶、大発、電探搭載艦数, 寒甲カウント
-    function countUnits(num) {
-        //先ず初期化
+    // ドラム缶、大発、電探搭載艦数, 寒甲カウント
+    function countUnits(num, is_for_resource) {
         let drum = 0;
         let radar = 0;
         let craft = 0;
         let kanko = 0;
-        for(let i = 0;i < c_lengths[num - 1];i++) {
-            let e_ids = getEqIds(c_ids[num - 1][i], num);
-            //一隻につき1回だけカウント
-            let d = true;
-            let r = true;
-            let c = true;
-            let k = true;
-            for(let e_id of e_ids) {
-                if(e_id === 75) { //ドラム缶
-                    if(d) {
+        if(is_for_resource) {
+            for(let i = 0;i < c_lengths[num - 1];i++) {
+                let e_ids = getEqIds(c_ids[num - 1][i], num);
+                // 累計
+                for(let e_id of e_ids) {
+                    if(e_id === 75) { // ドラム缶
                         drum++;
-                        d = false;
-                    }
-                }
-                //typeを取得
-                let t_id = getEqType(e_id);
-                if(t_id === 5812 || t_id === 5813) {
-                    if(r) {
-                        //小型電探
-                        //大型電探
-                        radar++;
-                        r = false;
-                    }
-                } else if(t_id === 81424 || t_id === 84724|| t_id === 203746) {
-                    //特大発動艇＋戦車第11連隊及びM4A1のみ除外 M4A1はtype:84524で含まれない
-                    if(e_id !== 230) {//特大発動艇＋戦車第11連隊及びM4A1のみ除外 M4A1はtype:84524で含まれない
-                        if(c) {
-                            craft++;
-                            c = false;
-                        }
-                    }
-                } else if(e_id === 402) { //寒甲
-                    if(k) {
-                        kanko++;
-                        k = false;
+                    } else if(valid_crafts.includes(e_id)) { //大発系
+                        craft++;
                     }
                 }
             }
+            ct_drums.push(drum);
+            ct_crafts.push(craft);
+        } else {
+            for(let i = 0;i < c_lengths[num - 1];i++) {
+                let e_ids = getEqIds(c_ids[num - 1][i], num);
+                // 一隻につき1回だけカウント
+                let d = true;
+                let r = true;
+                let c = true;
+                let k = true;
+                for(let e_id of e_ids) {
+                    if(e_id === 75) { // ドラム缶
+                        if(d) {
+                            drum++;
+                            d = false;
+                        }
+                    }
+                    //typeを取得
+                    let t_id = getEqType(e_id);
+                    if(t_id === 5812 || t_id === 5813) {
+                        if(r) {
+                            // 小型電探
+                            // 大型電探
+                            radar++;
+                            r = false;
+                        }
+                    } else if(t_id === 81424 || t_id === 84724|| t_id === 203746) {
+                        // 特大発動艇＋戦車第11連隊及びM4A1のみ除外 M4A1はtype:84524で含まれない
+                        if(e_id !== 230) {
+                            if(c) {
+                                craft++;
+                                c = false;
+                            }
+                        }
+                    } else if(e_id === 402) { // 寒甲
+                        if(k) {
+                            kanko++;
+                            k = false;
+                        }
+                    }
+                }
+            }
+            c_drums.push(drum);
+            c_radars.push(radar);
+            c_crafts.push(craft);
+            c_kanko.push(kanko);
         }
-        c_drums.push(drum);
-        c_radars.push(radar);
-        c_crafts.push(craft);
-        c_kanko.push(kanko);
+        
     }
-    //typeの先頭3つを連結してidとして返す(数値型)
+    // typeの先頭3つを連結してidとして返す(数値型)
     function getEqType(e_id) {
         let entry = e_data.find(entry => entry.id === e_id);
         return Number(entry.type.slice(0, 3).join(''));
     }
-    //速度を取得 高速+艦隊etc
+    // 速度を取得 高速+艦隊etc
     function calcSpeed(num) {
         let arr = [];
         for(let i = 0;i < c_lengths[num - 1];i++) {
@@ -745,7 +787,7 @@ $(function() {
         }
         return res;
     }
-    //構成艦のidを取得 配列で返す
+    // 構成艦のidを取得 配列で返す
     function getIdsFromFleet(num) {
         const ids = [];
         const f = `f${num}`;
@@ -757,7 +799,7 @@ $(function() {
         }
         return ids;
     }
-    //構成艦数カウント
+    // 構成艦数カウント
     function countShips(num) {
         // f1内のsキーの配下にあるオブジェクト数をカウント
         try {
@@ -768,7 +810,7 @@ $(function() {
             return 0;
         }
     }
-    //索敵計算
+    // 索敵計算
     function calcSeek(num) {
         let res = [];
         let sum_base = new Decimal(0); //艦娘索敵値によるスコア
@@ -827,7 +869,7 @@ $(function() {
         }
         return res;
     }
-    //装備ボーナス取得 艦のjson, 装備id(配列)
+    // 装備ボーナス取得 艦のjson, 装備id(配列)
     function getSeekBonus(ship, e_ids, num) {
         console.log(ship);
         let res = 0;
@@ -1123,7 +1165,7 @@ $(function() {
         }
         return res;
     }
-    //装備係数&改修係数取得 配列[装備係数, 改修係数]を返す
+    // 装備係数&改修係数取得 配列[装備係数, 改修係数]を返す
     function getEqCo(id) {
         let res = [];
         //typeを取得
@@ -1196,7 +1238,7 @@ $(function() {
         }
         return res;
     }
-    //艦idと艦隊番号から装備idを配列で得る
+    // 艦idと艦隊番号から装備idを配列で得る ※同一の艦が含まれると不具合が出るかも
     function getEqIds(s_id, num) {
         const ids = [];
         for (const s_key in i_json[`f${num}`]) {
@@ -1212,7 +1254,7 @@ $(function() {
         }
         return ids;
     }
-    //艦idから装備改修値を配列で得る
+    // 艦idから装備改修値を配列で得る
     function getEqRfs(s_id, num) {
         const rfs = [];
         for (const s_key in i_json[`f${num}`]) {
@@ -1230,7 +1272,7 @@ $(function() {
         }
         return rfs;
     }
-    //艦種を変数に反映
+    // 艦種を変数に反映
     function reflectionCom(types) {
         let res = [];
         for(let i = 0;i < types.length;i++) {
@@ -1296,8 +1338,8 @@ $(function() {
             }
         }
     }
-    //構成艦の名前を配列で返す
-    //引数:随伴であるか否か
+    // 構成艦の名前を配列で返す
+    // 引数:随伴であるか否か
     function getShipName(num) {
         let names = [];
         for (let id of c_ids[num - 1]) {
@@ -1308,7 +1350,7 @@ $(function() {
         }
         return names;
     }
-    //idから艦種取得 配列で渡す
+    // idから艦種取得 配列で渡す
     function getType(num) {
         let types = [];
         for (let id of c_ids[num - 1]) {
@@ -1319,7 +1361,7 @@ $(function() {
         }
         return types;
     }
-    //艦隊情報表示
+    // 艦隊情報表示
     function reloadImportDisplay() {
         $('#import-display').empty();
         let part = '';
@@ -1349,10 +1391,10 @@ $(function() {
         }
     }
     
-    //以下分岐判定に必要な関数
+    // 以下分岐判定に必要な関数
 
-    //特定の艦が含まれるかチェック
-    //改、改二等後に続く文字列は許容するが名前が変わる場合は都度呼び出すこと
+    // 特定の艦が含まれるかチェック
+    // 改、改二等後に続く文字列は許容するが名前が変わる場合は都度呼び出すこと
     function isInclude(name) {
         // 配列をループして各要素を調べる
         for (let i = 0; i < f_length; i++) {
@@ -1365,7 +1407,7 @@ $(function() {
         // ループを抜けても見つからなかった場合、falseを返す
         return false;
     }
-    //高速+艦隊か最速艦隊であればtrue
+    // 高速+艦隊か最速艦隊であればtrue
     function isFaster() {
         if(speed === '高速+艦隊' || speed === '最速艦隊') {
             return true;
@@ -1373,7 +1415,7 @@ $(function() {
             return false;
         }
     }
-    //旗艦が軽巡であればtrue
+    // 旗艦が軽巡であればtrue
     function isFCL () {
         var name = f_names[0];
         //先頭一致
@@ -1387,7 +1429,7 @@ $(function() {
         }
         return false;
     }
-    //低速戦艦をカウント
+    // 低速戦艦をカウント
     function slowBB() {
         var slowBBs = ['扶桑','扶桑改','扶桑改二','山城','山城改','山城改二','伊勢','伊勢改','伊勢改二','日向','日向改','日向改二','長門','長門改','長門改二','陸奥','陸奥改','陸奥改二','大和','大和改','大和改二重','武蔵','武蔵改','武蔵改二','Conte di Cavour','Nevada','Nevada改','Nevada改 Mod.2','Colorado','Colorado改','Maryland','Marylan改','Warspite','Warspite改','Nelson','Nelson改','Rodney','Rodney改','Гангут','Октябрьская революция','Гангут два'];
         // 配列arr1の要素をセットに変換
@@ -1415,7 +1457,7 @@ $(function() {
         }
         return count;
     }
-    //大和型カウント
+    // 大和型カウント
     function countYamato() {
         var yamatos = ['大和', '武蔵'];
         var count = 0;
@@ -1429,7 +1471,7 @@ $(function() {
         }
         return count;
     }
-    //艦隊が連合艦隊であるか
+    // 艦隊が連合艦隊であるか
     function isCom() {
         if(f_united === '空母機動部隊' || f_united === '水上打撃部隊' || f_united === '輸送護衛部隊') {
             return true;
@@ -1437,7 +1479,7 @@ $(function() {
             return false;
         }
     }
-    //ルートカウント
+    // ルートカウント
     function sum(route) {
         //無ければ追加、あれば加算
         rate[route] ? rate[route] += 1:rate[route] = 1;
@@ -1449,8 +1491,8 @@ $(function() {
             track.push(route.split('to')[1]);
         }
     }
-    //百分率で指定 小数第一位まで可
-    //指定した確率でtrue
+    // 百分率で指定 小数第一位まで可
+    // 指定した確率でtrue
     function sai(num) {
         // 0から100までの乱数を生成
         const randomValue = Math.random() * 100;
@@ -1459,11 +1501,13 @@ $(function() {
         // 1から100の間で指定された値以下であればtrueを返す
         return randomValue <= roundedNum;
     }
-    //分岐関数
-    //マップをworld-map,マスをアルファベットで、スタート地点ならnull
-    //再帰にするとスタックする
-    //纏められそうなのもあるが実装優先で愚直に書く
-    //但し条件から漏れると即無限ループなので必ずelse等で拾うこと
+    /*
+        分岐関数
+        マップをworld-map,マスをアルファベットで、スタート地点ならnull
+        再帰にするとスタックする
+        纏められそうなのもあるが実装優先で愚直に書く
+        但し条件から漏れると即無限ループなので必ずelse等で拾うこと
+    */
     function branch(world, map, edge, isOnce) {
         const BB = com['BB']; //戦艦
         const BBV = com['BBV'];//航空戦艦&改装航空戦艦
@@ -9404,7 +9448,7 @@ $(function() {
         }
     }
 
-    //演算開始
+    // 演算開始
     function startSim() {
         if(a_flag && f_flag) {
             area = localStorage.getItem('area');
@@ -9456,7 +9500,7 @@ $(function() {
         }
     }
 
-    //マップ描画
+    // マップ描画
     function drawMap(max_c) {
         removePopupInfo();
         let map = map_info; //map.jsより
@@ -9466,7 +9510,7 @@ $(function() {
             nodes: [],
             edges: []
         };
-        //nodes流し込み
+        // nodes流し込み
         for (let key in spots) {
             if (spots.hasOwnProperty(key)) {
                 //座標,マスの種類
@@ -9494,7 +9538,7 @@ $(function() {
             }
         }
 
-        //スタイルシート
+        // スタイルシート
         var style = [
             { selector: 'node', 
                 style: {
@@ -9710,13 +9754,13 @@ $(function() {
             elements: elements,
             style: style,
             layout:layout,
-            autoungrabify: true, //nodeのドラッグ不可
+            autoungrabify: true, // nodeのドラッグ不可
             userZoomingEnabled: false
         });
-        //更新
+        // 更新
         drew_area = area;
         console.log(`drew_area : ${drew_area}`);
-        //分岐条件表示
+        // 分岐条件表示
         let node = null;
         cy.on('mousedown', function (e) {
             let tar = e.target;
@@ -9724,12 +9768,11 @@ $(function() {
                 let node = tar.data('name');
                 let nodeData = map['spots'][drew_area][node];
                 let n_length = nodeData.length;
-                //Phase
-                //2023夏はフェイズごとに記述したが以降は分からない
+                // Phase
+                // 2023夏はフェイズごとに記述したが以降は分からない
                 let b_area = null;
                 if(active.hasOwnProperty(drew_area)) {
                     if(active[drew_area].hasOwnProperty('1') && (drew_area.includes('7') || drew_area.includes('57'))) {
-                        console.log('check1');
                         b_area = branch_info[`${drew_area}-${active[drew_area]['1']}`];
                     } else {
                         b_area = branch_info[drew_area];
@@ -9738,16 +9781,9 @@ $(function() {
                     b_area = branch_info[drew_area];
                 }
                 if(b_area.hasOwnProperty(node)) {
-                    if($('#popup-info')) {
-                        $('#popup-info').remove();
-                    }
-                    //クリックした座標(cy基準)
-                    let position = tar.renderedPosition();
-                    // cy領域の左上の座標を取得
-                    var cyContainer = cy.container().getBoundingClientRect();
-
+                    removePopupInfo();
                     let text = b_area[node];
-                    //改行、赤字置換
+                    // 改行、赤字置換
                     text = text.replaceAll('$e', '<br>');
                     text = text.replaceAll('$co', '<span style="color:red;">');
                     text = text.replaceAll('$oc', '</span>');
@@ -9764,9 +9800,9 @@ $(function() {
                         console.log(`world : ${world}`);
                         console.log(`map : ${map}`);
                         console.log(`node : ${node}`);
-                        //先ず1周してtrackを作る
+                        // 先ず1周してtrackを作る
                         var edge = null;
-                        //無限ループ防止
+                        // 無限ループ防止
                         var safety = 0;
                         var count = 0;
                         while(count < 15) {
@@ -9807,30 +9843,7 @@ $(function() {
                     }
                     text = text.replaceAll('/*', '<span style="text-decoration:underline;text-decoration-color: white;">');
                     text = text.replaceAll('*/', '</span>');
-                    text = `<p>${text}</p>`;
-                    let popup = $('<div>').html(text).attr('id', 'popup-info');
-                    //表示位置調整
-                    let top = position.y + cyContainer.top - 10;
-                    let left = position.x + cyContainer.left + 20;
-                    if(position.x >= 650) {
-                        left = position.x + cyContainer.left - 240;
-                    }
-                    // レイアウト
-                    popup.css({
-                        fontSize:'13px',
-                        width:'210px',
-                        position: 'absolute',
-                        top: top + 'px',
-                        left: left + 'px',
-                        background: '#fff',
-                        padding: '6px',
-                        border: '1px solid #000',
-                        borderRadius: '4px',
-                        boxShadow: '0 0 4px rgba(0, 0, 0, 0.5)',
-                        zIndex:1000
-                    });
-                    // 表示
-                    $('body').append(popup);
+                    popup(e, text);
                 } else {
                     removePopupInfo();
                 }
@@ -9838,23 +9851,58 @@ $(function() {
                 removePopupInfo();
             }
         });
-        //図上で右クリック
+        //
+        function popup(e, html) {
+            // 選択したnodeを分かりやすくしたいがデザインが難しい
+            //e.target.style('color', '#ff0000');
+            // クリックした座標(cy基準)
+            let position = e.target.renderedPosition();
+            // cy領域の左上の座標を取得
+            var cyContainer = cy.container().getBoundingClientRect();
+            html = `<p>${html}</p>`;
+            let popup = $('<div>').html(html).attr('id', 'popup-info');
+            // 表示位置調整
+            let top = position.y + cyContainer.top - 10;
+            let left = position.x + cyContainer.left + 20;
+            if(position.x >= 650) {
+                left = position.x + cyContainer.left - 260;
+                top = position.y + cyContainer.top + 20;
+            }
+            // レイアウト
+            popup.css({
+                fontSize:'13px',
+                maxWidth:'450px',
+                minWidth:'210px',
+                position: 'absolute',
+                top: top + 'px',
+                left: left + 'px',
+                background: '#fff',
+                padding: '6px',
+                border: '1px solid #000',
+                borderRadius: '4px',
+                boxShadow: '0 0 4px rgba(0, 0, 0, 0.5)',
+                zIndex:1000
+            });
+            // 表示
+            $('body').append(popup);
+        }
+        // 図上で右クリック
         cy.contextMenus({
             menuItems: [
                 {
-                    id: 'customMenuItem',
+                    id: 'cy-ct-bg',
                     content: '索敵無視',
                     coreAsWell: true,
                     show: true,
                     onClickFunction: function (event) {
-                        if(isIgnoreSeek) {
+                        if(is_ignore_seek) {
                             f_search = fs_copy;
-                            isIgnoreSeek = false;
+                            is_ignore_seek = false;
                         } else {
-                            //退避
+                            // 退避
                             fs_copy = f_search;
                             f_search = [999,999,999,999];
-                            isIgnoreSeek = true;
+                            is_ignore_seek = true;
                         }
                         reloadImportDisplay();
                         startSim();
@@ -9862,7 +9910,356 @@ $(function() {
                 }
             ]
         });
-        //図上スクロールをページスクロールに変換
+        // nodeを右クリックで獲得資源予測
+        cy.on('cxttapstart', 'node', function(e) {
+            removePopupInfo();
+            let node = e.target.data('name');
+            let content = '';
+            let r_data = {
+                fuel:null,
+                max_fuel:'unknown',
+                ammo:null,
+                max_ammo:'unknown',
+                steel:null,
+                max_steel:'unknown',
+                imo:null,
+                max_imo:'unknown',
+                is_nomal:true, //ドラム缶*2 + 大発系*3ならtrue(含ボーキのドラム缶*1.5)
+                memo:'',
+            };
+            let c_data = {
+                fuel:0,
+                ammo:0,
+                steel:0,
+                imo:0
+            };
+            let sum = 0;
+            switch(drew_area) {
+                case '1-2':
+                    if(node === 'B') {
+                        r_data.ammo = [10, 20];
+                    } else {
+                        return;
+                    }
+                    break;
+                case '1-3':
+                    if(node === 'D') {
+                        r_data.fuel = [10, 20];
+                    } else if(node === 'G') {
+                        r_data.fuel = [10, 30];
+                    } else {
+                        return;
+                    }
+                    break;
+                case '1-4':
+                    if(node === 'C') {
+                        r_data.steel = [10, 20];
+                    } else if(node === 'E') {
+                        r_data.ammo = [10, 20];
+                    } else if(node === 'G') {
+                        r_data.imo = [10, 20];
+                    } else {
+                        return;
+                    }
+                    break;
+                case '1-6':
+                    if(node === 'G') {
+                        r_data.ammo = 20;
+                        r_data.max_ammo = 40;
+                        r_data.is_nomal = false;
+                        mold('ammo', 0 , 5);
+                    } else if(node === 'M') {
+                        r_data.fuel = 40;
+                        r_data.max_fuel = 80;
+                        r_data.is_nomal = false;
+                        mold('fuel', 0, 10);
+                    } else {
+                        return;
+                    }
+                    break;
+                case '2-1':
+                    if(node === 'B') {
+                        r_data.steel = [10, 30];
+                    } else if(node === 'E') {
+                        r_data.memo = '高速建造材:1';
+                    } else {
+                        return;
+                    }
+                    break;
+                case '2-2':
+                    if(node === 'A') {
+                        r_data.imo = [10, 20];
+                    } else if(node === 'F') {
+                        r_data.imo = [15, 35];
+                    } else if(node === 'J') {
+                        r_data.memo = '高速建造材:1';
+                    } else {
+                        return;
+                    }
+                    break;
+                case '2-3':
+                    if(node === 'D') {
+                        r_data.fuel = [15, 45];
+                    } else if(node === 'G') {
+                        r_data.ammo = [15, 45];
+                    } else if(node === 'H') {
+                        r_data.ammo = [35, 40];
+                    } else if(node === 'I') {
+                        r_data.fuel = [15, 45];
+                    } else {
+                        return;
+                    }
+                    break;
+                case '2-4':
+                    if(node === 'A') {
+                        r_data.memo = '高速建造材:1<br>((上陸用舟艇+特型内火艇)4以上で+2個の確率が発生する？)';
+                    } else if(node === 'D') {
+                        r_data.fuel = [25, 60];
+                    } else if(node === 'G') {
+                        r_data.memo = '開発資材:1';
+                    } else if(node === 'N') {
+                        r_data.ammo = [20, 60];
+                    } else {
+                        return;
+                    }
+                    break;
+                case '2-5':
+                    if(node === 'M') {
+                        r_data.fuel = 70;
+                        r_data.is_nomal = false;
+                        mold('fuel', 0, 0);
+                    } else if(node === 'N') {
+                        r_data.steel = [50, 60];
+                        r_data.is_nomal = false;
+                        mold('steel', 0, 0);
+                    } else {
+                        return;
+                    }
+                    break;
+                case '3-1':
+                    if(node === 'A') {
+                        r_data.ammo = [35, 140];
+                    } else {
+                        return;
+                    }
+                    break;
+                case '3-2':
+                    if(node === 'B') {
+                        r_data.ammo = [50, 150];
+                    } else if(node === 'I') {
+                        r_data.memo = '家具箱(小):1';
+                    } else {
+                        return;
+                    }
+                    break;
+                case '3-3':
+                    if(node === 'D') {
+                        r_data.memo = '家具箱(中):1';
+                    } else if(node === 'H') {
+                        r_data.memo = '家具箱(大):1';
+                    } else {
+                        return;
+                    }
+                    break;
+                case '3-4':
+                    if(node === 'E') {
+                        r_data.imo = [25, 150];
+                    } else if(node === 'K') {
+                        r_data.memo = '家具箱(大):1';
+                    } else if(node === 'O') {
+                        r_data.memo = '家具箱(中):1';
+                    } else {
+                        return;
+                    }
+                    break;
+                case '3-5':
+                    if(node === 'J') {
+                        r_data.ammo = 50;
+                        r_data.is_nomal = false;
+                        mold('ammo', 10, 0);
+                    } else {
+                        return;
+                    }
+                    break;
+                case '4-1':
+                    if(node === 'B') {
+                        r_data.fuel = [40, 120];
+                    } else {
+                        return;
+                    }
+                    break;
+                case '4-2':
+                    if(node === 'J') {
+                        r_data.imo = [40, 60];
+                    } else if(node === 'K') {
+                        r_data.steel = [20, 80];
+                    } else {
+                        return;
+                    }
+                    break;
+                case '4-3':
+                    if(node === 'B') {
+                        r_data.fuel = [30, 90];
+                    } else if(node === 'J') {
+                        r_data.imo = [50, 100];
+                    } else {
+                        return;
+                    }
+                    break;
+                case '4-4':
+                    if(node === 'C') {
+                        r_data.fuel = [60, 150];
+                    } else if(node === 'J') {
+                        r_data.steel = [40, 70];
+                    } else {
+                        return;
+                    }
+                    break;
+                case '5-1':
+                    if(node === 'C') {
+                        r_data.steel = [25, 50];
+                    } else if(node === 'H') {
+                        r_data.ammo = [45, 70];
+                        r_data.is_nomal = false;
+                        mold('ammo', 0, 0);
+                    } else {
+                        return;
+                    }
+                    break;
+                case '5-2':
+                    if(node === 'G') {
+                        r_data.ammo = [20, 50];
+                    } else if(node === 'J') {
+                        r_data.imo = [40, 80];
+                    } else {
+                        return;
+                    }
+                    break;
+                case '5-3':
+                    if(node === 'F') {
+                        r_data.ammo = [60, 80];
+                    } else if(node === 'H') {
+                        r_data.steel = [50, 80];
+                    } else {
+                        return;
+                    }
+                    break;
+                case '5-4':
+                    if(node === 'I') {
+                        r_data.ammo = 60;
+                        r_data.max_ammo = 180;
+                        r_data.is_nomal = false;
+                        mold('ammo', 10, 15);
+                    } else {
+                        return;
+                    }
+                    break;
+                case '5-5':
+                    if(node === 'E') {
+                        r_data.fuel = 40;
+                        r_data.max_fuel = 180;
+                        r_data.is_nomal = false;
+                        mold('fuel', 15, 10);
+                    } else {
+                        return;
+                    }
+                    break;
+                case '7-1':
+                    if(node === 'E') {
+                        r_data.fuel = [10, 20];
+                    } else if(node === 'I') {
+                        r_data.fuel = [30, 50];
+                    } else {
+                        return;
+                    }
+                    break;
+                case '7-2':
+                    if(node === 'K') {
+                        r_data.fuel = [25, 40];
+                    } else {
+                        return;
+                    }
+                    break;
+                case '7-3':
+                    if(node === 'H') {
+                        r_data.fuel = [30, 50];
+                    } else if(node === 'O') {
+                        r_data.imo = [40, 50];
+                        r_data.is_nomal = false;
+                        mold('imo', 2, 3);
+                    } else {
+                        return;
+                    }
+                    break;
+                case '7-4':
+                    if(node === 'O') { // 7-4-Oはだいぶ特殊なのでフルスクラッチ
+                        let fuel = ft_drum * 8 + ft_craft * 7;
+                        fuel += com.BBV * 10 + com.CVL * 7 + com.AV * 6 + com.AS * 5 + com.LHA * 8 + com.AO * 22;
+                        let imo = ft_drum * 6 + ft_craft * 10;
+                        imo += com.BBV * 10 + com.CVL * 7 + com.AV * 6 + com.AS * 5 + com.LHA * 8 + com.AO * 22;
+                        content += `<p><img src="../media/items/fuel.png" class="item-icon"></p>`;
+                        content += `<p>base: 40</p>`;
+                        content += `<p>max: 200</p>`;
+                        content += `<p>add: <span style="font-weight:600;color:#1e00ff;">${fuel}</span> = <img src="../media/items/drum.png" class="item-icon">${ft_drum} * 8 + <img src="../media/items/craft.png" class="item-icon">${ft_craft} * 7</p>`;
+                        content += `<p>+ 航空戦艦 ${com.BBV} * 10</p>`;
+                        content += `<p>+ 軽空母 ${com.CVL} * 7</p>`;
+                        content += `<p>+ 水上機母艦 ${com.AV} * 6</p>`;
+                        content += `<p>+ 潜水母艦 ${com.AS} * 5</p>`;
+                        content += `<p>+ 揚陸艦 ${com.LHA} * 8</p>`;
+                        content += `<p>+ 補給艦 ${com.AO} * 22</p>`;
+                        content += `<p><img src="../media/items/imo.png" class="item-icon"></p>`;
+                        content += `<p>base: 20</p>`;
+                        content += `<p>max: 120</p>`;
+                        content += `<p>add: <span style="font-weight:600;color:#1e00ff;">${imo}</span> = <img src="../media/items/drum.png" class="item-icon">${ft_drum} * 6 + <img src="../media/items/craft.png" class="item-icon">${ft_craft} * 10</p>`;
+                        content += `<p>+ 航空戦艦 ${com.BBV} * 10</p>`;
+                        content += `<p>+ 軽空母 ${com.CVL} * 4</p>`;
+                        content += `<p>+ 水上機母艦 ${com.AV} * 5</p>`;
+                        content += `<p>+ 潜水母艦 ${com.AS} * 5</p>`;
+                        content += `<p>+ 揚陸艦 ${com.LHA} * 7</p>`;
+                        content += `<p>+ 補給艦 ${com.AO} * 16</p>`;
+                        r_data.is_nomal = false;
+                    } else {
+                        return;
+                    }
+                    break;
+                default:
+                    return;
+            }
+            if(r_data.is_nomal) {
+                if(r_data.fuel) {
+                    mold('fuel', 2, 3);
+                }
+                if(r_data.ammo) {
+                    mold('ammo', 2, 3);
+                }
+                if(r_data.steel) {
+                    mold('steel', 2, 3);
+                }
+                if(r_data.imo) {
+                    mold('imo', 1.5, 2);
+                }
+            }
+            if(r_data.memo) {
+                content += `<p>${r_data.memo}</p>`;
+            }
+            popup(e, content);
+            function mold(name, d_mag, c_mag) {
+                c_data[name] = Math.trunc(ft_drum * d_mag) + ft_craft * c_mag;
+                content += `<p><img src="../media/items/${name}.png" class="item-icon"></p>`;
+                if(Array.isArray(r_data[name])) {
+                    content += `<p>base: ${r_data[name][0]} ~ ${r_data[name][1]}</p>`;
+                } else {
+                    content += `<p>base: ${r_data[name]}</p>`;
+                }
+                if(name === 'imo') {
+                    content += `<p>add: <span style="font-weight:600;color:#1e00ff;">${c_data[name]}</span> = Math.trunc(${ft_drum} * ${d_mag}) + ${ft_craft} * ${c_mag}</p>`;
+                } else {
+                    content += `<p>add: <span style="font-weight:600;color:#1e00ff;">${c_data[name]}</span> = <img src="../media/items/drum.png" class="item-icon">${ft_drum} * ${d_mag} + <img src="../media/items/craft.png" class="item-icon">${ft_craft} * ${c_mag}</p>`;
+                }
+                content += `<p>max: ${r_data[`max_${name}`]}</p>`;
+            }
+        });
+        // 図上スクロールをページスクロールに変換
         $('#cy').on('wheel', function(e){
             e.preventDefault();
             e.stopPropagation();
@@ -9871,31 +10268,31 @@ $(function() {
             window.scrollBy(0, delta);
         });
     }
-    //popup-infoが存在すれば削除
+    // popup-infoが存在すれば削除
     function removePopupInfo() {
         if($('#popup-info')) {
             $('#popup-info').remove();
         }
     }
-    //読み込み時にlocalstorageから諸々の設定を読込、反映
-    //上に置くとtrigger()が不発する 謎
+    // 読み込み時にlocalstorageから諸々の設定を読込、反映
+    // 上に置くとtrigger()が不発する 謎
     setup();
     
-    //以下ストレージ関連
+    // 以下ストレージ関連
     function setup() {
         var a = localStorage.getItem('active');
         var s = localStorage.getItem('selected_type');
         var f = localStorage.getItem('fleet');
         var e = localStorage.getItem('error_log');
-        //能動分岐セット
+        // 能動分岐セット
         if(!a) {
             a = active;
             localStorage.setItem('active', JSON.stringify(a));
         } else {
             try {
                 a = JSON.parse(a);
-                //全てのキーが存在するかチェック
-                //無いのがあればそこだけ初期値を設定
+                // 全てのキーが存在するかチェック
+                // 無いのがあればそこだけ初期値を設定
                 for (const key in active) {
                     if (!a.hasOwnProperty(key)) {
                         a[key] = active[key];
@@ -9908,7 +10305,7 @@ $(function() {
                 localStorage.setItem('active', JSON.stringify(a));
             }
         }
-        //html反映
+        // html反映
         for(const key in a) {
             for(const key2 in a[key]) {
                 var val = a[key][key2];
@@ -9917,7 +10314,7 @@ $(function() {
                 active = a;
             }
         }
-        //html反映
+        // html反映
         var ar = localStorage.getItem('area');
         if(ar) {
             $('#area-display').text(`海域 : ${ar}`);
@@ -9935,7 +10332,7 @@ $(function() {
             localStorage.setItem('fleet', deck);
             location.href = location.origin + location.pathname;
         } else if(f) {
-            //艦隊は文字列のまま貼る
+            // 艦隊は文字列のまま貼る
             $('#fleet-import').val(f);
             $('#fleet-import').trigger('input');
         }
@@ -9981,11 +10378,11 @@ $(function() {
         active = elem;
         localStorage.setItem('active', JSON.stringify(elem));
     }
-    //localStorageのデータをキーを指定して削除
+    // localStorageのデータをキーを指定して削除
     function removeData(key) {
         localStorage.removeItem(key);
     }
-    //localStorage内を全削除
+    // localStorage内を全削除
     function allClear() {
         let res = confirm('本当に?\n特に問題はありませんが');
         if(res) {
@@ -9995,7 +10392,7 @@ $(function() {
             location.reload();
         }
     }
-    //popupから能動分岐切り替え
+    // popupから能動分岐切り替え
     $('body').on('click', '.remote-active', function() {
         let name = $(this).val();
         let inputs = $(`input[name="${name}"]`);
@@ -10007,33 +10404,33 @@ $(function() {
             inputs.eq(0).trigger('input');
         }
     });
-    //海域入力画面表示
+    // 海域入力画面表示
     $('#area-display').on('click', function() {
         $('#area-mask').css('display', 'block');
         $('#area-container').css('display', 'flex');
         $('#area-box').css('display', 'block');
     });
-    //設定画面非表示
+    // 設定画面非表示
     $('#area-container').on('click', function() {
         $('#area-mask').css('display', 'none');
         $('#area-container').css('display', 'none');
     });
-    //バブリング阻止
+    // バブリング阻止
     $('#area-box').on('click', function(e) {
         e.stopPropagation();
     });
-    //設定画面表示
+    // 設定画面表示
     $('#conf-icon-box').on('click', function() {
         $('#conf-mask').css('display', 'block');
         $('#conf-container').css('display', 'flex');
         $('#conf-box').css('display', 'block');
     });
-    //設定画面非表示
+    // 設定画面非表示
     $('#conf-container').on('click', function() {
         $('#conf-mask').css('display', 'none');
         $('#conf-container').css('display', 'none');
     });
-    //バブリング阻止
+    // バブリング阻止
     $('#conf-box').on('click', function(e) {
         e.stopPropagation();
     });
@@ -10045,11 +10442,11 @@ $(function() {
     $('body').on('mouseleave', '#asterisk', function() {
         $('#seek-message').hide();
     });
-    //localstorage全削除
+    // localstorage全削除
     $('#all-clear').on('click', function() {
         allClear();
     });
-    //オプションリスト折り畳み/展開
+    // オプションリスト折り畳み/展開
     $('#fold').on('click', function() {
         let isFolding = $(this).children('#option-up').css('display') === 'none';
         var listContainer = $('#option-box > .options:visible');
@@ -10063,7 +10460,7 @@ $(function() {
             listContainer.css('height', '23px');
         }
     });
-    //スクショ
+    // スクショ
     $('#screen-shot').on('click', function() {
         if(drew_area) {
             var now = new Date();
@@ -10087,7 +10484,7 @@ $(function() {
             });
         }
     });
-    //エラーログ送信許可/拒否
+    // エラーログ送信許可/拒否
     $('#error-log').on('click', function() {
         let isChecked = $(this).prop('checked');
         console.log(isChecked);
@@ -10097,7 +10494,7 @@ $(function() {
             localStorage.setItem('error_log', '0');
         }
     });
-    //gkcoiに渡すデッキビルダー生成
+    // gkcoiに渡すデッキビルダー生成
     function generateDeck() {
         let res = {
             lang: "jp",
@@ -10164,8 +10561,8 @@ $(function() {
         }
         return res;
     }
-    //一次関数的に上昇するパラメータを計算して返す
-    //引数s_dataのjson,パラメータ名
+    // 一次関数的に上昇するパラメータを計算して返す
+    // 引数s_dataのjson,パラメータ名
     function getLFparam(ship, lv, param) {
         let max = ship[`max_${param}`];
         let min = ship[param];
@@ -10200,7 +10597,7 @@ $(function() {
         }
         return new Blob([ab], { type: 'image/jpeg' });
     }
-    //blobから画像を生成して上限に連結(img1が上)幅はimg1に合わせる
+    // blobから画像を生成して上限に連結(img1が上)幅はimg1に合わせる
     function combineAndDownloadBlobs(blob1, blob2, fileName) {
         var canvas = document.createElement('canvas');
         var context = canvas.getContext('2d');
@@ -10239,7 +10636,7 @@ $(function() {
         // 1つ目の画像を読み込む
         img1.src = URL.createObjectURL(blob1);
     }
-    //数値から艦隊速度を文字列で取得
+    // 数値から艦隊速度を文字列で取得
     function getFleetSpeedWithNum(text) {
         let res = 0;
         switch(text) {
@@ -10258,7 +10655,7 @@ $(function() {
         }
         return res;
     }
-    //エラーログ送信
+    // エラーログ送信
     async function postErrorLog() {
         let permission = localStorage.getItem('error_log');
         if(permission && permission === '1') { //送信許可確認
@@ -10280,9 +10677,9 @@ $(function() {
             }
         }
     }
-    //重複チェック
-    //deckが大きすぎてクエリに乗らないのでhashで比較
-    //重複が無ければtrue
+    // 重複チェック
+    // deckが大きすぎてクエリに乗らないのでhashで比較
+    // 重複が無ければtrue
     async function isLogExists(hash) {
         const q = query(collection(db, area), where("hash", "==", hash));
 
@@ -10294,6 +10691,7 @@ $(function() {
             return true;
         }
     }
+    // 文字列をSHA-256ハッシュに変換
     async function hashString(inputString) {
         const encoder = new TextEncoder();
         const data = encoder.encode(inputString);
