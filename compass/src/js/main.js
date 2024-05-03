@@ -1708,7 +1708,7 @@ $(function() {
                                 }
                                 break;
                             case 'F':
-                                if(CV > 0 || slowBB() > 0) {
+                                if(CV + CVB > 0 || slowBB() > 0) {
                                     sum('FtoH');
                                     return 'H';
                                 } else if((CAV > 0 && DD > 1) || DD > 3 || ((CL + CT > 0) && Ds > 3)) {
@@ -1959,7 +1959,7 @@ $(function() {
                                 }
                                 break;
                             case 'F':
-                                if(BB + CV + Ss > 0 || CVL > 1 || CL > 2) {
+                                if(BB + CV + CVB + Ss > 0 || CVL > 1 || CL > 2) {
                                     sum('FtoI');
                                     return null;
                                 } else {
@@ -2046,7 +2046,7 @@ $(function() {
                 break;
             case 2:
                 switch(map) {
-                    case 1: //@2-1
+                    case 1: // @2-1
                         switch(edge) {
                             case null:
                                 sum('1toC');
@@ -2567,7 +2567,10 @@ $(function() {
                                     if(CVs > 2) {
                                         sum('BtoC');
                                         return 'C';
-                                    } else if(BBCVs === 2) {
+                                    } else if(BBs + CV + CVB > 2) {
+                                        sum('BtoC');
+                                        return 'C';
+                                    } else if(BBs + CV + CVB === 2) {
                                         if(sai(80)) {
                                             sum('BtoC');
                                             return 'C';
@@ -2576,7 +2579,7 @@ $(function() {
                                             sum('GtoH');
                                             return 'H';
                                         }
-                                    } else if(CV + CVL > 0) {
+                                    } else if(CV + CVB > 0) {
                                         if(sai(60)) {
                                             sum('BtoC');
                                             return 'C';
@@ -2713,11 +2716,11 @@ $(function() {
                                 if(BBCVs > 3) {
                                     sum('JtoL');
                                     return 'L';
-                                } else if(BBCVs === 3 || CV === 2) {
+                                } else if(BBCVs === 3 || CV + CVB === 2) {
                                     sum('JtoM');
                                     sum('MtoP');
                                     return null;
-                                } else if(CV === 0) {
+                                } else if(CV + CVB === 0) {
                                     sum('JtoL');
                                     return 'L';
                                 } else {
@@ -2824,7 +2827,7 @@ $(function() {
                                 } else if(CL > 0 && DD > 1) {
                                     sum('LtoP');
                                     return null;
-                                } else if(BBs + CV < 3) {
+                                } else if(BBs + CV + CVB < 3) {
                                     sum('LtoP');
                                     return null;
                                 } else {
@@ -2908,13 +2911,13 @@ $(function() {
                                 }
                                 break;
                             case 'E':
-                                if(BB > 0) {
+                                if(BBs > 0) {
                                     sum('EtoG');
                                     return 'G';
                                 } else if(CL > 0 && Ds > 3) {
                                     sum('EtoI');
                                     return 'I';
-                                } else if(slowBB() > 0 || CV + CAs > 1) {
+                                } else if(speed === '低速艦隊' || CV + CVB + CAs > 1) {
                                     sum('EtoG');
                                     return 'G';
                                 } else if(CL > 0 && DD > 2) {
@@ -3130,7 +3133,7 @@ $(function() {
                                 }
                                 break;
                             case 'C':
-                                if(DD < 4 || BBCVs > 1) {
+                                if(DD < 4 || BBs + CV + CVB > 1) {
                                     sum('CtoA');
                                     sum('AtoB');
                                     return null;
@@ -3179,7 +3182,7 @@ $(function() {
                                 }
                                 break;
                             case 'G':
-                                if(Ss > 0 || CV > 0 || BBs + CVL === 2) {
+                                if(Ss > 0 || CV + CVB > 0 || BBs + CVL === 2) {
                                     sum('GtoJ');
                                     sum('JtoK');
                                     return null;
@@ -3229,7 +3232,7 @@ $(function() {
                                 return 'A';
                                 break;
                             case 'A':
-                                if(CV > 0 || BBs + CVL > 3 || BBs + CVL === 1 && CL === 1 && DD === 4) {
+                                if(CV + CVB > 0 || BBs + CVL > 3 || BBs + CVL === 1 && CL === 1 && DD === 4) {
                                     sum('AtoC');
                                     return 'C';
                                 } else {
@@ -3260,7 +3263,7 @@ $(function() {
                                 }
                                 break;
                             case 'C':
-                                if(Ds < 2 || CV > 1 || BBCVs > 2) {
+                                if(Ds < 2 || CV + CVB > 1 || BBCVs > 2) {
                                     sum('CtoE');
                                     sum('EtoG');
                                     return 'G';
@@ -3417,7 +3420,7 @@ $(function() {
                                 } //航空戦艦により例外なし
                                 break;
                             case 'C':
-                                if(CV > 2 || CL + Ds === 0 || BBCVs > 4) {
+                                if(CV + CVB > 2 || CL + Ds === 0 || BBCVs > 4) {
                                     sum('CtoB');
                                     sum('BtoH');
                                     return 'H';
@@ -3447,12 +3450,12 @@ $(function() {
                                 }
                                 break;
                             case 'F':
-                                if(BBCVs + CA > 4) {
+                                if(BBCVs + CAs > 4) {
                                     sum('FtoG');
                                     sum('GtoJ');
                                     sum('JtoP');
                                     return null;
-                                } else if(BBs + CV < 3 && CL > 0 && Ds > 1) {
+                                } else if(BBs + CV + CVB < 3 && CL > 0 && Ds > 1) {
                                     if(isFaster()) {
                                         sum('FtoJ');
                                         sum('JtoP');
@@ -3486,7 +3489,7 @@ $(function() {
                                 }
                                 break;
                             case 'H':
-                                if(DD < 3 || CL + DD < 4 || CV > 0 || BBs + CVL > 1) {
+                                if(DD < 3 || CL + DD < 4 || CV + CVB > 0 || BBs + CVL > 1) {
                                     sum('HtoG');
                                     sum('GtoJ');
                                     sum('JtoP');
@@ -4114,10 +4117,10 @@ $(function() {
                                 break;
                         }
                         break;
-                    case 3: //@4-3 nullがヤな感じ 多分こういうことだろうという
+                    case 3: // @4-3 nullがヤな感じ 多分こういうことだろうという
                         switch (edge) {
                             case null:
-                                if(CV > 0) {
+                                if(CV + CVB > 0) {
                                     sum('1toC');
                                     return 'C';
                                 } else if(Ds > 3 && (speed !== '低速艦隊' || BBs + CVL === 0)) {
@@ -4263,7 +4266,7 @@ $(function() {
                                 if(Ss > 0 || (CVs > 2 || CVs === 0) || Ds < 2) {
                                     sum('KtoL');
                                     return 'L';
-                                } else if(CV === 1 && AV + CVL === 1) {
+                                } else if(CV + CVB === 1 && AV + CVL === 1) {
                                     if(sai(55)) {
                                         sum('KtoL');
                                         return 'L';
@@ -4358,7 +4361,7 @@ $(function() {
                                 }
                                 break;
                             case 'E':
-                                if(BBs + CV > 3) {
+                                if(BBs + CV + CVB > 3) {
                                     sum('EtoG');
                                     return 'G';
                                 } else if(CAs + CL > 0 && Ds > 1) {
@@ -4524,7 +4527,7 @@ $(function() {
                                 }
                                 break;
                             case 'K':
-                                if(track.includes('E') || BBs + CV > 3 || BBCVs > 4 || AO > 0) {
+                                if(track.includes('E') || BBs + CV + CVB > 3 || BBCVs > 4 || AO > 0) {
                                     sum('KtoM');
                                     return 'M';
                                 } else if(f_search[1] < 63) {
@@ -4580,7 +4583,7 @@ $(function() {
                                 } else if(speed === '低速艦隊') {
                                     sum('MtoR');
                                     return 'R';
-                                } else if(BBs + CV < 2) {
+                                } else if(BBs + CV + CVB < 2) {
                                     sum('MtoN');
                                     sum('NtoT');
                                     return null;
@@ -4699,7 +4702,7 @@ $(function() {
                                 }
                                 break;
                             case 'B':
-                                if(CV > 0 || CVL > 1) {
+                                if(CV + CVB > 0 || CVL > 1) {
                                     sum('BtoE');
                                     sum('EtoG');
                                     return 'G';
@@ -4814,7 +4817,7 @@ $(function() {
                                             return null;
                                         }
                                     }
-                                } else if(CV > 0) {
+                                } else if(CV + CVB > 0) {
                                     if(sai(70)) {
                                         sum('GtoI');
                                         return null;
@@ -4848,7 +4851,7 @@ $(function() {
                     case 2: //@5-2
                         switch(edge) {
                             case null:
-                                if(BBCVs > 4 || BBs > 3 || CV > 2 || Ss > 0) {
+                                if(BBCVs > 4 || BBs > 3 || CV + CVB > 2 || Ss > 0) {
                                     if(sai(50)) {
                                         sum('1toA');
                                         sum('AtoB');
@@ -4876,7 +4879,7 @@ $(function() {
                                 } else if(isInclude('翔鶴') && isInclude('瑞鶴') && DD > 1) {
                                     sum('CtoD');
                                     return 'D';
-                                } else if(BBs + CV > 0) {
+                                } else if(BBs + CV + CVB > 0) {
                                     sum('CtoE');
                                     sum('EtoF');
                                     return 'F';
@@ -4908,7 +4911,7 @@ $(function() {
                                     sum('FtoH');
                                     return null;
                                 } else if(f_search[1] < 70 && f_search >= 63) {
-                                    if(BBs + CV > 4) {
+                                    if(BBs + CV + CVB > 4) {
                                         if(sai(50)) {
                                             sum('FtoH');
                                             return null;
@@ -4939,7 +4942,7 @@ $(function() {
                                             return null;
                                         }
                                     }
-                                } else if(BBs + CV > 4) {
+                                } else if(BBs + CV + CVB > 4) {
                                     sum('FtoI');
                                     sum('ItoO');
                                     return null;
@@ -5107,7 +5110,7 @@ $(function() {
                                 }
                                 break;
                             case 'G':
-                                if(BBV + CV + Ss > 0) {
+                                if(BBV + CV + CVB + Ss > 0) {
                                     sum('GtoJ');
                                     return 'J';
                                 } else if(DD === 0 || CVL > 1) {
@@ -5168,7 +5171,7 @@ $(function() {
                                         sum('NtoO');
                                         return 'O';
                                     }
-                                } else if(BBCVs > 3 || CV > 0 ||CVL > 1) {
+                                } else if(BBCVs > 3 || CV + CVB > 0 ||CVL > 1) {
                                     sum('JtoM');
                                     return null;
                                 } else if(CVL === 1) {
@@ -5330,7 +5333,7 @@ $(function() {
                                     sum('GtoK');
                                     sum('KtoL');
                                     return 'L';
-                                } else if(CV < 3) {
+                                } else if(CV + CVB < 3) {
                                     sum('GtoL');
                                     return 'L';
                                 } else {
@@ -5351,7 +5354,7 @@ $(function() {
                                 } else if(f_search[1] < 56) {
                                     sum('LtoN');
                                     return null;
-                                } else if((f_search[1] < 60 && f_search[1] >= 56) || BBs + CV > 4) {
+                                } else if((f_search[1] < 60 && f_search[1] >= 56) || BBs + CV + CVB > 4) {
                                     if(sai(50)) {
                                         sum('LtoP');
                                         return null;
@@ -5410,7 +5413,7 @@ $(function() {
                                 }
                                 break;
                             case 'B':
-                                if(CV > 2 || BBs + CLT > 3 || CLT > 2 || DD < 2) {
+                                if(CV + CVB > 2 || BBs + CLT > 3 || CLT > 2 || DD < 2) {
                                     sum('BtoK');
                                     sum('KtoP');
                                     return 'P';
@@ -5483,7 +5486,7 @@ $(function() {
                                 if(track.includes('M') || isFaster() || AO > 0) {
                                     sum('NtoO');
                                     return 'O';
-                                } else if(CV > 0 || BBs + CVL > 2 || DD < 2) {
+                                } else if(CV + CVB > 0 || BBs + CVL > 2 || DD < 2) {
                                     sum('NtoM');
                                     return 'M';
                                 } else {
@@ -6072,7 +6075,7 @@ $(function() {
                                 } //f_lengthより例外なし
                                 break;
                             case 'B':
-                                if(BBs + CV > 0 || CVL > 1 || CAs > 2) {
+                                if(BBs + CV + CVB > 0 || CVL > 1 || CAs > 2) {
                                     sum('BtoA');
                                     sum('AtoC');
                                     sum('CtoE');
@@ -6198,7 +6201,7 @@ $(function() {
                                     sum('BtoC');
                                     return 'C';
                                 } else if(f_length === 6) {
-                                    if(CV > 1 || BBs + CV > 3 || CL + CT > 2) {
+                                    if(CV + CVB > 1 || BBs + CV + CVB > 3 || CL + CT > 2) {
                                         sum('1toA');
                                         sum('AtoB');
                                         sum('BtoC');
@@ -6209,12 +6212,12 @@ $(function() {
                                         return 'C';
                                     }
                                 } else if(f_length === 5) {
-                                    if(CV > 2) {
+                                    if(CV + CVB > 2) {
                                         sum('1toA');
                                         sum('AtoB');
                                         sum('BtoC');
                                         return 'C';
-                                    } else if(BBs + CV > 0 || CL + CT > 1 || DE < 3) {
+                                    } else if(BBs + CV + CVB > 0 || CL + CT > 1 || DE < 3) {
                                         sum('1toB');
                                         sum('BtoC');
                                         return 'C';
@@ -6223,7 +6226,7 @@ $(function() {
                                         return 'C';
                                     }
                                 } else if(f_length < 5) {
-                                    if(BBs + CV > 0 || Ds < 3) {
+                                    if(BBs + CV + CVB > 0 || Ds < 3) {
                                         sum('1toB');
                                         sum('BtoC');
                                         return 'C';
@@ -6238,7 +6241,7 @@ $(function() {
                                     sum('CtoD');
                                     return 'D';
                                 } else if(f_length === 6) {
-                                    if(BBs + CV > 0) {
+                                    if(BBs + CV + CVB > 0) {
                                         sum('CtoD');
                                         return 'D';
                                     } else if(Ds > 3) {
@@ -6249,7 +6252,7 @@ $(function() {
                                         return 'D';
                                     }
                                 } else if(f_length === 5) {
-                                    if(BBs + CV > 1) {
+                                    if(BBs + CV + CVB > 1) {
                                         sum('CtoD');
                                         return 'D';
                                     } else if(Ds > 3 || DE > 2) {
@@ -6260,7 +6263,7 @@ $(function() {
                                         return 'D';
                                     }
                                 } else if(f_length < 5) {
-                                    if(BBs + CV > 1) {
+                                    if(BBs + CV + CVB > 1) {
                                         sum('CtoD');
                                         return 'D';
                                     } else if(Ds > 2 || DE > 1) {
@@ -6689,7 +6692,7 @@ $(function() {
                                     }
                                     break;
                                 case 'M':
-                                    if(CV > 0 || BBCVs > 1 || Ss > 3) {
+                                    if(CV + CVB > 0 || BBCVs > 1 || Ss > 3) {
                                         sum('MtoN');
                                         return null;
                                     } else if(slowBB() > 0 || AO > 0 || AV > 1) {
@@ -6706,7 +6709,7 @@ $(function() {
                     case 4: //@7-4
                         switch(edge) {
                             case null:
-                                if(BB + CV + Ss > 0 || CAs > 1 || CL + CT + CLT > 1) {
+                                if(BB + CV + CVB + Ss > 0 || CAs > 1 || CL + CT + CLT > 1) {
                                     sum('1toC');
                                     return 'C';
                                 } else if(isInclude('あきつ丸') && DE === 2 && (DD === 1 || DE === 1)) {
@@ -6728,7 +6731,7 @@ $(function() {
                                 }
                                 break;
                             case 'C':
-                                if(BB + CV + Ss > 0 || (CVL > 2 || (CVL === 2 && isInclude('あきつ丸')))) {
+                                if(BB + CV + CVB + Ss > 0 || (CVL > 2 || (CVL === 2 && isInclude('あきつ丸')))) {
                                     sum('CtoD');
                                     sum('DtoF');
                                     return 'F';
@@ -6810,7 +6813,7 @@ $(function() {
                                 if(f_search[3] < 45) {
                                     sum('MtoN');
                                     return null;
-                                } else if((slowBB() > 0 && CV > 0) || (BBs - slowBB() > 1) || BBV > 1 || (CVL > 1 || (CVL === 1 && isInclude('あきつ丸'))) || (BBs - slowBB() + BBV + CVL > 2 || (BBs - slowBB() + BBV + CVL === 2 && isInclude('あきつ丸'))) || Ds < 2) {
+                                } else if((slowBB() > 0 && CV + CVB > 0) || (BBs - slowBB() > 1) || BBV > 1 || (CVL > 1 || (CVL === 1 && isInclude('あきつ丸'))) || (BBs - slowBB() + BBV + CVL > 2 || (BBs - slowBB() + BBV + CVL === 2 && isInclude('あきつ丸'))) || Ds < 2) {
                                     if(f_search[3] < 47 && f_search[3] >= 45) {
                                         if(sai(50)) {
                                             sum('MtoN');
@@ -6841,14 +6844,14 @@ $(function() {
                                 if(isFaster()) {
                                     sum('BtoD');
                                     return 'D';
-                                } else if(CV > 1 || slowBB() > 1 || Ss > 0 || CL === 0 || Ds < 2) {
+                                } else if(CV + CVB > 1 || slowBB() > 1 || Ss > 0 || CL === 0 || Ds < 2) {
                                     sum('BtoC');
                                     sum('CtoD');
                                     return 'D';
                                 } else if(Ds > 2) {
                                     sum('BtoD');
                                     return 'D';
-                                } else if(CV > 0 || CVL > 1 || BBs > 2 || CAs > 2) {
+                                } else if(CV + CVB > 0 || CVL > 1 || BBs > 2 || CAs > 2) {
                                     sum('BtoC');
                                     sum('CtoD');
                                     return 'D';
@@ -6861,7 +6864,7 @@ $(function() {
                                 if(speed === '最速艦隊') {
                                     sum('DtoF');
                                     return 'F';
-                                } else if(CV > 1 || CVs > 2 || BBs + CAs > 2 || BBs + CV + CAs > 2 || Ss > 0 || CL + DD === 0) {
+                                } else if(CV + CVB > 1 || CVs > 2 || BBs + CAs > 2 || BBs + CV + CVB + CAs > 2 || Ss > 0 || CL + DD === 0) {
                                     sum('DtoE');
                                     sum('EtoF');
                                     return 'F';
@@ -6926,7 +6929,7 @@ $(function() {
                                 if((CVL === 1 && CAs === 2 && CL === 1 && Ds === 2) || isFaster()) {
                                     sum('JtoO');
                                     return 'O';
-                                } else if(CV > 0 || CVL > 2 || slowBB() > 1 || BBs + CAs > 2 || Ds < 2) {
+                                } else if(CV + CVB > 0 || CVL > 2 || slowBB() > 1 || BBs + CAs > 2 || Ds < 2) {
                                     sum('JtoN');
                                     sum('NtoO');
                                     return 'O';
@@ -6961,7 +6964,7 @@ $(function() {
                                         if(speed === '最速艦隊') {
                                             sum('PtoT');
                                             return null;
-                                        } else if(CV > 0 || BBs + CVL > 1 || BBs + CAs > 2 || CL === 0) {
+                                        } else if(CV + CVB > 0 || BBs + CVL > 1 || BBs + CAs > 2 || CL === 0) {
                                             sum('PtoR');
                                             sum('RtoT');
                                             return null;
