@@ -1484,11 +1484,12 @@ $(function() {
         //無ければ追加、あれば加算
         rate[route] ? rate[route] += 1:rate[route] = 1;
         //追跡
+        let parts = route.split('to');
         if(track.length) {
-            track.push(route.split('to')[1]);
+            track.push(parts[1]);
         } else {
-            track.push(route.split('to')[0]);
-            track.push(route.split('to')[1]);
+            track.push(parts[0]);
+            track.push(parts[1]);
         }
     }
     // 百分率で指定 小数第一位まで可
@@ -1533,7 +1534,7 @@ $(function() {
         const LST = com['LST']; //戦車揚陸艦
         const AS = com['AS']; //潜水母艦
         const AR = com['AR']; //工作艦
-        
+
         const BBs = BB + BBV; //戦艦級
         const CVs = CV + CVL + CVB; //空母系
         const BBCVs = BBs + CVs; //戦艦級+空母系
@@ -4422,7 +4423,7 @@ $(function() {
                                 break;
                             case 'I':
                                 if(Ds > 1) {
-                                    if(CV === 2 || CAs === 2 || (CV === 0 && CL > 0)) {
+                                    if(CV + CVB === 2 || CAs === 2 || (CV + CVB === 0 && CL > 0)) {
                                         sum('ItoK');
                                         return null;
                                     } else {
@@ -9447,9 +9448,15 @@ $(function() {
                 break;
         }
     }
-
+    // trackを重複チェックしてからt_logsに格納 既にあれば加算
+    function pushLog() {
+        let key = track.join('e');
+        t_logs[key] ? t_logs[key] += 1:t_logs[key] = 1;
+    }
     // 演算開始
+    let t_logs = {};
     function startSim() {
+        //measureTime(true);
         if(a_flag && f_flag) {
             area = localStorage.getItem('area');
             let elem = area.split('-');
@@ -9468,6 +9475,7 @@ $(function() {
                 edge = branch(world, map, edge, false);
                 if(edge === null) {
                     count++;
+                    pushLog();
                     track = [];
                 }
                 safety++;
@@ -10267,6 +10275,22 @@ $(function() {
             //がくつくけどsmoothにすると連続スクロール時にもたる
             window.scrollBy(0, delta);
         });
+        //measureTime(false, 'startSim&drawMap');
+        console.log(t_logs);
+    }
+    // 区間計測デバッグ用
+    // is_start・・・開始ならtrue終了ならfalse
+    let s_time = 0;
+    function measureTime(is_start, text) {
+        if(!text) text = '';
+        if (is_start) {
+            console.log("計測開始");
+            s_time = performance.now(); // 開始時の時間を取得
+        } else {
+            console.log("計測終了");
+            const seconds = performance.now() - s_time;
+            console.log(`${text}: ${seconds}ms`);
+        }
     }
     // popup-infoが存在すれば削除
     function removePopupInfo() {
@@ -10459,6 +10483,10 @@ $(function() {
             $(this).children('#option-down').css('display', 'block');
             listContainer.css('height', '23px');
         }
+    });
+    // infomation
+    $('#infomation').on('click', function() {
+        
     });
     // スクショ
     $('#screen-shot').on('click', function() {
