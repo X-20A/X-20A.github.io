@@ -7,15 +7,25 @@ $(async function() {
         let elem = param.split('-');
         let map = `${elem[0]}-${elem[1]}`;
         let node = elem[2];
+        if(!isFinite(node)) {
+            node = `\'${node}\'`
+        } else {
+            node = 'null';
+        }
         let code = await getCode();
         code = code.slice(code.indexOf(`@${map}`) + 1); // @3-4等 以降
-        console.log(code);
         code = code.slice(0, code.indexOf('@')); // 次の海域頭まで
-        console.log(code);
-        let start = findStringPosition(code, `case \'${node}\':`);
+        let start = findStringPosition(code, `case ${node}:`);
         if(start > 0) {
             code = code.slice(start); // 目的のnode 以降
             let end = code.indexOf('break;') + 6;
+            if(param === '4-2-1') {
+                end = findStringPosition(code, 'case \'A\':') - 1;
+            } else if(param === '1-1-A') {
+                end = findStringPosition(code, '@1-2') - 15;
+            } else if(param === '1-2-1') {
+                end = findStringPosition(code, 'case \'A\':') - 1;
+            }
             code = code.slice(0, end); // 次のnodeまで
             //Prismの描画は結構もたるのでなるべく絞り込んでから渡したい
             $('#code').text(code);
