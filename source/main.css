@@ -1,0 +1,17 @@
+@font-face {
+    font-family: 'Pomeranian';
+    src: url('Pomeranian-Regular.ttf') format('truetype');
+}
+#not-found {
+    font-family: 'Pomeranian', sans-serif;
+    margin: 0;
+    background-color: #47484b;
+    padding-top: 100px;
+    height: 100%;
+    text-align: center;
+    font-size: 40px;
+    color: slategrey;
+    user-select: none;
+    -webkit-text-stroke: 1px #fff;
+    display: none;
+}

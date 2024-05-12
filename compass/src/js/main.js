@@ -83,7 +83,7 @@ $(function() {
     let f2_names = null; // 随伴艦隊構成艦名 表示の為だけ
     let f2_length = 0;
     let f_speed = null; // 速度
-    let f_search = null; // 索敵値
+    let f_seek = null; // 索敵値
     // ドラム缶、大発系、電探搭載艦数
     let f_drum = 0;
     let f_radar = 0;
@@ -114,7 +114,7 @@ $(function() {
     let c_ids = [];
     let c_names = [];
     let c_types = [];
-    let c_searchs = [];
+    let c_seeks = [];
     let c_speeds = [];
     let c_drums = [];
     let c_radars = [];
@@ -288,7 +288,7 @@ $(function() {
                 c_names.push(getShipName(i));
                 c_types.push(getType(i));
                 try {
-                    c_searchs.push(calcSeek(i));
+                    c_seeks.push(calcSeek(i));
                 } catch(e) {
                     console.error(e);
                     alert('処理中断:未対応の艦、装備が含まれるかも？');
@@ -307,7 +307,7 @@ $(function() {
                 c_lvs.push([]);
                 c_names.push([]);
                 c_types.push([]);
-                c_searchs.push([]);
+                c_seeks.push([]);
                 c_speeds.push([]);
                 c_drums.push(0);
                 c_radars.push(0);
@@ -321,7 +321,7 @@ $(function() {
         console.log(`c_lengths : ${c_lengths}`);
         console.log(`c_ids : ${c_ids}`);
         console.log(`c_lvs : ${c_lvs}`);
-        console.log(`c_searchs : ${c_searchs}`);
+        console.log(`c_searchs : ${c_seeks}`);
         console.log(`c_speeds : ${c_speeds}`);
         console.log(`c_drums : ${c_drums}, c_radars : ${c_radars}, c_crafts : ${c_crafts}, c_kanko : ${c_kanko}`);
         if(zeroCount === 3) {
@@ -465,8 +465,8 @@ $(function() {
                 // 変数反映
                 reflectionCom(types);
                 // 索敵値
-                f_search = c_searchs[f];
-                console.log(`f_search : ${f_search}`);
+                f_seek = c_seeks[f];
+                console.log(`f_search : ${f_seek}`);
                 // 速度
                 f_speed = c_speeds[f];
                 console.log(`f_speed : ${f_speed}`);
@@ -519,11 +519,11 @@ $(function() {
                 // 変数反映
                 reflectionCom(types);
                 // 索敵値 各項足し合わせ
-                f_search = [];
+                f_seek = [];
                 for (var i = 0; i < 4; i++) {
-                    f_search.push(new Decimal(c_searchs[0][i]).plus(new Decimal(c_searchs[1][i])));
+                    f_seek.push(new Decimal(c_seeks[0][i]).plus(new Decimal(c_seeks[1][i])));
                 }
-                console.log(`f_search : ${f_search}`);
+                console.log(`f_search : ${f_seek}`);
                 // 速度
                 // 低い方から適用
                 if(c_speeds[0] === '低速艦隊' || c_speeds[1] === '低速艦隊') {
@@ -567,7 +567,7 @@ $(function() {
             return;
         }
         // 気休めだけども保存前にチェック
-        if(f_length && f_ids && f_names && f_search && f_search[0] && f_speed) {
+        if(f_length && f_ids && f_names && f_seek && f_seek[0] && f_speed) {
             // 丸ごとlocalstorageへ
             localStorage.setItem('fleet', JSON.stringify(i_json));
             f_flag = true;
@@ -598,7 +598,7 @@ $(function() {
         c_ids = [];
         c_names = [];
         c_types = [];
-        c_searchs = [];
+        c_seeks = [];
         c_speeds = [];
         c_drums = [];
         c_radars = [];
@@ -1439,8 +1439,8 @@ $(function() {
         if(f_type !== '通常艦隊') {
             u += `<p>${f_type}</p>`;
         }
-        if(f_names && f_speed && f_search) {
-            $('#import-display').append(`${u}<p>${f_speed} | 搭載艦数[ドラム缶:${f_drum},大発系:${f_craft},電探:${f_radar}]</p><p>${part}</p><p id="seek-info">索敵値: <strong>1: </strong>${f_search[0]} <strong>2: </strong>${f_search[1]} <strong>3: </strong>${f_search[2]} <strong>4: </strong>${f_search[3]}</p>`);/*<span id="asterisk">*</span><span id="seek-message">一致しない場合は制空シミュを信用してください</span>*/
+        if(f_names && f_speed && f_seek) {
+            $('#import-display').append(`${u}<p>${f_speed} | 搭載艦数[ドラム缶:${f_drum},大発系:${f_craft},電探:${f_radar}]</p><p>${part}</p><p id="seek-info">索敵値: <strong>1: </strong>${f_seek[0]} <strong>2: </strong>${f_seek[1]} <strong>3: </strong>${f_seek[2]} <strong>4: </strong>${f_seek[3]}</p>`);/*<span id="asterisk">*</span><span id="seek-message">一致しない場合は制空シミュを信用してください</span>*/
         }
     }
     
@@ -2068,13 +2068,13 @@ $(function() {
                                 }
                                 break;
                             case 'M':
-                                if(BBV + CA + CVL > 2 || BBV + CAs > 2 || Ds < 3 || f_search[2] < 28) {
+                                if(BBV + CA + CVL > 2 || BBV + CAs > 2 || Ds < 3 || f_seek[2] < 28) {
                                     sum('MtoL');
                                     sum('LtoI');
                                     sum('ItoD');
                                     sum('DtoN');
                                     return null;
-                                } else if(f_search[2] < 30) {
+                                } else if(f_seek[2] < 30) {
                                     if(sai(50)) {
                                         sum('MtoL');
                                         sum('LtoI');
@@ -3002,10 +3002,10 @@ $(function() {
                                 if((BBCVs < 2 && Ds > 3) || (BBCVs === 0 && CL > 0 && DD > 2)) {
                                     sum('GtoI');
                                     return 'I';
-                                } else if(f_search[0] < 37) {
+                                } else if(f_seek[0] < 37) {
                                     sum('GtoK');
                                     return null;
-                                } else if(f_search[0] < 41 && f_search[0] >= 37) {
+                                } else if(f_seek[0] < 41 && f_seek[0] >= 37) {
                                     if(sai(50)) {
                                         sum('GtoI');
                                         return 'I';
@@ -3019,10 +3019,10 @@ $(function() {
                                 }
                                 break;
                             case 'I':
-                                if(f_search[0] < 31) {
+                                if(f_seek[0] < 31) {
                                     sum('ItoH');
                                     return null;
-                                } else if(f_search[0] < 34 && f_search[0] >= 31) {
+                                } else if(f_seek[0] < 34 && f_seek[0] >= 31) {
                                     if(sai(50)) {
                                         sum('ItoH');
                                         return null;
@@ -3036,10 +3036,10 @@ $(function() {
                                 }
                                 break;
                             case 'J':
-                                if(f_search[0] < 42) {
+                                if(f_seek[0] < 42) {
                                     sum('JtoH');
                                     return null;
-                                } else if(f_search[0] < 49 && f_search[0] >= 42) {
+                                } else if(f_seek[0] < 49 && f_seek[0] >= 42) {
                                     if(BBCVs > 3) {
                                         const num = Math.random().toFixed(2);
                                         if(num <= 33.3) {
@@ -3069,7 +3069,7 @@ $(function() {
                                         sum('JtoO');
                                         return null;
                                     }
-                                } else if(f_search[0] >= 49) {
+                                } else if(f_seek[0] >= 49) {
                                     sum('JtoO');
                                     return null;
                                 }
@@ -3679,10 +3679,10 @@ $(function() {
                                 } //CAsより例外なし
                                 break;
                             case 'G':
-                                if(f_search[3] < 23) {
+                                if(f_seek[3] < 23) {
                                     sum('GtoI');
                                     return null;
-                                } else if(f_search[3] < 28 && f_search[3] >= 23) {
+                                } else if(f_seek[3] < 28 && f_seek[3] >= 23) {
                                     if(sai(50)) {
                                         sum('GtoI');
                                         return null;
@@ -3690,7 +3690,7 @@ $(function() {
                                         sum('GtoK');
                                         return null;
                                     }
-                                } else if(f_search[3] >= 28) {
+                                } else if(f_seek[3] >= 28) {
                                     sum('GtoK');
                                     return null;
                                 } //例外なし
@@ -3699,10 +3699,10 @@ $(function() {
                                 if(BBCVs > 3 || (BBCVs > 1 && LHA > 0)) {
                                     sum('HtoJ');
                                     return null;
-                                } else if(f_search[3] < 35) {
+                                } else if(f_seek[3] < 35) {
                                     sum('HtoJ');
                                     return null;
-                                } else if(f_search[3] < 40 && f_search[3] >= 35) {
+                                } else if(f_seek[3] < 40 && f_seek[3] >= 35) {
                                     if(sai(50)) {
                                         sum('HtoJ');
                                         return null;
@@ -3710,7 +3710,7 @@ $(function() {
                                         sum('HtoK');
                                         return null;
                                     }
-                                } else if(f_search[3] >= 40) {
+                                } else if(f_seek[3] >= 40) {
                                     sum('HtoK');
                                     return null;
                                 } //例外なし
@@ -4583,10 +4583,10 @@ $(function() {
                                 if(track.includes('E') || BBs + CV + CVB > 3 || BBCVs > 4 || AO > 0) {
                                     sum('KtoM');
                                     return 'M';
-                                } else if(f_search[1] < 63) {
+                                } else if(f_seek[1] < 63) {
                                     sum('KtoL');
                                     return null;
-                                } else if(f_search[1] < 70 && f_search[1] >= 63) {
+                                } else if(f_seek[1] < 70 && f_seek[1] >= 63) {
                                     if(Ss > 0) {
                                         const num = Math.random().toFixed(2);
                                         if(num <= 0.33) {
@@ -4616,7 +4616,7 @@ $(function() {
                                         sum('KtoT');
                                         return null;
                                     }
-                                } else if(f_search[1] >= 70) {
+                                } else if(f_seek[1] >= 70) {
                                     sum('KtoT');
                                     return null;
                                 } //LoSより例外なし
@@ -4662,10 +4662,10 @@ $(function() {
                                 }
                                 break;
                             case 'Q':
-                                if(f_search[1] < 55) {
+                                if(f_seek[1] < 55) {
                                     sum('QtoP');
                                     return null;
-                                } else if(f_search[1] < 59 && f_search[1] >= 55) {
+                                } else if(f_seek[1] < 59 && f_seek[1] >= 55) {
                                     if(BBCVs > 4) {
                                         if(sai(50)) {
                                             sum('QtoO');
@@ -4695,7 +4695,7 @@ $(function() {
                                 } else if(BBCVs > 4 || DD === 0) {
                                     sum('QtoO');
                                     return 'O';
-                                } else if(f_search[1] >= 59) {
+                                } else if(f_seek[1] >= 59) {
                                     sum('QtoN');
                                     sum('NtoT');
                                     return null;
@@ -4960,10 +4960,10 @@ $(function() {
                                 }
                                 break;
                             case 'F':
-                                if(f_search[1] < 63) {
+                                if(f_seek[1] < 63) {
                                     sum('FtoH');
                                     return null;
-                                } else if(f_search[1] < 70 && f_search >= 63) {
+                                } else if(f_seek[1] < 70 && f_seek >= 63) {
                                     if(BBs + CV + CVB > 4) {
                                         if(sai(50)) {
                                             sum('FtoH');
@@ -5008,7 +5008,7 @@ $(function() {
                                         sum('FtoO');
                                         return null;
                                     }
-                                } else if(f_search[1] >= 70) {
+                                } else if(f_seek[1] >= 70) {
                                     sum('FtoO');
                                     return null;
                                 } //LoSより例外なし
@@ -5045,7 +5045,7 @@ $(function() {
                                             sum('LtoN');
                                             return null;
                                         }
-                                    } else if(f_search[1] < 60) {
+                                    } else if(f_seek[1] < 60) {
                                         if(sai(50)) {
                                             sum('LtoM');
                                             sum('MtoK');
@@ -5055,7 +5055,7 @@ $(function() {
                                             sum('LtoN');
                                             return null;
                                         }
-                                    } else if(f_search[1] < 62 && f_search[1] >= 60) {
+                                    } else if(f_seek[1] < 62 && f_seek[1] >= 60) {
                                         const num = Math.random().toFixed(2);
                                         if(num <= 0.33) {
                                             sum('LtoK');
@@ -5070,7 +5070,7 @@ $(function() {
                                             sum('LtoN');
                                             return null;
                                         }
-                                    } else if(f_search[1] >= 62) {
+                                    } else if(f_seek[1] >= 62) {
                                         if(sai(50)) {
                                             sum('LtoK');
                                             sum('KtoO');
@@ -5084,7 +5084,7 @@ $(function() {
                                     sum('LtoK');
                                     sum('KtoO');
                                     return null;
-                                } else if(f_search[1] < 62 && f_search[1] >= 60) {
+                                } else if(f_seek[1] < 62 && f_seek[1] >= 60) {
                                     if(sai(50)) {
                                         sum('LtoK');
                                         sum('KtoO');
@@ -5095,14 +5095,14 @@ $(function() {
                                         sum('KtoO');
                                         return null;
                                     }
-                                } else if(f_search[1] >= 62) {
+                                } else if(f_seek[1] >= 62) {
                                     sum('LtoK');
                                     sum('KtoO');
                                 } //LoSより例外なし
                                 break;
                         }
                         break;
-                    case 3: //5-3@
+                    case 3: //@5-3
                         switch(edge) {
                             case null:
                                 if(isFaster()) {
@@ -5404,10 +5404,10 @@ $(function() {
                                 if(isFaster()) {
                                     sum('LtoP');
                                     return null;
-                                } else if(f_search[1] < 56) {
+                                } else if(f_seek[1] < 56) {
                                     sum('LtoN');
                                     return null;
-                                } else if((f_search[1] < 60 && f_search[1] >= 56) || BBs + CV + CVB > 4) {
+                                } else if((f_seek[1] < 60 && f_seek[1] >= 56) || BBs + CV + CVB > 4) {
                                     if(sai(50)) {
                                         sum('LtoP');
                                         return null;
@@ -5415,7 +5415,7 @@ $(function() {
                                         sum('LtoN');
                                         return null;
                                     }
-                                } else if(f_search[1] >= 60) {
+                                } else if(f_seek[1] >= 60) {
                                     sum('LtoP');
                                     return null;
                                 } //LoSより例外なし
@@ -5424,10 +5424,10 @@ $(function() {
                                 if(isFaster()) {
                                     sum('MtoP');
                                     return null;
-                                } else if(f_search[1] < 41) {
+                                } else if(f_seek[1] < 41) {
                                     sum('MtoO');
                                     return null;
-                                } else if((f_search[1] < 45 && f_search[1] >= 41)) {
+                                } else if((f_seek[1] < 45 && f_seek[1] >= 41)) {
                                     if(sai(50)) {
                                         sum('MtoP');
                                         return null;
@@ -5435,7 +5435,7 @@ $(function() {
                                         sum('MtoO');
                                         return null;
                                     }
-                                } else if(f_search[1] >= 45) {
+                                } else if(f_seek[1] >= 45) {
                                     if(Ss > 0) {
                                         if(sai(66.6)) {
                                             sum('MtoP');
@@ -5551,10 +5551,10 @@ $(function() {
                                 if(isFaster()) {
                                     sum('OtoS');
                                     return null;
-                                } else if(f_search[1] < 63) {
+                                } else if(f_seek[1] < 63) {
                                     sum('OtoR');
                                     return null;
-                                } else if((f_search[1] < 66 & f_search[1] >= 63) || Ss > 0) {
+                                } else if((f_seek[1] < 66 & f_seek[1] >= 63) || Ss > 0) {
                                     if(sai(50)) {
                                         sum('OtoS');
                                         return null;
@@ -5562,7 +5562,7 @@ $(function() {
                                         sum('OtoR');
                                         return null;
                                     }
-                                } else if(f_search[1] >= 66) {
+                                } else if(f_seek[1] >= 66) {
                                     sum('OtoS');
                                     return null;
                                 } //LoSより例外なし
@@ -5592,10 +5592,10 @@ $(function() {
                                             return null;
                                         }
                                     }
-                                } else if(f_search[1] < 73) {
+                                } else if(f_seek[1] < 73) {
                                     sum('PtoQ');
                                     return null;
-                                } else if((f_search[1] < 80 && f_search[1] >= 73) || Ss > 0 || BBCVs > 4) {
+                                } else if((f_seek[1] < 80 && f_seek[1] >= 73) || Ss > 0 || BBCVs > 4) {
                                     if(sai(66.6)) {
                                         sum('PtoS');
                                         return null;
@@ -5603,7 +5603,7 @@ $(function() {
                                         sum('PtoQ');
                                         return null;
                                     }
-                                } else if(f_search[1] >= 80) {
+                                } else if(f_seek[1] >= 80) {
                                     sum('PtoS');
                                     return null;
                                 } //LoSより例外なし
@@ -5646,13 +5646,13 @@ $(function() {
                                 }
                                 break;
                             case 'G':
-                                if(Ss < 3 || BBCVs + CAs === 2 || f_search[3] < 12) {
+                                if(Ss < 3 || BBCVs + CAs === 2 || f_seek[3] < 12) {
                                     sum('GtoI');
                                     return null;
-                                } else if(AS > 0 && f_search[3] >= 16) {
+                                } else if(AS > 0 && f_seek[3] >= 16) {
                                     sum('GtoH');
                                     return 'H';
-                                } else if(AS === 0 && f_search[3] >= 16) {
+                                } else if(AS === 0 && f_seek[3] >= 16) {
                                     if(sai(85)) {
                                         sum('GtoH');
                                         return 'H';
@@ -5671,11 +5671,11 @@ $(function() {
                                 }
                                 break;
                             case 'H':
-                                if(f_search[3] < 20) {
+                                if(f_seek[3] < 20) {
                                     sum('HtoE');
                                     return null;
                                 } else if(AS > 0) {
-                                    if(f_search[3] < 25 && f_search[3] >= 20) {
+                                    if(f_seek[3] < 25 && f_seek[3] >= 20) {
                                         if(sai(50)) {
                                             sum('HtoE');
                                             return null;
@@ -5683,11 +5683,11 @@ $(function() {
                                             sum('HtoK');
                                             return null;
                                         }
-                                    } else if(f_search[3] >= 25) {
+                                    } else if(f_seek[3] >= 25) {
                                         sum('HtoK');
                                         return null;
                                     } //LoSより例外なし
-                                } else if(f_search[3] < 25 && f_search[3] >= 20) {
+                                } else if(f_seek[3] < 25 && f_seek[3] >= 20) {
                                     const num = Math.random().toFixed(2);
                                     if(num <= 0.33) {
                                         sum('HtoE');
@@ -5699,7 +5699,7 @@ $(function() {
                                         sum('HtoK');
                                         return null;
                                     }
-                                } else if(f_search[3] < 36 && f_search[3] >= 25) {
+                                } else if(f_seek[3] < 36 && f_seek[3] >= 25) {
                                     if(sai(50)) {
                                         sum('HtoJ');
                                         return null;
@@ -5707,7 +5707,7 @@ $(function() {
                                         sum('HtoK');
                                         return null;
                                     }
-                                } else if(f_search[3] >= 36) {
+                                } else if(f_seek[3] >= 36) {
                                     sum('HtoK');
                                     return null;
                                 } //LoSより例外なし
@@ -5785,10 +5785,10 @@ $(function() {
                                     sum('EtoF');
                                     sum('FtoI');
                                     return 'I';
-                                } else if(f_search[2] < 43) {
+                                } else if(f_seek[2] < 43) {
                                     sum('EtoI');
                                     return 'I';
-                                } else if(f_search[2] < 50 && f_search[2] >= 43) {
+                                } else if(f_seek[2] < 50 && f_seek[2] >= 43) {
                                     if(sai(50)) {
                                         sum('EtoI');
                                         return 'I';
@@ -5797,14 +5797,14 @@ $(function() {
                                         sum('JtoK');
                                         return null;
                                     }
-                                } else if(f_search[2] >= 50) {
+                                } else if(f_seek[2] >= 50) {
                                     sum('EtoJ');
                                     sum('JtoK');
                                     return null;
                                 } //LoSより例外なし
                                 break;
                             case 'H':
-                                if(f_search[2] < 32) {
+                                if(f_seek[2] < 32) {
                                     sum('HtoG');
                                     return null;
                                 } else {
@@ -5813,10 +5813,10 @@ $(function() {
                                 }
                                 break;
                             case 'I':
-                                if(Ss > 3 || f_search[2] < 35) {
+                                if(Ss > 3 || f_seek[2] < 35) {
                                     sum('ItoG');
                                     return null;
-                                } else if(f_search[2] < 40 && f_search[2] >= 35) {
+                                } else if(f_seek[2] < 40 && f_seek[2] >= 35) {
                                     if(sai(50)) {
                                         sum('ItoG');
                                         return null;
@@ -5824,7 +5824,7 @@ $(function() {
                                         sum('ItoK');
                                         return null;
                                     }
-                                } else if(f_search[2] >= 40) {
+                                } else if(f_seek[2] >= 40) {
                                     sum('ItoK');
                                     return null;
                                 } //LoSより例外なし
@@ -5877,10 +5877,10 @@ $(function() {
                                 }
                                 break;
                             case 'H':
-                                if(f_search[2] < 36) {
+                                if(f_seek[2] < 36) {
                                     sum('HtoI');
                                     return null;
-                                } else if(f_search[2] < 38 && f_search[2] >= 36) {
+                                } else if(f_seek[2] < 38 && f_seek[2] >= 36) {
                                     if(sai(50)) {
                                         sum('HtoI');
                                         return null;
@@ -5888,7 +5888,7 @@ $(function() {
                                         sum('HtoJ');
                                         return null;
                                     }
-                                } else if(f_search[2] >= 38) {
+                                } else if(f_seek[2] >= 38) {
                                     sum('HtoJ');
                                     return null;
                                 } //LoSより例外なし
@@ -6050,7 +6050,7 @@ $(function() {
                                 }
                                 break;
                             case 'G':
-                                if(f_search[2] < 50) {
+                                if(f_seek[2] < 50) {
                                     sum('GtoK');
                                     return null;
                                 } else {
@@ -6073,7 +6073,7 @@ $(function() {
                                 }
                                 break;
                             case 'J':
-                                if(f_search[2] < 35) {
+                                if(f_seek[2] < 35) {
                                     sum('JtoL');
                                     return null;
                                 } else {
@@ -6361,7 +6361,7 @@ $(function() {
                                 if(f_length < 6 || Ds > 4 || (DD > 0 && DE > 2)) {
                                     sum('EtoG');
                                     return null;
-                                } else if(f_search[3] < 46) {
+                                } else if(f_seek[3] < 46) {
                                     sum('EtoF');
                                     return null;
                                 } else {
@@ -6374,11 +6374,11 @@ $(function() {
                                     sum('ItoJ');
                                     sum('JtoK');
                                     return null;
-                                } else if(f_search[3] < 63) {
+                                } else if(f_seek[3] < 63) {
                                     sum('ItoJ');
                                     sum('JtoK');
                                     return null;
-                                } else if(f_search[3] < 69 && f_search[3] >= 63) {
+                                } else if(f_seek[3] < 69 && f_seek[3] >= 63) {
                                     const num = Math.random().toFixed(2);
                                     if(num <= 0.33) {
                                         sum('ItoJ');
@@ -6391,7 +6391,7 @@ $(function() {
                                         sum('ItoM');
                                         return null;
                                     }
-                                } else if(f_search[3] >= 69) {
+                                } else if(f_seek[3] >= 69) {
                                     sum('ItoM');
                                     return null;
                                 } //LoSより例外なし
@@ -6828,11 +6828,11 @@ $(function() {
                                     sum('KtoM');
                                     return 'M';
                                 } else if(track.includes('E')) {
-                                    if(f_search[3] < 33) {
+                                    if(f_seek[3] < 33) {
                                         sum('JtoK');
                                         sum('KtoM');
                                         return 'M';
-                                    } else if(f_search[3] < 37 && f_search[3] >= 33) {
+                                    } else if(f_seek[3] < 37 && f_seek[3] >= 33) {
                                         if(sai(50)) {
                                             if(CT > 0 && DE > 2 && countTaiyo() + CT + Ds === 5 && f_length === 5) {
                                                 sum('JtoP');
@@ -6847,7 +6847,7 @@ $(function() {
                                             sum('KtoM');
                                             return 'M';
                                         }
-                                    } else if(f_search[3] >= 37) {
+                                    } else if(f_seek[3] >= 37) {
                                         if(CT > 0 && DE > 2 && countTaiyo() + CT + Ds === 5 && f_length === 5) {
                                             sum('JtoP');
                                             return null;
@@ -6863,11 +6863,11 @@ $(function() {
                                 //KtoPは見つかってないらしい 全てMへ
                                 break;
                             case 'M':
-                                if(f_search[3] < 45) {
+                                if(f_seek[3] < 45) {
                                     sum('MtoN');
                                     return null;
                                 } else if((slowBB() > 0 && CV + CVB > 0) || (BBs - slowBB() > 1) || BBV > 1 || (CVL > 1 || (CVL === 1 && isInclude('あきつ丸'))) || (BBs - slowBB() + BBV + CVL > 2 || (BBs - slowBB() + BBV + CVL === 2 && isInclude('あきつ丸'))) || Ds < 2) {
-                                    if(f_search[3] < 47 && f_search[3] >= 45) {
+                                    if(f_seek[3] < 47 && f_seek[3] >= 45) {
                                         if(sai(50)) {
                                             sum('MtoN');
                                             return null;
@@ -6875,7 +6875,7 @@ $(function() {
                                             sum('MtoO');
                                             return null;
                                         }
-                                    } else if(f_search[3] >= 47){
+                                    } else if(f_seek[3] >= 47){
                                         sum('MtoO');
                                         return null;
                                     } //LoSより例外なし
@@ -6960,11 +6960,11 @@ $(function() {
                                 }
                                 break;
                             case 'I':
-                                if(f_search[3] < 53) {
+                                if(f_seek[3] < 53) {
                                     sum('ItoL');
                                     sum('LtoM');
                                     return null;
-                                } else if(f_search[3] < 59 && f_search[3] >= 53) {
+                                } else if(f_seek[3] < 59 && f_seek[3] >= 53) {
                                     if(sai(50)) {
                                         sum('ItoL');
                                         sum('LtoM');
@@ -6973,7 +6973,7 @@ $(function() {
                                         sum('ItoM');
                                         return null;
                                     }
-                                } else if(f_search[3] >= 59) {
+                                } else if(f_seek[3] >= 59) {
                                     sum('ItoM');
                                     return null;
                                 } //LoSより例外なし
@@ -7005,10 +7005,10 @@ $(function() {
                                 }
                                 break;
                             case 'P':
-                                if(f_search[3] < 58) {
+                                if(f_seek[3] < 58) {
                                     sum('PtoS');
                                     return null;
-                                } else if(f_search[3] < 63 && f_search[3] >= 58) {
+                                } else if(f_seek[3] < 63 && f_seek[3] >= 58) {
                                     if(sai(33.3)) {
                                         sum('PtoR');
                                         sum('RtoT');
@@ -7026,7 +7026,7 @@ $(function() {
                                             return null;
                                         }
                                     }
-                                } else if(f_search[3] >= 63) {
+                                } else if(f_seek[3] >= 63) {
                                     if(f_speed === '最速艦隊') {
                                         sum('PtoT');
                                         return null;
@@ -7046,7 +7046,7 @@ $(function() {
                 break;
             case 57:
                 switch(map) {
-                    case 7:
+                    case 7: //@57-7
                         if(active['57-7']['1'] === '1') {
                             switch(edge) {
                                 case null:
@@ -7098,7 +7098,7 @@ $(function() {
                                     }
                                     break;
                                 case 'B':
-                                    if(f_search[3] < 86) {
+                                    if(f_seek[3] < 86) {
                                         sum('BtoB1');
                                         return null;
                                     } else {
@@ -7215,7 +7215,7 @@ $(function() {
                                     }
                                     break;
                                 case 'B':
-                                    if(f_search[3] < 86) {
+                                    if(f_seek[3] < 86) {
                                         sum('BtoB1');
                                         return null;
                                     } else {
@@ -7361,7 +7361,7 @@ $(function() {
                                     }
                                     break;
                                 case 'B':
-                                    if(f_search[3] < 86) {
+                                    if(f_seek[3] < 86) {
                                         sum('BtoB1');
                                         return null;
                                     } else {
@@ -7528,7 +7528,7 @@ $(function() {
                                     }
                                     break;
                                 case 'B':
-                                    if(f_search[3] < 86) {
+                                    if(f_seek[3] < 86) {
                                         sum('BtoB1');
                                         return null;
                                     } else {
@@ -7728,7 +7728,7 @@ $(function() {
                                     }
                                     break;
                                 case 'B':
-                                    if(f_search[3] < 86) {
+                                    if(f_seek[3] < 86) {
                                         sum('BtoB1');
                                         return null;
                                     } else {
@@ -7938,7 +7938,7 @@ $(function() {
                                     }
                                     break;
                                 case 'B':
-                                    if(f_search[3] < 86) {
+                                    if(f_seek[3] < 86) {
                                         sum('BtoB1');
                                         return null;
                                     } else {
@@ -8235,7 +8235,7 @@ $(function() {
                                 }
                                 break;
                             case 'K':
-                                if(f_search[3] >= 68) {
+                                if(f_seek[3] >= 68) {
                                     if (is_once) return 1;
                                     sum('KtoM');
                                     return null;
@@ -8275,7 +8275,7 @@ $(function() {
                                 }
                                 break;
                             case 'S':
-                                if(f_search[3] >= 80) {
+                                if(f_seek[3] >= 80) {
                                     if (is_once) return 1;
                                     sum('StoT');
                                     sum('TtoX');
@@ -8323,7 +8323,7 @@ $(function() {
                                     if (is_once) return 9;
                                     sum('WtoR2');
                                     return 'R2';
-                                } else if(f_search[3] >= 100) {
+                                } else if(f_seek[3] >= 100) {
                                     if (is_once) return 10;
                                     sum('WtoR2');
                                     return 'R2';
@@ -8450,7 +8450,7 @@ $(function() {
                                 break;
                             case 'D':
                                 if(!isCom()) {
-                                    if(f_search[3] >= 98) {
+                                    if(f_seek[3] >= 98) {
                                         if (is_once) return 1;
                                         sum('DtoD2');
                                         return null;
@@ -8492,7 +8492,7 @@ $(function() {
                                 break;
                             case 'H':
                                 if(track.includes('A')) {
-                                    if(f_search[3] < 80) {
+                                    if(f_seek[3] < 80) {
                                         if (is_once) return 1;
                                         sum('HtoK');
                                         return null;
@@ -8598,7 +8598,7 @@ $(function() {
                                 }
                                 break;
                             case 'P':
-                                if(f_search[1] >= 62) {
+                                if(f_seek[1] >= 62) {
                                     if (is_once) return 1;
                                     sum('PtoR');
                                     return null;
@@ -8816,7 +8816,7 @@ $(function() {
                                 }
                                 break;
                             case 'F':
-                                if(f_search[1] >= 65) {
+                                if(f_seek[1] >= 65) {
                                     if (is_once) return 1;
                                     sum('FtoO');
                                     return 'O';
@@ -8865,7 +8865,7 @@ $(function() {
                                 }
                                 break;
                             case 'J':
-                                if(f_search[1] >= 45) {
+                                if(f_seek[1] >= 45) {
                                     if (is_once) return 1;
                                     sum('JtoN');
                                     return null;
@@ -8876,7 +8876,7 @@ $(function() {
                                 }
                                 break;
                             case 'L':
-                                if(f_search[1] >= 58) {
+                                if(f_seek[1] >= 58) {
                                     if (is_once) return 1;
                                     sum('LtoM');
                                     return 'M';
@@ -8887,7 +8887,7 @@ $(function() {
                                 }
                                 break;
                             case 'O':
-                                if(f_search[1] < 75) {
+                                if(f_seek[1] < 75) {
                                     if (is_once) return 1;
                                     sum('OtoO1');
                                     return null;
@@ -8907,7 +8907,7 @@ $(function() {
                                 }
                                 break;
                             case 'P':
-                                if(f_search[3] >= 98) {
+                                if(f_seek[3] >= 98) {
                                     if (is_once) return 1;
                                     sum('PtoR');
                                     return 'R';
@@ -9020,7 +9020,7 @@ $(function() {
                                 break;
                         }
                         break;
-                    case 4:
+                    case 4: //@58-4
                         var phase = Number(active['58-4']['1']);
                         var difficulty = Number(active['58-4']['2']);
                         switch(edge) {
@@ -9269,7 +9269,7 @@ $(function() {
                                 }
                                 break;
                             case 'F1':
-                                if(f_search[1] >= 98) {
+                                if(f_seek[1] >= 98) {
                                     if (is_once) return 1;
                                     sum('F1toG');
                                     return null;
@@ -9428,7 +9428,7 @@ $(function() {
                                 }
                                 break;
                             case 'M':
-                                if(f_search[1] >= 52) {
+                                if(f_seek[1] >= 52) {
                                     if (is_once) return 1;
                                     sum('MtoO');
                                     return null;
@@ -9478,7 +9478,7 @@ $(function() {
                                 }
                                 break;
                             case 'X':
-                                if(f_search[1] >= 84) {
+                                if(f_seek[1] >= 84) {
                                     if (is_once) return 1;
                                     sum('XtoZ');
                                     return null;
@@ -9839,12 +9839,24 @@ $(function() {
         // 更新
         drew_area = area;
         console.log(`drew_area : ${drew_area}`);
-        // 分岐条件表示
         let node = null;
+        cy.on('mouseup', function (e) {
+            let tar = e.target;
+            if(tar.data('name')) {
+                node = tar.data('name');
+                // ソースコード参照
+                if(event && event.ctrlKey) {
+                    let url = `${location.origin}/source/?search=${drew_area}-${node}`;
+                    window.open(url);
+                    return;
+                }
+            }
+        });
+        // 分岐条件表示
         cy.on('mousedown', function (e) {
             let tar = e.target;
             if(tar.data('name')) {
-                let node = tar.data('name');
+                node = tar.data('name');
                 let nodeData = map['spots'][drew_area][node];
                 let n_length = nodeData.length;
                 // Phase
@@ -9976,12 +9988,12 @@ $(function() {
                     show: true,
                     onClickFunction: function (event) {
                         if(is_ignore_seek) {
-                            f_search = fs_copy;
+                            f_seek = fs_copy;
                             is_ignore_seek = false;
                         } else {
                             // 退避
-                            fs_copy = f_search;
-                            f_search = [999,999,999,999];
+                            fs_copy = f_seek;
+                            f_seek = [999,999,999,999];
                             is_ignore_seek = true;
                         }
                         reloadImportDisplay();
@@ -10674,7 +10686,7 @@ $(function() {
             console.log(deck);
             //gkcoi出力
             let g_speed = getFleetSpeedWithNum(f_speed);
-            generate(deck, g_speed, f_search).then((canvas) => {
+            generate(deck, g_speed, f_seek).then((canvas) => {
                 let g_blob = getGkcoiBlob(canvas);
                 let cy_blob = getCyBlob();
                 combineAndDownloadBlobs(cy_blob, g_blob, fileName);
