@@ -3152,6 +3152,9 @@ $(function() {
                                         sum('FtoG');
                                         return null;
                                     }
+                                } else if(BBCVs > 2) {
+                                    sum('CtoD');
+                                    return 'D';
                                 } else {
                                     sum('CtoF');
                                     sum('FtoG');
