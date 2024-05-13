@@ -4949,13 +4949,16 @@ $(function() {
                                 }
                                 break;
                             case 'D':
-                                if(isInclude('祥鳳') && (((CA === 1 && (CL === 1 || AO === 1)) || AO === 2))) {
+                                if((isInclude('祥鳳') && DD === 3) && (((CA === 1 && (CL === 1 || AO === 1)) || AO === 2))) {
                                     sum('DtoG');
                                     return 'G';
-                                } else if(isInclude('夕張')) {
+                                } else if(isInclude('夕張') && DD === 2) {
                                     if(DD === 3 || (AO === 1 && (DD === 2 || CA === 2)) || (AO == 2 && (DD === 1 || CA === 2)) || (isInclude('祥鳳') && (CA === 2 || AO === 2))) {
                                         sum('DtoG');
                                         return 'G';
+                                    } else {
+                                        sum('DtoF');
+                                        return 'F';
                                     }
                                 } else {
                                     sum('DtoF');
