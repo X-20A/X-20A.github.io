@@ -109,7 +109,8 @@ $(function() {
     //消費資源計算に使う
     let f_lvs = [];
     
-    // 読込時の計算に使うあれこれ
+    // 読込時にあれこれしたやつを艦隊単位で入れる
+    // あとで実際に反映する艦隊を艦隊番号を指定してfシリーズに移す
     let c_lengths = [];
     let c_ids = [];
     let c_names = [];
@@ -189,7 +190,7 @@ $(function() {
     $('.areas').on('click', function() {
         setArea($(this).val());
     });
-    //海域入力で発火 オプション表示したり
+    // 海域入力で発火 オプション表示したり
     function setArea(text) {
         console.log(`area : ${text}`);
         if(areas.includes(text)) {
@@ -1449,16 +1450,12 @@ $(function() {
     // 特定の艦が含まれるかチェック
     // 改、改二等後に続く文字列は許容するが名前が変わる場合は都度呼び出すこと
     function isInclude(name) {
-        // 配列をループして各要素を調べる
-        for (let i = 0; i < f_length; i++) {
-            const element = f_names[i];
-            // 要素内でワードが存在するかチェック
-            if (element.includes(name)) {
-                return true; // ワードが見つかった場合、trueを返す
-            }
-        }
-        // ループを抜けても見つからなかった場合、falseを返す
-        return false;
+        return f_names.some(elem => elem.includes(name));
+    }
+    // isIncludeと同じ
+    // カウントを返す
+    function countShipsStartWith(name) {
+        return f_names.filter(elem => elem.startsWith(name)).length;
     }
     // 高速+艦隊か最速艦隊であればtrue
     function isFaster() {
@@ -1483,7 +1480,7 @@ $(function() {
         return false;
     }
     // 低速戦艦をカウント
-    function slowBB() {
+    function countSBB() {
         var slowBBs = ['扶桑','山城','伊勢','日向','長門','長門改','長門改二','陸奥','陸奥改','陸奥改二','大和','大和改','武蔵','武蔵改','武蔵改二','Conte di Cavour','Nevada','Nevada改','Nevada改 Mod.2','Colorado','Colorado改','Maryland','Marylan改','Warspite','Warspite改','Nelson','Nelson改','Rodney','Rodney改','Гангут','Октябрьская революция','Гангут два'];
         // 配列arr1の要素をセットに変換
         const set = new Set(f_names);
@@ -1496,7 +1493,7 @@ $(function() {
         }
         return count;
     }
-    //大鷹型カウント
+    // 大鷹型カウント
     function countTaiyo() {
         var taiyos = ['春日丸', '大鷹', '八幡丸', '雲鷹', '神鷹'];
         var count = 0;
@@ -1532,7 +1529,8 @@ $(function() {
             return false;
         }
     }
-    // ルートカウント
+    // rate(経路)をカウント
+    // 同じものがあれば加算、無ければ追加
     function sum(route) {
         //無ければ追加、あれば加算
         rate[route] ? rate[route] += 1:rate[route] = 1;
@@ -1761,7 +1759,7 @@ $(function() {
                                 }
                                 break;
                             case 'F':
-                                if(CV + CVB > 0 || slowBB() > 0) {
+                                if(CV + CVB > 0 || countSBB() > 0) {
                                     sum('FtoH');
                                     return 'H';
                                 } else if((CAV > 0 && DD > 1) || DD > 3 || ((CL + CT > 0) && Ds > 3)) {
@@ -5181,7 +5179,7 @@ $(function() {
                                 } else if(DD === 1) {
                                     sum('GtoI');
                                     return 'I';
-                                } else if(slowBB() > 1) {
+                                } else if(countSBB() > 1) {
                                     sum('GtoJ');
                                     return 'J';
                                 } else {
@@ -5234,7 +5232,7 @@ $(function() {
                                     sum('JtoM');
                                     return null;
                                 } else if(CVL === 1) {
-                                    if(slowBB() > 1) {
+                                    if(countSBB() > 1) {
                                         sum('JtoN');
                                         sum('NtoO');
                                         return 'O';
@@ -5336,7 +5334,7 @@ $(function() {
                                     sum('BtoC');
                                     sum('CtoG');
                                     return 'G';
-                                } else if((BBs > 0 && f_speed === '低速艦隊') || BBV + slowBB() > 1) {
+                                } else if((BBs > 0 && f_speed === '低速艦隊') || BBV + countSBB() > 1) {
                                     sum('BtoD');
                                     return 'D';
                                 } else if(isFaster() || (CL === 1 && DD > 2) || DD > 3) {
@@ -5364,7 +5362,7 @@ $(function() {
                                 }
                                 break;
                             case 'D':
-                                if(Ss > 0 || slowBB() > 1 || BBs > 2) {
+                                if(Ss > 0 || countSBB() > 1 || BBs > 2) {
                                     sum('DtoF');
                                     sum('FtoH');
                                     sum('HtoI');
@@ -6754,7 +6752,7 @@ $(function() {
                                     if(CV + CVB > 0 || BBCVs > 1 || Ss > 3) {
                                         sum('MtoN');
                                         return null;
-                                    } else if(slowBB() > 0 || AO > 0 || AV > 1) {
+                                    } else if(countSBB() > 0 || AO > 0 || AV > 1) {
                                         sum('MtoO');
                                         return null;
                                     } else {
@@ -6790,11 +6788,11 @@ $(function() {
                                 }
                                 break;
                             case 'C':
-                                if(BB + CV + CVB + Ss > 0 || (CVL > 2 || (CVL === 2 && isInclude('あきつ丸')))) {
+                                if(BB + CV + CVB + Ss > 0 || CVL + countShipsStartWith('あきつ丸') > 2) {
                                     sum('CtoD');
                                     sum('DtoF');
                                     return 'F';
-                                } else if(Ds > 3 || (CL > 0 && Ds > 2) || DE > 2 || (isFaster() && DD > 1)) {
+                                } else if(Ds > 3 || (CT > 0 && Ds > 2) || DE > 2 || (isFaster() && DD > 1)) {
                                     sum('CtoE');
                                     return 'E';
                                 } else {
@@ -6872,7 +6870,7 @@ $(function() {
                                 if(f_seek[3] < 45) {
                                     sum('MtoN');
                                     return null;
-                                } else if((slowBB() > 0 && CV + CVB > 0) || (BBs - slowBB() > 1) || BBV > 1 || (CVL > 1 || (CVL === 1 && isInclude('あきつ丸'))) || (BBs - slowBB() + BBV + CVL > 2 || (BBs - slowBB() + BBV + CVL === 2 && isInclude('あきつ丸'))) || Ds < 2) {
+                                } else if((countSBB() > 0 && CV + CVB > 0) || (BBs - countSBB() > 1) || BBV > 1 || (CVL > 1 || (CVL === 1 && isInclude('あきつ丸'))) || (BBs - countSBB() + BBV + CVL > 2 || (BBs - countSBB() + BBV + CVL === 2 && isInclude('あきつ丸'))) || Ds < 2) {
                                     if(f_seek[3] < 47 && f_seek[3] >= 45) {
                                         if(sai(50)) {
                                             sum('MtoN');
@@ -6903,7 +6901,7 @@ $(function() {
                                 if(isFaster()) {
                                     sum('BtoD');
                                     return 'D';
-                                } else if(CV + CVB > 1 || slowBB() > 1 || Ss > 0 || CL === 0 || Ds < 2) {
+                                } else if(CV + CVB > 1 || countSBB() > 1 || Ss > 0 || CL === 0 || Ds < 2) {
                                     sum('BtoC');
                                     sum('CtoD');
                                     return 'D';
@@ -6988,7 +6986,7 @@ $(function() {
                                 if((CVL === 1 && CAs === 2 && CL === 1 && Ds === 2) || isFaster()) {
                                     sum('JtoO');
                                     return 'O';
-                                } else if(CV + CVB > 0 || CVL > 2 || slowBB() > 1 || BBs + CAs > 2 || Ds < 2) {
+                                } else if(CV + CVB > 0 || CVL > 2 || countSBB() > 1 || BBs + CAs > 2 || Ds < 2) {
                                     sum('JtoN');
                                     sum('NtoO');
                                     return 'O';
@@ -9510,7 +9508,7 @@ $(function() {
                 break;
         }
     }
-    // trackを重複チェックしてからt_logsに格納 既にあれば加算
+    // track(1周ごとの経路)を重複チェックしてからt_logsに格納 既にあれば加算
     function pushLog() {
         let key = track.join('e');
         t_logs[key] ? t_logs[key] += 1:t_logs[key] = 1;
