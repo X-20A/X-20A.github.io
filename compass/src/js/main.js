@@ -6571,19 +6571,19 @@ $(function() {
                                         sum('CtoI');
                                         return 'I';
                                     } else if(f_length > 4) {
-                                        if(isFaster() && Ds > 3) {
+                                        if(isFaster() && CL + DD > 3) {
                                             sum('CtoI');
                                             return 'I';
                                         } else if(f_length === 6) {
                                             sum('CtoD');
                                             return 'D';
-                                        } else if(isInclude('羽黒') || isInclude('神風')) {
+                                        } else if(isInclude('羽黒') && isInclude('神風')) {
                                             if(Ds < 2) {
                                                 sum('CtoD');
                                                 return 'D';
                                             } else if(CL > 0 || isInclude('足柄')) {
-                                                sum('CtoE');
-                                                return null;
+                                                sum('CtoI');
+                                                return 'I';
                                             } else {
                                                 sum('CtoD');
                                                 return 'D';
