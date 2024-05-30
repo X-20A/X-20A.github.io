@@ -1,6 +1,6 @@
 /*
     更新手続き
-    
+
     イベなど新海域
         1.関数
             branch
@@ -19,9 +19,9 @@
             index.html
                 #area-inner・・・海域
                 #option-box・・・オプション
-                
+
         このへん追加すれば動くはず、たぶん
-        
+
     新艦・新装備
         data/ship.js
         data/item.js
@@ -101,14 +101,14 @@ $(function() {
         判定も少しはするけど殆ど自己申告
     */
     let f_type = null;
-    
+
     // 資源マス計算に使う(分岐判定には使わない)装備の累計
     let ft_drum = 0;
     let ft_craft = 0;
-    
+
     //消費資源計算に使う
     let f_lvs = [];
-    
+
     // 読込時にあれこれしたやつを艦隊単位で入れる
     // あとで実際に反映する艦隊を艦隊番号を指定してfシリーズに移す
     let c_lengths = [];
@@ -121,16 +121,16 @@ $(function() {
     let c_radars = [];
     let c_crafts = [];
     let c_kanko = [];
-    
+
     // 資源マス計算に使う(分岐判定には使わない)装備の累計
     // 大発動艇, 大発動艇(八九式中戦車&陸戦隊), 特に式内火艇, 特大発動艇, 装甲艇(AB艇), 武装大発, 大発動艇(II号戦車/北アフリカ仕様), 特大発動艇+一式砲戦車, 特四式内火艇, 特四式内火艇改
     let valid_crafts = [68,166,167,193,408,409,436,449,525,526];
     let ct_drums = [];
     let ct_crafts = [];
-    
+
     //消費資源計算に使う
     let c_lvs = [];
-    
+
     /*
         艦隊種別選択したやつ(数値)が入る
         1:第一艦隊
@@ -142,37 +142,37 @@ $(function() {
         7:輸送護衛部隊
     */
     let selected_type = null;
-    
+
     // 受け付ける海域
     const areas = ['1-1','1-2','1-3','1-4','1-5','1-6','2-1','2-2','2-3','2-4','2-5','3-1','3-2','3-3','3-4','3-5','4-1','4-2','4-3','4-4','4-5','5-1','5-2','5-3','5-4','5-5','6-1','6-2','6-3','6-4','6-5','7-1','7-2','7-3','7-3-1','7-4','7-5','57-7','58-1','58-2','58-3','58-4'];
     //optionがある海域
     const op_areas = ['4-5','5-3','5-5','6-3','7-3','7-4','7-5','57-7','58-1','58-2','58-3','58-4'];
-    
+
     // 1がキーの値はPhase
     let active = {'4-5':{'A':'D','C':'F','I':'J'},'5-3':{'O':'K'}, '5-5':{'F':'D'}, '6-3':{'A':'B'},'7-3':{'1':'0'},'7-4':{'F':'H'},'7-5':{'F':'G','H':'I','O':'P'},'57-7':{'1':'1','A2':'A3','B2':'B3','C':'A3','J':'K'}, '57-7':{'1':'1','A2':'A3','B':'B1','B2':'B3','C':'A3','J':'K'},'58-1':{'1':'1','A':'D','I':'N1','F':'G'},'58-2':{'1':'1','2':'1','B':'E'},'58-3':{'1':'1','2':'1','M':'P'},'58-4':{'1':'1','2':'1','B':'D'}};
-    
+
     let area = null; // 入力で切り替えるの
     let drew_area = null; // 表示中の海域
-    
+
     // オプション表示の為のz-index
     let z_value = 10;
-    
+
     // 演算開始の為のフラグ
     let a_flag = false;
     let f_flag = false;
-    
+
     let rate = {}; // これにルート情報を詰め込んでいく
     let track = []; // 最後の軌跡
     let t_logs = {}; //trackを1周ごとに格納
-    
+
     let cy = null;
-    
+
     // 索敵無視フラグと退避用変数
     let is_ignore_seek = false;
     let fs_copy = null;
-    
+
     let s_time = 0; // 区間計測用
-    
+
     // firebase(エラーログ)関連
     const firebaseConfig = {
         apiKey: "AIzaSyDyh01YFd5B_HmBHHKyT9FFj2MVLIqHWkY",
@@ -314,7 +314,7 @@ $(function() {
                 c_radars.push(0);
                 c_crafts.push(0);
                 c_kanko.push(0);
-                
+
                 ct_drums.push(0);
                 ct_crafts.push(0);
             }
@@ -390,7 +390,7 @@ $(function() {
                         break;
                     case 4:
                         view = '第四艦隊';
-                        break; 
+                        break;
                 }
             }
             setFleetInfo(selected_type);
@@ -480,7 +480,7 @@ $(function() {
                 console.log(`電探 : ${f_radar}`);
                 console.log(`大発系 : ${f_craft}`);
                 console.log(`寒甲 : ${f_kanko}`);
-                
+
                 ft_drum = ct_drums[f];
                 ft_craft = ct_crafts[f];
                 console.log(`ドラム缶累計 : ${ft_drum}`);
@@ -545,7 +545,7 @@ $(function() {
                 console.log(`ドラム缶 : ${f_drum}`);
                 console.log(`電探 : ${f_radar}`);
                 console.log(`大発系 : ${f_craft}`);
-                
+
                 ft_drum = ct_drums[0] + ct_drums[1];
                 ft_craft = ct_crafts[0] + ct_crafts[1];
                 // 艦隊種別
@@ -605,10 +605,10 @@ $(function() {
         c_radars = [];
         c_crafts = [];
         c_kanko = [];
-        
+
         ct_drums = [];
         ct_crafts = [];
-        
+
         c_lvs = [];
     }
     // ドラム缶、大発、電探搭載艦数, 寒甲カウント
@@ -676,7 +676,7 @@ $(function() {
             c_crafts.push(craft);
             c_kanko.push(kanko);
         }
-        
+
     }
     // typeの先頭3つを連結してidとして返す(数値型)
     function getEqType(e_id) {
@@ -1054,7 +1054,7 @@ $(function() {
                         if(!dup.includes(e_id)) {
                             res += 5;
                             dup.push(e_id);
-                        }   
+                        }
                     } else if(name.includes('Commandant Teste')) {
                         if(!dup.includes(e_id)) {
                             res += 4;
@@ -1444,7 +1444,7 @@ $(function() {
             $('#import-display').append(`${u}<p>${f_speed} | 搭載艦数[ドラム缶:${f_drum},大発系:${f_craft},電探:${f_radar}]</p><p>${part}</p><p id="seek-info">索敵値: <strong>1: </strong>${f_seek[0]} <strong>2: </strong>${f_seek[1]} <strong>3: </strong>${f_seek[2]} <strong>4: </strong>${f_seek[3]}</p>`);/*<span id="asterisk">*</span><span id="seek-message">一致しない場合は制空シミュを信用してください</span>*/
         }
     }
-    
+
     // 以下分岐判定に必要な関数
 
     // 特定の艦が含まれるかチェック
@@ -1472,7 +1472,7 @@ $(function() {
         var clsName = ['矢矧','能代','Helena','Brooklyn','Honolulu','神通','Sheffield','L.d.S.D.d.Abruzzi','G.Garibaldi','Perth','大淀','球磨','De Ruyter','長良','名取','川内','那珂','阿賀野','酒匂','天龍','Atlanta','五十鈴','多摩','Gotland','鬼怒','由良','阿武隈','夕張','龍田'];
         //こちらは完全一致
         var exCL = ['北上','大井','木曾','木曾改'];
-        if(clsName.some(item => item.startsWith(name))) {
+        if(clsName.some(item => name.startsWith(item))) {
             return true;
         } else if(exCL.includes(name)) {
             return true;
@@ -3058,7 +3058,7 @@ $(function() {
                                             sum('JtoO');
                                             return null;
                                         }
-                                    } 
+                                    }
                                 } else if(BBCVs > 3) {
                                     if(sai(50)) {
                                         sum('JtoM');
@@ -4440,7 +4440,7 @@ $(function() {
                                         } else {
                                             sum('EtoG');
                                             return 'G';
-                                            
+
                                         }
                                     } //BBCVsより例外なし
                                 } else if(Ss > 3) {
@@ -7132,7 +7132,7 @@ $(function() {
                                     break;
                                 case 'C2':
                                     if(CV < 3) {
-                                        sum('C2toD'); 
+                                        sum('C2toD');
                                         return 'D';
                                     } else {
                                         sum('C2toC3');
@@ -7249,7 +7249,7 @@ $(function() {
                                     break;
                                 case 'C2':
                                     if(CV < 3) {
-                                        sum('C2toD'); 
+                                        sum('C2toD');
                                         return 'D';
                                     } else {
                                         sum('C2toC3');
@@ -7395,7 +7395,7 @@ $(function() {
                                     break;
                                 case 'C2':
                                     if(CV < 3) {
-                                        sum('C2toD'); 
+                                        sum('C2toD');
                                         return 'D';
                                     } else {
                                         sum('C2toC3');
@@ -8736,7 +8736,7 @@ $(function() {
                                         } else if(AO + LHA + AV > 1) {
                                             if (is_once) return 7;
                                             sum('2toH');
-                                            return 'H';   
+                                            return 'H';
                                         } else if(phase < 4) {
                                             if (is_once) return 8;
                                             sum('3toI');
@@ -9325,15 +9325,15 @@ $(function() {
                                 } else if(difficulty === 2 && Ss > 2) {
                                     if (is_once) return 4;
                                     sum('JtoJ1');
-                                    return 'J1'; 
+                                    return 'J1';
                                 } else if(difficulty === 3 && Ss > 1) {
                                     if (is_once) return 5;
                                     sum('JtoJ1');
-                                    return 'J1'; 
+                                    return 'J1';
                                 } else if(difficulty === 4) {
                                     if (is_once) return 6;
                                     sum('JtoJ1');
-                                    return 'J1'; 
+                                    return 'J1';
                                 } else {
                                     if (is_once) return 7;
                                     sum('JtoF');
@@ -9613,7 +9613,7 @@ $(function() {
 
         // スタイルシート
         var style = [
-            { selector: 'node', 
+            { selector: 'node',
                 style: {
                     'color': 'rgb(250,250,250)',
                     'font-weight': '100',
@@ -9769,7 +9769,7 @@ $(function() {
                  'background-position-y': '-1px'
              }
             },
-            { selector: 'edge', 
+            { selector: 'edge',
                 style: {
                     'color': 'rgb(250,250,250)',
                     'font-weight': '100',
@@ -9782,43 +9782,43 @@ $(function() {
                     'content':'data(ratio)'
                 }
             }, //割合によって色分け
-            { selector: 'edge[ratio = 100]', 
+            { selector: 'edge[ratio = 100]',
                 style: {
                     'line-color': 'rgb(220,20,60)',
                     'target-arrow-color': 'rgb(220,20,60)',
                 }
             },
-            { selector: 'edge[ratio < 100][ratio >= 80]', 
+            { selector: 'edge[ratio < 100][ratio >= 80]',
                 style: {
                     'line-color': 'rgb(255,99,71)',
                     'target-arrow-color': 'rgb(255,99,71)',
                 }
             },
-            { selector: 'edge[ratio < 80][ratio >= 60]', 
+            { selector: 'edge[ratio < 80][ratio >= 60]',
                 style: {
                     'line-color': 'rgb(255,165,0)',
                     'target-arrow-color': 'rgb(255,165,0)',
                 }
             },
-            { selector: 'edge[ratio < 60][ratio >= 40]', 
+            { selector: 'edge[ratio < 60][ratio >= 40]',
                 style: {
                     'line-color': 'rgb(255,215,0)',
                     'target-arrow-color': 'rgb(255,215,0)',
                 }
             },
-            { selector: 'edge[ratio < 40][ratio >= 20]', 
+            { selector: 'edge[ratio < 40][ratio >= 20]',
                 style: {
                     'line-color': 'rgb(255,215,0)',
                     'target-arrow-color': 'rgb(255,215,0)',
                 }
             },
-            { selector: 'edge[ratio < 20][ratio > 0]', 
+            { selector: 'edge[ratio < 20][ratio > 0]',
                  style: {
                      'line-color': 'rgb(240,230,140)',
                      'target-arrow-color': 'rgb(240,230,140)',
                  }
             },
-            { selector: 'edge[ratio = 0]', 
+            { selector: 'edge[ratio = 0]',
                  style: {
                      'line-color': 'rgb(169,169,169)',
                      'content':'' //0の場合表示なし
@@ -9831,7 +9831,7 @@ $(function() {
         };
 
         // 出力
-        cy = cytoscape({ 
+        cy = cytoscape({
             // #cyに生成
             container: document.getElementById('cy'),
             elements: elements,
@@ -10464,7 +10464,7 @@ $(function() {
     // 読み込み時にlocalstorageから諸々の設定を読込、反映
     // 上に置くとtrigger()が不発する 謎
     setup();
-    
+
     // 以下ストレージ関連
     function setup() {
         var a = localStorage.getItem('active');
@@ -10528,7 +10528,7 @@ $(function() {
                 $('#error-log').prop('checked', true);
             }
         }
-        
+
     }
     // URLから任意のパラメータを取得
     function getParam(name, url) {
@@ -10649,7 +10649,7 @@ $(function() {
     });
     // infomation
     $('#infomation').on('click', function() {
-        
+
     });
     // 連想配列を値の大きい順にソート
     function sortObjectByValues(obj) {
