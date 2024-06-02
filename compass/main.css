@@ -115,6 +115,17 @@ li {
     text-decoration: none;
     background-color: rgba(255, 255, 255, 0.08);
 }
+.icon-on-map {
+    display: none;
+    cursor: pointer;
+    padding: 3px;
+    border-radius: 100%;
+    width: 22px;
+    top: 4px;
+    position: absolute;
+    z-index: 9999;
+    background-color: #cccccc;
+}
 .cy-context-menus-cxt-menu {
     display:none;
     z-index: 1000;
@@ -294,16 +305,11 @@ li {
     color: red;
     display: none;
 }
+#infomation {
+    right: 37px;
+}
 #screen-shot {
-    cursor: pointer;
-    padding: 3px;
-    border-radius: 100%;
-    width: 22px;
     right: 4px;
-    top: 4px;
-    position: absolute;
-    z-index: 9999;
-    background-color: #cccccc;
 }
 #cy {
     display:flex;
@@ -314,6 +320,18 @@ li {
     height:100%;
     z-index:999;
     background: blanchedalmond;
+}
+#popup-info {
+    font-size: 13px;
+    max-width: 450px;
+    min-width: 210px;
+    position: absolute;
+    background: #fff;
+    padding: 6px;
+    border: 1px solid #000;
+    border-radius: 4px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
 }
 /*デザインボタン*/
 .design-button {
