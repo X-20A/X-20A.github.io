@@ -401,9 +401,11 @@ $(function() {
         $(this).val('');
         $(this).blur();
     });
+    // 艦隊種別選択表示
     $('#type-select').on('mouseover', function() {
         $('#fleet-option-box').css('display', 'block');
     });
+    // 艦隊種別選択非表示
     $('#fleet-option-box').on('mouseleave', function() {
         $('#fleet-option-box').css('display', 'none');
     });
@@ -690,9 +692,9 @@ $(function() {
             let e_ids = getEqIds(c_ids[num - 1][i], num);
             let rf = getEqRfs(c_ids[num - 1][i], num);
             /*
-            33:タービン
-            34:強化缶
-            87:新型缶
+                33:タービン
+                34:強化缶
+                87:新型缶
             */
             let tur = 0; // タービン
             let kan = 0; // 強化缶
@@ -6218,16 +6220,12 @@ $(function() {
                                 }
                                 break;
                             case 'H':
-                                if((CL > 0 && DD > 3) || (CL > 0 && DE > 2)) {
+                                if((CL > 0 && DD > 3) || (DD > 0 && DE > 2)) {
                                     sum('HtoK');
                                     return null;
                                 } else if(AO > 0) {
-                                    const num = Math.random().toFixed(2);
-                                    if(num <= 0.33) {
+                                    if(sai(50)) {
                                         sum('HtoI');
-                                        return null;
-                                    } else if(num <= 0.66) {
-                                        sum('HtoJ');
                                         return null;
                                     } else {
                                         sum('HtoK');
@@ -10609,32 +10607,28 @@ $(function() {
     });
     // 海域入力画面表示
     $('#area-display').on('click', function() {
-        document.getElementById('area-mask').style.display = 'block';
+        document.getElementById('mask').style.display = 'block';
         document.getElementById('area-container').style.display = 'flex';
         document.getElementById('area-box').style.display = 'block';
     });
-    // 設定画面非表示
+    // 海域選択画面非表示
     $('#area-container').on('click', function() {
-        $('#area-mask').css('display', 'none');
+        $('#mask').css('display', 'none');
         $('#area-container').css('display', 'none');
-    });
-    // バブリング阻止
-    $('#area-box').on('click', function(e) {
-        e.stopPropagation();
     });
     // 設定画面表示
     $('#conf-icon-box').on('click', function() {
-        $('#conf-mask').css('display', 'block');
+        $('#mask').css('display', 'block');
         $('#conf-container').css('display', 'flex');
         $('#conf-box').css('display', 'block');
     });
     // 設定画面非表示
     $('#conf-container').on('click', function() {
-        $('#conf-mask').css('display', 'none');
+        $('#mask').css('display', 'none');
         $('#conf-container').css('display', 'none');
     });
     // バブリング阻止
-    $('#conf-box').on('click', function(e) {
+    $('#area-box, #conf-box').on('click', function(e) {
         e.stopPropagation();
     });
     // localstorage全削除
@@ -10662,7 +10656,7 @@ $(function() {
         }
     });
 
-    // infomation
+    // infomation ※未実装
     $('#infomation').on('click', function() {
 
     });
