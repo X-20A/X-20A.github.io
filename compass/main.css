@@ -156,6 +156,7 @@ li {
     z-index: 999999999;
     position: fixed;
     display: none;
+    top: 0;
 }
 #conf-box {
     background-color: #202129;
@@ -166,7 +167,7 @@ li {
     opacity: 1;
     color: white;
 }
-#conf-mask {
+#mask {
     top: 0;
     width: 100%;
     height: 100%;
@@ -231,16 +232,7 @@ li {
     z-index: 999999999;
     position: fixed;
     display: none;
-}
-#area-mask {
     top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: black;
-    opacity: 0.4;
-    display: none;
-    position: fixed;
-    z-index: 999999998;
 }
 #area-box {
     margin-top: 120px;
