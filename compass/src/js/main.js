@@ -28,14 +28,13 @@
 */
 import $ from 'jquery';
 import 'jquery-ui/ui/widgets/draggable';
-import 'jquery-ui/ui/widgets/resizable';
 import Decimal from 'decimal.js';
-import cytoscape from 'cytoscape';
+import cytoscape from 'cytoscape/dist/cytoscape.min.js';
 import contextMenus from 'cytoscape-context-menus';
-cytoscape.use(contextMenus);
 import { generate } from "gkcoi";
-import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc, doc, getDocs, query, where } from "firebase/firestore";
+
+cytoscape.use(contextMenus);
+
 $(function() {
     /*
         s_dataはship.js
@@ -123,8 +122,19 @@ $(function() {
     let c_kanko = [];
 
     // 資源マス計算に使う(分岐判定には使わない)装備の累計
-    // 大発動艇, 大発動艇(八九式中戦車&陸戦隊), 特に式内火艇, 特大発動艇, 装甲艇(AB艇), 武装大発, 大発動艇(II号戦車/北アフリカ仕様), 特大発動艇+一式砲戦車, 特四式内火艇, 特四式内火艇改
-    let valid_crafts = [68,166,167,193,408,409,436,449,525,526];
+    /*
+        大発動艇
+        大発動艇(八九式中戦車&陸戦隊)
+        特に式内火艇
+        特大発動艇
+        装甲艇(AB艇)
+        武装大発
+        大発動艇(II号戦車/北アフリカ仕様)
+        特大発動艇+一式砲戦車
+        特四式内火艇
+        特四式内火艇改
+    */
+    const valid_crafts = [68,166,167,193,408,409,436,449,525,526];
     let ct_drums = [];
     let ct_crafts = [];
 
@@ -173,18 +183,6 @@ $(function() {
 
     let s_time = 0; // 区間計測用
 
-    // firebase(エラーログ)関連
-    const firebaseConfig = {
-        apiKey: "AIzaSyDyh01YFd5B_HmBHHKyT9FFj2MVLIqHWkY",
-        authDomain: "compass-sim-error-log.firebaseapp.com",
-        projectId: "compass-sim-error-log",
-        storageBucket: "compass-sim-error-log.appspot.com",
-        messagingSenderId: "340060275816",
-        appId: "1:340060275816:web:7843f0d752e8387787a7dd",
-        measurementId: "G-GR0L54BP2M"
-    };
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
 
     // 海域が入力されたら適正かチェックしてフラグ切替
     $('.areas').on('click', function() {
@@ -1560,6 +1558,11 @@ $(function() {
             track.push(parts[1]);
         }
     }
+    // track(1周ごとの経路)を重複チェックしてからt_logsに格納 既にあれば加算
+    function pushLog() {
+        let key = track.join('e');
+        t_logs[key] ? t_logs[key] += 1:t_logs[key] = 1;
+    }
     // 百分率で指定 小数第一位まで可
     // 指定した確率でtrue
     function sai(num) {
@@ -1589,7 +1592,7 @@ $(function() {
         const CLT = com['CLT']; // 雷巡
         const ATU = com['ATU']; // 練習特務艦
         const CT = com['CT']; // 練習巡洋艦
-        const DD = com['DD']; // 駆逐艦 ※テスト
+        const DD = com['DD']; // 駆逐艦
         const DE = com['DE']; // 海防艦
         const SS = com['SS']; // 潜水艦
         const SSV = com['SSV']; // 潜水空母
@@ -5119,6 +5122,7 @@ $(function() {
                                 } else if(f_seek[1] >= 62) {
                                     sum('LtoK');
                                     sum('KtoO');
+                                    return null;
                                 } // LoSより例外なし
                                 break;
                         }
@@ -9521,11 +9525,6 @@ $(function() {
                 break;
         }
     }
-    // track(1周ごとの経路)を重複チェックしてからt_logsに格納 既にあれば加算
-    function pushLog() {
-        let key = track.join('e');
-        t_logs[key] ? t_logs[key] += 1:t_logs[key] = 1;
-    }
     // 演算開始
     function startSim() {
         // measureTime(true);
@@ -9569,7 +9568,6 @@ $(function() {
                         console.log(`f_speed : ${f_speed}`);
                         console.log(rate);
                         console.log('終わり');
-                        postErrorLog();
                         return;
                     }
                 }
@@ -10475,11 +10473,10 @@ $(function() {
             $('#popup-info').remove();
         }
     }
+    
     // 読み込み時にlocalstorageから諸々の設定を読込、反映
     // 上に置くとtrigger()が不発する 謎
     setup();
-
-    // 以下ストレージ関連
     function setup() {
         var a = localStorage.getItem('active');
         var s = localStorage.getItem('selected_type');
@@ -10708,16 +10705,6 @@ $(function() {
             });
         }
     });
-    // エラーログ送信許可/拒否
-    $('#error-log').on('click', function() {
-        let isChecked = $(this).prop('checked');
-        console.log(isChecked);
-        if(isChecked) {
-            localStorage.setItem('error_log', '1');
-        } else {
-            localStorage.setItem('error_log', '0');
-        }
-    });
     // gkcoiに渡すデッキビルダー生成
     function generateDeck() {
         let res = {
@@ -10879,50 +10866,5 @@ $(function() {
                 break;
         }
         return res;
-    }
-    // エラーログ送信
-    async function postErrorLog() {
-        let permission = localStorage.getItem('error_log');
-        if(permission && permission === '1') { // 送信許可確認
-            let deck = localStorage.getItem('fleet');
-            // 基地航空隊切り落とし
-            deck = deck.split(',"a1')[0];
-            let hash = null;
-            hash = await hashString(deck);
-            console.log(deck);
-            console.log(`hash : ${hash}`);
-            if(hash && await isLogExists(hash)) { // 重複チェック
-                await addDoc(collection(db, area), {
-                    deck: deck,
-                    hash: hash
-                });
-                console.log('送信完了');
-            } else {
-                console.log('送信中断:重複');
-            }
-        }
-    }
-    // 重複チェック
-    // deckが大きすぎてクエリに乗らないのでhashで比較
-    // 重複が無ければtrue
-    async function isLogExists(hash) {
-        const q = query(collection(db, area), where("hash", "==", hash));
-
-        const querySnapshot = await getDocs(q);
-        console.log(querySnapshot);
-        if(querySnapshot._snapshot.docChanges.length > 0) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-    // 文字列をSHA-256ハッシュに変換
-    async function hashString(inputString) {
-        const encoder = new TextEncoder();
-        const data = encoder.encode(inputString);
-        const hashBuffer = await window.crypto.subtle.digest('SHA-256', data);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const hashedString = hashArray.map(byte => ('00' + byte.toString(16)).slice(-2)).join('');
-        return hashedString;
     }
 });
