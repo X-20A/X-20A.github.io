@@ -31,7 +31,7 @@ import 'jquery-ui/ui/widgets/draggable';
 import Decimal from 'decimal.js';
 import cytoscape from 'cytoscape/dist/cytoscape.min.js';
 import contextMenus from 'cytoscape-context-menus';
-import { generate } from "gkcoi";
+import { generate } from 'gkcoi';
 
 cytoscape.use(contextMenus);
 
@@ -159,13 +159,10 @@ $(function() {
     const op_areas = ['4-5','5-3','5-5','6-3','7-3','7-4','7-5','57-7','58-1','58-2','58-3','58-4'];
 
     // 1がキーの値はPhase
-    let active = {'4-5':{'A':'D','C':'F','I':'J'},'5-3':{'O':'K'}, '5-5':{'F':'D'}, '6-3':{'A':'B'},'7-3':{'1':'0'},'7-4':{'F':'H'},'7-5':{'F':'G','H':'I','O':'P'},'57-7':{'1':'1','A2':'A3','B2':'B3','C':'A3','J':'K'}, '57-7':{'1':'1','A2':'A3','B':'B1','B2':'B3','C':'A3','J':'K'},'58-1':{'1':'1','A':'D','I':'N1','F':'G'},'58-2':{'1':'1','2':'1','B':'E'},'58-3':{'1':'1','2':'1','M':'P'},'58-4':{'1':'1','2':'1','B':'D'}};
+    let active = {'4-5':{'A':'D','C':'F','I':'J'},'5-3':{'O':'K'}, '5-5':{'F':'D'}, '6-3':{'A':'B'},'7-3':{'1':'0'},'7-4':{'F':'H'},'7-5':{'F':'G','H':'I','O':'P'}, '57-7':{'1':'1','A2':'A3','B':'B1','B2':'B3','C':'A3','J':'K'},'58-1':{'1':'1','A':'D','I':'N1','F':'G'},'58-2':{'1':'1','2':'1','B':'E'},'58-3':{'1':'1','2':'1','M':'P'},'58-4':{'1':'1','2':'1','B':'D'}};
 
     let area = null; // 入力で切り替えるの
     let drew_area = null; // 表示中の海域
-
-    // オプション表示の為のz-index
-    let z_value = 10;
 
     // 演算開始の為のフラグ
     let a_flag = false;
@@ -190,7 +187,7 @@ $(function() {
     });
     // 海域入力で発火 オプション表示したり
     function setArea(text) {
-        console.log(`area : ${text}`);
+        console.log(`area: ${text}`);
         if(areas.includes(text)) {
             a_flag = true;
             localStorage.setItem('area', text);
@@ -198,58 +195,43 @@ $(function() {
                 // オプションが必要な海域は入力を表示
                 $('#option-box').css('display','block');
                 $('#option-box .options').each(function () {
-                    var child = $(this);
-                    if (child.attr("id") === text) {
-                        child.css("display", "block");
+                    const child = $(this);
+                    if (child.attr('id') === text) {
+                        child.css('display', 'block');
                     } else {
                         // 子要素が存在しない場合はdisplayをnoneに設定
-                        child.css("display", "none");
+                        child.css('display', 'none');
                     }
                 });
             } else {
                 $('#option-box').css('display','none');
             }
             $('#area-container').click();
-            $('#area-display').text(`海域 : ${text}`);
+            $('#area-display').text(`海域: ${text}`);
         } else {
             a_flag = false;
             $('#option-box').css('display','none');
         }
-        Promise.resolve()
-            .then(startSim)
-            .then(preInfo)
-            .then(function() {
-                $('.icon-on-map').css('display', 'block');
-            }).catch(error => {
-                console.error("エラーが発生しました:", error);
-        });
+        simController();
     }
     // オプションドラッグ
     $('#draggable-list').draggable({ containment: 'window', scroll: false });
     // オプションが変更されたら取得してlocalstorageへ保存
     $('.option-value').on('input', function() {
-        var name = $(this).attr('name');
-        var type = $(this).attr('type');
+        const name = $(this).attr('name');
         const namePattern = /^([\dA-Z]+-[\dA-Z]+)-([\dA-Z]+)$/i;
         const match = name.match(namePattern);
-        var key = match[1];
-        var char = match[2];
-        let value = $(this).val();
+        const key = match[1];
+        const char = match[2];
+        const value = $(this).val();
         if($(this).attr('type') === 'radio') {
             updateActive(key, char, value);
         }
-        Promise.resolve()
-            .then(startSim)
-            .then(preInfo)
-            .then(function() {
-            $('.icon-on-map').css('display', 'block');
-        }).catch(error => {
-            console.error("エラーが発生しました:", error);
-        });
+        simController();
     });
     // デッキビルダー読み込み
     $('#fleet-import').on('input', function() {
-        var text = $(this).val();
+        const text = $(this).val();
         try {
             i_json = JSON.parse(text);
         } catch(e) {
@@ -274,7 +256,7 @@ $(function() {
         let zeroCount = 0;
         let tar = null;
         for(let i = 1;i < 5;i++) {
-            let count = countShips(i);
+            const count = countShips(i);
             c_lengths.push(count);
             if(count === 0) {
                 zeroCount++;
@@ -317,12 +299,12 @@ $(function() {
                 ct_crafts.push(0);
             }
         }
-        console.log(`c_lengths : ${c_lengths}`);
-        console.log(`c_ids : ${c_ids}`);
-        console.log(`c_lvs : ${c_lvs}`);
-        console.log(`c_searchs : ${c_seeks}`);
-        console.log(`c_speeds : ${c_speeds}`);
-        console.log(`c_drums : ${c_drums}, c_radars : ${c_radars}, c_crafts : ${c_crafts}, c_kanko : ${c_kanko}`);
+        console.log(`c_lengths: ${c_lengths}`);
+        console.log(`c_ids: ${c_ids}`);
+        console.log(`c_lvs: ${c_lvs}`);
+        console.log(`c_searchs: ${c_seeks}`);
+        console.log(`c_speeds: ${c_speeds}`);
+        console.log(`c_drums: ${c_drums}, c_radars: ${c_radars}, c_crafts: ${c_crafts}, c_kanko: ${c_kanko}`);
         if(zeroCount === 3) {
             // 2.情報の有る艦隊が一つだけの場合はそのまま読み込み
             setFleetInfo(tar);
@@ -354,9 +336,9 @@ $(function() {
                     break;
             }
         }
-        console.log(`t : ${t}`);
+        console.log(`制空シミュからの艦隊種別指定: ${t}`);
         let view = '艦隊種別';
-        console.log(`selected_type : ${selected_type}`);
+        console.log(`設定艦隊種別: ${selected_type}`);
         if(selected_type) {
             if(selected_type > 4) {
                 if(c_lengths[0] && c_lengths[1]) { // 第一と第二に少なくとも1艦
@@ -411,16 +393,16 @@ $(function() {
     $('.fleet-type').on('click', function() {
         $('#type-select').text($(this).text());
         $('#fleet-option-box').css('display', 'none');
-        let type = $(this).data('type');
+        const type = $(this).data('type');
         setFleetInfo(type);
     });
     // セレクトの値を一つ前に戻す
     // 読込がまずったときに
     function setBackSelect() {
         console.log('setBackSelect');
-        let options = $('.fleet-type');
+        const options = $('.fleet-type');
         if(selected_type) {
-            for (let option of options) {
+            for (const option of options) {
                 if(option.dataset.type === selected_type + '') { // 文字列化してから比較
                     $('#type-select').text(option.textContent);
                 }
@@ -433,17 +415,16 @@ $(function() {
     // 計算結果から抜き出して変数セット
     // 引数:艦隊種別
     function setFleetInfo(f) {
-        console.log(`f : ${f}`);
         f--; // 配列指定の為
         // 初期化してから
-        for (var key in com) {
+        for (const key in com) {
             com[key] = 0;
         }
         try {
             if(f < 4) {
                 // 通常艦隊
                 f_length = c_lengths[f];
-                console.log(`f_length : ${f_length}`);
+                console.log(`f_length: ${f_length}`);
                 if(!f_length) {
                     alert('処理中断: 艦隊が空かも？');
                     // 空欄化
@@ -454,49 +435,50 @@ $(function() {
                 }
                 // 構成艦のid
                 f_ids = c_ids[f];
-                console.log(`f_ids : ${f_ids}`);
+                console.log(`f_ids: ${f_ids}`);
                 // 構成艦のlv
                 f_lvs = c_lvs[f];
-                console.log(`f_lvs : ${f_lvs}`);
+                console.log(`f_lvs: ${f_lvs}`);
                 // 構成艦の名前
                 f_names = c_names[f];
-                console.log(`f_names : ${f_names}`);
-                let types = c_types[f];
-                console.log(`types : ${types}`);
+                console.log(`f_names: ${f_names}`);
+                const types = c_types[f];
+                console.log(`types: ${types}`);
                 // 変数反映
                 reflectionCom(types);
                 // 索敵値
                 f_seek = c_seeks[f];
-                console.log(`f_search : ${f_seek}`);
+                console.log(`f_search: ${f_seek}`);
                 // 速度
                 f_speed = c_speeds[f];
-                console.log(`f_speed : ${f_speed}`);
+                console.log(`f_speed: ${f_speed}`);
                 // ドラム缶、大発、電探搭載艦数カウント 変数にセット
                 f_drum = c_drums[f];
                 f_radar = c_radars[f];
                 f_craft = c_crafts[f];
                 f_kanko = c_kanko[f];
-                console.log(`ドラム缶 : ${f_drum}`);
-                console.log(`電探 : ${f_radar}`);
-                console.log(`大発系 : ${f_craft}`);
-                console.log(`寒甲 : ${f_kanko}`);
+                console.log('搭載艦数');
+                console.log(`ドラム缶: ${f_drum}`);
+                console.log(`電探: ${f_radar}`);
+                console.log(`大発系: ${f_craft}`);
+                console.log(`寒甲: ${f_kanko}`);
 
                 ft_drum = ct_drums[f];
                 ft_craft = ct_crafts[f];
-                console.log(`ドラム缶累計 : ${ft_drum}`);
-                console.log(`大発系累計 : ${ft_craft}`);
+                console.log(`ドラム缶累計: ${ft_drum}`);
+                console.log(`大発系累計: ${ft_craft}`);
                 if(f_length === 7) {
                     f_type = '遊撃部隊';
                 } else {
                     f_type = '通常艦隊';
                 }
-                console.log(`f_type : ${f_type}`);
+                console.log(`f_type: ${f_type}`);
             } else {
                 // 連合艦隊
                 // 第一艦隊と第二艦隊を足したり
                 f_length = c_lengths[0] + c_lengths[1];
                 f2_length = c_lengths[1];
-                console.log(`f_length : ${f_length}`);
+                console.log(`f_length: ${f_length}`);
                 if(!c_lengths[0] || !c_lengths[1]) {
                     alert('処理中断: 艦隊が空かも？');
                     setBackSelect();
@@ -507,24 +489,24 @@ $(function() {
                 }
                 // 構成艦のid
                 f_ids = c_ids[0].concat(c_ids[1]);
-                console.log(`f_ids : ${f_ids}`);
+                console.log(`f_ids: ${f_ids}`);
                 f_lvs = c_lvs[0].concat(c_lvs[1]);
                 // 構成艦のlv
-                console.log(`f_lvs : ${f_lvs}`);
+                console.log(`f_lvs: ${f_lvs}`);
                 // 構成艦の名前
                 f_names = c_names[0].concat(c_names[1]);
                 f2_names = c_names[1];
-                console.log(`f_names : ${f_names}`);
-                let types = c_types[0].concat(c_types[1]);
-                console.log(`types : ${types}`);
+                console.log(`f_names: ${f_names}`);
+                const types = c_types[0].concat(c_types[1]);
+                console.log(`types: ${types}`);
                 // 変数反映
                 reflectionCom(types);
                 // 索敵値 各項足し合わせ
                 f_seek = [];
-                for (var i = 0; i < 4; i++) {
+                for (let i = 0; i < 4; i++) {
                     f_seek.push(new Decimal(c_seeks[0][i]).plus(new Decimal(c_seeks[1][i])));
                 }
-                console.log(`f_search : ${f_seek}`);
+                console.log(`f_search: ${f_seek}`);
                 // 速度
                 // 低い方から適用
                 if(c_speeds[0] === '低速艦隊' || c_speeds[1] === '低速艦隊') {
@@ -536,15 +518,15 @@ $(function() {
                 } else {
                     f_speed = '最速艦隊';
                 }
-                console.log(`f_speed : ${f_speed}`);
+                console.log(`f_speed: ${f_speed}`);
                 // ドラム缶、大発、電探搭載艦数カウント 変数にセット
                 f_drum = c_drums[0] + c_drums[1];
                 f_radar = c_radars[0] + c_radars[1];
                 f_craft = c_crafts[0] + c_crafts[1];
                 f_kanko = c_kanko[0] + c_kanko[1];
-                console.log(`ドラム缶 : ${f_drum}`);
-                console.log(`電探 : ${f_radar}`);
-                console.log(`大発系 : ${f_craft}`);
+                console.log(`ドラム缶: ${f_drum}`);
+                console.log(`電探: ${f_radar}`);
+                console.log(`大発系: ${f_craft}`);
 
                 ft_drum = ct_drums[0] + ct_drums[1];
                 ft_craft = ct_crafts[0] + ct_crafts[1];
@@ -556,10 +538,10 @@ $(function() {
                 } else if(f === 6) {
                     f_type = '輸送護衛部隊';
                 }
-                console.log(`f_type : ${f_type}`);
+                console.log(`f_type: ${f_type}`);
             }
         } catch(e) {
-            console.log(`error : ${e}`);
+            console.log(`error: ${e}`);
             alert('処理中断: 艦隊情報の取得に失敗しました');
             // 空欄化
             $('#fleet-import').val('');
@@ -577,14 +559,7 @@ $(function() {
             // 表示
             reloadImportDisplay();
             is_ignore_seek = false;
-            Promise.resolve()
-                .then(startSim)
-                .then(preInfo)
-                .then(function() {
-                $('.icon-on-map').css('display', 'block');
-            }).catch(error => {
-                console.error("エラーが発生しました:", error);
-            });
+            simController();
         } else {
             alert('処理中断: 入力値に不備があるかも？');
             // 空欄化
@@ -592,6 +567,7 @@ $(function() {
             $('#fleet-import').blur();
             setBackSelect();
         }
+        console.log('艦隊諸元読込完了');
     }
     // cシリーズ初期化
     function inCs() {
@@ -619,9 +595,9 @@ $(function() {
         let kanko = 0;
         if(is_for_resource) {
             for(let i = 0;i < c_lengths[num - 1];i++) {
-                let e_ids = getEqIds(c_ids[num - 1][i], num);
+                const e_ids = getEqIds(c_ids[num - 1][i], num);
                 // 累計
-                for(let e_id of e_ids) {
+                for(const e_id of e_ids) {
                     if(e_id === 75) { // ドラム缶
                         drum++;
                     } else if(valid_crafts.includes(e_id)) { // 大発系
@@ -633,13 +609,13 @@ $(function() {
             ct_crafts.push(craft);
         } else {
             for(let i = 0;i < c_lengths[num - 1];i++) {
-                let e_ids = getEqIds(c_ids[num - 1][i], num);
+                const e_ids = getEqIds(c_ids[num - 1][i], num);
                 // 一隻につき1回だけカウント
                 let d = true;
                 let r = true;
                 let c = true;
                 let k = true;
-                for(let e_id of e_ids) {
+                for(const e_id of e_ids) {
                     if(e_id === 75) { // ドラム缶
                         if(d) {
                             drum++;
@@ -647,7 +623,7 @@ $(function() {
                         }
                     }
                     // typeを取得
-                    let t_id = getEqType(e_id);
+                    const t_id = getEqType(e_id);
                     if(t_id === 5812 || t_id === 5813) {
                         if(r) {
                             // 小型電探
@@ -680,15 +656,15 @@ $(function() {
     }
     // typeの先頭3つを連結してidとして返す(数値型)
     function getEqType(e_id) {
-        let entry = e_data.find(entry => entry.id === e_id);
+        const entry = e_data.find(entry => entry.id === e_id);
         return Number(entry.type.slice(0, 3).join(''));
     }
     // 速度を取得 高速+艦隊etc
     function calcSpeed(num) {
-        let arr = [];
+        const arr = [];
         for(let i = 0;i < c_lengths[num - 1];i++) {
-            let e_ids = getEqIds(c_ids[num - 1][i], num);
-            let rf = getEqRfs(c_ids[num - 1][i], num);
+            const e_ids = getEqIds(c_ids[num - 1][i], num);
+            const rf = getEqRfs(c_ids[num - 1][i], num);
             /*
                 33:タービン
                 34:強化缶
@@ -698,7 +674,6 @@ $(function() {
             let kan = 0; // 強化缶
             let n_kan = 0; // 新型缶
             let pow = 0; // 新型缶☆7↑
-            console.log(`e_ids : ${e_ids}`);
             for(let q = 0;q < e_ids.length;q++) {
                 if(e_ids[q] === 33) {
                     tur++;
@@ -711,13 +686,11 @@ $(function() {
                     }
                 }
             }
-            let kans = kan + n_kan;
-            let ship = s_data.find(entry => entry.id === c_ids[num - 1][i]);
-            let sg = ship.sg;
+            const kans = kan + n_kan;
+            const ship = s_data.find(entry => entry.id === c_ids[num - 1][i]);
+            const sg = ship.sg;
             let val = 0;
-            console.log(`sg : ${sg}`);
-            console.log(`tur : ${tur}, n_kan : ${n_kan}, pow : ${pow}`);
-            switch(sg) { // thanks to Aerial Combat Simulator 無駄がなく美しい
+            switch(sg) {
                 case 0: // 高速A
                     val = 1;
                     if(tur && n_kan || pow > 1) {
@@ -816,7 +789,7 @@ $(function() {
                     break;
             }
         }
-        console.log(`艦隊各速度 : ${arr}`);
+        console.log(`艦隊各速度: ${arr}`);
         let res = '';
         if(arr.every(elem => elem === 3)) {
             res = '最速艦隊';
@@ -834,8 +807,8 @@ $(function() {
         const ids = [];
         const f = `f${num}`;
         for (let i = 1; i <= c_lengths[num - 1]; i++) {
-            const key = "s" + i;
-            if (i_json[f][key] && i_json[f][key].hasOwnProperty("id")) {
+            const key = 's' + i;
+            if (i_json[f][key] && i_json[f][key].hasOwnProperty('id')) {
                 ids.push('' + i_json[f][key].id); // 文字列化
             }
         }
@@ -846,8 +819,8 @@ $(function() {
         const lvs = [];
         const f = `f${num}`;
         for (let i = 1; i <= c_lengths[num - 1]; i++) {
-            const key = "s" + i;
-            if (i_json[f][key] && i_json[f][key].hasOwnProperty("lv")) {
+            const key = 's' + i;
+            if (i_json[f][key] && i_json[f][key].hasOwnProperty('lv')) {
                 lvs.push(i_json[f][key].lv);
             }
         }
@@ -868,7 +841,7 @@ $(function() {
     function calcSeek(num) {
         let res = [];
         let sum_base = new Decimal(0); // 艦娘索敵値によるスコア
-        let f_length_correct = new Decimal(2 * (6 - c_lengths[num - 1])); // 隻数補正
+        const f_length_correct = new Decimal(2 * (6 - c_lengths[num - 1])); // 隻数補正
         let sum_eq = new Decimal(0); // 装備によるスコア
         let command = 120;
         if(i_json.hqlv) { // オリジナルのデッキビルダーには司令レベルが無いみたい
@@ -878,42 +851,42 @@ $(function() {
         for (let i = 0; i < c_lengths[num - 1]; i++) {
             // 素の索敵値計算
             const key = 's' + (i + 1);
-            let lv = i_json[`f${num}`][key]['lv'];
+            const lv = i_json[`f${num}`][key]['lv'];
             // 索敵値の最大値と最小値を取得
-            let ship = s_data.find(entry => entry.id === c_ids[num - 1][i]);
-            let min_seek = new Decimal(ship.seek);
-            let max_seek = new Decimal(ship.max_seek);
-            let cur_seek = new Decimal(max_seek).minus(min_seek).times(lv).div(99).floor().plus(min_seek);
-            console.log(`艦名 : ${c_names[num - 1][i]}, 素索敵値 : ${cur_seek}`);
+            const ship = s_data.find(entry => entry.id === c_ids[num - 1][i]);
+            const min_seek = new Decimal(ship.seek);
+            const max_seek = new Decimal(ship.max_seek);
+            const cur_seek = new Decimal(max_seek).minus(min_seek).times(lv).div(99).floor().plus(min_seek);
+            console.log(`艦名: ${c_names[num - 1][i]}, 素索敵値: ${cur_seek}`);
             // 装備id取得
-            let i_ids = getEqIds(c_ids[num - 1][i], num);
-            console.log(`装備id : ${i_ids}`);
+            const i_ids = getEqIds(c_ids[num - 1][i], num);
+            console.log(`装備id: ${i_ids}`);
             // 装備ボーナス
-            let bonus = getSeekBonus(ship, i_ids, num);
-            console.log(`seek_bonus : ${bonus}`);
+            const bonus = getSeekBonus(ship, i_ids, num);
+            console.log(`seek_bonus: ${bonus}`);
             // 素の索敵値の平方根を加算
             sum_base = sum_base.plus(Decimal.sqrt(cur_seek.plus(bonus)));
             // 改修値取得
-            let rfs = getEqRfs(c_ids[num - 1][i], num);
+            const rfs = getEqRfs(c_ids[num - 1][i], num);
             for(let q = 0;q < i_ids.length;q++) {
                 // 装備の索敵値が1以上だったらあれこれ
-                let eq = e_data.find(entry => entry.id === i_ids[q]);
-                let seek = new Decimal(eq.seek);
+                const eq = e_data.find(entry => entry.id === i_ids[q]);
+                const seek = new Decimal(eq.seek);
                 if(seek > 0) {
                     // 係数
-                    let coefficient = getEqCo(i_ids[q]);
-                    let eq_co = new Decimal(coefficient[0]); // 装備係数
-                    let rf_co = new Decimal(coefficient[1]); // 改修係数
-                    let rf = new Decimal(rfs[q]);
-                    console.log(`装備係数 : ${coefficient[0]}, 改修係数 : ${coefficient[1]}`);
+                    const coefficient = getEqCo(i_ids[q]);
+                    const eq_co = new Decimal(coefficient[0]); // 装備係数
+                    const rf_co = new Decimal(coefficient[1]); // 改修係数
+                    const rf = new Decimal(rfs[q]);
+                    console.log(`装備係数: ${coefficient[0]}, 改修係数: ${coefficient[1]}`);
                     sum_eq = sum_eq.plus(eq_co.times(seek.plus(rf_co.times(Decimal.sqrt(rf)))));
                 }
             }
         }
-        let material = sum_base.plus(f_length_correct).minus(command);
+        const material = sum_base.plus(f_length_correct).minus(command);
         // 係数 四捨五入で小数第二位まで
         for(let j = 1;j < 5;j++) {
-            let elem = material.plus(sum_eq.times(j));
+            const elem = material.plus(sum_eq.times(j));
             // 値の正負で丸めの挙動を揃える
             if(elem < 0) {
                 res.push(elem.negated().toDecimalPlaces(2, Decimal.ROUND_UP).negated());
@@ -927,15 +900,14 @@ $(function() {
     function getSeekBonus(ship, e_ids, num) {
         console.log(ship);
         let res = 0;
-        let id = ship.id;
-        let name = ship.name;
-        let na = ship.na;
-        let type = ship.type;
-        let dup = []; // 重複不可のがきたらこれに追加
-        let e_length = e_ids.length;
+        const id = ship.id;
+        const name = ship.name;
+        const na = ship.na;
+        const type = ship.type;
+        const dup = []; // 重複不可のがきたらこれに追加
+        const e_length = e_ids.length;
         for(let i = 0;i < e_length;i++) {
-            let e_id = e_ids[i];
-            let eq = e_data.find(entry => entry.id === e_id);
+            const e_id = e_ids[i];
             switch(e_id) {
                 case 315: // SG初期
                     if(name === '丹陽' || name === '雪風改二') {
@@ -980,8 +952,8 @@ $(function() {
                         }
                     }
                     break;
-                case 517: // 清霜逆探
-                    var gifted = ['朝霜改二','清霜改二','初霜改二','潮改二','Верный','霞改二','時雨改三','雪風改二'];
+                case 517: { // 清霜逆探
+                    const gifted = ['朝霜改二','清霜改二','初霜改二','潮改二','Верный','霞改二','時雨改三','雪風改二'];
                     if(name === '清霜改二丁') {
                         if(!dup.includes(e_id)) {
                             res += 3;
@@ -999,10 +971,11 @@ $(function() {
                         }
                     }
                     break;
+                }
                 case 30: // 21号対空電探
-                case 410: // 21号対空電探改二
-                    let akizuki = ['秋月','照月','初月','涼月','冬月'];
-                    let mogami = ['最上改','最上改二','最上改二特'];
+                case 410: { // 21号対空電探改二
+                    const akizuki = ['秋月','照月','初月','涼月','冬月'];
+                    const mogami = ['最上改','最上改二','最上改二特'];
                     if(akizuki.some(item => item.includes(name)) || mogami.includes(name)) {
                         if(!dup.includes(e_id)) {
                             res += 2;
@@ -1010,19 +983,21 @@ $(function() {
                         }
                     }
                     break;
-                case 118: // 紫雲
+                }
+                case 118: { // 紫雲
                     if(name.includes('大淀')) {
                         res += 2;
-                        let rf = getEqRfs(id, num)[i];
+                        const rf = getEqRfs(id, num)[i];
                         if(rf === 10) { // 改修maxで更に+1
                             res += 1;
                         }
                     }
                     break;
-                case 414: // SOC seagull
+                }
+                case 414: { // SOC seagull
                     if(na === 1) { // USA
                         if(type === '軽巡洋艦' || type === '重巡洋艦') {
-                            let rf = getEqRfs(id, num)[i];
+                            const rf = getEqRfs(id, num)[i];
                             if(!dup.includes(e_id)) {
                                 res += 2;
                                 // 改修でさらにボーナス
@@ -1039,6 +1014,7 @@ $(function() {
                         }
                     }
                     break;
+                }
                 case 115: // Ar196改
                     if(name.includes('Bismarck') || name.includes('Prinz Eugen')) {
                         res += 2;
@@ -1085,13 +1061,14 @@ $(function() {
                         }
                     }
                     break;
-                case 194: // Laté 298B
-                    var gifted = ['Commandant Teste','Richelieu','Jean Bart','瑞穂','神威'];
+                case 194: { // Laté 298B
+                    const gifted = ['Commandant Teste','Richelieu','Jean Bart','瑞穂','神威'];
                     if(gifted.some(item => item.includes(name))) {
                         res += 2;
                         dup.push(e_id);
                     }
                     break;
+                }
                 case 415: // SO3C Seamew改
                     if(na === 1) { // USA
                         if(type === '軽巡洋艦' || type === '重巡洋艦') {
@@ -1184,9 +1161,9 @@ $(function() {
                         }
                     }
                     break;
-                case 521: // 紫雲(熟練)
+                case 521: { // 紫雲(熟練)
+                    const rf = getEqRfs(id, num)[i];
                     if(name.includes('大淀改')) {
-                        let rf = getEqRfs(id, num)[i];
                         if(rf > 0) { // 改修1以上で+5
                             res += 5;
                         }
@@ -1194,12 +1171,12 @@ $(function() {
                             res += 1;
                         }
                     } else if(name.includes('三隈改二特')) {
-                        let rf = getEqRfs(id, num)[i];
                         if(rf > 0) { // 改修1以上で+4
                             res += 4;
                         }
                     }
                     break;
+                }
                 case 522: // 零式小型水上機
                     if(type === '潜水艦' || type === '潜水空母') {
                         res += 3;
@@ -1223,7 +1200,7 @@ $(function() {
     function getEqCo(id) {
         let res = [];
         // typeを取得
-        let e_id = getEqType(id);
+        const e_id = getEqType(id);
         // やや無駄になるが2回に分けた方が見やすくて良いと思う
         switch(e_id) {
             // 装備係数
@@ -1294,11 +1271,11 @@ $(function() {
     }
     // 艦idと艦隊番号から装備idを配列で得る ※同一の艦が含まれると不具合が出るかも
     function getEqIds(s_id, num) {
-        const ids = [];
+        let ids = [];
         for (const s_key in i_json[`f${num}`]) {
-            let ship = i_json[`f${num}`][s_key];
+            const ship = i_json[`f${num}`][s_key];
             if (Number(ship.id) && Number(ship.id) === Number(s_id)) { // 本家デッキビルダーへの対応で艦IDは数値化
-                let items = ship.items;
+                const items = ship.items;
                 for(const i_key in items) {
                     if(items[i_key].id) {
                         ids.push(items[i_key].id);
@@ -1310,11 +1287,11 @@ $(function() {
     }
     // 艦idから装備改修値を配列で得る
     function getEqRfs(s_id, num) {
-        const rfs = [];
+        let rfs = [];
         for (const s_key in i_json[`f${num}`]) {
-            let ship = i_json[`f${num}`][s_key];
+            const ship = i_json[`f${num}`][s_key];
             if (Number(ship.id) && Number(ship.id) === Number(s_id)) { // 本家デッキビルダーへの対応で艦IDは数値化
-                let items = ship.items;
+                const items = ship.items;
                 for(const i_key in items) {
                     if(items[i_key].rf) {
                         rfs.push(items[i_key].rf);
@@ -1328,7 +1305,6 @@ $(function() {
     }
     // 艦種を変数に反映
     function reflectionCom(types) {
-        let res = [];
         for(let i = 0;i < types.length;i++) {
             switch(types[i]) {
                 case '戦艦':
@@ -1396,8 +1372,8 @@ $(function() {
     // 引数:随伴であるか否か
     function getShipName(num) {
         let names = [];
-        for (let id of c_ids[num - 1]) {
-            let ship = s_data.find((item) => item.id === id);
+        for (const id of c_ids[num - 1]) {
+            const ship = s_data.find((item) => item.id === id);
             if (ship) {
                 names.push(ship.name);
             }
@@ -1407,10 +1383,10 @@ $(function() {
     // idから艦種取得 配列で渡す
     function getType(num) {
         let types = [];
-        for (let id of c_ids[num - 1]) {
-            let entry = s_data.find(entry => entry.id === id);
-            if (entry) {
-                types.push(entry.type);
+        for (const id of c_ids[num - 1]) {
+            const ship = s_data.find(entry => entry.id === id);
+            if (ship) {
+                types.push(ship.type);
             }
         }
         return types;
@@ -1459,6 +1435,19 @@ $(function() {
             `);
         }
     }
+    // シミュレータが同期処理させたいので関数化
+    // startSim以降を呼び出したいときはこれを叩く
+    function simController() {
+        Promise.resolve()
+            .then(startSim)
+            // .then(preInfo)
+            .then(function() {
+                $('.icon-on-map').css('display', 'block');
+        }).catch(error => {
+            console.error('エラーが発生しました:', error);
+            return area;
+        });
+    }
 
     // 以下分岐判定に必要な関数
 
@@ -1482,11 +1471,11 @@ $(function() {
     }
     // 旗艦が軽巡であればtrue
     function isFCL () {
-        var name = f_names[0];
+        const name = f_names[0];
         // 先頭一致
-        var clsName = ['矢矧','能代','Helena','Brooklyn','Honolulu','神通','Sheffield','L.d.S.D.d.Abruzzi','G.Garibaldi','Perth','大淀','球磨','De Ruyter','長良','名取','川内','那珂','阿賀野','酒匂','天龍','Atlanta','五十鈴','多摩','Gotland','鬼怒','由良','阿武隈','夕張','龍田'];
+        const clsName = ['矢矧','能代','Helena','Brooklyn','Honolulu','神通','Sheffield','L.d.S.D.d.Abruzzi','G.Garibaldi','Perth','大淀','球磨','De Ruyter','長良','名取','川内','那珂','阿賀野','酒匂','天龍','Atlanta','五十鈴','多摩','Gotland','鬼怒','由良','阿武隈','夕張','龍田'];
         // こちらは完全一致
-        var exCL = ['北上','大井','木曾','木曾改'];
+        const exCL = ['北上','大井','木曾','木曾改'];
         if(clsName.some(item => name.startsWith(item))) {
             return true;
         } else if(exCL.includes(name)) {
@@ -1496,11 +1485,11 @@ $(function() {
     }
     // 低速戦艦をカウント
     function countSBB() {
-        var slowBBs = ['扶桑','山城','伊勢','日向','長門','長門改','長門改二','陸奥','陸奥改','陸奥改二','大和','大和改','武蔵','武蔵改','武蔵改二','Conte di Cavour','Nevada','Nevada改','Nevada改 Mod.2','Colorado','Colorado改','Maryland','Marylan改','Warspite','Warspite改','Nelson','Nelson改','Rodney','Rodney改','Гангут','Октябрьская революция','Гангут два'];
+        const slowBBs = ['扶桑','山城','伊勢','日向','長門','長門改','長門改二','陸奥','陸奥改','陸奥改二','大和','大和改','武蔵','武蔵改','武蔵改二','Conte di Cavour','Nevada','Nevada改','Nevada改 Mod.2','Colorado','Colorado改','Maryland','Marylan改','Warspite','Warspite改','Nelson','Nelson改','Rodney','Rodney改','Гангут','Октябрьская революция','Гангут два'];
         // 配列arr1の要素をセットに変換
         const set = new Set(f_names);
         // 配列arr2の要素を1つずつ調べて、重複があるか確認
-        var count = 0;
+        let count = 0;
         for (const element of slowBBs) {
             if (set.has(element)) {
                 count++;
@@ -1510,8 +1499,8 @@ $(function() {
     }
     // 大鷹型カウント
     function countTaiyo() {
-        var taiyos = ['春日丸', '大鷹', '八幡丸', '雲鷹', '神鷹'];
-        var count = 0;
+        const taiyos = ['春日丸', '大鷹', '八幡丸', '雲鷹', '神鷹'];
+        let count = 0;
         for (const element of f_names) {
             for (const name of taiyos) {
                 if (element.startsWith(name)) {
@@ -1524,8 +1513,8 @@ $(function() {
     }
     // 大和型カウント
     function countYamato() {
-        var yamatos = ['大和', '武蔵'];
-        var count = 0;
+        const yamatos = ['大和', '武蔵'];
+        let count = 0;
         for (const element of f_names) {
             for (const name of yamatos) {
                 if (element.startsWith(name)) {
@@ -1550,7 +1539,7 @@ $(function() {
         // 無ければ追加、あれば加算
         rate[route] ? rate[route] += 1:rate[route] = 1;
         // 追跡
-        let parts = route.split('to');
+        const parts = route.split('to');
         if(track.length) {
             track.push(parts[1]);
         } else {
@@ -1560,7 +1549,7 @@ $(function() {
     }
     // track(1周ごとの経路)を重複チェックしてからt_logsに格納 既にあれば加算
     function pushLog() {
-        let key = track.join('e');
+        const key = track.join('e');
         t_logs[key] ? t_logs[key] += 1:t_logs[key] = 1;
     }
     // 百分率で指定 小数第一位まで可
@@ -1590,7 +1579,7 @@ $(function() {
         const CAV = com['CAV']; // 航巡
         const CL = com['CL']; // 軽巡
         const CLT = com['CLT']; // 雷巡
-        const ATU = com['ATU']; // 練習特務艦
+        // const ATU = com['ATU']; // 練習特務艦
         const CT = com['CT']; // 練習巡洋艦
         const DD = com['DD']; // 駆逐艦
         const DE = com['DE']; // 海防艦
@@ -1598,11 +1587,11 @@ $(function() {
         const SSV = com['SSV']; // 潜水空母
         const AV = com['AV']; // 水母
         const AO = com['AO']; // 補給艦
-        const ASU = com['ASU']; // 特務艦
-        const LHT = com['LHT']; // 灯台補給船
-        const CVE = com['CVE']; // 特設護衛空母
+        // const ASU = com['ASU']; // 特務艦
+        // const LHT = com['LHT']; // 灯台補給船
+        // const CVE = com['CVE']; // 特設護衛空母
         const LHA = com['LHA']; // 揚陸艦
-        const LST = com['LST']; // 戦車揚陸艦
+        // const LST = com['LST']; // 戦車揚陸艦
         const AS = com['AS']; // 潜水母艦
         const AR = com['AR']; // 工作艦
 
@@ -4485,7 +4474,7 @@ $(function() {
                                     return 'I';
                                 }
                                 break;
-                            case 'G':
+                            case 'G': {
                                 const num = Math.random().toFixed(2);
                                 if(num <= 0.25) {
                                     sum('GtoC');
@@ -4498,6 +4487,7 @@ $(function() {
                                     return null;
                                 }
                                 break;
+                            }
                             case 'I':
                                 if(Ds > 1) {
                                     if(CV + CVB === 2 || CAs === 2 || (CV + CVB === 0 && CL > 0)) {
@@ -5024,7 +5014,7 @@ $(function() {
                                     sum('ItoO');
                                     return null;
                                 } else if(BBs > 2 || CVs > 2) {
-                                    if(70) {
+                                    if(sai(70)) {
                                         sum('FtoI');
                                         sum('ItoO');
                                         return null;
@@ -5059,7 +5049,7 @@ $(function() {
                                 }
                                 break;
                             case 'L':
-                                if(!isInclude('祥鳳') && !is('夕張')) {
+                                if(!isInclude('祥鳳') && !isInclude('夕張')) {
                                     if(isFaster()) {
                                         if(sai(50)) {
                                             sum('LtoK');
@@ -8127,9 +8117,9 @@ $(function() {
                 break;
             case 58:
                 switch(map) {
-                    case 1: // @58-1
-                        var phase = Number(active['58-1']['1']);
-                        var kanko_carrier = CVs + f_names.filter(v => v.includes('あきつ丸')).length;
+                    case 1: {// @58-1
+                        const phase = Number(active['58-1']['1']);
+                        const kanko_carrier = CVs + f_names.filter(v => v.includes('あきつ丸')).length;
                         switch(edge) {
                             case null:
                                 if(kanko_carrier === 0 && Ds > 3) {
@@ -8386,10 +8376,11 @@ $(function() {
                                 }
                         }
                         break;
-                    case 2: // @58-2
-                        var phase = Number(active['58-2']['1']);
-                        var difficulty = Number(active['58-2']['2']);
-                        var kanko_carrier = CVs + f_names.filter(v => v.includes('あきつ丸')).length;
+                    }
+                    case 2: { // @58-2
+                        const phase = Number(active['58-2']['1']);
+                        const difficulty = Number(active['58-2']['2']);
+                        const kanko_carrier = CVs + f_names.filter(v => v.includes('あきつ丸')).length;
                         switch(edge) {
                             case null:
                                 if(phase === 1) {
@@ -8717,10 +8708,11 @@ $(function() {
                                 break;
                         }
                         break;
-                    case 3: // @58-3
-                        var phase = Number(active['58-3']['1']);
-                        var difficulty = Number(active['58-3']['2']);
-                        var kanko_carrier = CVs + f_names.filter(v => v.includes('あきつ丸')).length;
+                    }
+                    case 3: { // @58-3
+                        const phase = Number(active['58-3']['1']);
+                        const difficulty = Number(active['58-3']['2']);
+                        const kanko_carrier = CVs + f_names.filter(v => v.includes('あきつ丸')).length;
                         switch(edge) {
                             case null:
                                 if(isCom()) {
@@ -9041,9 +9033,10 @@ $(function() {
                                 break;
                         }
                         break;
-                    case 4: // @58-4
-                        var phase = Number(active['58-4']['1']);
-                        var difficulty = Number(active['58-4']['2']);
+                    }
+                    case 4: { // @58-4
+                        const phase = Number(active['58-4']['1']);
+                        const difficulty = Number(active['58-4']['2']);
                         switch(edge) {
                             case null:
                                 if(phase < 4) {
@@ -9521,23 +9514,26 @@ $(function() {
                                 }
                                 break;
                         }
+                        break;
+                    }
                 }
                 break;
         }
     }
     // 演算開始
+    // simControllerから叩くこと
     function startSim() {
         // measureTime(true);
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             if(a_flag && f_flag) {
                 area = localStorage.getItem('area');
-                let elem = area.split('-');
-                let world = Number(elem[0]);
-                let map = Number(elem[1]);
+                const elem = area.split('-');
+                const world = Number(elem[0]);
+                const map = Number(elem[1]);
                 let edge = null;
                 // 無限ループ防止
                 let max_c = 10000; // 何回回すか
-                let max_s = 150000;
+                const max_s = 150000;
                 if(area.includes('58')) {
                     max_c = 1; // イベは1回だけ
                 }
@@ -9555,17 +9551,17 @@ $(function() {
                         alert('無限ループ防止 バグった');
                         console.log('無限ループ');
                         console.log('以下諸元');
-                        console.log(`海域 : ${world}-${map}`);
+                        console.log(`海域: ${world}-${map}`);
                         console.log('直後艦種');
                         console.log(com);
                         console.log('軌跡' + track);
-                        console.log(`safety : ${safety}`);
-                        console.log(`count : ${count}`);
-                        console.log(`ドラム缶 : ${f_drum}`);
-                        console.log(`電探 : ${f_radar}`);
-                        console.log(`大発系 : ${f_craft}`);
-                        console.log(`寒甲 : ${f_kanko}`);
-                        console.log(`f_speed : ${f_speed}`);
+                        console.log(`safety: ${safety}`);
+                        console.log(`count: ${count}`);
+                        console.log(`ドラム缶: ${f_drum}`);
+                        console.log(`電探: ${f_radar}`);
+                        console.log(`大発系: ${f_craft}`);
+                        console.log(`寒甲: ${f_kanko}`);
+                        console.log(`f_speed: ${f_speed}`);
                         console.log(rate);
                         console.log('終わり');
                         return;
@@ -9573,11 +9569,11 @@ $(function() {
                 }
                 console.log('軌跡' + track);
                 console.log(rate);
-                console.log(countYamato());
                 // 正直どういう挙動になってるのか分からない
                 // 非同期でいい感じにやってくれてるならいいやって感じ
                 drawMap(max_c);
                 rate = {};
+                t_logs = {};
 
                 resolve();
             }
@@ -9587,15 +9583,15 @@ $(function() {
     // マップ描画
     function drawMap(max_c) {
         removePopupInfo();
-        let map = map_info; // map.jsより
-        var spots = map['spots'][area];
-        var routes = map['route'][area];
-        var elements = {
+        const map = map_info; // map.jsより
+        const spots = map['spots'][area];
+        const routes = map['route'][area];
+        let elements = {
             nodes: [],
             edges: []
         };
         // nodes流し込み
-        for (let key in spots) {
+        for (const key in spots) {
             if (spots.hasOwnProperty(key)) {
                 // 座標,マスの種類
                 const [x, y, label] = spots[key];
@@ -9606,11 +9602,11 @@ $(function() {
             }
         }
         // esges流し込み
-        for (let key in routes) {
+        for (const key in routes) {
             if (routes.hasOwnProperty(key)) {
                 const [source, target] = routes[key];
                 // 通っていないルートはrateに無いので0に置き換え
-                var ratio = ((rate[source + 'to' + target] / max_c) * 100).toFixed(1);
+                let ratio = ((rate[source + 'to' + target] / max_c) * 100).toFixed(1);
                 ratio = isNaN(ratio) ? 0 : parseFloat(ratio);
                 elements.edges.push({
                     data: {
@@ -9623,7 +9619,7 @@ $(function() {
         }
 
         // スタイルシート
-        var style = [
+        const style = [
             { selector: 'node',
                 style: {
                     'color': 'rgb(250,250,250)',
@@ -9837,7 +9833,7 @@ $(function() {
             }
         ];
 
-        var layout = {
+        const layout = {
             name:'preset'
         };
 
@@ -9853,15 +9849,15 @@ $(function() {
         });
         // 更新
         drew_area = area;
-        console.log(`drew_area : ${drew_area}`);
+        console.log(`drew_area: ${drew_area}`);
         let node = null;
         cy.on('mouseup', function (e) {
-            let tar = e.target;
+            const tar = e.target;
             if(tar.data('name')) {
                 node = tar.data('name');
                 // ソースコード参照
                 if(event && event.ctrlKey) {
-                    let url = `${location.origin}/source/?search=${drew_area}-${node}`;
+                    const url = `${location.origin}/source/?search=${drew_area}-${node}`;
                     window.open(url);
                     return;
                 }
@@ -9869,11 +9865,9 @@ $(function() {
         });
         // 分岐条件表示
         cy.on('mousedown', function (e) {
-            let tar = e.target;
+            const tar = e.target;
             if(tar.data('name')) {
                 node = tar.data('name');
-                let nodeData = map['spots'][drew_area][node];
-                let n_length = nodeData.length;
                 // Phase
                 // 2023夏はフェイズごとに記述したが以降は分からない
                 let b_area = null;
@@ -9899,18 +9893,18 @@ $(function() {
                     text = text.replaceAll('$or', `<a href="https:// x-20a.github.io/reference/?topic=${drew_area}-${node}" style="color:blue;" target="_blank" rel="noopener noreferrer">`);
                     text = text.replaceAll('$ro', '</a>');
                     if(drew_area.includes('58')) {
-                        let blocks = text.split(/\$bl(.*?)\$lb/g).filter(Boolean);
-                        let split_area = drew_area.split('-');
-                        let world = Number(split_area[0]);
-                        let map = Number(split_area[1]);
-                        console.log(`world : ${world}`);
-                        console.log(`map : ${map}`);
-                        console.log(`node : ${node}`);
+                        const blocks = text.split(/\$bl(.*?)\$lb/g).filter(Boolean);
+                        const split_area = drew_area.split('-');
+                        const world = Number(split_area[0]);
+                        const map = Number(split_area[1]);
+                        console.log(`world: ${world}`);
+                        console.log(`map: ${map}`);
+                        console.log(`node: ${node}`);
                         // 先ず1周してtrackを作る
-                        var edge = null;
+                        let edge = null;
                         // 無限ループ防止
-                        var safety = 0;
-                        var count = 0;
+                        const safety = 0;
+                        let count = 0;
                         while(count < 15) {
                             edge = branch(world, map, edge, false);
                             if(edge === null) {
@@ -9920,17 +9914,17 @@ $(function() {
                                 alert('無限ループ防止 バグった');
                                 console.log('無限ループ');
                                 console.log('以下諸元');
-                                console.log(`海域 : ${world}-${map}`);
+                                console.log(`海域: ${world}-${map}`);
                                 console.log('直後艦種');
                                 console.log(com);
                                 console.log('軌跡' + track);
-                                console.log(`safety : ${safety}`);
-                                console.log(`count : ${count}`);
-                                console.log(`ドラム缶 : ${f_drum}`);
-                                console.log(`電探 : ${f_radar}`);
-                                console.log(`大発系 : ${f_craft}`);
-                                console.log(`寒甲 : ${f_kanko}`);
-                                console.log(`f_speed : ${f_speed}`);
+                                console.log(`safety: ${safety}`);
+                                console.log(`count: ${count}`);
+                                console.log(`ドラム缶: ${f_drum}`);
+                                console.log(`電探: ${f_radar}`);
+                                console.log(`大発系: ${f_craft}`);
+                                console.log(`寒甲: ${f_kanko}`);
+                                console.log(`f_speed: ${f_speed}`);
                                 console.log(rate);
                                 console.log('終わり');
                                 return;
@@ -9941,7 +9935,7 @@ $(function() {
                         if(!matchNum && !isNaN(node)) {
                             matchNum = branch(world, map, null, true);
                         }
-                        console.log(`matchNum : ${matchNum}`);
+                        console.log(`matchNum: ${matchNum}`);
                         if(blocks[matchNum - 1]) {
                             blocks[matchNum - 1] = `<span style="text-decoration:underline;text-decoration-color: red;">${blocks[matchNum - 1]}</span>`;
                         }
@@ -9964,14 +9958,14 @@ $(function() {
             // e.target.style.color = '#ff0000';
 
             // クリックした座標(cy基準)
-            let position = e.target.renderedPosition();
+            const position = e.target.renderedPosition();
 
             // cy領域の左上の座標を取得
-            var cyContainer = cy.container().getBoundingClientRect();
+            const cyContainer = cy.container().getBoundingClientRect();
 
             // htmlを作成
             html = `<p>${html}</p>`;
-            let popup = document.createElement('div');
+            const popup = document.createElement('div');
             popup.innerHTML = html;
             popup.id = 'popup-info';
 
@@ -9986,7 +9980,7 @@ $(function() {
                 top = position.y + cyContainer.top - 10;
             }
             
-            let style = popup.style;
+            const style = popup.style;
             style.top = top + 'px';
             style.left = left + 'px';
 
@@ -10002,7 +9996,7 @@ $(function() {
                     content: '索敵無視',
                     coreAsWell: true,
                     show: true,
-                    onClickFunction: function (event) {
+                    onClickFunction: function () {
                         if(is_ignore_seek) {
                             f_seek = fs_copy;
                             is_ignore_seek = false;
@@ -10013,15 +10007,7 @@ $(function() {
                             is_ignore_seek = true;
                         }
                         reloadImportDisplay();
-                        Promise.resolve()
-                            .then(startSim)
-                            .then(preInfo)
-                            .then(function() {
-                            $('.icon-on-map').css('display', 'block');
-                        }).catch(error => {
-                            console.error("エラーが発生しました:", error);
-                            $('.icon-on-map').css('display', 'none');
-                        });
+                        simController();
                     }
                 }
             ]
@@ -10029,7 +10015,7 @@ $(function() {
         // nodeを右クリックで獲得資源予測
         cy.on('cxttapstart', 'node', function(e) {
             removePopupInfo();
-            let node = e.target.data('name');
+            const node = e.target.data('name');
             let content = '';
             let r_data = {
                 fuel: null,
@@ -10049,7 +10035,7 @@ $(function() {
                 steel: 0,
                 imo: 0
             };
-            let sum = 0;
+            
             switch(drew_area) {
                 case '1-2':
                     if(node === 'B') {
@@ -10379,16 +10365,18 @@ $(function() {
         $('#cy').on('wheel', function(e){
             e.preventDefault();
             e.stopPropagation();
-            var delta = e.originalEvent.deltaY;
+            const delta = e.originalEvent.deltaY;
             // がくつくけどsmoothにすると連続スクロール時にもたる
             window.scrollBy(0, delta);
         });
         // measureTime(false, 'startSim&drawMap');
         console.log(t_logs);
     }
+    // ※未使用
     // 演算と描画が完了したらinfo画面の情報を準備
+    // 基地は計算しないからこれはこれで半端かも
     function preInfo(callback) {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             console.log('preInfo');
             // 値の大きい順に並びかえ
             t_logs = sortObjectByValues(t_logs);
@@ -10459,10 +10447,10 @@ $(function() {
     function measureTime(is_start, text) {
         if(!text) text = '';
         if (is_start) {
-            console.log("計測開始");
+            console.log('計測開始');
             s_time = performance.now(); // 開始時の時間を取得
         } else {
-            console.log("計測終了");
+            console.log('計測終了');
             const seconds = performance.now() - s_time;
             console.log(`${text}: ${seconds}ms`);
         }
@@ -10478,10 +10466,9 @@ $(function() {
     // 上に置くとtrigger()が不発する 謎
     setup();
     function setup() {
-        var a = localStorage.getItem('active');
-        var s = localStorage.getItem('selected_type');
-        var f = localStorage.getItem('fleet');
-        var e = localStorage.getItem('error_log');
+        let a = localStorage.getItem('active');
+        let s = localStorage.getItem('selected_type');
+        let f = localStorage.getItem('fleet');
         // 能動分岐セット
         if(!a) {
             a = active;
@@ -10506,16 +10493,16 @@ $(function() {
         // html反映
         for(const key in a) {
             for(const key2 in a[key]) {
-                var val = a[key][key2];
-                var name = key + '-' + key2;
+                const val = a[key][key2];
+                const name = key + '-' + key2;
                 $('input[name="' + name + '"][value="' + val + '"]').prop('checked', true);
                 active = a;
             }
         }
         // html反映
-        var ar = localStorage.getItem('area');
+        const ar = localStorage.getItem('area');
         if(ar) {
-            $('#area-display').text(`海域 : ${ar}`);
+            $('#area-display').text(`海域: ${ar}`);
             setArea(ar);
         }
         if(s) {
@@ -10534,20 +10521,14 @@ $(function() {
             $('#fleet-import').val(f);
             $('#fleet-import').trigger('input');
         }
-        if(e) {
-            if(e === '1') {
-                $('#error-log').prop('checked', true);
-            }
-        }
-
     }
     // URLから任意のパラメータを取得
     function getParam(name, url) {
         if (!url) {
             url = window.location.href;
         }
-        name = name.replace(/[\[\]]/g, "\\$&");
-        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        name = name.replace(/[\[\]]/g, '\\$&');
+        const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
             results = regex.exec(url);
         if (!results) {
             return null;
@@ -10555,7 +10536,7 @@ $(function() {
         if (!results[2]) {
             return '';
         }
-        return decodeURIComponent(results[2].replace(/\+/g, " "));
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
     }
 
     /*
@@ -10565,7 +10546,7 @@ $(function() {
         変数、ストレージ双方更新
     */
     function updateActive(key, char, value) {
-        var elem = localStorage.getItem('active');
+        let elem = localStorage.getItem('active');
         if(elem) {
             elem = JSON.parse(elem);
             elem[key][char] = value;
@@ -10576,13 +10557,9 @@ $(function() {
         active = elem;
         localStorage.setItem('active', JSON.stringify(elem));
     }
-    // localStorageのデータをキーを指定して削除
-    function removeData(key) {
-        localStorage.removeItem(key);
-    }
     // localStorage内を全削除
     function allClear() {
-        let res = confirm('本当に?\n特に問題はありませんが');
+        const res = confirm('本当に?\n特に問題はありませんが');
         if(res) {
             // ローカルストレージ全削除
             localStorage.clear();
@@ -10592,8 +10569,8 @@ $(function() {
     }
     // popupから能動分岐切り替え
     $('body').on('click', '.remote-active', function() {
-        let name = $(this).val();
-        let inputs = $(`input[name="${name}"]`);
+        const name = $(this).val();
+        const inputs = $(`input[name="${name}"]`);
         if(inputs.eq(0).prop('checked')) {
             inputs.eq(1).prop('checked', true);
             inputs.eq(1).trigger('input');
@@ -10634,9 +10611,9 @@ $(function() {
     });
     // オプションリスト折り畳み/展開
     document.getElementById('fold').addEventListener('click', function() {
-        let optionUp = this.querySelector('#option-up');
-        let optionDown = this.querySelector('#option-down');
-        let listContainer = document.querySelectorAll('#option-box > .options');
+        const optionUp = this.querySelector('#option-up');
+        const optionDown = this.querySelector('#option-down');
+        const listContainer = document.querySelectorAll('#option-box > .options');
 
         if (optionUp.style.display === 'none') {
             optionUp.style.display = 'block';
@@ -10674,9 +10651,9 @@ $(function() {
     // 艦の最大資源消費量を配列で返す
     function getMaxCosts() {
         let res = [];
-        for(let s_id of f_ids) { // 艦
-            let max_fuel = s_data.find(entry => entry.id === s_id).fuel;
-            let max_ammo = s_data.find(entry => entry.id === s_id).bullet;
+        for(const s_id of f_ids) { // 艦
+            const max_fuel = s_data.find(entry => entry.id === s_id).fuel;
+            const max_ammo = s_data.find(entry => entry.id === s_id).bullet;
             res.push([max_fuel, max_ammo]);
         }
         return res;
@@ -10684,21 +10661,21 @@ $(function() {
     // スクショ
     $('#screen-shot').on('click', function() {
         if(drew_area) {
-            var now = new Date();
-            var hours = now.getHours();
-            var minutes = now.getMinutes();
+            const now = new Date();
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
             // 二桁の形式に変換
-            hours = hours < 10 ? "0" + hours : hours;
-            minutes = minutes < 10 ? "0" + minutes : minutes;
-            var time = `${hours}${minutes}`;
-            let fileName = `${drew_area}_${time}`;
+            hours = hours < 10 ? '0' + hours : hours;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            const time = `${hours}${minutes}`;
+            const fileName = `${drew_area}_${time}`;
             const deck = generateDeck();
             console.log(deck);
             // gkcoi出力
-            let g_speed = getFleetSpeedWithNum(f_speed);
+            const g_speed = getFleetSpeedWithNum(f_speed);
             generate(deck, g_speed, f_seek).then((canvas) => {
-                let g_blob = getGkcoiBlob(canvas);
-                let cy_blob = getCyBlob();
+                const g_blob = getGkcoiBlob(canvas);
+                const cy_blob = getCyBlob();
                 combineAndDownloadBlobs(cy_blob, g_blob, fileName);
             }).catch((error) => {
                 console.error(error);
@@ -10707,9 +10684,9 @@ $(function() {
     });
     // gkcoiに渡すデッキビルダー生成
     function generateDeck() {
-        let res = {
-            lang: "jp",
-            theme: "dark",
+        const res = {
+            lang: 'jp',
+            theme: 'dark',
             hqlv: i_json.hqlv
         };
         if(selected_type < 5) {
@@ -10724,19 +10701,16 @@ $(function() {
                 n = 2;
             }
             let s_length = f_length - f2_length;
-            if(num === 2) {
-                s_length =  f2_length;
-            }
             let f = {};
             for(let i = 0;i < s_length;i++) {
-                let s_id = i_json[`f${num}`][`s${i + 1}`]['id'];
-                let i_ship = i_json[`f${num}`][`s${i + 1}`];
-                let s_ship = s_data.find((item) => item.id === s_id + '');
-                let hp = s_ship.hp;
-                let lv = i_ship.lv;
-                let asw = getLFparam(s_ship, lv, 'ass');
-                let los = getLFparam(s_ship, lv, 'seek');
-                let luck = i_ship.luck;
+                const s_id = i_json[`f${num}`][`s${i + 1}`]['id'];
+                const i_ship = i_json[`f${num}`][`s${i + 1}`];
+                const s_ship = s_data.find((item) => item.id === s_id + '');
+                const hp = s_ship.hp;
+                const lv = i_ship.lv;
+                const asw = getLFparam(s_ship, lv, 'ass');
+                const los = getLFparam(s_ship, lv, 'seek');
+                const luck = i_ship.luck;
                 // 表示されないのは指定しない
                 let ship = {
                     id: s_id,
@@ -10751,10 +10725,9 @@ $(function() {
                     los: los,
                     luck: luck
                 };
-                let i_length = Object.keys(i_ship.items).length;
                 let items = {};
                 let j = 1;
-                for(let key in i_ship.items) {
+                for(const key in i_ship.items) {
                     let name = `i${j}`;
                     if(key === 'ix') {
                         name = 'ix';
@@ -10776,21 +10749,20 @@ $(function() {
     // 一次関数的に上昇するパラメータを計算して返す
     // 引数s_dataのjson,パラメータ名
     function getLFparam(ship, lv, param) {
-        let max = ship[`max_${param}`];
-        let min = ship[param];
-        let res = new Decimal(max).minus(min).times(lv).div(99).floor().plus(min);
+        const max = ship[`max_${param}`];
+        const min = ship[param];
+        const res = new Decimal(max).minus(min).times(lv).div(99).floor().plus(min);
         return parseInt(res);
     }
     // cytoscapeのblob取得
     function getCyBlob() {
-        let blob = cy.jpg({
+        return cy.jpg({
             maxWidth:1293,
             quality:1,
             output: 'blob',
             full: true,
             bg:'#212121'
         });
-        return blob;
     }
     // Canvasをblobで取得
     function getGkcoiBlob(canvas) {
@@ -10811,13 +10783,13 @@ $(function() {
     }
     // blobから画像を生成して上限に連結(img1が上)幅はimg1に合わせる
     function combineAndDownloadBlobs(blob1, blob2, fileName) {
-        var canvas = document.createElement('canvas');
-        var context = canvas.getContext('2d');
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
         // 入力Blobの高さを取得
-        var b1_height, b2_height;
+        let b1_height, b2_height;
         // BlobのためのImage要素を作成
-        var img1 = new Image();
-        var img2 = new Image();
+        const img1 = new Image();
+        const img2 = new Image();
         // 1つ目の画像の読み込みが完了したときの処理
         img1.onload = function() {
             b1_height = img1.height;
@@ -10825,14 +10797,14 @@ $(function() {
             img2.onload = function() {
                 b2_height = img2.height;
                 // 2つの画像の幅を比較し、大きい方に合わせる
-                var max_width = Math.max(img1.width, img2.width);
+                const max_width = Math.max(img1.width, img2.width);
                 canvas.width = max_width;
                 canvas.height = b1_height + b2_height;
                 // 画像を描画
                 context.drawImage(img1, 0, 0, max_width, b1_height);
                 context.drawImage(img2, 0, b1_height, max_width, b2_height);
-                var combinedImage = canvas.toDataURL(); // 画像をDataURLに変換
-                var a = document.createElement('a');
+                const combinedImage = canvas.toDataURL(); // 画像をDataURLに変換
+                const a = document.createElement('a');
                 a.href = combinedImage;
                 a.download = `${fileName}.jpg`;
                 document.body.appendChild(a);
@@ -10867,4 +10839,36 @@ $(function() {
         }
         return res;
     }
+    // ※未実装
+    // 現在読み込んでいる編成で全マップ、全オプション組み合わせをテストしてバグを洗い出す 開発環境からのみ呼び出し可
+    function bruteForceTest() {
+        if(location.hostname === 'x-20a.github.io') {
+            return;
+        }
+        let error_areas = [];
+        for(const t_area of areas) {
+            localStorage.setItem('area', t_area);
+            console.log(area);
+            const error_area = simController();
+            if(error_area) {
+                error_areas.push(error_area);
+            }
+            /*
+                optionも回したいけど一旦保留
+                if(op_areas.includes(area)) {
+
+                } else {
+
+                }
+            */
+        }
+        alert(error_areas);
+    }
+    // キーボードショートカット
+    $(document).keydown(function(e) {
+        switch(e.keyCode) {
+            case 65:
+            bruteForceTest();
+        }
+    });
 });

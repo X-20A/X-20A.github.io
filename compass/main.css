@@ -209,13 +209,13 @@ li {
 #type-select {
     display: none;
     margin-left: 3px;
-    width:110px;
+    width:111px;
     border: solid 1px;
     font-size: 14px;
     padding-left: 2px;
 }
 #fleet-option-box {
-    width: 112px;
+    width: 113px;
     font-size: 14px;
     z-index: 9999;
     background-color: white;
