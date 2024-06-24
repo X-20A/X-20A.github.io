@@ -14,6 +14,9 @@
     Githubのリモートリポジトリにはcdn置換後のものだけ設置する(紛らわしいので
     ヽ(ﾟдﾟ)ノ ＜ delivr
 */
+/*
+    追記: GithubPagesを更新しても反映にかなりラグがあるっぽいので使いどころが限られそう
+*/
 
 const fs = require('fs');
 const path = require('path');
@@ -40,13 +43,13 @@ const cdnBaseUrl = 'https://cdn.jsdelivr.net/gh/X-20A/X-20A.github.io@main';
 const pathMappings = {
     '/commons/header.js': `${cdnBaseUrl}/commons/header.js`,
     '/commons/header.css': `${cdnBaseUrl}/commons/header.css`,
-    'main.css': `${cdnBaseUrl}/compass/main.css`,
+    // 'main.css': `${cdnBaseUrl}/compass/main.css`,
     '../media/compass.svg': `${cdnBaseUrl}/media/compass.svg`,
-    '/data/ship.js': `${cdnBaseUrl}/data/ship.js`,
-    '/data/item.js': `${cdnBaseUrl}/data/item.js`,
-    '/data/map.js': `${cdnBaseUrl}/data/map.js`,
-    '/data/branch.js': `${cdnBaseUrl}/data/branch.js`,
-    'dist/main.js': `${cdnBaseUrl}/compass/dist/main.js`
+    // '/data/ship.js': `${cdnBaseUrl}/data/ship.js`,
+    // '/data/item.js': `${cdnBaseUrl}/data/item.js`,
+    // '/data/map.js': `${cdnBaseUrl}/data/map.js`,
+    // '/data/branch.js': `${cdnBaseUrl}/data/branch.js`,
+    // 'dist/main.js': `${cdnBaseUrl}/compass/dist/main.js`
 };
 
 // HTMLファイルを読み込む
