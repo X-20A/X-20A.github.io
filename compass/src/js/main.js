@@ -179,7 +179,10 @@ $(function() {
     let fs_copy = null;
 
     let s_time = 0; // 区間計測用
-
+    
+    const isDev = location.hostname !== 'x-20a.github.io'; // 開発環境であるか
+    
+    const cdn = 'https://cdn.jsdelivr.net/gh/X-20A/X-20A.github.io@main';
 
     // 海域が入力されたら適正かチェックしてフラグ切替
     $('.areas').on('click', function() {
@@ -9637,7 +9640,7 @@ $(function() {
             }, // マスの分類ごとに表示分岐
             { selector: 'node[label = "st"]', // 出撃
                  style: {
-                     'background-image': '/media/nodes/start.png',
+                     'background-image': `${cdn}/media/nodes/start.png`,
                      'font-weight': '600',
                      'text-outline-width': '2px',
                      'font-size': '20px',
@@ -9650,7 +9653,7 @@ $(function() {
             },
             { selector: 'node[label = "po"]',  // 港湾
                  style: {
-                     'background-image': '/media/nodes/port.png',
+                     'background-image': `${cdn}/media/nodes/port.png`,
                      'width': '48px',
                      'height': '48px',
                      'background-opacity': 0,
@@ -9660,7 +9663,7 @@ $(function() {
             },
             { selector: 'node[label = "bo"]', // ボス
                  style: {
-                     'background-image': '/media/nodes/boss.png',
+                     'background-image': `${cdn}/media/nodes/boss.png`,
                      'width': '48px',
                      'height': '48px',
                      'background-opacity': 0,
@@ -9670,7 +9673,7 @@ $(function() {
             },
             { selector: 'node[label = "ab"]',  // 航空戦
                  style: {
-                     'background-image': '/media/nodes/air-b.png',
+                     'background-image': `${cdn}/media/nodes/air-b.png`,
                      'width': '48px',
                      'height': '27px',
                      'background-opacity': 0,
@@ -9679,7 +9682,7 @@ $(function() {
             },
             { selector: 'node[label = "ad"]',  // 空襲
                  style: {
-                     'background-image': '/media/nodes/air-d.png',
+                     'background-image': `${cdn}/media/nodes/air-d.png`,
                      'width': '44px',
                      'height': '25px',
                      'background-opacity': 0,
@@ -9687,7 +9690,7 @@ $(function() {
             },
             { selector: 'node[label = "ac"]',  // 能動分岐
                  style: {
-                     'background-image': '/media/nodes/calm.png',
+                     'background-image': `${cdn}/media/nodes/calm.png`,
                      'border-width': 3, // ボーダーの太さ
                      'border-color': '#904A64',
                      'width': '27px',
@@ -9698,7 +9701,7 @@ $(function() {
             },
             { selector: 'node[label = "en"]', // 通常戦 基本設定
                  style: {
-                     'background-image': '/media/nodes/enemy.png',
+                     'background-image': `${cdn}/media/nodes/enemy.png`,
                      'width': '27px', // enemy系
                      'height': '27px',
                      'background-opacity': 0,
@@ -9708,7 +9711,7 @@ $(function() {
             },
             { selector: 'node[label = "su"]', // 対潜
              style: {
-                 'background-image': '/media/nodes/enemy.png',
+                 'background-image': `${cdn}/media/nodes/enemy.png`,
                  'width': '27px', // enemy系
                  'height': '27px',
                  'background-opacity': 0,
@@ -9718,7 +9721,7 @@ $(function() {
             },
             { selector: 'node[label = "ca"]', // 気のせい
                  style: {
-                     'background-image': '/media/nodes/calm.png',
+                     'background-image': `${cdn}/media/nodes/calm.png`,
                      'width': '27px', // enemy系
                      'height': '27px',
                      'background-opacity': 0,
@@ -9728,7 +9731,7 @@ $(function() {
             },
             { selector: 'node[label = "wh"]',  // 渦潮
                  style: {
-                     'background-image': '/media/nodes/whirl.png',
+                     'background-image': `${cdn}/media/nodes/whirl.png`,
                      'width': '27px', // enemy系
                      'height': '27px',
                      'background-opacity': 0,
@@ -9738,7 +9741,7 @@ $(function() {
             },
             { selector: 'node[label = "re"]',  // 資源
                  style: {
-                     'background-image': '/media/nodes/resource.png',
+                     'background-image': `${cdn}/media/nodes/resource.png`,
                      'width': '27px', // enemy系
                      'height': '27px',
                      'background-opacity': 0,
@@ -9748,7 +9751,7 @@ $(function() {
             },
             { selector: 'node[label = "ni"]',  // 夜戦
                  style: {
-                     'background-image': '/media/nodes/night.png',
+                     'background-image': `${cdn}/media/nodes/night.png`,
                      'width': '27px', // enemy系
                      'height': '27px',
                      'background-opacity': 0,
@@ -9758,7 +9761,7 @@ $(function() {
             },
             { selector: 'node[label = "sc"]',  // 航空偵察
                  style: {
-                     'background-image': '/media/nodes/scout.png',
+                     'background-image': `${cdn}/media/nodes/scout.png`,
                      'width': '27px', // enemy系
                      'height': '27px',
                      'background-opacity': 0,
@@ -9768,7 +9771,7 @@ $(function() {
             },
             { selector: 'node[label = "un"]', // 不明
              style: {
-                 'background-image': '/media/nodes/unknown.png',
+                 'background-image': `${cdn}/media/nodes/unknown.png`,
                  'width': '27px', // enemy系
                  'height': '27px',
                  'background-opacity': 0,
@@ -10625,7 +10628,7 @@ $(function() {
             optionUp.style.display = 'none';
             optionDown.style.display = 'block';
             listContainer.forEach(function(item) {
-                item.style.height = '23px';
+                item.style.height = '22px';
             });
         }
     });
@@ -10842,7 +10845,7 @@ $(function() {
     // ※未実装
     // 現在読み込んでいる編成で全マップ、全オプション組み合わせをテストしてバグを洗い出す 開発環境からのみ呼び出し可
     function bruteForceTest() {
-        if(location.hostname === 'x-20a.github.io') {
+        if(!isDev) {
             return;
         }
         let error_areas = [];
