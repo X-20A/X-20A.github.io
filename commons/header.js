@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function(){
     let open = document.getElementById('header-side-open');
     let close = document.getElementById('header-side-close');
-    let mask = document.getElementById('mask');
+    let mask = document.getElementById('header-mask');
     let sideBar = document.getElementById('side-bar-container');
     open.addEventListener('click', function() {
         animateOpenSidebar(-200, 0);

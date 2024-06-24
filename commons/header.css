@@ -51,7 +51,7 @@ ul {
     color: white;
     user-select: none;
 }
-#mask {
+#header-mask {
     top: 0;
     width: 100%;
     height: 100%;
