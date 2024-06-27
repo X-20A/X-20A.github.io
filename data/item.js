@@ -544,4 +544,7 @@ let e_data = [{"id":1,"name":"12cm単装砲","type":[1,1,1,1,0],"armor":0,"fire"
 ,{"id":528,"name":"Type274 射撃管制レーダー","type":[5,8,13,11,0],"armor":1,"fire":2,"torpedo":0,"bomb":0,"aac":3,"ass":0,"hit":8,"evasion":2,"seek":5,"range":2}
 ,{"id":529,"name":"12.7cm連装砲C型改三H","type":[1,1,1,1,0],"armor":1,"fire":3,"torpedo":0,"bomb":0,"aac":5,"ass":3,"hit":1,"evasion":1,"seek":0,"range":1}
 ,{"id":530,"name":"35.6cm連装砲改三丙","type":[1,1,3,3,0],"armor":4,"fire":21,"torpedo":0,"bomb":0,"aac":3,"ass":0,"hit":3,"evasion":0,"seek":0,"range":3}
+,{"id":531,"name":"艦隊通信アンテナ","type":[12,22,34,28,0],"armor":0,"fire":0,"torpedo":0,"bomb":0,"aac":1,"ass":0,"hit":1,"evasion":0,"seek":1,"range":0}
+,{"id":532,"name":"通信装置&要員","type":[12,22,34,28,0],"armor":0,"fire":0,"torpedo":0,"bomb":0,"aac":1,"ass":0,"hit":0,"evasion":0,"seek":1,"range":0}
+,{"id":533,"name":"10cm連装高角砲+高射装置改","type":[1,1,1,16,0],"armor":4,"fire":3,"torpedo":0,"bomb":0,"aac":11,"ass":0,"hit":2,"evasion":2,"seek":0,"range":1}
 ];
