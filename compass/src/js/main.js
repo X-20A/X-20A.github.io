@@ -40,8 +40,6 @@ $(function() {
         s_dataはship.js
         e_dataはitem.js
         map_infoはmap.jsより
-        idがs_dataは文字列
-        e_dataは数字であることに注意
 
         制空シミュを基準にしたときの本家デッキビルダー差異・注意点
         艦ID'のみ'文字列
@@ -812,7 +810,7 @@ $(function() {
         for (let i = 1; i <= c_lengths[num - 1]; i++) {
             const key = 's' + i;
             if (i_json[f][key] && i_json[f][key].hasOwnProperty('id')) {
-                ids.push('' + i_json[f][key].id); // 文字列化
+                ids.push(i_json[f][key].id);
             }
         }
         return ids;
@@ -10656,7 +10654,7 @@ $(function() {
         let res = [];
         for(const s_id of f_ids) { // 艦
             const max_fuel = s_data.find(entry => entry.id === s_id).fuel;
-            const max_ammo = s_data.find(entry => entry.id === s_id).bullet;
+            const max_ammo = s_data.find(entry => entry.id === s_id).ammo;
             res.push([max_fuel, max_ammo]);
         }
         return res;
@@ -10682,6 +10680,7 @@ $(function() {
                 combineAndDownloadBlobs(cy_blob, g_blob, fileName);
             }).catch((error) => {
                 console.error(error);
+                alert('スクショ失敗: 未対応の艦が含まれるかも？');
             });
         }
     });
