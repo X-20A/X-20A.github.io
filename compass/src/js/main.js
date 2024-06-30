@@ -2547,11 +2547,11 @@ $(function() {
                                 }
                                 break;
                             case 'J':
-                                if(CL > 0 && DD > 3 || (CL > 0 && CA === 5)) {
+                                if(CL > 0 && DD > 3 || (CL === 1 && CA === 5)) {
                                     sum('JtoN');
                                     return null;
                                 } else if(Ss === f_length) {
-                                    if(sai(65)) {
+                                    if(sai(90)) {
                                         sum('JtoN');
                                         return null;
                                     } else {
@@ -2560,10 +2560,10 @@ $(function() {
                                     }
                                 } else if(Ss > 0) {
                                     const num = Math.random().toFixed(2);
-                                    if(num <= 10) {
+                                    if(num <= 0.1) {
                                         sum('JtoM');
                                         return null;
-                                    } else if(num <= 55) {
+                                    } else if(num <= 0.55) {
                                         sum('JtoL');
                                         return null;
                                     } else {
