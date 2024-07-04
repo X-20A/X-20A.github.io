@@ -4978,7 +4978,7 @@ $(function() {
                                 if(f_seek[1] < 63) {
                                     sum('FtoH');
                                     return null;
-                                } else if(f_seek[1] < 70 && f_seek >= 63) {
+                                } else if(f_seek[1] < 70 && f_seek[1] >= 63) {
                                     if(BBs + CV + CVB > 4) {
                                         if(sai(50)) {
                                             sum('FtoH');
