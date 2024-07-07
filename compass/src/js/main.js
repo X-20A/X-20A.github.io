@@ -2132,6 +2132,9 @@ $(function() {
                                         sum('CtoE');
                                         return 'E';
                                     }
+                                } else if(AV + AS > 0) {
+                                    sum('CtoE');
+                                    return 'E';    
                                 } else {
                                     if(sai(50)) {
                                         sum('CtoD');
@@ -2616,11 +2619,11 @@ $(function() {
                                 return 'B';
                                 break;
                             case 'B':
-                                if(DD === f_length) {
+                                if(DD === 6) {
                                     sum('BtoG');
                                     sum('GtoH');
                                     return 'H';
-                                } else if(CL + CT > 0 && DD === 4 && (CA > 0 || DD === 5 || DE > 0)) {
+                                } else if(CL + CT === 1 && DD > 3 && (CAs === 1 || DD === 5 || DE === 1)) {
                                     sum('BtoG');
                                     sum('GtoH');
                                     return 'H';
