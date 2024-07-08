@@ -810,7 +810,7 @@ $(function() {
         for (let i = 1; i <= c_lengths[num - 1]; i++) {
             const key = 's' + i;
             if (i_json[f][key] && i_json[f][key].hasOwnProperty('id')) {
-                ids.push(i_json[f][key].id);
+                ids.push(Number(i_json[f][key].id));
             }
         }
         return ids;
