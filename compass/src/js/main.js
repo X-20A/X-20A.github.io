@@ -879,7 +879,7 @@ $(function() {
                     const eq_co = new Decimal(coefficient[0]); // 装備係数
                     const rf_co = new Decimal(coefficient[1]); // 改修係数
                     const rf = new Decimal(rfs[q]);
-                    console.log(`装備係数: ${coefficient[0]}, 改修係数: ${coefficient[1]}`);
+                    console.log(`装備係数: ${coefficient[0]}, 改修係数: ${coefficient[1]}, 改修効果: ${rf_co.times(Decimal.sqrt(rf))}`);
                     sum_eq = sum_eq.plus(eq_co.times(seek.plus(rf_co.times(Decimal.sqrt(rf)))));
                 }
             }
@@ -1193,6 +1193,16 @@ $(function() {
                         res += 2;
                     }
                     break;
+                case 273: { // 彩雲(偵四) ☆2のときのみ
+                    const rf = getEqRfs(id, num)[i];
+                    if(rf === 2) {
+                        if(!dup.includes(e_id)) {
+                            res += 1;
+                            dup.push(e_id);
+                        }
+                    }
+                    break;
+                }
             }
         }
         return res;
