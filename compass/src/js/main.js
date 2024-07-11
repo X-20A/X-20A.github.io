@@ -3266,7 +3266,7 @@ $(function() {
                                 } else if(f_speed === '低速艦隊' || f_radar === 0 || CL + DD + AO < 6) {
                                     sum('GtoH');
                                     return 'H';
-                                } else if(f_speed === '高速+艦隊') {
+                                } else if(isFaster()) {
                                     sum('GtoF');
                                     sum('FtoL');
                                     return null;
