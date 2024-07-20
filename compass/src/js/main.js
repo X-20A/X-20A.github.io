@@ -2481,10 +2481,10 @@ $(function() {
                                     }
                                 } else {
                                     const num = Math.random().toFixed(2);
-                                    if(num <= 25) {
+                                    if(num <= 0.25) {
                                         sum('FtoG');
                                         return 'G';
-                                    } else if(num <= 60) {
+                                    } else if(num <= 0.60) {
                                         sum('FtoH');
                                         return null;
                                     } else {
@@ -3062,11 +3062,11 @@ $(function() {
                                     return null;
                                 } else if(f_seek[0] < 49 && f_seek[0] >= 42) {
                                     if(BBCVs > 3) {
-                                        const num = Math.random().toFixed(2);
-                                        if(num <= 33.3) {
+                                        const num = Math.random().toFixed(3);
+                                        if(num <= 0.333) {
                                             sum('JtoH');
                                             return null;
-                                        } else if(num <= 66.6) {
+                                        } else if(num <= 0.666) {
                                             sum('JtoM');
                                             return null;
                                         } else {
