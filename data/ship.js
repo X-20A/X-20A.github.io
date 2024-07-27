@@ -818,4 +818,12 @@ let s_data = [
 ,{"id":975,"no":575,"name":"春雨改二","type":"駆逐艦","hp":31,"ass":78,"seek":10,"max_ass":73,"max_seek":51,"fuel":15,"ammo":20,"na":0,"sg":2}
 ,{"id":979,"no":579,"name":"稲木改二","type":"海防艦","hp":27,"ass":46,"seek":5,"max_ass":87,"max_seek":42,"fuel":10,"ammo":15,"na":0,"sg":7}
 ,{"id":968,"no":568,"name":"初月改二","type":"駆逐艦","hp":39,"ass":32,"seek":12,"max_ass":72,"max_seek":54,"fuel":25,"ammo":30,"na":0,"sg":2}
+,{"id":927,"no":527,"name":"Valiant","type":"戦艦","hp":73,"ass":0,"seek":0,"max_ass":0,"max_seek":0,"fuel":90,"ammo":110,"na":5,"sg":5}
+,{"id":733,"no":1733,"name":"Valiant改","type":"戦艦","hp":83,"ass":0,"seek":0,"max_ass":0,"max_seek":0,"fuel":90,"ammo":110,"na":5,"sg":5}
+,{"id":962,"no":562,"name":"Mogador","type":"駆逐艦","hp":21,"ass":0,"seek":0,"max_ass":0,"max_seek":0,"fuel":10,"ammo":35,"na":5,"sg":2}
+,{"id":965,"no":565,"name":"Gloire","type":"軽巡洋艦","hp":33,"ass":0,"seek":0,"max_ass":0,"max_seek":0,"fuel":30,"ammo":40,"na":5,"sg":2}
+,{"id":967,"no":567,"name":"Mogador改","type":"駆逐艦","hp":38,"ass":0,"seek":0,"max_ass":0,"max_seek":0,"fuel":15,"ammo":40,"na":5,"sg":2}
+,{"id":970,"no":570,"name":"Gloire改","type":"軽巡洋艦","hp":46,"ass":0,"seek":0,"max_ass":0,"max_seek":0,"fuel":35,"ammo":50,"na":5,"sg":2}
+,{"id":969,"no":569,"name":"Richelieu Deux","type":"巡洋戦艦","hp":89,"ass":0,"seek":0,"max_ass":0,"max_seek":0,"fuel":195,"ammo":280,"na":5,"sg":2}
 ];
+

@@ -152,12 +152,12 @@ $(function() {
     let selected_type = null;
 
     // 受け付ける海域
-    const areas = ['1-1','1-2','1-3','1-4','1-5','1-6','2-1','2-2','2-3','2-4','2-5','3-1','3-2','3-3','3-4','3-5','4-1','4-2','4-3','4-4','4-5','5-1','5-2','5-3','5-4','5-5','6-1','6-2','6-3','6-4','6-5','7-1','7-2','7-3','7-3-1','7-4','7-5','57-7','58-1','58-2','58-3','58-4'];
+    const areas = ['1-1','1-2','1-3','1-4','1-5','1-6','2-1','2-2','2-3','2-4','2-5','3-1','3-2','3-3','3-4','3-5','4-1','4-2','4-3','4-4','4-5','5-1','5-2','5-3','5-4','5-5','6-1','6-2','6-3','6-4','6-5','7-1','7-2','7-3','7-3-1','7-4','7-5','57-7','58-1','58-2','58-3','58-4','59-1'];
     // optionがある海域
-    const op_areas = ['4-5','5-3','5-5','6-3','7-3','7-4','7-5','57-7','58-1','58-2','58-3','58-4'];
+    const op_areas = ['4-5','5-3','5-5','6-3','7-3','7-4','7-5','57-7','58-1','58-2','58-3','58-4','59-1'];
 
     // 1がキーの値はPhase
-    let active = {'4-5':{'A':'D','C':'F','I':'J'},'5-3':{'O':'K'}, '5-5':{'F':'D'}, '6-3':{'A':'B'},'7-3':{'1':'0'},'7-4':{'F':'H'},'7-5':{'F':'G','H':'I','O':'P'}, '57-7':{'1':'1','A2':'A3','B':'B1','B2':'B3','C':'A3','J':'K'},'58-1':{'1':'1','A':'D','I':'N1','F':'G'},'58-2':{'1':'1','2':'1','B':'E'},'58-3':{'1':'1','2':'1','M':'P'},'58-4':{'1':'1','2':'1','B':'D'}};
+    let active = {'4-5':{'A':'D','C':'F','I':'J'},'5-3':{'O':'K'}, '5-5':{'F':'D'}, '6-3':{'A':'B'},'7-3':{'1':'0'},'7-4':{'F':'H'},'7-5':{'F':'G','H':'I','O':'P'}, '57-7':{'1':'1','A2':'A3','B':'B1','B2':'B3','C':'A3','J':'K'},'58-1':{'1':'1','A':'D','I':'N1','F':'G'},'58-2':{'1':'1','2':'1','B':'E'},'58-3':{'1':'1','2':'1','M':'P'},'58-4':{'1':'1','2':'1','B':'D'},'59-1':{'1':'1','C':'C1','E':'F'}};
 
     let area = null; // 入力で切り替えるの
     let drew_area = null; // 表示中の海域
@@ -899,7 +899,6 @@ $(function() {
     }
     // 装備ボーナス取得 艦のjson, 装備id(配列)
     function getSeekBonus(ship, e_ids, num) {
-        console.log(ship);
         let res = 0;
         const id = ship.id;
         const name = ship.name;
@@ -9532,6 +9531,155 @@ $(function() {
                     }
                 }
                 break;
+            case 59:
+                switch(map) {
+                    case 1: {
+                        const phase = Number(active['59-1']['1']);
+                        switch(edge) {
+                            case null:
+                                if(phase === 1) {
+                                    sum('1toA');
+                                    return 'A';
+                                } else if(CV + CVB > 0) {
+                                    sum('1toA');
+                                    return 'A';
+                                } else if(CL > 0 && AV + AO > 0) {
+                                    sum('1toA');
+                                    return 'A';
+                                } else {
+                                    return '2';
+                                }
+                                break;
+                            case '2':
+                                if(Ds < 2) {
+                                    sum('2toI');
+                                    sum('ItoJ');
+                                    sum('JtoG');
+                                    return 'G';
+                                } else if(f_speed !== '低速艦隊') {
+                                    sum('2toJ');
+                                    sum('JtoG');
+                                    return 'G';
+                                } else if(BBs > 1) {
+                                    sum('2toI');
+                                    sum('ItoJ');
+                                    sum('JtoG');
+                                    return 'G';
+                                } else if(CVs > 0) {
+                                    sum('2toI');
+                                    sum('ItoJ');
+                                    sum('JtoG');
+                                    return 'G';
+                                } else {
+                                    sum('2toJ');
+                                    sum('JtoG');
+                                    return 'G';
+                                }
+                                break;
+                            case 'A':
+                                if(CL === 0) {
+                                    if(Ss > 0) {
+                                        sum('AtoB');
+                                        sum('BtoC');
+                                        return 'C';
+                                    } else if(Ds === f_length) {
+                                        sum('AtoD');
+                                        sum('DtoE');
+                                        return 'E';
+                                    } else if(Ds > 1) {
+                                        sum('AtoD');
+                                        sum('DtoE');
+                                        return 'E';
+                                    } else {
+                                        sum('AtoC1');
+                                        return 'C1';
+                                    }
+                                } else {
+                                    if(AO > 0) {
+                                        sum('AtoD');
+                                        sum('DtoE');
+                                        return 'E';
+                                    } else if(Ds > 1) {
+                                        sum('AtoB');
+                                        sum('BtoC');
+                                        return 'C';
+                                    } else if(CV + CVB > 1) {
+                                        sum('AtoD');
+                                        sum('DtoE');
+                                        return 'E';
+                                    } else {
+                                        sum('AtoC1');
+                                        return 'C1';
+                                    }
+                                }
+                                break;
+                            case 'C1':
+                                if(phase > 1 && f_speed !== '低速艦隊') {
+                                    sum('C1toC2');
+                                    sum('C2toL');
+                                    sum('LtoM');
+                                    return null;
+                                } else if(BBs + CV + CVB > 1) {
+                                    sum('C1toD');
+                                    sum('DtoE');
+                                    return 'E';
+                                } else if(Ds < 2) {
+                                    sum('C1toD');
+                                    sum('DtoE');
+                                    return 'E';
+                                } else {
+                                    sum('C1toE');
+                                    return 'E';
+                                }
+                                break;
+                            case 'G':
+                                if(track.includes('1')) {
+                                    sum('GtoH');
+                                    return null;
+                                } else if(phase < 3) {
+                                    sum('GtoK');
+                                    sum('KtoL');
+                                    sum('LtoM');
+                                    return null;
+                                } else if(Ds > 3) {
+                                    sum('GtoL');
+                                    sum('LtoM');
+                                    return null;
+                                } else if(Ds > 2 && BBs + CVs === 0) {
+                                    sum('GtoL');
+                                    sum('LtoM');
+                                    return null;
+                                } else {
+                                    sum('GtoK');
+                                    sum('KtoL');
+                                    sum('LtoM');
+                                    return null;
+                                }
+                                break;
+                            case 'C':
+                                if(active['59-1']['C'] === 'C1') {
+                                    sum('CtoC1');
+                                    return 'C1';
+                                } else {
+                                    sum('CtoC2');
+                                    sum('C2toL');
+                                    sum('LtoM');
+                                    return null;
+                                }
+                                break;
+                            case 'E':
+                                if(active['59-1']['E'] === 'F') {
+                                    sum('EtoF');
+                                    return null;
+                                } else {
+                                    sum('EtoG');
+                                    return 'G';
+                                }
+                                break;
+                        }
+                    }
+                }
+                break;
         }
     }
     // 演算開始
@@ -9581,8 +9729,8 @@ $(function() {
                         return;
                     }
                 }
-                console.log('軌跡' + track);
-                console.log(rate);
+                console.log('最終航路', track);
+                console.log('航路', rate);
                 // 正直どういう挙動になってるのか分からない
                 // 非同期でいい感じにやってくれてるならいいやって感じ
                 drawMap(max_c);
@@ -9899,6 +10047,7 @@ $(function() {
                     let text = b_area[node];
                     // 改行、赤字置換
                     text = text.replaceAll('$e', '<br>');
+                    text = text.replaceAll('$i', '    ');
                     text = text.replaceAll('$co', '<span style="color:red;">');
                     text = text.replaceAll('$oc', '</span>');
                     text = text.replaceAll('$bo', '<span style="font-weight:bold;">');
@@ -10384,7 +10533,7 @@ $(function() {
             window.scrollBy(0, delta);
         });
         // measureTime(false, 'startSim&drawMap');
-        console.log(t_logs);
+        console.log('ルート', t_logs);
     }
     // ※未使用
     // 演算と描画が完了したらinfo画面の情報を準備
