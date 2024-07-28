@@ -9543,7 +9543,18 @@ $(function() {
                                 } else if(CV + CVB > 0) {
                                     sum('1toA');
                                     return 'A';
-                                } else if(CL > 0 && AV + AO > 0) {
+                                } else if(BBs > 2) {
+                                    sum('1toA');
+                                    return 'A';   
+                                } else if(AO > 0) {
+                                    sum('1toA');
+                                    return 'A';  
+                                } else if(CL > 2) {
+                                    sum('1toA');
+                                    return 'A';
+                                } else if(Ds > 3) {
+                                    return '2';
+                                } else if(BBs > 0 && AV > 0) {
                                     sum('1toA');
                                     return 'A';
                                 } else {
@@ -9551,7 +9562,22 @@ $(function() {
                                 }
                                 break;
                             case '2':
-                                if(Ds < 2) {
+                                if(Ss > 0) {
+                                    sum('2toI');
+                                    sum('ItoJ');
+                                    sum('JtoG');
+                                    return 'G';
+                                } else if(CVL > 1) {
+                                    sum('2toI');
+                                    sum('ItoJ');
+                                    sum('JtoG');
+                                    return 'G';
+                                } else if(CAs > 2) {
+                                    sum('2toI');
+                                    sum('ItoJ');
+                                    sum('JtoG');
+                                    return 'G';
+                                } else if(Ds < 2) {
                                     sum('2toI');
                                     sum('ItoJ');
                                     sum('JtoG');
@@ -9565,7 +9591,12 @@ $(function() {
                                     sum('ItoJ');
                                     sum('JtoG');
                                     return 'G';
-                                } else if(CVs > 0) {
+                                } else if(CL + CT === 0) {
+                                    sum('2toI');
+                                    sum('ItoJ');
+                                    sum('JtoG');
+                                    return 'G';
+                                } else if(LHA > 0) {
                                     sum('2toI');
                                     sum('ItoJ');
                                     sum('JtoG');
@@ -9577,49 +9608,51 @@ $(function() {
                                 }
                                 break;
                             case 'A':
-                                if(CL === 0) {
+                                if(Ds === 0) {
+                                    sum('AtoB');
+                                    sum('BtoC');
+                                    return 'C';
+                                } else if(Ds === 1) {
                                     if(Ss > 0) {
-                                        sum('AtoB');
-                                        sum('BtoC');
-                                        return 'C';
-                                    } else if(Ds === f_length) {
-                                        sum('AtoD');
-                                        sum('DtoE');
-                                        return 'E';
-                                    } else if(Ds > 1) {
-                                        sum('AtoD');
-                                        sum('DtoE');
-                                        return 'E';
-                                    } else {
                                         sum('AtoC1');
                                         return 'C1';
+                                    } else if(BBs + CVs > 2) {
+                                        sum('AtoC1');
+                                        return 'C1';
+                                    } else {
+                                        sum('AtoD');
+                                        sum('DtoE');
+                                        return 'E';
                                     }
-                                } else {
-                                    if(AO > 0) {
-                                        sum('AtoD');
-                                        sum('DtoE');
-                                        return 'E';
-                                    } else if(Ds > 1) {
+                                } else if(Ds > 1) {
+                                    if(Ss > 0 && f_speed === '低速艦隊') {
+                                        sum('AtoC1');
+                                        return 'C1';
+                                    } else if(BBs + CVs > 3) {
                                         sum('AtoB');
                                         sum('BtoC');
                                         return 'C';
-                                    } else if(CV + CVB > 1) {
+                                    } else if(BBs + CVs === 3) {
+                                        sum('AtoD');
+                                        sum('DtoE');
+                                        return 'E';
+                                    } else if(AO > 0) {
+                                        sum('AtoD');
+                                        sum('DtoE');
+                                        return 'E';
+                                    } else if(CL + CT === 0) {
                                         sum('AtoD');
                                         sum('DtoE');
                                         return 'E';
                                     } else {
-                                        sum('AtoC1');
-                                        return 'C1';
+                                        sum('AtoB');
+                                        sum('BtoC');
+                                        return 'C';
                                     }
                                 }
                                 break;
                             case 'C1':
-                                if(phase > 1 && f_speed !== '低速艦隊') {
-                                    sum('C1toC2');
-                                    sum('C2toL');
-                                    sum('LtoM');
-                                    return null;
-                                } else if(BBs + CV + CVB > 1) {
+                                if(BBs + CV + CVB + Ss > 1) {
                                     sum('C1toD');
                                     sum('DtoE');
                                     return 'E';
@@ -9641,11 +9674,20 @@ $(function() {
                                     sum('KtoL');
                                     sum('LtoM');
                                     return null;
-                                } else if(Ds > 3) {
+                                } else if(BBs + CVs > 1) {
+                                    sum('GtoK');
+                                    sum('KtoL');
+                                    sum('LtoM');
+                                    return null;
+                                } else if(Ds > 4) {
                                     sum('GtoL');
                                     sum('LtoM');
                                     return null;
-                                } else if(Ds > 2 && BBs + CVs === 0) {
+                                } else if(Ds > 3 && f_speed !== '低速艦隊') {
+                                    sum('GtoL');
+                                    sum('LtoM');
+                                    return null;
+                                } else if(Ds > 2 && BBs + CVs === 0 && CL + CT + CLT < 3) {
                                     sum('GtoL');
                                     sum('LtoM');
                                     return null;
@@ -10184,7 +10226,7 @@ $(function() {
                     let text = b_area[node];
                     // 改行、赤字置換
                     text = text.replaceAll('$e', '<br>');
-                    text = text.replaceAll('$i', '    ');
+                    text = text.replaceAll('$i', '&nbsp;&nbsp;&nbsp;&nbsp;');
                     text = text.replaceAll('$co', '<span style="color:red;">');
                     text = text.replaceAll('$oc', '</span>');
                     text = text.replaceAll('$bo', '<span style="font-weight:bold;">');
