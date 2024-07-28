@@ -152,12 +152,12 @@ $(function() {
     let selected_type = null;
 
     // 受け付ける海域
-    const areas = ['1-1','1-2','1-3','1-4','1-5','1-6','2-1','2-2','2-3','2-4','2-5','3-1','3-2','3-3','3-4','3-5','4-1','4-2','4-3','4-4','4-5','5-1','5-2','5-3','5-4','5-5','6-1','6-2','6-3','6-4','6-5','7-1','7-2','7-3','7-3-1','7-4','7-5','57-7','58-1','58-2','58-3','58-4','59-1'];
+    const areas = ['1-1','1-2','1-3','1-4','1-5','1-6','2-1','2-2','2-3','2-4','2-5','3-1','3-2','3-3','3-4','3-5','4-1','4-2','4-3','4-4','4-5','5-1','5-2','5-3','5-4','5-5','6-1','6-2','6-3','6-4','6-5','7-1','7-2','7-3','7-3-1','7-4','7-5','57-7','58-1','58-2','58-3','58-4','59-1','59-2'];
     // optionがある海域
-    const op_areas = ['4-5','5-3','5-5','6-3','7-3','7-4','7-5','57-7','58-1','58-2','58-3','58-4','59-1'];
+    const op_areas = ['4-5','5-3','5-5','6-3','7-3','7-4','7-5','57-7','58-1','58-2','58-3','58-4','59-1','59-2'];
 
     // 1がキーの値はPhase
-    let active = {'4-5':{'A':'D','C':'F','I':'J'},'5-3':{'O':'K'}, '5-5':{'F':'D'}, '6-3':{'A':'B'},'7-3':{'1':'0'},'7-4':{'F':'H'},'7-5':{'F':'G','H':'I','O':'P'}, '57-7':{'1':'1','A2':'A3','B':'B1','B2':'B3','C':'A3','J':'K'},'58-1':{'1':'1','A':'D','I':'N1','F':'G'},'58-2':{'1':'1','2':'1','B':'E'},'58-3':{'1':'1','2':'1','M':'P'},'58-4':{'1':'1','2':'1','B':'D'},'59-1':{'1':'1','C':'C1','E':'F'}};
+    let active = {'4-5':{'A':'D','C':'F','I':'J'},'5-3':{'O':'K'}, '5-5':{'F':'D'}, '6-3':{'A':'B'},'7-3':{'1':'0'},'7-4':{'F':'H'},'7-5':{'F':'G','H':'I','O':'P'}, '57-7':{'1':'1','A2':'A3','B':'B1','B2':'B3','C':'A3','J':'K'},'58-1':{'1':'1','A':'D','I':'N1','F':'G'},'58-2':{'1':'1','2':'1','B':'E'},'58-3':{'1':'1','2':'1','M':'P'},'58-4':{'1':'1','2':'1','B':'D'},'59-1':{'1':'1','C':'C1','E':'F'},"59-2":{'L':'M','N':'O','P':'Q'}};
 
     let area = null; // 入力で切り替えるの
     let drew_area = null; // 表示中の海域
@@ -9678,6 +9678,143 @@ $(function() {
                                 break;
                         }
                     }
+                        break;
+                    case 2:
+                        switch(edge) {
+                            case null:
+                                if(!isCom()) {
+                                    sum('1toA');
+                                    return 'A';
+                                } else {
+                                    sum('2toF');
+                                    sum('FtoG');
+                                    return 'G';
+                                }
+                                break;
+                            case 'A':
+                                if(DD > 3) {
+                                    sum('AtoA2');
+                                    sum('A2toB');
+                                    sum('BtoC');
+                                    return 'C';
+                                } else {
+                                    sum('AtoA1');
+                                    sum('A1toA2');
+                                    sum('A2toB');
+                                    sum('BtoC');
+                                    return 'C';
+                                }
+                                break;
+                            case 'C':
+                                if(f_seek[3] >= 60) {
+                                    sum('CtoE');
+                                    return null;
+                                } else {
+                                    sum('CtoD');
+                                    return null;
+                                }
+                                break;
+                            case 'G':
+                                if(f_type === '輸送護衛部隊') {
+                                    sum('GtoI');
+                                    return 'I';
+                                } else if(LHA > 0) {
+                                    sum('GtoI');
+                                    return 'I';
+                                } else if(CL === 2 && DD > 3 && BBs > 2) {
+                                    sum('GtoI');
+                                    return 'I';
+                                } else if(CV + CVB > 2) {
+                                    sum('GtoH');
+                                    sum('HtoK');
+                                    sum('KtoN');
+                                    return 'N';
+                                } else if(DD < 3) {
+                                    sum('GtoH');
+                                    sum('HtoK');
+                                    sum('KtoN');
+                                    return 'N';
+                                } else if(CL === 2 && DD > 3 && CVs < 2) {
+                                    sum('GtoK');
+                                    sum('KtoN');
+                                    return 'N';
+                                } else if(CL > 2) {
+                                    sum('GtoK');
+                                    sum('KtoN');
+                                    return 'N';
+                                } else if(f_speed !== '低速艦隊') {
+                                    sum('GtoK');
+                                    sum('KtoN');
+                                    return 'N';
+                                } else {
+                                    sum('GtoH');
+                                    sum('HtoK');
+                                    sum('KtoN');
+                                    return 'N';
+                                }
+                                break;
+                            case 'I':
+                                if(BBs > 1 && f_speed === '低速艦隊') {
+                                    sum('ItoJ');
+                                    sum('JtoL');
+                                    return 'L';
+                                } else {
+                                    sum('ItoL');
+                                    return 'L';
+                                }
+                                break;
+                            case 'R':
+                                if(true) {
+                                    sum('RtoW');
+                                    return null;
+                                } else {
+                                    sum('RtoV');
+                                    return null;
+                                }
+                                break;
+                            case 'S':
+                                if(true) {
+                                    sum('StoU');
+                                    return null;
+                                } else {
+                                    sum('StoT');
+                                    return null;
+                                }
+                                break;
+                            case 'L':
+                                if(active['59-2']['L'] === 'M') {
+                                    sum('LtoM');
+                                    return null;
+                                } else {
+                                    sum('LtoN');
+                                    return 'N';
+                                }
+                                break;
+                            case 'N':
+                                if(active['59-2']['N'] === 'O') {
+                                    sum('NtoO');
+                                    sum('OtoS');
+                                    return 'S';
+                                } else {
+                                    sum('NtoP');
+                                    return 'P';
+                                }
+                                break;
+                            case 'P':
+                                if(active['59-2']['P'] === 'Q') {
+                                    sum('PtoQ');
+                                    return null;
+                                } else {
+                                    sum('PtoR');
+                                    return 'R';
+                                }
+                                break;
+                        }
+                        break;
+                    case 3: {
+                        
+                    }
+                        break;
                 }
                 break;
         }
