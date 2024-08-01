@@ -9533,7 +9533,7 @@ $(function() {
                 break;
             case 59:
                 switch(map) {
-                    case 1: {
+                    case 1: { // @59-1
                         const phase = Number(active['59-1']['1']);
                         switch(edge) {
                             case null:
@@ -9729,7 +9729,7 @@ $(function() {
                         }
                     }
                         break;
-                    case 2:
+                    case 2: // @59-2
                         switch(edge) {
                             case null:
                                 if(!isCom()) {
@@ -9899,7 +9899,7 @@ $(function() {
                                 break;
                         }
                         break;
-                    case 3: {
+                    case 3: { // @59-3
                         const phase = Number(active['59-3']['1']);
                         switch(edge) {
                             case null:
@@ -9962,23 +9962,36 @@ $(function() {
                                 } else if(f_type === '輸送護衛部隊') {
                                     sum('B1toP');
                                     return 'P';
-                                } else {
+                                } else if(f_type === '水上打撃部隊') {
                                     sum('B1toN');
                                     return 'N';
+                                } else if(f_type === '空母機動部隊') {
+                                    if(CV + CVB > 1) {
+                                        sum('B1toN');
+                                        return 'N';
+                                    } else {
+                                        sum('B1toP');
+                                        return 'P';
+                                    }
+                                } else {
+                                    sum('B1toP');
+                                    return 'P';
                                 }
                                 break;
                             case 'C3':
-                                if(f_seek[3] >= 105) {
-                                    if(BBs + CV + CVB > 3) {
-                                        sum('C3toD');
-                                        sum('DtoF');
-                                        return null;
-                                    } else {
-                                        sum('C3toF');
-                                        return null;
-                                    }
-                                } else {
+                                if(f_seek[3] < 105) {
                                     sum('C3toE');
+                                    return null;
+                                } else if(BBs + CV + CVB > 3) {
+                                    sum('C3toD');
+                                    sum('DtoF');
+                                    return null;
+                                } else if(DD < 2) {
+                                    sum('C3toD');
+                                    sum('DtoF');
+                                    return null;
+                                } else {
+                                    sum('C3toF');
                                     return null;
                                 }
                                 break;
@@ -9995,7 +10008,7 @@ $(function() {
                                 }
                                 break;
                             case 'I':
-                                if(f_seek[3] >= 82) {
+                                if(f_seek[3] >= 83) {
                                     sum('ItoK');
                                     return null;
                                 } else {
@@ -10035,8 +10048,11 @@ $(function() {
                                 }
                                 break;
                             case 'Q':
-                                if(true) {
+                                if(f_seek[1] >= 62) {
                                     sum('QtoS');
+                                    return null;
+                                } else {
+                                    sum('QtoR');
                                     return null;
                                 }
                                 break;
@@ -10045,12 +10061,12 @@ $(function() {
                                     sum('VtoV2');
                                     sum('V2toV3');
                                     return 'V3';
-                                } else if(CVs > 3) {
-                                    sum('VtoV2');
-                                    sum('V2toV3');
-                                    return 'V3';
                                 } else if(f_speed !== '低速艦隊') {
-                                    if(phase === 3 && DD > 3) {
+                                    if(CVs > 3) {
+                                        sum('VtoV2');
+                                        sum('V2toV3');
+                                        return 'V3';
+                                    } else if(phase === 3 && DD > 3) {
                                         sum('VtoX');
                                         return null;
                                     } else {
@@ -10058,7 +10074,10 @@ $(function() {
                                         return 'V3';
                                     }
                                 } else if(f_speed === '低速艦隊') {
-                                    if(LHA > 0) {
+                                    if(CVs > 3) {
+                                        sum('VtoV1');
+                                        return null;
+                                    } else if(LHA > 0) {
                                         sum('VtoV1');
                                         return null;
                                     } else if(AV > 1) {
