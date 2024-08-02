@@ -374,7 +374,7 @@ let s_data = [
 ,{"id":345,"no":1425,"name":"高波改","type":"駆逐艦","hp":32,"ass":29,"seek":13,"max_ass":67,"max_seek":54,"fuel":15,"ammo":20,"na":0,"sg":2}
 ,{"id":346,"no":1426,"name":"照月改","type":"駆逐艦","hp":37,"ass":30,"seek":10,"max_ass":72,"max_seek":49,"fuel":20,"ammo":25,"na":0,"sg":2}
 ,{"id":347,"no":1427,"name":"Libeccio改","type":"駆逐艦","hp":29,"ass":40,"seek":10,"max_ass":80,"max_seek":46,"fuel":15,"ammo":20,"na":2,"sg":2}
-,{"id":348,"no":1428,"name":"瑞穂改","type":"水上機母艦","hp":42,"ass":0,"seek":38,"max_ass":0,"max_seek":94,"fuel":40,"ammo":45,"na":0,"sg":3}
+,{"id":348,"no":1428,"name":"瑞穂改","type":"水上機母艦","hp":42,"ass":0,"seek":38,"max_ass":0,"max_seek":94,"fuel":40,"ammo":45,"na":0,"sg":5}
 ,{"id":349,"no":1429,"name":"風雲改","type":"駆逐艦","hp":32,"ass":29,"seek":9,"max_ass":69,"max_seek":42,"fuel":15,"ammo":20,"na":0,"sg":2}
 ,{"id":350,"no":1430,"name":"海風改","type":"駆逐艦","hp":30,"ass":27,"seek":8,"max_ass":63,"max_seek":40,"fuel":15,"ammo":20,"na":0,"sg":2}
 ,{"id":351,"no":1431,"name":"江風改","type":"駆逐艦","hp":30,"ass":24,"seek":8,"max_ass":59,"max_seek":40,"fuel":15,"ammo":20,"na":0,"sg":2}
