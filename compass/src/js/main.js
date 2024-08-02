@@ -9549,14 +9549,9 @@ $(function() {
                                 } else if(BBs > 2) {
                                     sum('1toA');
                                     return 'A';   
-                                } else if(CL > 2) {
-                                    sum('1toA');
-                                    return 'A';
                                 } else if(CL + AV > 2) {
                                     sum('1toA');
                                     return 'A'; 
-                                } else if(Ds > 3) {
-                                    return '2';
                                 } else if(BBs > 0 && CL > 0 && AV > 0) {
                                     sum('1toA');
                                     return 'A';
@@ -9615,11 +9610,15 @@ $(function() {
                                     sum('AtoB');
                                     sum('BtoC');
                                     return 'C';
+                                } else if(AO > 0) {
+                                    sum('AtoD');
+                                    sum('DtoE');
+                                    return 'E';
                                 } else if(Ds === 1) {
                                     if(Ss > 0) {
                                         sum('AtoC1');
                                         return 'C1';
-                                    } else if(BBs + CVs > 2) {
+                                    } else if(BBCVs > 2) {
                                         sum('AtoC1');
                                         return 'C1';
                                     } else {
@@ -9631,19 +9630,19 @@ $(function() {
                                     if(Ss > 0 && f_speed === '低速艦隊') {
                                         sum('AtoC1');
                                         return 'C1';
-                                    } else if(BBs + CVs > 3) {
+                                    } else if(BBCVs === 4) {
                                         sum('AtoB');
                                         sum('BtoC');
                                         return 'C';
-                                    } else if(BBs + CVs === 3) {
+                                    } else if(BBCVs === 3) {
                                         sum('AtoD');
                                         sum('DtoE');
                                         return 'E';
-                                    } else if(AO > 0) {
+                                    } else if(BBCVs === 2 && CL + CT + AV === 0) {
                                         sum('AtoD');
                                         sum('DtoE');
                                         return 'E';
-                                    } else if(CL + CT === 0) {
+                                    } else if(BBCVs === 1 && CL + CT === 0) {
                                         sum('AtoD');
                                         sum('DtoE');
                                         return 'E';
@@ -9659,6 +9658,10 @@ $(function() {
                                     sum('C1toD');
                                     sum('DtoE');
                                     return 'E';
+                                } else if(CVs > 2) {
+                                    sum('C1toD');
+                                    sum('DtoE');
+                                    return 'E';
                                 } else if(Ds < 2) {
                                     sum('C1toD');
                                     sum('DtoE');
@@ -9666,6 +9669,16 @@ $(function() {
                                 } else {
                                     sum('C1toE');
                                     return 'E';
+                                }
+                                break;
+                            case 'C2':
+                                if(CV + CVB === 0 && CL > 0 && Ds > 1 && f_speed !== '低速艦隊') {
+                                    sum('C2toL');
+                                    sum('LtoM');
+                                    return null;
+                                } else {
+                                    sum('C2toC1');
+                                    return 'C1';
                                 }
                                 break;
                             case 'G':
@@ -9677,7 +9690,7 @@ $(function() {
                                     sum('KtoL');
                                     sum('LtoM');
                                     return null;
-                                } else if(BBs + CVs > 1) {
+                                } else if(BBCVs > 1) {
                                     sum('GtoK');
                                     sum('KtoL');
                                     sum('LtoM');
