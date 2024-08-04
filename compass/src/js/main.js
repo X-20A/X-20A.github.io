@@ -9942,8 +9942,12 @@ $(function() {
                                 }
                                 break;
                             case '2':
-                                if(true) {
+                                if(DD > 2) {
                                     sum('2toH');
+                                    return 'H';
+                                } else {
+                                    sum('2toG');
+                                    sum('GtoH');
                                     return 'H';
                                 }
                                 break;
@@ -10021,7 +10025,7 @@ $(function() {
                                 }
                                 break;
                             case 'I':
-                                if(f_seek[3] >= 83) {
+                                if(f_seek[3] >= 82) {
                                     sum('ItoK');
                                     return null;
                                 } else {
@@ -10070,40 +10074,37 @@ $(function() {
                                 }
                                 break;
                             case 'V':
-                                if(CV + CVB > 2) {
+                                if(LHA > 0 && f_speed === '低速艦隊') {
+                                    sum('VtoV1');
+                                    return null;
+                                } else if(AV > 1 && f_speed === '低速艦隊') {
+                                    sum('VtoV1');
+                                    return null;
+                                } else if(BBs > 4) {
+                                    sum('VtoV1');
+                                    return null;
+                                } else if(BBs + CV + CVB > 4) {
                                     sum('VtoV2');
                                     sum('V2toV3');
                                     return 'V3';
-                                } else if(f_speed !== '低速艦隊') {
-                                    if(CVs > 3) {
-                                        sum('VtoV2');
-                                        sum('V2toV3');
-                                        return 'V3';
-                                    } else if(phase === 3 && DD > 3) {
-                                        sum('VtoX');
-                                        return null;
-                                    } else {
-                                        sum('VtoV3');
-                                        return 'V3';
-                                    }
-                                } else if(f_speed === '低速艦隊') {
-                                    if(CVs > 3) {
-                                        sum('VtoV1');
-                                        return null;
-                                    } else if(LHA > 0) {
-                                        sum('VtoV1');
-                                        return null;
-                                    } else if(AV > 1) {
-                                        sum('VtoV1');
-                                        return null;
-                                    } else if(countYamato() > 1) {
-                                        sum('VtoV2');
-                                        sum('V2toV3');
-                                        return 'V3';
-                                    } else {
-                                        sum('VtoV3');
-                                        return 'V3';
-                                    }
+                                } else if(CVs > 3) {
+                                    sum('VtoV2');
+                                    sum('V2toV3');
+                                    return 'V3';
+                                } else if(CV + CVB > 2) {
+                                    sum('VtoV2');
+                                    sum('V2toV3');
+                                    return 'V3';
+                                } else if(countYamato() > 1 && f_speed === '低速艦隊') {
+                                    sum('VtoV2');
+                                    sum('V2toV3');
+                                    return 'V3';
+                                } else if(phase === 3 && DD > 3 && f_speed !== '低速艦隊') {
+                                    sum('VtoX');
+                                    return null;
+                                } else {
+                                    sum('VtoV3');
+                                    return 'V3';
                                 }
                                 break;
                             case 'V3':
