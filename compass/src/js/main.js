@@ -9642,7 +9642,7 @@ $(function() {
                                         sum('AtoD');
                                         sum('DtoE');
                                         return 'E';
-                                    } else if(BBCVs === 1 && CL + CT === 0) {
+                                    } else if(BBCVs < 2 && CL + CT === 0) {
                                         sum('AtoD');
                                         sum('DtoE');
                                         return 'E';
