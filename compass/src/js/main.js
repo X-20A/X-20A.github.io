@@ -11576,10 +11576,10 @@ $(function() {
             for(let i = 0;i < s_length;i++) {
                 const s_id = i_json[`f${num}`][`s${i + 1}`]['id'];
                 const i_ship = i_json[`f${num}`][`s${i + 1}`];
-                const s_ship = s_data.find((item) => item.id === s_id + '');
-                const hp = s_ship.hp;
+                const s_ship = s_data.find((item) => item.id === s_id);
+                const hp = 0; // s_ship.hp
                 const lv = i_ship.lv;
-                const asw = getLFparam(s_ship, lv, 'ass');
+                const asw = 0; // getLFparam(s_ship, lv, 'ass')
                 const los = getLFparam(s_ship, lv, 'seek');
                 const luck = i_ship.luck;
                 // 表示されないのは指定しない
