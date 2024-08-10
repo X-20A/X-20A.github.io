@@ -514,8 +514,8 @@ $(function() {
                     f_speed = '低速艦隊';
                 } else if(c_speeds[0] === '高速艦隊' || c_speeds[1] === '高速艦隊') {
                     f_speed = '高速艦隊';
-                } else if(c_speeds[0] === '高速艦隊+' || c_speeds[1] === '高速艦隊+') {
-                    f_speed = '高速艦隊+';
+                } else if(c_speeds[0] === '高速+艦隊' || c_speeds[1] === '高速+艦隊') {
+                    f_speed = '高速+艦隊';
                 } else {
                     f_speed = '最速艦隊';
                 }
@@ -10139,27 +10139,39 @@ $(function() {
                                 break;
                             case '1':
                                 if(f_speed !== '低速艦隊') {
-                                    sum('1toA');
-                                    sum('AtoA2');
-                                    return 'A2';
-                                } else if(Ds === 0) {
-                                    sum('1toA1');
-                                    sum('A1toA');
-                                    sum('AtoA2');
-                                    return 'A2';
-                                } else if(BBs > 0) {
-                                    sum('1toA1');
-                                    sum('A1toA');
-                                    sum('AtoA2');
-                                    return 'A2';
+                                    if(BBs > 1 && Ds === 0) {
+                                        sum('1toA1');
+                                        sum('A1toA');
+                                        sum('AtoA2');
+                                        return 'A2';
+                                    } else {
+                                        sum('1toA');
+                                        sum('AtoA2');
+                                        return 'A2';
+                                    }
                                 } else {
-                                    sum('1toA');
-                                    sum('AtoA2');
-                                    return 'A2';
+                                    if(BBs > 0) {
+                                        sum('1toA1');
+                                        sum('A1toA');
+                                        sum('AtoA2');
+                                        return 'A2';
+                                    } else if(Ds === 0) {
+                                        sum('1toA1');
+                                        sum('A1toA');
+                                        sum('AtoA2');
+                                        return 'A2';
+                                    } else {
+                                        sum('1toA');
+                                        sum('AtoA2');
+                                        return 'A2';
+                                    }
                                 }
                                 break;
                             case 'C':
-                                if(CV + CVB > 1) {
+                                if(BBs + CV + CVB > 2) {
+                                    sum('CtoI');
+                                    return 'I';
+                                } else if(CV + CVB > 1) {
                                     sum('CtoI');
                                     return 'I';
                                 } else if(phase > 1 && BBs === 0) {
@@ -10242,7 +10254,15 @@ $(function() {
                                 }
                                 break;
                             case 'T':
-                                if(Ss > 0 && AS === 0) {
+                                if(isFaster()) {
+                                    sum('TtoT2');
+                                    sum('T2toU');
+                                    sum('UtoU1');
+                                    sum('U1toU2');
+                                    sum('U2toV');
+                                    sum('VtoW');
+                                    return 'W';
+                                } else if(Ss > 0 && AS === 0) {
                                     sum('TtoT1');
                                     sum('T1toT2');
                                     sum('T2toU');
@@ -10269,7 +10289,7 @@ $(function() {
                                     sum('U2toV');
                                     sum('VtoW');
                                     return 'W';
-                                } else if(DD < 3) {
+                                } else if(CL + Ds < 4) {
                                     sum('TtoT1');
                                     sum('T1toT2');
                                     sum('T2toU');
@@ -10286,27 +10306,8 @@ $(function() {
                                     sum('U2toV');
                                     sum('VtoW');
                                     return 'W';
-                                } else if(BBs > 2) {
-                                    sum('TtoT1');
-                                    sum('T1toT2');
-                                    sum('T2toU');
-                                    sum('UtoU1');
-                                    sum('U1toU2');
-                                    sum('U2toV');
-                                    sum('VtoW');
-                                    return 'W';
-                                } else if(DD < 4) {
-                                    sum('TtoT1');
-                                    sum('T1toT2');
-                                    sum('T2toU');
-                                    sum('UtoU1');
-                                    sum('U1toU2');
-                                    sum('U2toV');
-                                    sum('VtoW');
-                                    return 'W';
-                                } else if(CL < 2) {
-                                    sum('TtoT1');
-                                    sum('T1toT2');
+                                } else if(BBs < 3 && CL > 1 && Ds > 3) {
+                                    sum('TtoT2');
                                     sum('T2toU');
                                     sum('UtoU1');
                                     sum('U1toU2');
@@ -10314,7 +10315,8 @@ $(function() {
                                     sum('VtoW');
                                     return 'W';
                                 } else {
-                                    sum('TtoT2');
+                                    sum('TtoT1');
+                                    sum('T1toT2');
                                     sum('T2toU');
                                     sum('UtoU1');
                                     sum('U1toU2');
@@ -10324,7 +10326,10 @@ $(function() {
                                 }
                                 break;
                             case 'W':
-                                if(countYamato() > 0) {
+                                if(isFaster()) {
+                                    sum('WtoZ');
+                                    return null;
+                                } else if(countYamato() > 0) {
                                     sum('WtoX');
                                     return 'X';
                                 } else {
