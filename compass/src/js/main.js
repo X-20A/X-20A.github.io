@@ -9955,7 +9955,7 @@ $(function() {
                                 }
                                 break;
                             case '2':
-                                if(DD > 2) {
+                                if(Ds > 2) {
                                     sum('2toH');
                                     return 'H';
                                 } else {
@@ -9972,6 +9972,18 @@ $(function() {
                                     sum('H2toI');
                                     return 'I';
                                 } else if(CV + CVB > 2) {
+                                    sum('BtoB2');
+                                    sum('B2toH1');
+                                    sum('H1toH2');
+                                    sum('H2toI');
+                                    return 'I';
+                                } else if(AV > 1) {
+                                    sum('BtoB2');
+                                    sum('B2toH1');
+                                    sum('H1toH2');
+                                    sum('H2toI');
+                                    return 'I';
+                                } else if(LHA > 0) {
                                     sum('BtoB2');
                                     sum('B2toH1');
                                     sum('H1toH2');
@@ -10009,14 +10021,14 @@ $(function() {
                                 }
                                 break;
                             case 'C3':
-                                if(f_seek[3] < 105) {
+                                if(f_seek[3] < 103) {
                                     sum('C3toE');
                                     return null;
                                 } else if(BBs + CV + CVB > 3) {
                                     sum('C3toD');
                                     sum('DtoF');
                                     return null;
-                                } else if(DD < 2) {
+                                } else if(Ds < 2) {
                                     sum('C3toD');
                                     sum('DtoF');
                                     return null;
@@ -10066,6 +10078,10 @@ $(function() {
                                         sum('PtoT');
                                         sum('TtoV');
                                         return 'V';
+                                    } else if(Ss > 0 && AS === 0) {
+                                        sum('PtoT');
+                                        sum('TtoV');
+                                        return 'V';
                                     } else if(f_type === '水上打撃部隊' && f_speed === '低速艦隊') {
                                         sum('PtoT');
                                         sum('TtoV');
@@ -10078,7 +10094,7 @@ $(function() {
                                 }
                                 break;
                             case 'Q':
-                                if(f_seek[1] >= 62) {
+                                if(f_seek[1] >= 52) {
                                     sum('QtoS');
                                     return null;
                                 } else {
@@ -10091,6 +10107,9 @@ $(function() {
                                     sum('VtoV1');
                                     return null;
                                 } else if(AV > 1 && f_speed === '低速艦隊') {
+                                    sum('VtoV1');
+                                    return null;
+                                } else if(BBs + CV + CVB > 5 && f_speed === '低速艦隊') {
                                     sum('VtoV1');
                                     return null;
                                 } else if(BBs > 4) {
@@ -10108,6 +10127,10 @@ $(function() {
                                     sum('VtoV2');
                                     sum('V2toV3');
                                     return 'V3';
+                                } else if(Ss > 0 && f_speed === '低速艦隊') {
+                                    sum('VtoV2');
+                                    sum('V2toV3');
+                                    return 'V3';
                                 } else if(countYamato() > 1 && f_speed === '低速艦隊') {
                                     sum('VtoV2');
                                     sum('V2toV3');
@@ -10121,8 +10144,11 @@ $(function() {
                                 }
                                 break;
                             case 'V3':
-                                if(true) {
+                                if(f_seek[1] >= 72) {
                                     sum('V3toX');
+                                    return null;
+                                } else {
+                                    sum('V3toW');
                                     return null;
                                 }
                                 break;
