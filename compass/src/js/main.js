@@ -1572,6 +1572,7 @@ $(function() {
         // 1から100の間で指定された値以下であればtrueを返す
         return randomValue <= roundedNum;
     }
+    
     /*
         分岐関数
         マップをworld-map,マスをアルファベットで、スタート地点ならnull
@@ -10138,8 +10139,13 @@ $(function() {
                                 }
                                 break;
                             case '1':
-                                if(f_speed !== '低速艦隊') {
-                                    if(BBs > 1 && Ds === 0) {
+                                if(Ss > 0) {
+                                    sum('1toA1');
+                                    sum('A1toA');
+                                    sum('AtoA2');
+                                    return 'A2';
+                                } else if(f_speed !== '低速艦隊') {
+                                    if(BBCVs > 1 && Ds < 2) {
                                         sum('1toA1');
                                         sum('A1toA');
                                         sum('AtoA2');
@@ -10150,7 +10156,12 @@ $(function() {
                                         return 'A2';
                                     }
                                 } else {
-                                    if(BBs > 0) {
+                                    if(CVs > 1) {
+                                        sum('1toA1');
+                                        sum('A1toA');
+                                        sum('AtoA2');
+                                        return 'A2';
+                                    } else if(BBs > 0) {
                                         sum('1toA1');
                                         sum('A1toA');
                                         sum('AtoA2');
@@ -10202,7 +10213,10 @@ $(function() {
                                 }
                                 break;
                             case 'I':
-                                if(true) {
+                                if(BBs + CV + CVB > 3) {
+                                    sum('ItoJ');
+                                    return 'J';
+                                } else if(true) {
                                     sum('ItoL');
                                     return null;
                                 } else {
@@ -10221,6 +10235,12 @@ $(function() {
                                 break;
                             case 'M':
                                 if(CV + CVB > 0) {
+                                    sum('MtoN');
+                                    sum('NtoO');
+                                    sum('OtoP');
+                                    sum('PtoQ');
+                                    return 'Q';
+                                } else if(CVL > 1) {
                                     sum('MtoN');
                                     sum('NtoO');
                                     sum('OtoP');
@@ -10332,13 +10352,19 @@ $(function() {
                                 } else if(countYamato() > 0) {
                                     sum('WtoX');
                                     return 'X';
+                                } else if(BBs > 3) {
+                                    sum('WtoX');
+                                    return 'X';
                                 } else {
                                     sum('WtoZ');
                                     return null;
                                 }
                                 break;
                             case 'X':
-                                if(countYamato() > 1) {
+                                if(isFaster()) {
+                                    sum('XtoZ');
+                                    return null;
+                                } else if(countYamato() > 1) {
                                     sum('XtoY');
                                     sum('YtoZ');
                                     return null;
@@ -10374,6 +10400,7 @@ $(function() {
                 break;
         }
     }
+    
     // 演算開始
     // simControllerから叩くこと
     function startSim() {
