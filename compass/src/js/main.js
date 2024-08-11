@@ -9548,12 +9548,15 @@ $(function() {
                                 } else if(CV + CVB > 0) {
                                     sum('1toA');
                                     return 'A';
-                                } else if(AO > 0) {
+                                } else if(BBs + CVL > 3) {
                                     sum('1toA');
-                                    return 'A';  
+                                    return 'A';
                                 } else if(BBs > 2) {
                                     sum('1toA');
                                     return 'A';   
+                                } else if(AO > 0) {
+                                    sum('1toA');
+                                    return 'A';  
                                 } else if(CL + AV > 2) {
                                     sum('1toA');
                                     return 'A'; 
@@ -9568,6 +9571,10 @@ $(function() {
                                 if(LHA > 0) {
                                     sum('2toI');
                                     sum('ItoJ');
+                                    sum('JtoG');
+                                    return 'G';
+                                } else if(isFaster()) {
+                                    sum('2toJ');
                                     sum('JtoG');
                                     return 'G';
                                 } else if(Ss > 0) {
@@ -9663,6 +9670,10 @@ $(function() {
                                     sum('C1toD');
                                     sum('DtoE');
                                     return 'E';
+                                } else if(CVs + Ss > 2) {
+                                    sum('C1toD');
+                                    sum('DtoE');
+                                    return 'E';
                                 } else if(CVs > 2) {
                                     sum('C1toD');
                                     sum('DtoE');
@@ -9677,7 +9688,7 @@ $(function() {
                                 }
                                 break;
                             case 'C2':
-                                if(CV + CVB === 0 && CL > 0 && Ds > 1 && f_speed !== '低速艦隊') {
+                                if(CV + CVB === 0 && BBs < 2 && Ds > 1 && f_speed !== '低速艦隊') {
                                     sum('C2toL');
                                     sum('LtoM');
                                     return null;
