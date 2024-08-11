@@ -1535,6 +1535,10 @@ $(function() {
         }
         return count;
     }
+    // あきつ丸カウント
+    function countAkitsuMaru() {
+        return f_names.filter(str => str.startsWith('あきつ丸')).length;
+    }
     // 艦隊が連合艦隊であるか
     function isCom() {
         if(f_type === '空母機動部隊' || f_type === '水上打撃部隊' || f_type === '輸送護衛部隊') {
@@ -9756,7 +9760,12 @@ $(function() {
                                 }
                                 break;
                             case 'A':
-                                if(DD > 3) {
+                                if(isFaster()) {
+                                    sum('AtoA2');
+                                    sum('A2toB');
+                                    sum('BtoC');
+                                    return 'C';
+                                } else if(DD > 3) {
                                     sum('AtoA2');
                                     sum('A2toB');
                                     sum('BtoC');
@@ -9787,7 +9796,7 @@ $(function() {
                                 if(f_type === '輸送護衛部隊') {
                                     sum('GtoI');
                                     return 'I';
-                                } else if(BBCVs > 6) {
+                                } else if(CVs > 4) {
                                     sum('GtoH');
                                     sum('HtoK');
                                     sum('KtoN');
@@ -9825,14 +9834,17 @@ $(function() {
                                     if(LHA > 0) {
                                         sum('GtoI');
                                         return 'I';
-                                    } else if(BBs === 3 && CVs === 1 && CL === 2) {
+                                    } else if(BBs === 3 && CVs === 1 && CL + CT === 2) {
+                                        sum('GtoI');
+                                        return 'I';
+                                    } else if(BBs === 3 && CVs === 1 && AV === 2) {
                                         sum('GtoI');
                                         return 'I';
                                     } else if(f_speed !== '低速艦隊') {
                                         sum('GtoK');
                                         sum('KtoN');
                                         return 'N';
-                                    } else if(CV + CVB === 2 && CL > 1) {
+                                    } else if(CV + CVB < 2 && CL > 1) {
                                         sum('GtoK');
                                         sum('KtoN');
                                         return 'N';
@@ -9845,7 +9857,7 @@ $(function() {
                                 }
                                 break;
                             case 'I':
-                                if(CV + CVB > 1) {
+                                if(CVs + countAkitsuMaru() > 1) {
                                     sum('ItoJ');
                                     sum('JtoL');
                                     return 'L';
@@ -9856,7 +9868,7 @@ $(function() {
                                 } else if(f_speed !== '低速艦隊') {
                                     sum('ItoL');
                                     return 'L';
-                                } else if(CL > 0 && DD > 5 && LHA === 0) {
+                                } else if(CL > 1 && Ds + LHA > 5) {
                                     sum('ItoL');
                                     return 'L';
                                 } else {
@@ -9866,7 +9878,7 @@ $(function() {
                                 }
                                 break;
                             case 'R':
-                                if(true) {
+                                if(f_seek[1] >= 67) {
                                     sum('RtoW');
                                     return null;
                                 } else {
@@ -9875,7 +9887,7 @@ $(function() {
                                 }
                                 break;
                             case 'S':
-                                if(true) {
+                                if(f_seek[1] >= 57) {
                                     sum('StoU');
                                     return null;
                                 } else {
