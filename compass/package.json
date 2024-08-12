@@ -15,7 +15,7 @@
     "cytoscape": "^3.28.1",
     "cytoscape-context-menus": "^4.1.0",
     "decimal.js": "^10.4.3",
-    "gkcoi": "^1.5.2",
+    "gkcoi": "1.5.2",
     "jquery": "^3.7.1",
     "jquery-ui": "^1.13.2"
   },

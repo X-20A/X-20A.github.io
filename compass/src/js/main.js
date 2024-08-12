@@ -976,7 +976,7 @@ $(function() {
                 case 410: { // 21号対空電探改二
                     const akizuki = ['秋月','照月','初月','涼月','冬月'];
                     const mogami = ['最上改','最上改二','最上改二特'];
-                    if(akizuki.some(item => item.includes(name)) || mogami.includes(name)) {
+                    if(akizuki.some(item => name.startsWith(item)) || mogami.includes(name)) {
                         if(!dup.includes(e_id)) {
                             res += 2;
                             dup.push(e_id);
@@ -10734,7 +10734,7 @@ $(function() {
                         console.log('以下諸元');
                         console.log(`海域: ${world}-${map}`);
                         console.log('艦種', com);
-                        console.log('軌跡' + track);
+                        console.log('最終航路', track);
                         console.log(`safety: ${safety}`);
                         console.log(`count: ${count}`);
                         console.log(`ドラム缶: ${f_drum}`);
@@ -10747,7 +10747,6 @@ $(function() {
                         return;
                     }
                 }
-                console.log('最終航路', track);
                 console.log('航路', rate);
                 // 正直どういう挙動になってるのか分からない
                 // 非同期でいい感じにやってくれてるならいいやって感じ
@@ -11872,9 +11871,12 @@ $(function() {
             const time = `${hours}${minutes}`;
             const fileName = `${drew_area}_${time}`;
             const deck = generateDeck();
-            console.log(deck);
             // gkcoi出力
             const g_speed = getFleetSpeedWithNum(f_speed);
+            console.log('gkcoiへの引数');
+            console.log('deck', deck);
+            console.log(`g_speed: ${g_speed}`);
+            console.log(`f_seek: ${f_seek}`);
             generate(deck, g_speed, f_seek).then((canvas) => {
                 const g_blob = getGkcoiBlob(canvas);
                 const cy_blob = getCyBlob();
@@ -11909,9 +11911,9 @@ $(function() {
                 const s_id = i_json[`f${num}`][`s${i + 1}`]['id'];
                 const i_ship = i_json[`f${num}`][`s${i + 1}`];
                 const s_ship = s_data.find((item) => item.id === s_id);
-                const hp = 0; // s_ship.hp
+                const hp = s_ship.hp;
                 const lv = i_ship.lv;
-                const asw = 0; // getLFparam(s_ship, lv, 'ass')
+                const asw = getLFparam(s_ship, lv, 'ass');
                 const los = getLFparam(s_ship, lv, 'seek');
                 const luck = i_ship.luck;
                 // 表示されないのは指定しない
