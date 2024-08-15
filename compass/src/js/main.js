@@ -10486,7 +10486,7 @@ $(function() {
                                 } else if(phase === 1 && isCom()) {
                                     return '2';
                                 } else if(phase > 1) {
-                                    if(BBCVs > 2) {
+                                    if(BB + CV + CVB > 2) {
                                         sum('3toM');
                                         sum('MtoM1');
                                         sum('M1toM2');
@@ -10505,7 +10505,7 @@ $(function() {
                                 if(f_speed === '低速艦隊') {
                                     sum('1toA1');
                                     return 'A1';
-                                } else if(BBs > 0) {
+                                } else if(BBs + CV + CVB > 0) {
                                     sum('1toA1');
                                     return 'A1';
                                 } else {
@@ -10518,6 +10518,10 @@ $(function() {
                             case '2':
                                 if(isFaster()) {
                                     sum('2toE');
+                                    return 'E';
+                                } else if(Ss > 0 && AS === 0) {
+                                    sum('2toD');
+                                    sum('DtoE');
                                     return 'E';
                                 } else if(BBs + CV + CVB > 1) {
                                     sum('2toD');
@@ -10533,14 +10537,14 @@ $(function() {
                                 }
                                 break;
                             case 'A1':
-                                if(true) {
-                                    sum('A1toA');
+                                if(Ss > 0) {
+                                    sum('A1toA2');
+                                    sum('A2toA');
                                     sum('AtoB');
                                     sum('BtoC');
                                     return 'C';
                                 } else {
-                                    sum('A1toA2');
-                                    sum('A2toA');
+                                    sum('A1toA');
                                     sum('AtoB');
                                     sum('BtoC');
                                     return 'C';
@@ -10562,7 +10566,7 @@ $(function() {
                                 } else if(Ds > 5) {
                                     sum('EtoG');
                                     return 'G';
-                                } else if(Ds > 4 && CA > 1 && f_speed !== '低速艦隊') {
+                                } else if(Ds > 4 && CA > 1 && CVs < 2 && f_speed !== '低速艦隊') {
                                     sum('EtoG');
                                     return 'G';
                                 } else {
@@ -10581,7 +10585,7 @@ $(function() {
                                 }
                                 break;
                             case 'M2':
-                                if(true) {
+                                if(f_type === '空母機動部隊') {
                                     sum('M2toN');
                                     sum('NtoO');
                                     return 'O';
@@ -10597,6 +10601,10 @@ $(function() {
                                     sum('OtoO2');
                                     return 'O2';
                                 } else if(countYamato() > 0) {
+                                    sum('OtoO1');
+                                    sum('O1toO2');
+                                    return 'O2';
+                                } else if(CV + CVB > 2) {
                                     sum('OtoO1');
                                     sum('O1toO2');
                                     return 'O2';
@@ -10638,16 +10646,24 @@ $(function() {
                                 }
                                 break;
                             case 'S':
-                                if(CA > 1) {
-                                    sum('StoT');
-                                    return 'T';
+                                if(f_speed !== '低速艦隊') {
+                                    if(CA > 1) {
+                                        sum('StoT');
+                                        return 'T';
+                                    } else {
+                                        sum('StoS1');
+                                        sum('S1toT');
+                                        return 'T';
+                                    }
                                 } else if(f_speed === '低速艦隊') {
-                                    sum('StoS2');
-                                    return 'S2';
-                                } else {
-                                    sum('StoS1');
-                                    sum('S1toT');
-                                    return 'T';
+                                    if(CL > 2) {
+                                        sum('StoS1');
+                                        sum('S1toT');
+                                        return 'T';
+                                    } else {
+                                        sum('StoS2');
+                                        return 'S2'; 
+                                    }
                                 }
                                 break;
                             case 'S2':
@@ -10679,7 +10695,10 @@ $(function() {
                                 } else if(isFaster()) {
                                     sum('ZtoZZ');
                                     return null;
-                                } else if(CL + AV === 2 && CL + CLT === 2 && Ds === 4) {
+                                } else if(CA + CAV === 2 && AV === 0 && Ds === 4) {
+                                    sum('ZtoZZ');
+                                    return null;
+                                } else if(AV + CAV === 2 && CA === 0 && Ds === 4) {
                                     sum('ZtoZZ');
                                     return null;
                                 } else {
