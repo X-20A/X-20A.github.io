@@ -10194,13 +10194,17 @@ $(function() {
                                     sum('AtoA2');
                                     return 'A2';
                                 } else if(f_speed !== '低速艦隊') {
-                                    if(BBCVs > 1 && Ds < 2) {
-                                        sum('1toA1');
-                                        sum('A1toA');
+                                    if(BBCVs < 2) {
+                                        sum('1toA');
+                                        sum('AtoA2');
+                                        return 'A2';
+                                    } else if(Ds > 1) {
+                                        sum('1toA');
                                         sum('AtoA2');
                                         return 'A2';
                                     } else {
-                                        sum('1toA');
+                                        sum('1toA1');
+                                        sum('A1toA');
                                         sum('AtoA2');
                                         return 'A2';
                                     }
@@ -10216,10 +10220,6 @@ $(function() {
                                         sum('AtoA2');
                                         return 'A2';
                                     } else if(f_length < 6) {
-                                        sum('1toA');
-                                        sum('AtoA2');
-                                        return 'A2';
-                                    } else if(CL > 0) {
                                         sum('1toA');
                                         sum('AtoA2');
                                         return 'A2';
@@ -10239,6 +10239,9 @@ $(function() {
                                     sum('CtoI');
                                     return 'I';
                                 } else if(phase > 1 && BBs === 0) {
+                                    sum('CtoM');
+                                    return 'M';
+                                } else if(phase > 1 && f_length < 7 && BBs + CV + CVB < 2) {
                                     sum('CtoM');
                                     return 'M';
                                 } else {
@@ -10266,10 +10269,10 @@ $(function() {
                                 }
                                 break;
                             case 'I':
-                                if(BBs + CV + CVB > 3) {
+                                if(CV + CVB > 1) {
                                     sum('ItoJ');
                                     return 'J';
-                                } else if(CL + Ds < 2) {
+                                } else if(CL === 0 && Ds < 3) {
                                     sum('ItoJ');
                                     return 'J';
                                 } else if(true) {
@@ -10440,7 +10443,7 @@ $(function() {
                                 }
                                 break;
                             case 'X':
-                                if(f_seek[1] < 80) {
+                                if(f_seek[1] < 72) {
                                     sum('XtoK');
                                     return null;
                                 } else if(isFaster()) {
