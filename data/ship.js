@@ -819,15 +819,15 @@ let s_data = [
 ,{"id":979,"no":579,"name":"稲木改二","type":"海防艦","hp":27,"ass":47,"seek":5,"max_ass":87,"max_seek":42,"fuel":10,"ammo":15,"na":0,"sg":7}
 ,{"id":968,"no":568,"name":"初月改二","type":"駆逐艦","hp":39,"ass":32,"seek":12,"max_ass":75,"max_seek":54,"fuel":25,"ammo":30,"na":0,"sg":2}
 ,{"id":927,"no":527,"name":"Valiant","type":"戦艦","hp":73,"ass":0,"seek":15,"max_ass":0,"max_seek":47,"fuel":90,"ammo":110,"na":3,"sg":5}
-,{"id":733,"no":1733,"name":"Valiant改","type":"戦艦","hp":83,"ass":0,"seek":19,"max_ass":0,"max_seek":59,"fuel":90,"ammo":110,"na":3,"sg":5}
+,{"id":733,"no":1733,"name":"Valiant改","type":"戦艦","hp":83,"ass":0,"seek":18,"max_ass":0,"max_seek":59,"fuel":90,"ammo":110,"na":3,"sg":5}
 ,{"id":962,"no":562,"name":"Mogador","type":"駆逐艦","hp":21,"ass":32,"seek":8,"max_ass":52,"max_seek":38,"fuel":10,"ammo":35,"na":5,"sg":2}
 ,{"id":967,"no":567,"name":"Mogador改","type":"駆逐艦","hp":38,"ass":38,"seek":11,"max_ass":63,"max_seek":50,"fuel":15,"ammo":40,"na":5,"sg":2}
 ,{"id":965,"no":565,"name":"Gloire","type":"軽巡洋艦","hp":33,"ass":0,"seek":20,"max_ass":36,"max_seek":64,"fuel":30,"ammo":40,"na":5,"sg":2}
 ,{"id":970,"no":570,"name":"Gloire改","type":"軽巡洋艦","hp":46,"ass":0,"seek":24,"max_ass":45,"max_seek":76,"fuel":35,"ammo":50,"na":5,"sg":2}
 ,{"id":969,"no":569,"name":"Richelieu Deux","type":"巡洋戦艦","hp":89,"ass":0,"seek":19,"max_ass":0,"max_seek":58,"fuel":195,"ammo":280,"na":5,"sg":2}
-,{"id":952,"no":552,"name":"Phoenix","type":"軽巡洋艦","hp":38,"ass":0,"seek":0,"max_ass":0,"max_seek":0,"fuel":35,"ammo":55,"na":1,"sg":2}
+,{"id":952,"no":552,"name":"Phoenix","type":"軽巡洋艦","hp":38,"ass":0,"seek":18,"max_ass":34,"max_seek":68,"fuel":35,"ammo":55,"na":1,"sg":2}
 ,{"id":734,"no":1734,"name":"Phoenix改","type":"軽巡洋艦","hp":53,"ass":0,"seek":0,"max_ass":0,"max_seek":0,"fuel":35,"ammo":60,"na":1,"sg":2}
 ,{"id":957,"no":557,"name":"General Belgrano","type":"軽巡洋艦","hp":55,"ass":0,"seek":0,"max_ass":0,"max_seek":0,"fuel":55,"ammo":95,"na":1,"sg":2}
-,{"id":966,"no":566,"name":"Lexington","type":"正規空母","hp":84,"ass":0,"seek":0,"max_ass":0,"max_seek":0,"fuel":65,"ammo":70,"na":1,"sg":2}
-,{"id":735,"no":1735,"name":"Lexington改","type":"正規空母","hp":89,"ass":0,"seek":0,"max_ass":0,"max_seek":0,"fuel":85,"ammo":90,"na":1,"sg":2}
+,{"id":966,"no":566,"name":"Lexington","type":"正規空母","hp":84,"ass":0,"seek":40,"max_ass":0,"max_seek":67,"fuel":65,"ammo":70,"na":1,"sg":2}
+,{"id":735,"no":1735,"name":"Lexington改","type":"正規空母","hp":89,"ass":0,"seek":45,"max_ass":0,"max_seek":80,"fuel":85,"ammo":90,"na":1,"sg":2}
 ];
