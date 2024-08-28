@@ -1539,6 +1539,11 @@ $(function() {
     function countAkitsuMaru() {
         return f_names.filter(str => str.startsWith('あきつ丸')).length;
     }
+    // 特定艦カウントの汎用版
+    // 前方一致でカウントするので呼び出し方に注意
+    function countShipsByName(name) {
+        return f_names.filter(str => str.startsWith(name)).length;
+    }
     // 艦隊が連合艦隊であるか
     function isCom() {
         if(f_type === '空母機動部隊' || f_type === '水上打撃部隊' || f_type === '輸送護衛部隊') {
@@ -10557,7 +10562,12 @@ $(function() {
                                 }
                                 break;
                             case '1':
-                                if(f_speed === '低速艦隊') {
+                                if(isFaster()) {
+                                    sum('1toA');
+                                    sum('AtoB');
+                                    sum('BtoC');
+                                    return 'C';
+                                } else if(f_speed === '低速艦隊') {
                                     sum('1toA1');
                                     return 'A1';
                                 } else if(BBs + CV + CVB > 0) {
@@ -10601,6 +10611,18 @@ $(function() {
                                     sum('AtoB');
                                     sum('BtoC');
                                     return 'C';
+                                } else if(BBs > 1) {
+                                    sum('A1toA2');
+                                    sum('A2toA');
+                                    sum('AtoB');
+                                    sum('BtoC');
+                                    return 'C';
+                                } else if(CVs > 2) {
+                                    sum('A1toA2');
+                                    sum('A2toA');
+                                    sum('AtoB');
+                                    sum('BtoC');
+                                    return 'C';
                                 } else {
                                     sum('A1toA');
                                     sum('AtoB');
@@ -10609,7 +10631,7 @@ $(function() {
                                 }
                                 break;
                             case 'C':
-                                if(true) {
+                                if(f_seek[3] >= 70) {
                                     sum('CtoC2');
                                     return null;
                                 } else {
@@ -10624,7 +10646,7 @@ $(function() {
                                 } else if(Ds > 5) {
                                     sum('EtoG');
                                     return 'G';
-                                } else if(Ds > 4 && CA > 1 && CVs < 2 && f_speed !== '低速艦隊') {
+                                } else if(Ds > 4 && CA > 1 && BBs + CVs < 3 && BBs + CV + CVB < 2 && f_speed !== '低速艦隊') {
                                     sum('EtoG');
                                     return 'G';
                                 } else {
@@ -10705,6 +10727,9 @@ $(function() {
                                 if(f_speed !== '低速艦隊') {
                                     sum('R1toR');
                                     return null;
+                                } else if(countYamato() + countShipsByName('Iowa')) {
+                                    sum('R1toR');
+                                    return null;
                                 } else if(f_speed === '低速艦隊') {
                                     sum('R1toR2');
                                     sum('R2toR');
@@ -10712,24 +10737,26 @@ $(function() {
                                 }
                                 break;
                             case 'S':
-                                if(f_speed !== '低速艦隊') {
-                                    if(CVs > 1) {
-                                        sum('StoS1');
-                                        sum('S1toT');
-                                        return 'T'; 
-                                    } else if(CA > 1) {
+                                if(countYamato() > 1) {
+                                    sum('StoS2');
+                                    return 'S2'; 
+                                } else if(CV + CVB > 0) {
+                                    sum('StoS2');
+                                    return 'S2'; 
+                                } else if(f_speed !== '低速艦隊') {
+                                    if(CA > 1 && CVL < 2) {
                                         sum('StoT');
                                         return 'T';
                                     } else {
                                         sum('StoS1');
                                         sum('S1toT');
-                                        return 'T';
+                                        return 'T'; 
                                     }
                                 } else if(f_speed === '低速艦隊') {
-                                    if(CL + CT > 2) {
+                                    if(CL + CT > 2 && Ds > 2) {
                                         sum('StoS1');
                                         sum('S1toT');
-                                        return 'T';
+                                        return 'T'; 
                                     } else {
                                         sum('StoS2');
                                         return 'S2'; 
@@ -10747,7 +10774,7 @@ $(function() {
                                 }
                                 break;
                             case 'T':
-                                if(f_seek[1] >= 70) {
+                                if(f_seek[1] >= 65) {
                                     sum('TtoV');
                                     return null;
                                 } else {
@@ -10762,13 +10789,19 @@ $(function() {
                                 } else if(CVs > 2) {
                                     sum('ZtoY');
                                     return null;
+                                } else if(CAs > 3) {
+                                    sum('ZtoY');
+                                    return null;
+                                } else if(BBs > 3) {
+                                    sum('ZtoZ1');
+                                    return 'Z1';
                                 } else if(isFaster()) {
                                     sum('ZtoZZ');
                                     return null;
                                 } else if(countYamato() === 0) {
                                     sum('ZtoZZ');
                                     return null;
-                                } else if(countYamato() === 1 && CAs > 1 && CL > 1 && Ds > 3) {
+                                } else if(countYamato() === 1 && CAs > 1 && CL + CT > 1 && Ds > 3) {
                                     sum('ZtoZZ');
                                     return null;
                                 } else {
@@ -12166,31 +12199,9 @@ $(function() {
         }
         return res;
     }
-    // ※未実装
-    // 現在読み込んでいる編成で全マップ、全オプション組み合わせをテストしてバグを洗い出す 開発環境からのみ呼び出し可
-    function bruteForceTest() {
-        if(!isDev) {
-            return;
-        }
-        let error_areas = [];
-        for(const t_area of areas) {
-            localStorage.setItem('area', t_area);
-            console.log(area);
-            const error_area = simController();
-            if(error_area) {
-                error_areas.push(error_area);
-            }
-            /*
-                optionも回したいけど一旦保留
-                if(op_areas.includes(area)) {
-
-                } else {
-
-                }
-            */
-        }
-        alert(error_areas);
-    }
+    // ※デバッグ用
+    // 海域とNodeを指定して現在の編成での返り値を出力
+    window.branch = branch;
     // キーボードショートカット
     $(document).keydown(function(e) {
         switch(e.keyCode) {
