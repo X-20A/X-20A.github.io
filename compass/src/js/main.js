@@ -10241,11 +10241,11 @@ $(function() {
                                         sum('A1toA');
                                         sum('AtoA2');
                                         return 'A2';
-                                    } else if(f_length < 5) {
+                                    } else if(Ds > 1) {
                                         sum('1toA');
                                         sum('AtoA2');
                                         return 'A2';
-                                    } else if(Ds > 1) {
+                                    } else if(f_length < 5) {
                                         sum('1toA');
                                         sum('AtoA2');
                                         return 'A2';
@@ -10266,11 +10266,11 @@ $(function() {
                                         sum('A1toA');
                                         sum('AtoA2');
                                         return 'A2';
-                                    } else if(f_length < 5) {
+                                    } else if(CL + CT > 0 && Ds > 1) {
                                         sum('1toA');
                                         sum('AtoA2');
                                         return 'A2';
-                                    } else if(CL + CT > 0 && Ds > 1) {
+                                    } else if(f_length < 5) {
                                         sum('1toA');
                                         sum('AtoA2');
                                         return 'A2';
@@ -10287,6 +10287,9 @@ $(function() {
                                     sum('CtoI');
                                     return 'I';
                                 } else if(CV + CVB > 1) {
+                                    sum('CtoI');
+                                    return 'I';
+                                } else if(CVs > 2) {
                                     sum('CtoI');
                                     return 'I';
                                 } else if(Ds < 2) {
@@ -10364,18 +10367,13 @@ $(function() {
                                     sum('OtoP');
                                     sum('PtoQ');
                                     return 'Q';
-                                } else if(CL + CT === 0) {
+                                } else if(CL + CT > 0 && Ds === 3) {
                                     sum('MtoN');
                                     sum('NtoO');
                                     sum('OtoP');
                                     sum('PtoQ');
                                     return 'Q';
-                                } else if(Ds === 3) {
-                                    sum('MtoO');
-                                    sum('OtoP');
-                                    sum('PtoQ');
-                                    return 'Q';
-                                } else if(f_speed !== '低速艦隊') {
+                                } else if(CL + CT > 0 && f_speed !== '低速艦隊') {
                                     sum('MtoO');
                                     sum('OtoP');
                                     sum('PtoQ');
