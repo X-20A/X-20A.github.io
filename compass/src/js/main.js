@@ -1771,7 +1771,7 @@ $(function() {
                                     }
                                 } else if(Ss > 0) {
                                     sum('AtoE');
-                                    sum['EtoF'];
+                                    sum('EtoF');
                                     return 'F';
                                 } else {
                                     if(sai(50)) {
@@ -1826,7 +1826,7 @@ $(function() {
                                     } else if(num <= 0.8) {
                                         sum('HtoJ');
                                     } else {
-                                        sum['HtoI'];
+                                        sum('HtoI');
                                     }
                                     return null;
                                 } else {
