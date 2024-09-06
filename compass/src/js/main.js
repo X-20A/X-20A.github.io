@@ -9880,18 +9880,26 @@ $(function() {
                                 }
                                 break;
                             case 'I':
-                                if(CVs + countAkitsuMaru() > 1) {
+                                if(CV + CVB > 1) {
                                     sum('ItoJ');
                                     sum('JtoL');
                                     return 'L';
-                                } else if(DD < 4) {
+                                } else if(Ds < 4) {
                                     sum('ItoJ');
                                     sum('JtoL');
                                     return 'L';
-                                } else if(f_speed !== '低速艦隊') {
+                                } else if(CL + CT < 2 && f_speed === '低速艦隊') {
+                                    sum('ItoJ');
+                                    sum('JtoL');
+                                    return 'L';
+                                } else if(Ds + LHA < 6 && f_speed === '低速艦隊') {
+                                    sum('ItoJ');
+                                    sum('JtoL');
+                                    return 'L';
+                                } else if(BBs < 2) {
                                     sum('ItoL');
                                     return 'L';
-                                } else if(CL + CT > 1 && Ds + LHA > 5) {
+                                } else if(CVs + countAkitsuMaru() < 2) {
                                     sum('ItoL');
                                     return 'L';
                                 } else {
@@ -9910,7 +9918,7 @@ $(function() {
                                 }
                                 break;
                             case 'S':
-                                if(f_seek[1] >= 58) {
+                                if(f_seek[1] >= 59) {
                                     sum('StoU');
                                     return null;
                                 } else {
