@@ -10226,7 +10226,7 @@ $(function() {
                         }
                     }
                         break;
-                    case 4: {
+                    case 4: { // @59-4
                         const phase = Number(active['59-4']['1']);
                         switch(edge) {
                             case null:
@@ -10543,7 +10543,7 @@ $(function() {
                         }
                     }
                         break;
-                    case 5: {
+                    case 5: { // @59-5
                         const phase = Number(active['59-5']['1']);
                         switch(edge) {
                             case null:
@@ -10568,25 +10568,30 @@ $(function() {
                                 }
                                 break;
                             case '1':
-                                if(isFaster()) {
+                                if(f_speed === '最速艦隊') {
                                     sum('1toA');
                                     sum('AtoB');
                                     sum('BtoC');
                                     return 'C';
-                                } else if(f_speed === '低速艦隊') {
+                                } else if(BBCVs > 1) {
                                     sum('1toA1');
                                     return 'A1';
+                                } else if(isFaster()) {
+                                    sum('1toA');
+                                    sum('AtoB');
+                                    sum('BtoC');
+                                    return 'C';
                                 } else if(BBs + CV + CVB > 0) {
                                     sum('1toA1');
                                     return 'A1';
-                                } else if(CVL > 1) {
-                                    sum('1toA1');
-                                    return 'A1';
-                                } else {
+                                } else if(f_speed !== '低速艦隊') {
                                     sum('1toA');
                                     sum('AtoB');
                                     sum('BtoC');
                                     return 'C';
+                                } else {
+                                    sum('1toA1');
+                                    return 'A1';
                                 }
                                 break;
                             case '2':
@@ -10652,7 +10657,7 @@ $(function() {
                                 } else if(Ds > 5) {
                                     sum('EtoG');
                                     return 'G';
-                                } else if(Ds > 4 && CA > 1 && CV + CVB === 0 && BBs + CVL < 2 && f_speed !== '低速艦隊') {
+                                } else if(Ds > 4 && CA > 1 && CV + CVB === 0 && CVL < 2 && f_speed !== '低速艦隊') {
                                     sum('EtoG');
                                     return 'G';
                                 } else {
@@ -10712,7 +10717,10 @@ $(function() {
                                 }
                                 break;
                             case 'Q':
-                                if(isFaster()) {
+                                if(BBs > 3) {
+                                    sum('QtoR1');
+                                    return 'R1';
+                                } else if(isFaster()) {
                                     sum('QtoR');
                                     return null;
                                 } else if(countYamato() > 1) {
@@ -10730,15 +10738,19 @@ $(function() {
                                 }
                                 break;
                             case 'R1':
-                                if(countYamato() + countShipsByName('Iowa') < 2) {
+                                if(f_speed !== '低速艦隊') {
                                     sum('R1toR');
                                     return null;
-                                } else if(f_speed !== '低速艦隊') {
-                                    sum('R1toR');
-                                    return null;
-                                } else if(f_speed === '低速艦隊') {
-                                    sum('R1toR2');
+                                } else if(countYamato() + countShipsByName('Iowa') > 1) {
+                                    um('R1toR2');
                                     sum('R2toR');
+                                    return null;
+                                } else if(BB > 1) {
+                                    um('R1toR2');
+                                    sum('R2toR');
+                                    return null;
+                                } else {
+                                    sum('R1toR');
                                     return null;
                                 }
                                 break;
@@ -10747,6 +10759,9 @@ $(function() {
                                     sum('StoS2');
                                     return 'S2'; 
                                 } else if(CV + CVB > 0) {
+                                    sum('StoS2');
+                                    return 'S2'; 
+                                } else if(Ds < 3) {
                                     sum('StoS2');
                                     return 'S2'; 
                                 } else if(f_speed !== '低速艦隊') {
@@ -10759,7 +10774,7 @@ $(function() {
                                         return 'T'; 
                                     }
                                 } else if(f_speed === '低速艦隊') {
-                                    if(CL + CT > 2 && Ds > 2) {
+                                    if(CL + CT > 2) {
                                         sum('StoS1');
                                         sum('S1toT');
                                         return 'T'; 
@@ -10770,12 +10785,12 @@ $(function() {
                                 }
                                 break;
                             case 'S2':
-                                if(true) {
-                                    sum('S2toS1');
-                                    sum('S1toT');
+                                if(BBs === 0 && f_speed !== '低速艦隊') {
+                                    sum('S2toT');
                                     return 'T';
                                 } else {
-                                    sum('S2toT');
+                                    sum('S2toS1');
+                                    sum('S1toT');
                                     return 'T';
                                 }
                                 break;
@@ -10789,7 +10804,10 @@ $(function() {
                                 }
                                 break;
                             case 'Z':
-                                if(CVs + countAkitsuMaru() > 2) {
+                                if(f_seek[1] < 80) {
+                                    sum('ZtoZ1');
+                                    return 'Z1';
+                                } else if(CVs + countAkitsuMaru() > 2) {
                                     sum('ZtoY');
                                     return null;
                                 } else if(CAs > 3) {
@@ -10802,12 +10820,12 @@ $(function() {
                                     if(isFaster()) {
                                         sum('ZtoY');
                                         return null;
-                                    } else if(BBs < 3) {
-                                        sum('ZtoY');
-                                        return null;
-                                    } else {
+                                    } else if(BBs > 2) {
                                         sum('ZtoZ1');
                                         return 'Z1';
+                                    } else {
+                                        sum('ZtoY');
+                                        return null;
                                     }
                                 } else if(phase === 3) {
                                     if(isFaster()) {
