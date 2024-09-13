@@ -1,0 +1,100 @@
+<html>
+    <head>
+        <!-- Google tag (gtag.js) -->
+        <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-W196CSZLNV"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-W196CSZLNV');
+        </script>
+        <meta name="keywords" content="改修ネジ期待値,ツール,アプリ,艦これ,艦隊これくしょん">
+        <meta name="description" content="Sortie Simulator テンプレート集">
+        <title>改修資材期待値 ｜ poyopoyo工具箱</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript" src="/commons/header.js"></script>
+        <link rel="stylesheet" type="text/css" href="/commons/header.css">
+        <link rel="stylesheet" type="text/css" href="main.css">
+        <link rel="icon" href="../media/hubspot.svg" type="image/svg+xml">
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <!-- header body直後に貼り付けること -->
+        <div id="side-bar-container">
+            <span id="header-side-close">
+                <svg class="side-bar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z"></path></svg>
+            </span>
+            <div id="side-menu">
+                <a href="/index"><p class="side-menu-content">ツールを探す</p></a>
+                <a href="/compass"><p class="side-menu-content">羅針盤シミュ</p></a>
+                <a href="/reference"><p class="side-menu-content">資料室</p></a>
+                <a href="/judge"><p class="side-menu-content">B勝利ヨシ！</p></a>
+                <a href="/suzu"><p class="side-menu-content">涼月タイマー</p></a>
+            </div>
+        </div>
+        <div id="header-mask">
+        </div>
+        <div id="header-container">
+            <div id="header-inner-container">
+                <span id="header-side-open">
+                    <svg class="side-bar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z"></path></svg>
+                </span>
+                <a href="/index"><span id="header-title">poyopoyo工具箱</span></a>
+            </div>
+        </div>
+        <!-- end of header -->
+        <div id="outer-container">
+            <div id="main-container">
+                <div id="upper-container">
+                    <form id="search-container">
+                        <input id="search-text" type="text" size="25" placeholder="ID or 名前検索">
+                    </form>
+                </div>
+                <div id="result-container">
+                    <p id="id"></p>
+                    <p id="name"></p>
+                    <div id="result">
+                        <div></div>
+                        <div class="header">ネジ</div>
+                        <div class="header">期待値</div>
+                        <div class="header">確実化</div>
+                        <div class="header">1~5</div>
+                        <div class="empty" id="step1-nez"></div>
+                        <div id="1to5-expect"></div>
+                        <div id="1to5-witch"></div>
+                        <div>5→6</div>
+                        <div></div>
+                        <div id="5to6-expect"></div>
+                        <div id="5to6-witch"></div>
+                        <div>6→7</div>
+                        <div class="empty" id="step2-nez"></div>
+                        <div id="6to7-expect"></div>
+                        <div id="6to7-witch"></div>
+                        <div>7→8</div>
+                        <div class="empty"></div>
+                        <div id="7to8-expect"></div>
+                        <div id="7to8-witch"></div>
+                        <div>8→9</div>
+                        <div class="empty"></div>
+                        <div id="8to9-expect"></div>
+                        <div id="8to9-witch"></div>
+                        <div>9→10</div>
+                        <div></div>
+                        <div id="9to10-expect"></div>
+                        <div id="9to10-witch"></div>
+                        <div>更新</div>
+                        <div id="step3-nez"></div>
+                        <div id="step3-expect"></div>
+                        <div id="step3-witch"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="hits-container">
+            
+        </div>
+        <script type="text/javascript" src="improvement.js"></script>
+        <script type="text/javascript" src="main.js"></script>
+    </body>
+</html>
