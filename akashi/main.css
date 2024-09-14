@@ -15,7 +15,7 @@ th,td {
     background-color: #f5f7f8;
 }
 #main-container {
-    width: 520px;
+    width: 560px;
     background-color: #fff;
     height: 100%;
     margin: auto;
@@ -41,7 +41,7 @@ th,td {
 }
 #result {
     display: grid;
-    grid-template-columns: 2fr 2fr 2fr 1fr;
+    grid-template-columns: 1fr 2fr 2fr 2fr 1fr;
     width: 100%;
     margin: auto;
     text-align: center;

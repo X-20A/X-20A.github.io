@@ -4,6 +4,7 @@ $(function() {
     const list = $('#hits-container');
     form.on('input', function() {
         let text = $(this).val();
+        if(!text) return;
         text = escapeHtml(text);
         text = convertToHalfWidth(text);
         console.log(text);
@@ -87,6 +88,17 @@ $(function() {
         }
         
         
+    });
+    // フォーム以外がクリックされたらリスト非表示
+    $('body').on('click', function() {
+        const active = document.activeElement;
+        if(active.id !== 'search-text') {
+            iniHits();
+            return;
+        }
+    });
+    $('#search-text').on('focus', function() {
+        $(this).trigger('input');
     });
     // url書き換え阻止
     document.getElementById('search-container').addEventListener('submit', function(event) {
