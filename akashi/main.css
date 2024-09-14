@@ -55,6 +55,9 @@ th,td {
 .empty {
     border-bottom: 0 !important;
 }
+#other-container {
+    padding: 160px 0 0 150px;
+}
 
 #search-container{
     box-sizing: border-box;
