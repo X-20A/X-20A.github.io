@@ -1,0 +1,103 @@
+@charset "UTF-8";
+::-webkit-scrollbar {
+    display: none;
+}
+details {
+    cursor: default;
+}
+#outer-container {
+    background-color: #f5f7f8;
+}
+#main-container {
+    width: 640px;
+    background-color: #fff;
+    margin: auto;
+}
+#upper-container {
+    padding-top: 36px;
+    align-items: center;
+    justify-content: center;
+}
+#control-container {
+    border-bottom: 2px solid #DBE0E5;
+    justify-content: space-between;
+    display: flex;
+}
+#quest-container {
+    font-size: 15px;
+}
+.quest-block {
+    display: flex;
+    border-bottom: 1px solid #C0C0C0;
+    height: 21px;
+    overflow: hidden;
+}
+.quest-info {
+    padding-left: 4px;
+    flex: 2;
+    overflow: hidden;
+    white-space: nowrap;
+    cursor: pointer;
+    border-right: 2px solid #DBE0E5;
+    display: flex;
+}
+.quest-icon {
+    height: 19px;
+}
+.sortie {
+    background-color: #FFDDDD;
+}
+.senka {
+    background-color: #f97674 !important;
+}
+.ex {
+    background-color: #DDDDFF;
+}
+.mo-ex {
+    font-weight: 600;
+}
+.columns {
+    flex: 3;
+    display: flex;
+    background-color: #EEF5FF;
+}
+.column {
+    text-align: center;
+    flex: 1;
+    max-width: 76px;
+}
+.indicate {
+    margin: 0;
+    text-align: center;
+    cursor: default;
+}
+.checks {
+    margin: 0;
+    cursor: pointer;
+}
+.check-box {
+    margin: 0;
+}
+.form {
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+    height: 22px;
+}
+.rank {
+    margin-left: 3px;
+    user-select: none;
+    width: 41px;
+}
+#other-container {
+    padding-left: 210px;
+}
+#ex-overlap {
+    display: none;
+    position: fixed;
+    background-color: #fff;
+    border: 1px solid #919191;
+}
+#ex-info {
+    padding: 0 5px;
+}
