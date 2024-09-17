@@ -9750,9 +9750,7 @@ $(function() {
                                     return 'C1';
                                 } else {
                                     sum('CtoC2');
-                                    sum('C2toL');
-                                    sum('LtoM');
-                                    return null;
+                                    return 'C2';
                                 }
                                 break;
                             case 'E':
