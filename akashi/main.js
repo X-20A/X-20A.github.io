@@ -2,23 +2,29 @@ $(function() {
     const imp_length = imp_json.length;
     const form = $('#search-text');
     const list = $('#hits-container');
+    const bookmark_path = '../media/bookmark-outline.png';
+    const bookmark_check_path = '../media/bookmark-check.png';
+    
+    // フォーム入力
     form.on('input', function() {
-        let text = $(this).val();
-        if(!text) return;
-        text = escapeHtml(text);
-        text = convertToHalfWidth(text);
-        console.log(text);
-        let num = Number(text);
         let hits = [];
-        if(num > 0) {
-            hits = searchWithID(num);
-            if(!hits.length) {
+        
+        let text = $(this).val();
+        if(!text) {
+            hits = getFavs();
+        } else {
+            text = escapeHtml(text);
+            text = convertToHalfWidth(text);
+            let num = Number(text);
+            if(num > 0 && !text.includes('.')) {
+                hits = searchWithID(num);
+                if(!hits.length) {
+                    hits = searchWithName(text);
+                }
+            } else {
                 hits = searchWithName(text);
             }
-        } else {
-            hits = searchWithName(text);
         }
-        
         iniHits();
         if(hits.length) {
             displaySearchResult(hits);
@@ -27,13 +33,12 @@ $(function() {
             // 何もしなくていいかな
         }
     });
+    // 検索結果が選択されたら計算して表示
     $('#hits-container').on('click', '.hits', function() {
         iniHits();
         
         const id = $(this).data('id');
         const item = imp_json.filter(entry => entry.id === id)[0];
-        console.log('item', item);
-        console.log(imp_json);
         const name = item.name;
         const step1 = item.step1;
         const step2 = item.step2;
@@ -58,8 +63,15 @@ $(function() {
         witches.push(expects[6] > step3[1]? '〇': '');
         
         // こっちは流し込む感じで いんだよvueとか
-        $('#id').text(`id: ${id}`);
+        $('#id').text(`No.${id}`);
         $('#name').text(name);
+        
+        if(isFav(id)) {
+            $('#switch-fav').prop('src', bookmark_check_path);
+        } else {
+            $('#switch-fav').prop('src', bookmark_path);
+        }
+        $('#switch-fav').data('id', id);
         
         $('#step1-nez').text(`${step1[0]} / ${step1[1]}`);
         $('#step2-nez').text(`${step2[0]} / ${step2[1]}`);
@@ -97,13 +109,56 @@ $(function() {
             return;
         }
     });
+    // フォームがフォーカスされたら検索結果再表示
     $('#search-text').on('focus', function() {
         $(this).trigger('input');
+    });
+    $('#switch-fav').on('click', function() {
+        const id = $(this).data('id');
+        const is_invalid = switchFav(id);
+        if(is_invalid) {
+            $(this).prop('src', bookmark_check_path);
+        } else {
+            $(this).prop('src', bookmark_path);
+        }
     });
     // url書き換え阻止
     document.getElementById('search-container').addEventListener('submit', function(event) {
         event.preventDefault(); // フォームの送信を防ぐ
     });
+    
+    function isFav(id) {
+        let res = false;
+        let favs = localStorage.getItem('imp_favs');
+        if(favs) {
+            favs = JSON.parse(favs);
+            if(favs.includes(id)) {
+                res = true;
+            }
+        }
+        return res;
+    }
+    function switchFav(id) {
+        id = Number(id);
+        let is_invalid = false;
+        let favs = localStorage.getItem('imp_favs');
+        let new_val = null;
+        if(favs) {
+            favs = JSON.parse(favs);
+            if(favs.includes(id)) {
+                new_val = favs.filter(entry => entry !== id);
+            } else {
+                new_val = favs.concat(id);
+                is_invalid = true;
+            }
+        } else {
+            new_val = [id];
+            is_invalid = true;
+        }
+        localStorage.setItem('imp_favs', JSON.stringify(new_val));
+        
+        return is_invalid;
+    }
     //検索結果空欄化
     function iniHits() {
         list.css('display', 'none');
@@ -111,7 +166,6 @@ $(function() {
     }
     // 検索結果表示
     function displaySearchResult(hits) {
-        console.log('hits', hits);
         const hits_length = hits.length;
         let html = '';
         for(let i = 0;i < hits_length;i++) {
@@ -119,7 +173,7 @@ $(function() {
             const id = hit.id
             const name = hit.name;
             
-            html += `<div class="hits" data-id="${id}">id: ${id} ${name}</div>`;
+            html += `<div class="hits" data-id="${id}">No: ${id} ${name}</div>`;
         }
         $('#hits-container').prepend(html);
         
@@ -130,12 +184,22 @@ $(function() {
         const leftBottomX = offset.left; // 左端のX座標
         const leftBottomY = offset.top + height; // 下端のY座標
 
-        // console.log(leftBottomX);
-        // console.log(leftBottomY);
-
         list.css('top', leftBottomY);
         list.css('left', leftBottomX);
         list.css('display', 'block');
+    }
+    function getFavs() {
+        let res = [];
+        let ids = localStorage.getItem('imp_favs');
+        if(ids) {
+            ids = JSON.parse(ids);
+            if(ids.length) {
+                res = imp_json
+                    .filter(entry => ids.includes(entry.id))
+                    .sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id)); // idsの順番でソート
+            }
+        }
+        return res;
     }
     // ID検索(前方一致)
     function searchWithID(target_num) {

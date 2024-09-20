@@ -91,6 +91,7 @@ details {
 }
 #other-container {
     padding-left: 210px;
+    margin-bottom: 24px;
 }
 #ex-overlap {
     display: none;
@@ -100,4 +101,71 @@ details {
 }
 #ex-info {
     padding: 0 5px;
+}
+#share-mask {
+    top: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 999999;
+    position: fixed;
+    opacity: 0.5;
+    background-color: #000;
+    display: none;
+}
+#share-container {
+    top: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 1000000;
+    position: fixed;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+#share-inner {
+    background-color: #fff;
+    height: 400px;
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+}
+#url-box {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-grow: 2;
+}
+#created-url {
+    width: 240px;
+}
+#copy-url {
+    width: 22px;
+    cursor: pointer;
+}
+#gap {
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
+#gap::before,
+#gap::after {
+    content: '';
+    flex-grow: 1;
+    height: 1px;
+    background: #c4c4c4; /* 線の色を指定 */
+}
+
+#gap::before {
+    margin-left: 15px; /* テキストと左側の線の間隔 */
+}
+
+#gap::after {
+    margin-right: 15px; /* テキストと右側の線の間隔 */
+}
+#qrcode-box {
+    flex-grow: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

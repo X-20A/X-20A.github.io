@@ -16,7 +16,7 @@ $(function() {
         for(let i = 0;i < blocks_length;i++) {
             const block = blocks.eq(i);
             if(block.css('height') !== '21px') {
-                block.find('.quest-info').first().click();
+                block.find('.quest-info').first().mousedown();
             }
         }
     });
@@ -26,6 +26,30 @@ $(function() {
         if(confirm('初期化しますか？')) {
             location.reload();
         }
+    });
+    $('#share').on('click', function() {
+        $('#qrcode-box').empty();
+        
+        const compress_state = LZString.compressToEncodedURIComponent(localStorage.quest);
+        const setting = localStorage.quest_setting;
+        const url = `${location.origin}${location.pathname}?import=${compress_state}&setting=${setting}`;
+        new QRCode(document.getElementById("qrcode-box"), url);
+        $('#created-url').val(url);
+        
+        $('#share-mask').css('display', 'block');
+        $('#share-container').css('display', 'flex');
+    });
+    $('#share-container').on('click', function() {
+        $('#share-mask').css('display', 'none');
+        $('#share-container').css('display', 'none');
+    });
+    $('#share-inner').on('click', function(e) {
+        e.stopPropagation();
+    });
+    $('#copy-url').on('click', function() {
+        const text = $('#created-url').val();
+        navigator.clipboard.writeText(text);
+        $('#created-url').select();
     });
     // 全ての任務のチェック状態を収集してlocalStorageにほりこむ
     function updateData() {
@@ -57,7 +81,7 @@ $(function() {
         }
     }
     // 折り畳み
-    $('.quest-info').on('click', function() {
+    $('.quest-info').on('mousedown', function() {
         const block = $(this).closest('.quest-block');
         switchFold(block);
         
@@ -101,7 +125,39 @@ $(function() {
         $('#ex-overlap').hide();
     });
     
+    // URLから任意のパラメータを取得
+    function getParam(name, url) {
+        if (!url) {
+            url = window.location.href;
+        }
+        name = name.replace(/[\[\]]/g, '\\$&');
+        const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+              results = regex.exec(url);
+        if (!results) {
+            return null;
+        }
+        if (!results[2]) {
+            return '';
+        }
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+    
     if(true) {
+        // import
+        let import_param = getParam('import');
+        if(import_param) {
+            let quest_state = LZString.decompressFromEncodedURIComponent(import_param);
+            
+            let import_setting = getParam('setting');
+            
+            if(confirm('現在のデータに上書きしますか？')) {
+                localStorage.setItem('quest', quest_state);
+                localStorage.setItem('quest_setting', import_setting);
+                
+                location.href = `${location.origin}${location.pathname}`;
+            }
+        }
+        
         // setup
         let settings = localStorage.getItem('quest_setting');
         let fold_cache = false;

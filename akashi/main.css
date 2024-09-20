@@ -35,6 +35,7 @@ th,td {
     padding: 4px;
     border: 1px solid #99cffa;
     background-color: #fff;
+    min-width: 230px;
 }
 #result-container {
     padding: 5px;
@@ -51,6 +52,16 @@ th,td {
 #result div {
     border-right: 1px solid #000;
     border-bottom: 1px solid #000;
+}
+#info-box {
+    display: flex;
+    justify-content: space-between;
+}
+#name {
+    margin-left: 10px;
+}
+#switch-fav {
+    cursor: pointer;
 }
 .empty {
     border-bottom: 0 !important;

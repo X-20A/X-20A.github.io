@@ -10,7 +10,7 @@
             gtag('config', 'G-W196CSZLNV');
         </script>
         <meta name="keywords" content="改修,期待値,ツール,アプリ,艦これ,艦隊これくしょん">
-        <meta name="description" content="Sortie Simulator テンプレート集">
+        <meta name="description" content="改修確実化が合理的であるか確認できます">
         <title>改修効率計算機 ｜ poyopoyo工具箱</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <script type="text/javascript" src="/commons/header.js"></script>
@@ -31,6 +31,8 @@
                 <a href="/reference"><p class="side-menu-content">資料室</p></a>
                 <a href="/judge"><p class="side-menu-content">B勝利ヨシ！</p></a>
                 <a href="/suzu"><p class="side-menu-content">涼月タイマー</p></a>
+                <a href="/akashi"><p class="side-menu-content">改修効率計算機</p></a>
+                <a href="/quest"><p class="side-menu-content">任務手帳</p></a>
             </div>
         </div>
         <div id="header-mask">
@@ -52,8 +54,14 @@
                     </form>
                 </div>
                 <div id="result-container">
-                    <p id="id"></p>
-                    <p id="name"></p>
+                    <div id="info-box">
+                        <div>
+                            <span id="id"></span><span id="name"></span>
+                        </div>
+                        <div>
+                            <img id="switch-fav" data-id=""></img>
+                        </div>
+                    </div>
                     <div id="result">
                         <div></div>
                         <div class="header">ネジ</div>
@@ -106,7 +114,7 @@
                     <details>
                         <summary>謝辞</summary>
                         <p>以下のサイトを参考に製作しました</p>
-                        <p>・虚像工廠改二 - 改修資材必要数期待値計算</p>
+                        <p>・<a href="https://dsco11.web.fc2.com/kancolle/improvement-chance.html" target="_blank" rel="noopener noreferrer">虚像工廠改二 - 改修資材必要数期待値計算</a></p>
                         <p>・<a href="https://akashi-list.me/" target="_blank" rel="noopener noreferrer">明石の改修工廠早見表</a></p>
                         <p>・<a href="https://docs.google.com/spreadsheets/d/1wPUtvU9yG5Sf8MnTAp3kKOXyC5EeKUIJ_V5OCu27_0c/edit?gid=485599777#gid=485599777" target="_blank" rel="noopener noreferrer">改修工廠の証</a></p>
                         <p>ありがとうございます</p>
@@ -117,6 +125,17 @@
 
             </div>
         </div>
+        <!-- footer -->
+        <div id="footer">
+            <span>
+                バグ報告、要望等は<a id="odaibako" href="https://odaibako.net/u/__poyo" target="_blank">お題箱</a>まで
+            </span>
+            <span>
+                作者: <a href="https://kancolle.social/@momemi" target="_blank"><img src="https://icongr.am/simple/mastodon.svg?size=16&amp;colored=true" class="sns-icon"></a>
+                <a href="https://twitter.com/momemi_kc" target="_blank"><img src="https://icongr.am/simple/twitter.svg?size=16&amp;color=00a0e8&amp;colored=false" class="sns-icon"></a>
+            </span>
+        </div>
+        <!-- end of footer -->
         <script type="text/javascript" src="improvement.js"></script>
         <script type="text/javascript" src="main.js"></script>
     </body>
