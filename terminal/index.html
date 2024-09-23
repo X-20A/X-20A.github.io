@@ -1,0 +1,79 @@
+<html>
+    <head>
+        <!-- Google tag (gtag.js) -->
+        <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-W196CSZLNV"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-W196CSZLNV');
+        </script>
+        <meta name="keywords" content="ターミナル,ツール,アプリ,艦これ,艦隊これくしょん">
+        <meta name="description" content="Sortie Simulator テンプレート集">
+        <title>ターミナル ｜ poyopoyo工具箱</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript" src="/commons/header.js"></script>
+        <link rel="stylesheet" type="text/css" href="/commons/header.css">
+        <link rel="stylesheet" type="text/css" href="main.css">
+        <link rel="icon" href="../media/hubspot.svg" type="image/svg+xml">
+    </head>
+    <body>
+        <!-- header body直後に貼り付けること -->
+        <div id="side-bar-container">
+            <span id="header-side-close">
+                <svg class="side-bar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z"></path></svg>
+            </span>
+            <div id="side-menu">
+                <a href="/index"><p class="side-menu-content">ツールを探す</p></a>
+                <a href="/compass"><p class="side-menu-content">羅針盤シミュ</p></a>
+                <a href="/reference"><p class="side-menu-content">資料室</p></a>
+                <a href="/judge"><p class="side-menu-content">B勝利ヨシ！</p></a>
+                <a href="/suzu"><p class="side-menu-content">涼月タイマー</p></a>
+            </div>
+        </div>
+        <div id="header-mask">
+        </div>
+        <div id="header-container">
+            <div id="header-inner-container">
+                <span id="header-side-open">
+                    <svg class="side-bar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z"></path></svg>
+                </span>
+                <a href="/index"><span id="header-title">poyopoyo工具箱</span></a>
+            </div>
+        </div>
+        <!-- end of header -->
+        <div id="outer-container">
+            <div id="main-container">
+                <div id="upper-container">
+                    <div id="map-container">
+                        <div id="cy"></div>
+                        <span id="message">👇👇👇🙄👇</span>
+                    </div>
+                    <div id="info-container">
+                        <p id="title"></p>
+                        <p><a id="url" href="" target="_blank" rel="noopener noreferrer"></a></p>
+                        <div id="memo"></div>
+                    </div>
+                </div>
+                <div id="area-container">
+                    <span class="worlds" data-world="1">1</span>
+                    <span class="worlds" data-world="2">2</span>
+                    <span class="worlds" data-world="3">3</span>
+                    <span class="worlds" data-world="4">4</span>
+                    <span class="worlds" data-world="5">5</span>
+                    <span class="worlds" data-world="6">6</span>
+                    <span class="worlds" data-world="7">7</span>
+                </div>
+            </div>
+        </div>
+        <div id="select-menu">
+            
+        </div>
+        <canvas id="canvas" style="display: none;"></canvas>
+        <div id="omake-cy" style="width: 100%;height: 100%"></div>
+        <script type="text/javascript" src="/data/map.js"></script>
+        <script type="text/javascript" src="data/template.js"></script>
+        <script type="text/javascript" src="dist/main.js"></script>
+    </body>
+</html>

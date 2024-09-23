@@ -1,0 +1,87 @@
+@charset "UTF-8";
+::-webkit-scrollbar {
+    display: none;
+}
+.worlds {
+    font-weight: 600;
+    color: #0F2B46;
+    text-align: center;
+    flex: 1;
+    cursor: pointer;
+    padding: 15px
+}
+.worlds:hover {
+    background-color: #dcefff;
+}
+.list-items {
+    padding-left: 5px;
+    cursor: pointer;
+    user-select: none;
+}
+.list-items:hover {
+    background-color: #dcefff;
+}
+#outer-container {
+    background-color: #f5f7f8;
+}
+#main-container {
+    width: 900px;
+    background-color: #fff;
+    height: 100%;
+    margin: auto;
+}
+#upper-container {
+    height: 410px;
+    display: flex;
+    padding-top: 36px;
+    border-bottom: 2px solid #DBE0E5;
+}
+#map-container {
+    margin-top: -27px;
+    flex: 5;
+    border-right: 2px solid #DBE0E5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#cy {
+    background-position-x: -21px;
+    background-position-y: 25px;
+    background-size: 702px;
+    background-color: #000;
+    display: none;
+    height: 100%;
+    width: 100%;
+}
+#message {
+    font-size: 24px;
+    cursor: default;
+}
+#info-container {
+    flex: 2;
+}
+#title {
+    font-weight: 600;
+    font-size: 16px;
+}
+#url {
+    font-size: 15px;
+}
+#memo {
+    font-size: 15px;
+}
+#area-container {
+    padding: 0 70px;
+    display: flex;
+    height: 47px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 3px;
+}
+#select-menu {
+    position: fixed;
+    z-index: 999999;
+    width: 200px;
+    border-left: 2px solid #dcefff;
+    font-weight: 500;
+}
