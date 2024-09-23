@@ -451,7 +451,7 @@ const templates = [
         "area": 4,
         "route": "1-C-E-J-L-P",
         "url": "2948hmow+",
-        "memo": ""
+        "memo": "ボスマス梯形陣"
     },
     {
         "title": "7-4_CEJLP_破壊",
@@ -459,7 +459,7 @@ const templates = [
         "area": 4,
         "route": "1-C-E-J-L-P",
         "url": "29qnfwvc+",
-        "memo": ""
+        "memo": "ボスマス梯形陣"
     },
     {
         "title": "7-5-1_ABDGK_破壊",

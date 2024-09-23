@@ -46,7 +46,7 @@ $(function() {
     $('#share-inner').on('click', function(e) {
         e.stopPropagation();
     });
-    $('#copy-url').on('click', function() {
+    $('.copy-url').on('click', function() {
         const text = $('#created-url').val();
         navigator.clipboard.writeText(text);
         $('#created-url').select();
@@ -179,7 +179,6 @@ $(function() {
             datas = JSON.parse(datas);
             const data_length = datas.length;
             
-            
             for(let i = 0;i < data_length;i++) {
                 const data = datas[i];
                 const id = data.id;
@@ -198,7 +197,6 @@ $(function() {
                     if(data.is_fold && data.is_fold !== 0) {
                         switchFold(block);
                     }
-                    
                 }
             }
         }

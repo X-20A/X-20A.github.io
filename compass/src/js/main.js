@@ -10802,7 +10802,7 @@ $(function() {
                                 }
                                 break;
                             case 'Z':
-                                if(f_seek[1] < 80) {
+                                if(f_seek[1] < 83) {
                                     sum('ZtoZ1');
                                     return 'Z1';
                                 } else if(CVs + countAkitsuMaru() > 2) {

@@ -137,6 +137,11 @@ details {
 }
 #created-url {
     width: 240px;
+    border: none;
+    border-bottom: 1px solid #696969;
+}
+#created-url:focus {
+    outline: none;
 }
 #copy-url {
     width: 22px;
@@ -162,6 +167,9 @@ details {
 
 #gap::after {
     margin-right: 15px; /* テキストと右側の線の間隔 */
+}
+#or {
+    margin: 0 18px;
 }
 #qrcode-box {
     flex-grow: 2;

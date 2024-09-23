@@ -39,7 +39,7 @@ $(function() {
         
         $('#message').remove();
         $('#cy').css('display', 'block');
-        $('#cy').css('background-image', `url(../media/background/${world}-${area}.png)`);
+        $('#cy').css('background-image', `url(${cdn}/media/background/${world}-${area}.png)`);
         drawMap(`${world}-${area}`, route, false);
     });
     $('#select-menu').on('dblclick', '.list-items', function() {
