@@ -827,7 +827,8 @@ let s_data = [
 ,{"id":969,"no":569,"name":"Richelieu Deux","type":"巡洋戦艦","hp":89,"ass":0,"seek":19,"max_ass":0,"max_seek":58,"fuel":195,"ammo":280,"na":5,"sg":2}
 ,{"id":952,"no":552,"name":"Phoenix","type":"軽巡洋艦","hp":38,"ass":0,"seek":18,"max_ass":34,"max_seek":68,"fuel":35,"ammo":55,"na":1,"sg":2}
 ,{"id":734,"no":1734,"name":"Phoenix改","type":"軽巡洋艦","hp":53,"ass":0,"seek":22,"max_ass":42,"max_seek":78,"fuel":35,"ammo":60,"na":1,"sg":2}
-,{"id":957,"no":557,"name":"General Belgrano","type":"軽巡洋艦","hp":55,"ass":0,"seek":38,"max_ass":45,"max_seek":90,"fuel":55,"ammo":95,"na":1,"sg":2}
+,{"id":957,"no":557,"name":"General Belgrano","type":"軽巡洋艦","hp":55,"ass":0,"seek":40,"max_ass":45,"max_seek":90,"fuel":55,"ammo":95,"na":1,"sg":2}
 ,{"id":966,"no":566,"name":"Lexington","type":"正規空母","hp":84,"ass":0,"seek":40,"max_ass":0,"max_seek":67,"fuel":65,"ammo":70,"na":1,"sg":2}
 ,{"id":735,"no":1735,"name":"Lexington改","type":"正規空母","hp":89,"ass":0,"seek":46,"max_ass":0,"max_seek":80,"fuel":85,"ammo":90,"na":1,"sg":2}
+,{"id":694,"no":394,"name":"霧島改二丙","type":"巡洋戦艦","hp":85,"ass":0,"seek":16,"max_ass":0,"max_seek":52,"fuel":100,"ammo":160,"na":0,"sg":1}
 ];
