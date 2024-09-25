@@ -1145,7 +1145,7 @@ $(function() {
                             res += 1;
                         } else if(type === '軽巡洋艦') {
                             res += 3;
-                        } else if(type === '重巡洋艦') {
+                        } else if(type === '重巡洋艦' || type === '航空巡洋艦') {
                             res += 1;
                         }
                     }
@@ -1156,7 +1156,7 @@ $(function() {
                             res += 1;
                         } else if(type === '軽巡洋艦') {
                             res += 3;
-                        } else if(type === '重巡洋艦') {
+                        } else if(type === '重巡洋艦' || type === '航空巡洋艦') {
                             res += 3;
                         }
                     }
