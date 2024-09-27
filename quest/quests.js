@@ -378,210 +378,269 @@ const exs = [
         "time": "03:05"
     }
 ];
-// 没 そのうち使うかも
+// データからレイアウトするともたるかな、分からない
 let quest_json = [
-    {
-        id: 'Bm1',
-        name: '「第五戦隊」出撃せよ！',
-        area: ['2-5']
-    },
     {
         id: 'Bm2',
         name: '「潜水艦隊」出撃せよ！',
         area: ['6-1'],
-        state: '000'
-    },
-    {
-        id: 'Bm3',
-        name: '「水雷戦隊」南西へ！',
-        area: ['1-4']
-    },
-    {
-        id: 'Bm4',
-        name: '「水上打撃部隊」南方へ！',
-        area: ['5-1']
-    },
-    {
-        id: 'Bm5',
-        name: '海上護衛強化月間',
-        area: ['1-5']
-    },
-    {
-        id: 'Bm6',
-        name: '「空母機動部隊」西へ！',
-        area: ['4-2']
-    },
-    {
-        id: 'Bm7',
-        name: '「水上反撃部隊」突入せよ！',
-        area: ['2-5']
+        zekamashi: "6-1-s",
+        kiton: "任務「「潜水艦隊」出撃せよ！」-攻略"
     },
     {
         id: 'Bm8',
         name: '兵站線確保！海上警備を強化実施せよ！',
         area: ['1-2','1-3','1-4','2-1'],
-        state: '0000',
+        zekamashi: "heitan-kaizyoukeibi",
+        kiton: "任務「兵站線確保！海上警備を強化実"
     }, // 以上マンスリー
     {
         id: 'Bq1',
         name: '沖ノ島海域迎撃戦',
         area: ['2-4'],
-        state: '00'
+        zekamashi: "2-4-s-geigekisen",
+        kiton: "クォータリー任務「沖ノ島海域迎撃戦"
     },
     {
         id: 'Bq2',
         name: '戦果拡張任務！「Z作戦」前段作戦',
         area: ['2-4','6-1','6-3','6-4'],
-        state: '0000'
+        zekamashi: "z-sakusen-zendan",
+        kiton: "任務「戦果拡張任務！「z作戦」前段作"
     },
     {
         id: 'Bq3',
         name: '強行輸送艦隊、抜錨！',
         area: ['1-6'],
-        state: '00'
+        zekamashi: "kyoukou-yusou",
+        kiton: "任務「海上通商航路の警戒を厳とせよ"
     },
     {
         id: 'Bq4',
         name: '前線の航空偵察を実施せよ！',
         area: ['6-3'],
-        state: '00'
+        zekamashi: "zensen-koukuuteisatu",
+        kiton: "任務「前線の航空偵察を実施せよ！」"
     },
     {
         id: 'Bq5',
         name: '北方海域警備を実施せよ！',
         area: ['3-1','3-2','3-3'],
-        state: '000'
+        zekamashi: "hoppoukeibi",
+        kiton: "クォータリー任務「北方海域警備を実"
     },
     {
         id: 'Bq6',
         name: '精鋭「三一駆」、鉄底海域に突入せよ！',
         area: ['5-4'],
-        state: '00'
+        zekamashi: "naganami-kaini",
+        kiton: "クォータリー任務「精鋭「三一駆」、"
     },
     {
         id: 'Bq7',
         name: '新編成「三川艦隊」、鉄底海峡に突入せよ！',
         area: ['5-1','5-3','5-4'],
-        state: '000'
+        zekamashi: "sinnpen-mikawakantai",
+        kiton: "クォータリー任務「新編成「三川艦隊"
     },
     {
         id: 'Bq8',
-        name: '	泊地周辺海域の安全確保を徹底せよ！',
+        name: '泊地周辺海域の安全確保を徹底せよ！',
         area: ['1-5','7-1','7-2-1','7-2-2'],
-        state: '000000000000'
+        zekamashi: "hakutisyuuhen",
+        kiton: "クォータリー任務「泊地周辺海域の安"
     },
     {
         id: 'Bq9',
         name: '空母戦力の投入による兵站線戦闘哨戒',
         area: ['1-3','1-4','2-1','2-2','2-3'],
-        state: '00000'
+        zekamashi: "kuubo-tounyuu",
+        kiton: "任務「空母戦力の投入による兵站線戦"
     },
     {
         id: 'Bq10',
         name: '戦果拡張任務！「Z作戦」後段作戦',
         area: ['7-2-2','5-5','6-2','6-5'],
-        state: '0000'
+        zekamashi: "z-sakusen-koudan",
+        kiton: "任務「戦果拡張任務！「z作戦」後段作"
     },
     {
         id: 'Bq11',
         name: '南西諸島方面「海上警備行動」発令！',
         area: ['1-4','2-1','2-2','2-3'],
-        state: '0000'
+        zekamashi: "nansei-kaizyoukeibi",
+        kiton: "任務「南西諸島方面「海上警備行動」"
     },
     {
         id: 'Bq12',
         name: '発令！「西方海域作戦」',
         area: ['4-1','4-2','4-3','4-4','4-5'],
-        state: '00000'
+        zekamashi: "haturei-seihou",
+        kiton: "任務「発令！「西方海域作戦」」攻略"
     },
     {
         id: 'Bq13',
         name: '拡張「六水戦」、最前線へ！',
         area: ['5-1','5-4','6-4','6-5'],
-        state: '0000'
+        zekamashi: "yuubari-rokusuisen",
+        kiton: "任務「拡張「六水戦」、最前線へ！」"
     },
     { // 以上クウォータリー
         id: 'By13',
         name: '精強「第七駆逐隊」緊急出動！',
         area: ['1-2','1-3','1-5','3-2'],
-        state: '0000'
+        zekamashi: "dainanakutikutai-kinkyuu",
+        kiton: "任務『精強「第七駆逐隊」緊急出動！"
     },
     {
         id: 'By1',
         name: '精鋭「十九駆」、躍り出る！',
         area: ['2-5','3-4','4-5','5-3'],
-        state: '0000'
+        zekamashi: "kaiboukan-odorideru",
+        kiton: "任務「精鋭「十九駆」、躍り出る！」"
     },
     {
         id: 'By2',
         name: '「海防艦」、海を護る！',
         area: ['1-1','1-2','1-3','1-5','1-6'],
-        state: '00000'
+        zekamashi: "kaiboukan-mamoru",
+        kiton: "任務「「海防艦」、海を護る！」攻略"
     },
     {
         id: 'By3',
         name: '工作艦「明石」護衛任務',
         area: ['1-3','2-1','2-2','2-3','1-6'],
-        state: '00000'
+        zekamashi: "akashi-goei",
+        kiton: "任務「工作艦「明石」護衛任務」攻略"
     },
     {
         id: 'By4',
         name: '重巡戦隊、西へ！',
         area: ['4-1','4-2','4-3','4-4'],
-        state: '0000'
+        zekamashi: "zyuuzyun-nishi",
+        kiton: "任務「重巡戦隊、西へ！」攻略（イヤ"
     },
     {
         id: 'By11',
         name: '日英米合同水上艦隊、抜錨せよ！',
         area: ['3-1','3-3','4-3','7-3-2'],
-        state: '0000'
+        zekamashi: "nitieibei-batubyou",
+        kiton: "任務『日英米合同水上艦隊、抜錨せよ"
     },
     {
         id: 'By12',
         name: '精鋭「第十九駆逐隊」、全力出撃！',
         area: ['1-5','2-3','3-2','5-3'],
-        state: '0000'
+        zekamashi: "daizyuukukutiku-zenryoku",
+        kiton: "任務『精鋭「第十九駆逐隊」、全力出"
     },
     {
         id: 'By14',
         name: '鵜来型海防艦、静かな海を防衛せよ！',
         area: ['1-1','1-2','1-5'],
-        state: '0000000'
+        zekamashi: "ukurugata-bouei",
+        kiton: "任務『鵜来型海防艦、静かな海を防衛"
     },
     {
         id: 'By6',
         name: '鎮守府近海海域の哨戒を実施せよ！',
         area: ['1-2','1-3','1-4'],
-        state: '000000'
+        zekamashi: "tinzyuhukinkai-syoukai",
+        kiton: "任務『鎮守府近海海域の哨戒を実施せ"
     },
     {
         id: 'By7',
         name: '南西方面の兵站航路の安全を図れ！',
         area: ['1-5','1-6','2-1'],
-        state: '000000'
+        zekamashi: "nansei-heitankouro",
+        kiton: "任務『南西方面の兵站航路の安全を図"
     },
     {
         id: 'By8',
         name: '空母機動部隊、出撃！敵艦隊を迎撃せよ！',
         area: ['2-2','2-3','2-4'],
-        state: '000'
+        zekamashi: "kuubokidou-geigeki",
+        kiton: "任務『空母機動部隊、出撃！敵艦隊を"
     },
     {
         id: 'By9',
         name: 'AL作戦',
         area: ['3-1','3-3','3-4','3-5'],
-        state: '0000'
+        zekamashi: "al-sakusen-yearly",
+        kiton: "任務『al作戦』攻略！【イヤーリー6月"
     },
     {
         id: 'By10',
         name: '機動部隊決戦',
         area: ['5-2','5-5','6-4','6-5'],
-        state: '00000000'
+        zekamashi: "kidoubutai-kessen",
+        kiton: "任務『機動部隊決戦』攻略！【イヤー"
     },
     {
         id: 'By5',
         name: '歴戦「第十方面艦隊」、全力出撃！',
         area: ['4-2','7-2-2','7-3-2'],
-        state: '000000'
+        zekamashi: "rekisen-zyuhoumen",
+        kiton: "任務「歴戦「第十方面艦隊」、全力出"
+    },
+    { // 以下遠征
+        id: 'Dq1',
+        name: '海上通商航路の警戒を厳とせよ！',
+        zekamashi: "kaizyou-gentoseyo",
+        kiton: "任務「海上通商航路の警戒を厳とせよ-2"
+    },
+    {
+        id: 'Dq2',
+        name: '近海に侵入する敵潜を制圧せよ！',
+        zekamashi: "kinkai-tekisen",
+        kiton: "任務「近海に侵入する敵潜を制圧せよ"
+    },
+    {
+        id: 'Dy1',
+        name: '特設護衛船団司令部、活動開始！',
+        zekamashi: "tokusetugoei",
+        kiton: "任務「特設護衛船団司令部、活動開始"
+    },
+    {
+        id: 'Dy7',
+        name: '西方連絡作戦準備を実施せよ！',
+        zekamashi: "seihourenraku-zyunbi",
+        kiton: "任務「西方連絡作戦準備を実施せよ！"
+    },
+    {
+        id: 'Dy2',
+        name: '練習航海及び警備任務を実施せよ！',
+        zekamashi: "rensyuu-keibi",
+        kiton: "任務「練習航海及び警備任務を実施せ"
+    },
+    {
+        id: 'Dy8',
+        name: '新兵装開発資材輸送を船団護衛せよ！',
+        zekamashi: "sinheisou-yusou",
+        kiton: "任務「新兵装開発資材輸送を船団護衛"
+    },
+    {
+        id: 'Dy3',
+        name: '小笠原沖哨戒線の強化を実施せよ！',
+        zekamashi: "ogasawaraoki-syoukai",
+        kiton: "任務「小笠原沖哨戒線の強化を実施せ"
+    },
+    {
+        id: 'Dy4',
+        name: '南西諸島方面の海上護衛を強化せよ！',
+        zekamashi: "nanseisyotou-kaizyougoei",
+        kiton: "任務「南西諸島方面の海上護衛を強化"
+    },
+    {
+        id: 'Dy5',
+        name: '兵站強化遠征任務【基本作戦】',
+        zekamashi: "heitan-ensei-kihon",
+        kiton: "任務「兵站強化遠征任務【基本作戦】"
+    },
+    {
+        id: 'Dy6',
+        name: '兵站強化遠征任務【拡張作戦】',
+        zekamashi: "heitan-ensei-kakutyou",
+        kiton: "任務「兵站強化遠征任務【拡張作戦】"
     }
 ];

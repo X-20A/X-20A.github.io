@@ -40,6 +40,7 @@ details {
     cursor: pointer;
     border-right: 2px solid #DBE0E5;
     display: flex;
+    user-select: none;
 }
 .quest-icon {
     height: 19px;
@@ -176,4 +177,20 @@ details {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+#custom-menu {
+    font-size: 12px;
+    padding: 0;
+    border: 1px solid #2196F3;
+    margin: 0 5px;
+    width: 75px;
+    position: fixed;
+    background-color: #fff;
+}
+.ctxs {
+    cursor: pointer;
+    padding: 5px;
+}
+.ctxs:hover {
+    background-color: #ebebeb;
 }
