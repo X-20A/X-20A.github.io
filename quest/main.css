@@ -72,6 +72,10 @@ details {
     text-align: center;
     cursor: default;
 }
+.ex-id {
+    user-select: none;
+    cursor: pointer;
+}
 .checks {
     margin: 0;
     cursor: pointer;

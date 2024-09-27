@@ -142,6 +142,13 @@ $(function() {
         $('#custom-menu').css('display', 'none');
     });
     
+    // 艦これ遠征大成功ノート ジャンプ
+    $('.ex-id').on('dblclick', function() {
+        const id = $(this).text();
+        const url = `https://kancolle.narublo.com/${id}/`;
+        window.open(url, '_blank');
+    });
+    
     // 開閉状態記憶の可否と、全ての任務のチェック状態を収集してlocalStorageにほりこむ
     function updateData() {
         const quests = $('.quest-block');
