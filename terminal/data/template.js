@@ -74,7 +74,7 @@ const templates = [
         "memo": "道中単縦陣"
     },
     {
-        "title": "2-5_BFJO",
+        "title": "2-5_上_BFJO",
         "world": 2,
         "area": 5,
         "route": "1-B-F-J-O",
@@ -326,11 +326,19 @@ const templates = [
     },
     // @6
     {
+        "title": "6-1_FHK",
+        "world": 6,
+        "area": 1,
+        "route": "1-A-F-G-H-K",
+        "url": "2dcshnpu+",
+        "memo": "none"
+    },
+    {
         "title": "6-1_CFHK",
         "world": 6,
         "area": 1,
         "route": "1-C-F-G-H-K",
-        "url": "23gqsson+",
+        "url": "2avaerm2+",
         "memo": "none"
     },
     {
@@ -358,7 +366,7 @@ const templates = [
         "memo": "B未満夜戦"
     },
     {
-        "title": "6-4_ADCFN",
+        "title": "6-4_左_ADCFN",
         "world": 6,
         "area": 4,
         "route": "1-A-D-C-F-N",
@@ -366,7 +374,7 @@ const templates = [
         "memo": "none"
     },
     {
-        "title": "6-4_MKJIN",
+        "title": "6-4_右_MKJIN",
         "world": 6,
         "area": 4,
         "route": "2-M-K-J-I-N",
@@ -374,36 +382,36 @@ const templates = [
         "memo": "none"
     },
     {
-        "title": "6-5_ACDGM_削り",
+        "title": "6-5_ACDGM_上_削り",
         "world": 6,
         "area": 5,
         "route": "1-A-C-D-G-M",
-        "url": "2dpapy28+",
-        "memo": "none"
+        "url": "2atft4dg+",
+        "memo": "基地2中隊ボス集中"
     },
     {
-        "title": "6-5_ACDGM_破壊",
+        "title": "6-5_ACDGM_上_破壊",
         "world": 6,
         "area": 5,
         "route": "1-A-C-D-G-M",
-        "url": "28q67hwk+",
-        "memo": "none"
+        "url": "28b9pac9+",
+        "memo": "基地2中隊ボス集中"
     },
     {
-        "title": "6-5_BFIJM_削り",
+        "title": "6-5_BFIJM_下_削り",
         "world": 6,
         "area": 5,
         "route": "2-B-F-I-J-M",
-        "url": "26sxup5m+",
-        "memo": "夜戦マス梯形陣"
+        "url": "2dke38j7+",
+        "memo": "夜戦マス梯形陣$e基地2中隊ボス集中"
     },
     {
-        "title": "6-5_BFIJM_破壊",
+        "title": "6-5_BFIJM_下_破壊",
         "world": 6,
         "area": 5,
         "route": "2-B-F-I-J-M",
-        "url": "2yanjhzs+",
-        "memo": "夜戦マス梯形陣"
+        "url": "24shsusd+",
+        "memo": "夜戦マス梯形陣$e基地2中隊ボス集中"
     },
     {
         "title": "7-1_DGHK",

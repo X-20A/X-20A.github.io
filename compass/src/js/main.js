@@ -3252,7 +3252,7 @@ $(function() {
                                 }
                                 break;
                             case 'E':
-                                if(f_speed === '高速+艦隊') {
+                                if(isFaster()) {
                                     sum('EtoF');
                                     sum('FtoL');
                                     return null;
