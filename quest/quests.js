@@ -379,7 +379,7 @@ const exs = [
     }
 ];
 // データからレイアウトするともたるかな、分からない
-let quest_json = [
+const quest_json = [
     {
         id: 'Bm2',
         name: '「潜水艦隊」出撃せよ！',

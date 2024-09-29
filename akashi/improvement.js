@@ -4834,12 +4834,35 @@ let imp_json = [
     {
         "id": 386,
         "name": "6inch三連装速射砲 Mk.16",
-        "canImprovement": false
+        "canImprovement": true,
+        "step1": [
+            3,
+            3
+        ],
+        "step2": [
+            3,
+            4
+        ],
+        "step3": [
+            6,
+            8
+        ]
     },
     {
         "id": 387,
         "name": "6inch三連装速射砲 Mk.16 mod.2",
-        "canImprovement": false
+        "canImprovement": true,
+        "step1": [
+            4,
+            4
+        ],
+        "step2": [
+            4,
+            6
+        ],
+        "step3": [
+            null
+        ]
     },
     {
         "id": 388,
@@ -6143,7 +6166,8 @@ let imp_json = [
             5
         ],
         "step2": [
-            null
+            5,
+            6
         ],
         "step3": [
             null
@@ -6218,5 +6242,85 @@ let imp_json = [
         "id": 538,
         "name": "Loire 130M改(熟練)",
         "canImprovement": false
+    },
+    {
+        "id": 539,
+        "name": "SOC Seagull 後期型(熟練)",
+        "canImprovement": true,
+        "step1": [
+            4,
+            5
+        ],
+        "step2": [
+            5,
+            7
+        ],
+        "step3": [
+            null
+        ]
+    },
+    {
+        "id": 541,
+        "name": "SBD(Yellow Wings)",
+        "canImprovement": true,
+        "step1": [
+            2,
+            2
+        ],
+        "step2": [
+            2,
+            3
+        ],
+        "step3": [
+            4,
+            null
+        ]
+    },
+    {
+        "id": 542,
+        "name": "TBD(Yellow Wings)",
+        "canImprovement": true,
+        "step1": [
+            2,
+            3
+        ],
+        "step2": [
+            null
+        ],
+        "step3": [
+            null
+        ]
+    },
+    {
+        "id": 543,
+        "name": "SBD VS-2(偵察飛行隊)",
+        "canImprovement": true,
+        "step1": [
+            3,
+            3
+        ],
+        "step2": [
+            3,
+            4
+        ],
+        "step3": [
+            null
+        ]
+    },
+    {
+        "id": 544,
+        "name": "SBD VB-2(爆撃飛行隊)",
+        "canImprovement": true,
+        "step1": [
+            3,
+            3
+        ],
+        "step2": [
+            3,
+            4
+        ],
+        "step3": [
+            null
+        ]
     }
-];
+]

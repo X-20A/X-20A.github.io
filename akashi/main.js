@@ -216,10 +216,10 @@ $(function() {
 
         return top10Entries;
     }
-    // 名前検索(部分一致)
+    // 名前検索(部分一致) 大文字小文字を区別しない
     function searchWithName(target_text) {
         const filteredEntries = imp_json.filter(entry => {
-            return entry.name.includes(target_text) && entry.canImprovement;
+            return entry.name.toLowerCase().includes(target_text.toLowerCase()) && entry.canImprovement;
         });
 
         // 'id' の値でソート（降順）
