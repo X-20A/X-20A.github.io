@@ -127,16 +127,16 @@ const templates = [
         "world": 3,
         "area": 5,
         "route": "1-B-D-H-K",
-        "url": "22erkajo+",
-        "memo": "旗艦健在なら夜戦"
+        "url": "2boy94t6+",
+        "memo": "ほっぽマス気球有効$e旗艦健在なら夜戦"
     },
     {
         "title": "3-5_BDHK_破壊",
         "world": 3,
         "area": 5,
         "route": "1-B-D-H-K",
-        "url": "2894e287+",
-        "memo": "旗艦健在なら夜戦"
+        "url": "27sb7w6p+",
+        "memo": "ほっぽマス気球有効$e旗艦健在なら夜戦"
     },
     {
         "title": "3-5_BFGK_削り",
@@ -172,6 +172,14 @@ const templates = [
     },
     // @4
     {
+        "title": "4-1_CDGJ",
+        "world": 4,
+        "area": 1,
+        "route": "1-C-F-D-G-J",
+        "url": "22dm8qkp+",
+        "memo": "none"
+    },
+    {
         "title": "4-2_ACL",
         "world": 4,
         "area": 2,
@@ -192,8 +200,8 @@ const templates = [
         "world": 4,
         "area": 3,
         "route": "1-D-H-N",
-        "url": "26jx6ffn+",
-        "memo": "none"
+        "url": "22ne8arx+",
+        "memo": "ボスマス気球有効"
     },
     {
         "title": "4-4_AEIK",
@@ -208,32 +216,32 @@ const templates = [
         "world": 4,
         "area": 5,
         "route": "1-C-D-H-T",
-        "url": "26bzu4sj+",
-        "memo": "none"
+        "url": "24xoweax+",
+        "memo": "ボスマス気球有効"
     },
     {
         "title": "4-5_DHT_破壊",
         "world": 4,
         "area": 5,
         "route": "1-C-D-H-T",
-        "url": "2awgs57z+",
-        "memo": "none"
+        "url": "25u97n37+",
+        "memo": "ボスマス気球有効"
     },
     {
         "title": "4-5_DHKT_削り",
         "world": 4,
         "area": 5,
         "route": "1-C-D-H-K-T",
-        "url": "25e68397+",
-        "memo": "none"
+        "url": "23t9p8rf+",
+        "memo": "ボスマス気球有効"
     },
     {
         "title": "4-5_DHKT_破壊",
         "world": 4,
         "area": 5,
         "route": "1-C-D-H-K-T",
-        "url": "25wrkp8v+",
-        "memo": "none"
+        "url": "25kc2pkx+",
+        "memo": "ボスマス気球有効"
     },
     // @5
     {
@@ -370,16 +378,16 @@ const templates = [
         "world": 6,
         "area": 4,
         "route": "1-A-D-C-F-N",
-        "url": "2dzscm7g+",
-        "memo": "none"
+        "url": "24kqq9p6+",
+        "memo": "ボスマス気球有効"
     },
     {
         "title": "6-4_右_MKJIN",
         "world": 6,
         "area": 4,
         "route": "2-M-K-J-I-N",
-        "url": "2bpmyubg+",
-        "memo": "none"
+        "url": "22gktc32+",
+        "memo": "ボスマス気球有効"
     },
     {
         "title": "6-5_ACDGM_上_削り",
