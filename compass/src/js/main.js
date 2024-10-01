@@ -3238,7 +3238,7 @@ $(function() {
                                 } else if(f_speed === '最速艦隊' && f_radar > 3) {
                                     sum('CtoE');
                                     return 'E';
-                                } else if(f_speed === '高速+艦隊' || AO > 0) {
+                                } else if(isFaster() || AO > 0) {
                                     if(sai(60)) {
                                         sum('CtoG');
                                         return 'G';
@@ -4736,7 +4736,7 @@ $(function() {
                                 } // LoSより例外なし
                                 break;
                             case 'R':
-                                if(f_speed === '高速+艦隊' || (f_speed !== '低速艦隊' && CL + CAV > 0 && DD > 1)) {
+                                if(isFaster() || (f_speed !== '低速艦隊' && CL + CAV > 0 && DD > 1)) {
                                     sum('RtoN');
                                     sum('NtoT');
                                     return null;
@@ -4888,7 +4888,7 @@ $(function() {
                                         sum('GtoJ');
                                         return null;
                                     }
-                                } else if(f_speed === '高速+艦隊') {
+                                } else if(isFaster()) {
                                     sum('GtoJ');
                                     return null;
                                 } else if(CAs > 3) {

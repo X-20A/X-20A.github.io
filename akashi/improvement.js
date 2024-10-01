@@ -6155,7 +6155,18 @@ let imp_json = [
     {
         "id": 530,
         "name": "35.6cm連装砲改三丙",
-        "canImprovement": false
+        "canImprovement": true,
+        "step1": [
+            8,
+            8
+        ],
+        "step2": [
+            9,
+            11
+        ],
+        "step3": [
+            null
+        ]
     },
     {
         "id": 531,
