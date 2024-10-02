@@ -38,8 +38,28 @@ $(function() {
         applyInfo(title, url, memo);
         
         $('#message').remove();
-        $('#cy').css('display', 'block');
-        $('#cy').css('background-image', `url(${cdn}/media/background/${world}-${area}.webp)`);
+        
+        // 海域ごとに背景を位置合わせ
+        const adjust_data = adjust_datas.filter(item => item.area === `${world}-${area}`)[0];
+        if(adjust_data) {
+            const x = adjust_data.x;
+            const y = adjust_data.y;
+            const size = adjust_data.size;
+
+            $('#cy').css({
+                'background-image': `url(${cdn}/media/background/${world}-${area}.webp)`,
+                'background-position-x': x,
+                'background-position-y': y,
+                'background-size': size,
+                'display': 'block'
+            });
+        } else {
+            $('#cy').css({
+                'background-image': `url(/media/background/${world}-${area}.webp)`,
+                'display': 'block'
+            });
+        }
+        
         drawMap(`${world}-${area}`, route, false);
     });
     $('#select-menu').on('dblclick', '.list-items', function() {

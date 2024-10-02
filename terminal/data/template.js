@@ -91,6 +91,14 @@ const templates = [
     },
     // @3
     {
+        "title": "3-1_CFG",
+        "world": 3,
+        "area": 1,
+        "route": "1-C-F-G",
+        "url": "29ffx6lz+",
+        "memo": "none"
+    },
+    {
         "title": "3-2_CL",
         "world": 3,
         "area": 2,
@@ -99,11 +107,19 @@ const templates = [
         "memo": "渦潮による喪失は未入力$eB未満夜戦"
     },
     {
-        "title": "3-3_AGM",
+        "title": "3-3_上_AGM",
         "world": 3,
         "area": 3,
         "route": "1-A-C-G-M",
         "url": "2yavuen7+",
+        "memo": "渦潮による喪失は未入力"
+    },
+    {
+        "title": "3-3_下_ABM",
+        "world": 3,
+        "area": 3,
+        "route": "1-A-B-F-J-M",
+        "url": "24faxgjk+",
         "memo": "渦潮による喪失は未入力"
     },
     {

@@ -8,7 +8,8 @@
     text-align: center;
     flex: 1;
     cursor: pointer;
-    padding: 15px
+    padding: 15px;
+    user-select: none;
 }
 .worlds:hover {
     background-color: #dcefff;
@@ -45,7 +46,7 @@
     justify-content: center;
 }
 #cy {
-    background-position-x: -21px;
+    background-position-x: -40px;
     background-position-y: 25px;
     background-size: 702px;
     background-color: #000;
