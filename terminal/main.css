@@ -82,7 +82,8 @@
 #select-menu {
     position: fixed;
     z-index: 999999;
-    width: 200px;
+    width: 210px;
     border-left: 2px solid #dcefff;
     font-weight: 500;
+    background-color: #fff;
 }

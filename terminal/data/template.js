@@ -494,6 +494,14 @@ const templates = [
         "memo": "ボスマス梯形陣"
     },
     {
+        "title": "7-4_CDJKM_クルージング",
+        "world": 7,
+        "area": 4,
+        "route": "1-C-D-F-J-K-M-O",
+        "url": "ytjvbb79+",
+        "memo": "潜水マスに基地分散$eゲージ破壊時は3戦目駆逐入り編成確定"
+    },
+    {
         "title": "7-5-1_ABDGK_破壊",
         "world": 7,
         "area": 5,
