@@ -247,4 +247,8 @@ $(function() {
         };
         return text.replace(/[&<>"']/g, (char) => map[char]);
     }
+    
+    if(true) {
+        $('#search-text').focus();
+    }
 });

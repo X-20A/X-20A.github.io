@@ -11909,6 +11909,8 @@ $(function() {
             $('#fleet-import').val(f);
             $('#fleet-import').trigger('input');
         }
+        
+        $('#fleet-import').focus();
     }
     // URLから任意のパラメータを取得
     function getParam(name, url) {
