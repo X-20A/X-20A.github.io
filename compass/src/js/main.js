@@ -1849,29 +1849,30 @@ $(function() {
                                     return 'D';
                                 } else {
                                     sum('1toB');
-                                    sum('BtoC');
-                                    sum('CtoF');
-                                    return 'F';
+                                    return 'B';
                                 }
                                 break;
                             case 'B':
-                                if((CVs > 2) || BBs > 2 || Ds === 0) {
+                                if(CVs > 2 || BBs > 2 || Ds === 0) {
                                     sum('BtoD');
                                     return 'D';
                                 } else if(Ds > 2) {
                                     sum('BtoC');
-                                    return 'C';
+                                    sum('CtoF');
+                                    return 'F';
                                 }else if(CL > 0) {
                                     if(sai(80)) {
                                         sum('BtoC');
-                                        return 'C';
+                                        sum('CtoF');
+                                        return 'F';
                                     } else {
                                         sum('BtoD');
                                         return 'D';
                                     }
                                 } else if(sai(60)) {
                                     sum('BtoC');
-                                    return 'C';
+                                    sum('CtoF');
+                                    return 'F';
                                 } else {
                                     sum('BtoD');
                                     return 'D';
@@ -1932,28 +1933,17 @@ $(function() {
                                             sum('HtoL');
                                             return null;
                                         }
-                                    } else  {
-                                        if(sai(50)) {
-                                            sum('FtoE');
-                                            sum('EtoH');
-                                            sum('HtoL');
-                                            return null;
-                                        } else {
-                                            sum('FtoH');
-                                            sum('HtoL');
-                                            return null;
-                                        }
-                                    }
-                                }
-                                if(sai(50)) {
-                                    sum('FtoE');
-                                    sum('EtoH');
-                                    sum('HtoL');
-                                    return null;
+                                    } // Dsより例外なし
                                 } else {
-                                    sum('FtoH');
-                                    sum('HtoL');
-                                    return null;
+                                    if(sai(50)) {
+                                        sum('FtoH');
+                                        sum('HtoL');
+                                        return null;
+                                    } else {
+                                        sum('FtoI');
+                                        sum('ItoL');
+                                        return null;
+                                    }
                                 }
                                 break;
                             case 'J':
