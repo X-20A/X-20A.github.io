@@ -2738,7 +2738,7 @@ $(function() {
                                 } // DDで例外なし確認
                                 break;
                             case 'H':
-                                if(CL + CT > 0 && DD > 3 && (CA === 1 || CL + CT === 2 || DD === 5)) {
+                                if(CL + CT > 0 && DD > 3 && (CAs === 1 || CL + CT === 2 || DD === 5)) {
                                     sum('HtoL');
                                     return 'L';
                                 } else {
