@@ -667,7 +667,7 @@ const s_data = [
 ,{"id":647,"name":"浦波改二","type":"駆逐艦","seek":12,"max_seek":44,"hp":31,"hp2":36,"ass":25,"max_ass":66,"fuel":15,"na":0,"sg":2}
 ,{"id":648,"name":"秋雲改二","type":"駆逐艦","seek":10,"max_seek":42,"hp":33,"hp2":38,"ass":28,"max_ass":75,"fuel":15,"na":0,"sg":2}
 ,{"id":649,"name":"高波改二","type":"駆逐艦","seek":14,"max_seek":60,"hp":33,"hp2":38,"ass":30,"max_ass":72,"fuel":15,"na":0,"sg":2}
-,{"id":650,"name":"宗谷","type":"補給艦","seek":9,"max_seek":18,"hp":23,"hp2":27,"ass":0,"max_ass":2,"fuel":20,"na":0,"sg":5}
+,{"id":650,"name":"宗谷","type":"補給艦","seek":16,"max_seek":32,"hp":23,"hp2":27,"ass":0,"max_ass":4,"fuel":25,"na":0,"sg":5}
 ,{"id":651,"name":"丹陽","type":"駆逐艦","seek":15,"max_seek":50,"hp":35,"hp2":40,"ass":26,"max_ass":60,"fuel":15,"na":0,"sg":2}
 ,{"id":652,"name":"球磨改二","type":"軽巡洋艦","seek":13,"max_seek":58,"hp":46,"hp2":52,"ass":40,"max_ass":80,"fuel":25,"na":0,"sg":2}
 ,{"id":653,"name":"Scirocco","type":"駆逐艦","seek":7,"max_seek":20,"hp":15,"hp2":19,"ass":29,"max_ass":60,"fuel":15,"na":2,"sg":2}
@@ -706,7 +706,7 @@ const s_data = [
 ,{"id":696,"name":"Atlanta改","type":"軽巡洋艦","seek":11,"max_seek":50,"hp":41,"hp2":47,"ass":12,"max_ass":32,"fuel":30,"na":1,"sg":2}
 ,{"id":697,"name":"South Dakota改","type":"巡洋戦艦","seek":18,"max_seek":60,"hp":91,"hp2":100,"ass":0,"max_ass":0,"fuel":160,"na":1,"sg":2}
 ,{"id":698,"name":"加賀改二","type":"正規空母","seek":51,"max_seek":90,"hp":84,"hp2":92,"ass":0,"max_ass":0,"fuel":100,"na":0,"sg":3}
-,{"id":699,"name":"宗谷","type":"補給艦","seek":9,"max_seek":18,"hp":23,"hp2":27,"ass":0,"max_ass":2,"fuel":20,"na":0,"sg":5}
+,{"id":699,"name":"宗谷","type":"補給艦","seek":2,"max_seek":12,"hp":23,"hp2":27,"ass":8,"max_ass":32,"fuel":20,"na":0,"sg":5}
 ,{"id":700,"name":"薄雲改","type":"駆逐艦","seek":7,"max_seek":41,"hp":30,"hp2":35,"ass":22,"max_ass":60,"fuel":15,"na":0,"sg":2}
 ,{"id":701,"name":"第四号海防艦改","type":"海防艦","seek":4,"max_seek":20,"hp":15,"hp2":19,"ass":32,"max_ass":76,"fuel":10,"na":0,"sg":5}
 ,{"id":702,"name":"松改","type":"駆逐艦","seek":15,"max_seek":45,"hp":27,"hp2":31,"ass":35,"max_ass":80,"fuel":15,"na":0,"sg":2}
@@ -831,5 +831,5 @@ const s_data = [
 ,{"id":966,"name":"Lexington","type":"正規空母","seek":40,"max_seek":67,"hp":84,"hp2":92,"ass":0,"max_ass":0,"fuel":65,"na":1,"sg":2}
 ,{"id":735,"name":"Lexington改","type":"正規空母","seek":46,"max_seek":80,"hp":89,"hp2":97,"ass":0,"max_ass":0,"fuel":85,"na":1,"sg":2}
 ,{"id":694,"name":"霧島改二丙","type":"巡洋戦艦","seek":16,"max_seek":52,"hp":85,"hp2":93,"ass":0,"max_ass":0,"fuel":100,"na":0,"sg":2}
-,{"id":956,"name":"早霜改二","type":"駆逐艦","seek":11,"max_seek":42,"hp":33,"hp2":37,"ass":28,"max_ass":75,"fuel":15,"na":0,"sg":2} // 仮
+,{"id":956,"name":"早霜改二","type":"駆逐艦","seek":11,"max_seek":42,"hp":33,"hp2":38,"ass":28,"max_ass":75,"fuel":15,"na":0,"sg":2} // 仮
 ];
