@@ -37,8 +37,8 @@ const templates = [
         "world": 1,
         "area": 5,
         "route": "1-A-D-F-G-J",
-        "url": "26o4g5sy+",
-        "memo": "none"
+        "url": "2b3dphsj+",
+        "memo": "ボスマス通常消費"
     },
     {
         "title": "1-6_EFB",
@@ -216,8 +216,8 @@ const templates = [
         "world": 4,
         "area": 3,
         "route": "1-D-H-N",
-        "url": "22ne8arx+",
-        "memo": "ボスマス気球有効"
+        "url": "22oy9yb4+",
+        "memo": "ボスマス気球有効$eボス前10%逸れ"
     },
     {
         "title": "4-4_AEIK",
@@ -442,8 +442,8 @@ const templates = [
         "world": 7,
         "area": 1,
         "route": "1-D-E-G-H-K",
-        "url": "22sjf6zs+",
-        "memo": "none"
+        "url": "2b35n9je+",
+        "memo": "ボスマス通常消費"
     },
     {
         "title": "7-2-1_CEG",
