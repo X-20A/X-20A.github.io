@@ -192,8 +192,8 @@ const templates = [
         "world": 4,
         "area": 1,
         "route": "1-C-F-D-G-J",
-        "url": "22dm8qkp+",
-        "memo": "none"
+        "url": "2b7dn4zx+",
+        "memo": "Dマス通常消費"
     },
     {
         "title": "4-2_ACL",
@@ -457,7 +457,7 @@ const templates = [
         "title": "7-2-2_BCIM",
         "world": 7,
         "area": 2,
-        "route": "1-C-D-I-M",
+        "route": "1-B-C-D-I-M",
         "url": "22ukw2bj+",
         "memo": "ゲージ指定無し"
     },
