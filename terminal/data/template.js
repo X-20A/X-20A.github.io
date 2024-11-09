@@ -107,6 +107,14 @@ const templates = [
         "memo": "渦潮による喪失は未入力$eB未満夜戦"
     },
     {
+        "title": "3-2_CJK",
+        "world": 3,
+        "area": 2,
+        "route": "1-C-G-J-K",
+        "url": "2yedf8be+",
+        "memo": "渦潮による喪失は未入力"
+    },
+    {
         "title": "3-3_上_AGM",
         "world": 3,
         "area": 3,
