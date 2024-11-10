@@ -3536,7 +3536,18 @@ let imp_json = [
     {
         "id": 261,
         "name": "Type144/147 ASDIC",
-        "canImprovement": false
+        "canImprovement": true,
+        "step1": [
+            5,
+            6
+        ],
+        "step2": [
+            6,
+            8
+        ],
+        "step3": [
+            null
+        ]
     },
     {
         "id": 262,
@@ -4160,7 +4171,8 @@ let imp_json = [
             5
         ],
         "step3": [
-            null
+            9,
+            15
         ]
     },
     {
@@ -4347,7 +4359,18 @@ let imp_json = [
     {
         "id": 329,
         "name": "35.6cm連装砲改二",
-        "canImprovement": false
+        "canImprovement": true,
+        "step1": [
+            7,
+            7
+        ],
+        "step2": [
+            8,
+            10
+        ],
+        "step3": [
+            null
+        ]
     },
     {
         "id": 330,
@@ -5118,7 +5141,18 @@ let imp_json = [
     {
         "id": 411,
         "name": "42号対空電探改二",
-        "canImprovement": false
+        "canImprovement": true,
+        "step1": [
+            5,
+            6
+        ],
+        "step2": [
+            7,
+            9
+        ],
+        "step3": [
+            null
+        ]
     },
     {
         "id": 412,
@@ -5263,12 +5297,36 @@ let imp_json = [
     {
         "id": 426,
         "name": "305mm/46 連装砲",
-        "canImprovement": false
+        "canImprovement": true,
+        "step1": [
+            2,
+            3
+        ],
+        "step2": [
+            2,
+            4
+        ],
+        "step3": [
+            6,
+            9
+        ]
     },
     {
         "id": 427,
         "name": "305mm/46 三連装砲",
-        "canImprovement": false
+        "canImprovement": true,
+        "step1": [
+            2,
+            3
+        ],
+        "step2": [
+            2,
+            4
+        ],
+        "step3": [
+            6,
+            9
+        ]
     },
     {
         "id": 428,
@@ -6340,6 +6398,22 @@ let imp_json = [
         "step2": [
             3,
             4
+        ],
+        "step3": [
+            null
+        ]
+    },
+    {
+        "id": 549,
+        "name": "三式指揮連絡機改二",
+        "canImprovement": true,
+        "step1": [
+            4,
+            5
+        ],
+        "step2": [
+            5,
+            7
         ],
         "step3": [
             null
