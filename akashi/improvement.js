@@ -2428,7 +2428,18 @@ let imp_json = [
     {
         "id": 175,
         "name": "雷電",
-        "canImprovement": false
+        "canImprovement": true,
+        "step1": [
+            5,
+            6
+        ],
+        "step2": [
+            6,
+            8
+        ],
+        "step3": [
+            null
+        ]
     },
     {
         "id": 176,
