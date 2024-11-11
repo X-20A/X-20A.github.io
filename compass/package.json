@@ -17,7 +17,8 @@
     "decimal.js": "^10.4.3",
     "gkcoi": "1.5.2",
     "jquery": "^3.7.1",
-    "jquery-ui": "^1.13.2"
+    "jquery-ui": "^1.13.2",
+    "lz-string": "^1.5.0"
   },
   "devDependencies": {
     "webpack": "^5.90.1",

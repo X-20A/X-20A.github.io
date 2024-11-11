@@ -32,6 +32,7 @@ import Decimal from 'decimal.js';
 import cytoscape from 'cytoscape/dist/cytoscape.min.js';
 import contextMenus from 'cytoscape-context-menus';
 import { generate } from 'gkcoi';
+import LZString from 'lz-string';
 
 cytoscape.use(contextMenus);
 
@@ -4193,9 +4194,9 @@ $(function() {
                                 break;
                         }
                         break;
-                    case 3: // @4-3 nullがヤな感じ 多分こういうことだろうという
+                    case 3: // @4-3
                         switch (edge) {
-                            case null:
+                            case null: // nullがヤな感じ 多分こういうことだろうという
                                 if(CV + CVB > 0) {
                                     sum('1toC');
                                     return 'C';
@@ -11890,9 +11891,14 @@ $(function() {
         // urlパラメータからの読み込みならlocalstorageに入れてパラメータなしでリロード
         // 入力チェックはsetFleetInfoあたりでやる
         let deck = getParam('predeck');
+        let pdz = getParam('pdz');
         if(deck) {
             deck = decodeURIComponent(deck);
             localStorage.setItem('fleet', deck);
+            location.href = location.origin + location.pathname;
+        } else if(pdz) {
+            pdz = LZString.decompressFromEncodedURIComponent(pdz);
+            localStorage.setItem('fleet', pdz);
             location.href = location.origin + location.pathname;
         } else if(f) {
             // 艦隊は文字列のまま貼る
