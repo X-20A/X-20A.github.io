@@ -3720,7 +3720,7 @@ $(function() {
                                 } // 例外なし
                                 break;
                             case 'H':
-                                if(BBCVs > 3 || (BBCVs > 1 && LHA > 0)) {
+                                if(BBCVs > 3 || LHA > 0) {
                                     sum('HtoJ');
                                     return null;
                                 } else if(f_seek[3] < 35) {
