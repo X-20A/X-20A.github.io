@@ -82,6 +82,14 @@ const templates = [
         "memo": "none"
     },
     {
+        "title": "2-5_BFEO",
+        "world": 2,
+        "area": 5,
+        "route": "1-B-F-E-I-O",
+        "url": "23e35zje+",
+        "memo": "none"
+    },
+    {
         "title": "2-5_CEO",
         "world": 2,
         "area": 5,
