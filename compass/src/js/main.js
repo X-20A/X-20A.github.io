@@ -3720,7 +3720,7 @@ $(function() {
                                 } // 例外なし
                                 break;
                             case 'H':
-                                if(BBCVs > 3 || LHA > 0) {
+                                if(BBCVs > 3 || (BBCVs > 1 && LHA > 0)) {
                                     sum('HtoJ');
                                     return null;
                                 } else if(f_seek[3] < 35) {
@@ -6942,26 +6942,50 @@ $(function() {
                                 if(f_speed === '最速艦隊') {
                                     sum('DtoF');
                                     return 'F';
-                                } else if(CV + CVB > 1 || CVs > 2 || BBs + CAs > 2 || BBs + CV + CVB + CAs > 2 || Ss > 0 || CL + DD === 0) {
+                                } else if(CV + CVB > 1) {
+                                    sum('DtoE');
+                                    sum('EtoF');
+                                    return 'F';
+                                } else if(CVL > 2) {
+                                    sum('DtoE');
+                                    sum('EtoF');
+                                    return 'F';
+                                } else if(BBs + CAs > 2) {
+                                    sum('DtoE');
+                                    sum('EtoF');
+                                    return 'F';
+                                } else if(CL + DD === 0) {
                                     sum('DtoE');
                                     sum('EtoF');
                                     return 'F';
                                 } else if(f_speed === '高速+艦隊') {
                                     sum('DtoF');
                                     return 'F';
+                                } else if(BBs + CV + CVB + CAs > 2) {
+                                    sum('DtoE');
+                                    sum('EtoF');
+                                    return 'F';
+                                } else if(Ds > 2) {
+                                    sum('DtoF');
+                                    return 'F';
+                                } else if(BBs < 2) {
+                                    sum('DtoF');
+                                    return 'F';
                                 } else if(Ds < 2) {
                                     sum('DtoE');
                                     sum('EtoF');
                                     return 'F';
-                                } else if(Ds > 2 || f_speed !== '低速艦隊') {
-                                    sum('DtoF');
-                                    return 'F';
-                                } else if((CAV === 1 && BBV === 1 && CL === 1 && DD === 3 && f_speed === '低速艦隊') || (CAV === 2 && CVL === 1 && CL === 1 && DD === 2 && f_speed === '低速艦隊')) { // 例外的にFへ
-                                    sum('DtoF');
-                                    return 'F';
+                                } else if(BBs + CVL > 2) {
+                                    if(f_speed === '低速艦隊') {
+                                        sum('DtoE');
+                                        sum('EtoF');
+                                        return 'F';
+                                    } else {
+                                        sum('DtoF');
+                                        return 'F';
+                                    }
                                 } else {
-                                    sum('DtoE');
-                                    sum('EtoF');
+                                    sum('DtoF');
                                     return 'F';
                                 }
                                 break;
