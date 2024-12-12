@@ -11284,7 +11284,7 @@ $(function() {
                     text = text.replaceAll('$bo', '<span style="font-weight:bold;">');
                     text = text.replaceAll('$ob', '</span>');
                     text = text.replaceAll('$sw', `<button class="design-button remote-active" value="${drew_area}-${node}" style="padding:3px 15px;margin-left:5px;">切替</button>`);
-                    text = text.replaceAll('$or', `<a href="https:// x-20a.github.io/reference/?topic=${drew_area}-${node}" style="color:blue;" target="_blank" rel="noopener noreferrer">`);
+                    text = text.replaceAll('$or', `<a href="https://x-20a.github.io/reference/?topic=${drew_area}-${node}" style="color:blue;" target="_blank" rel="noopener noreferrer">`);
                     text = text.replaceAll('$ro', '</a>');
                     if(drew_area.includes('58')) {
                         const blocks = text.split(/\$bl(.*?)\$lb/g).filter(Boolean);
