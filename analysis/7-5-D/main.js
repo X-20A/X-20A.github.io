@@ -46,14 +46,14 @@ $(function() {
         startProcess();
     }
 
-    function displayInfo(e_count, e_length, c_length, first, last) {
+    function displayInfo(e_length, c_length, first, last) {
         $('#info-container').css('display', 'block');
         $('#wait-message').css('display', 'none');
         $('#node').text(`node : ${node}`);
-        $('#total').text(`Total sortie : ${e_count}`);
+        $('#total').text(`Total sortie : ${e_length}`);
         $('#date-span').text(`${convertDateTime(first)} ～ ${convertDateTime(last)}`);
         let color = 'red';
-        if(!c_length) {
+        if (!c_length) {
             color = '#4ae325';
         }
         $('#count').html(`<span style="color:${color};">${c_length}</span> / ${e_length}`);
@@ -64,17 +64,16 @@ $(function() {
         let ces = await startSim(sortie_data, map_info);
         //反例を表示
         let c_length = ces.length;
-        if(c_length) {
+        if (c_length) {
             let unmatch = openList(entries, ces, 40, true);
             $('#counterexample-list').append(unmatch);
             let matchList = excludeElements(e_length, ces.map(subArray => subArray[0]));
             let match = openList(entries, matchList, 10, false);
             $('#match-list').append(match);
         }
-        let entry_count = sortie_data.result.entryCount;
         let last = entries[0].datetime;
         let first = entries[e_length - 1].datetime;
-        displayInfo(entry_count, e_length, c_length, first, last);
+        displayInfo(e_length, c_length, first, last);
     }
 
     function openList(entries, list, max, isCe) {
@@ -83,15 +82,15 @@ $(function() {
         for (let i = 0; i < list.length && iterations < max; i++) {
             html += '<div class="list-item">';
             let fleet = null;
-            if(isCe) {
+            if (isCe) {
                 fleet = entries[list[i][0]];
             } else {
                 fleet = entries[list[i]];
             }
             let f1_length = fleet.fleet1.length;
             let f2_length = fleet.fleet2.length;
-            let fleet1 = fleet.fleet1data;
-            let fleet2 = fleet.fleet2data;
+            let fleet1 = fleet.fleet1;
+            let fleet2 = fleet.fleet2;
             let f1_names = [];
             let f2_names = [];
             for (var q = 0; q < f1_length; q++) {
@@ -100,27 +99,27 @@ $(function() {
             for (var q = 0; q < f2_length; q++) {
                 f2_names.push(fleet2[q].name);
             }
-            if(isCe) {
+            if (isCe) {
                 html += createRouteHtml(list[i][1], getRoute(fleet));
             } else {
                 html += createRouteHtml(null, getRoute(fleet));
             }
             html += `<p>${getFleetType(fleet)} | ${getFleetSpeed(fleet)}</p>`;
             let los = getLos(fleet);
-            for(let i = 0;i < 4;i++) {
-                html += `<span style="font-weight:600;">${i+ 1}</span><span>:${los[i]} </span>`;
+            for (let i = 0; i < 4; i++) {
+                html += `<span style="font-weight:600;">${i + 1}</span><span>:${los[i]} </span>`;
             }
-            if(fleet.radars) {
+            if (fleet.radars) {
                 html += `<p>radars:${fleet.radars} | radarShips:${fleet.radarShips} | radars5los:${fleet.radars5los} | radarShips5los:${fleet.radarShips5los}</p>`;
             } else {
                 html += `<p>radars:0 | radarShips:0 | radars5los:0 | radarShips5los:0</p>`;
             }
             html += createListHtml(f1_names);
-            if(f2_length) {
+            if (f2_length) {
                 html += createListHtml(f2_names);
             }
             html += getShipTypes(fleet, 1);
-            if(f2_length) {
+            if (f2_length) {
                 html += getShipTypes(fleet, 2);
             }
             html += '</div><hr>';
@@ -134,17 +133,17 @@ $(function() {
         db_route = cutOffCheckPoint(db_route);
         db_route = cutOffEndPoints(db_route);
         let res = '';
-        if(sim_route) {
+        if (sim_route) {
             res += `<p>sim : ${sim_route} | db : ${db_route}</p>`;
         } else {
-            res +=  `<p>db : ${db_route}</p>`;
+            res += `<p>db : ${db_route}</p>`;
         }
 
         return res;
     }
     function createListHtml(names) {
         let res = '<p>';
-        for(name of names) {
+        for (name of names) {
             res += name + ' ';
         }
         res += '</p>';
@@ -153,14 +152,14 @@ $(function() {
     function getShipTypes(fleet, num) {
         let res = '<p>';
         let types = null;
-        if(num === 1) {
+        if (num === 1) {
             types = fleet.fleetOneTypes;
         } else {
             types = fleet.fleetTwoTypes;
         }
         let elem = [];
-        for(type of types) {
-            switch(type) {
+        for (type of types) {
+            switch (type) {
                 case 1:
                     elem.push('DE');
                     break;
@@ -223,7 +222,7 @@ $(function() {
                     break;
             }
         }
-        for(type of elem) {
+        for (type of elem) {
             res += `<span class="types">${type}</span>`;
         }
         res += '</p>';

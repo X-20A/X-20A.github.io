@@ -52,45 +52,45 @@ let end_points = ['F']; //List of the end points that can be reached
 function branch(node) {
     switch(node) {
         case null:
-            if(f_speed === '最速艦隊') {
+            if (f_speed === '最速艦隊') {
                 return 'F';
             }
-            if(CV + CVB >= 2) {
+            if (CV + CVB >= 2) {
                 return ['E', 'F'];
             }
-            if(CVL >= 3) {
+            if (CVL >= 3) {
                 return ['E', 'F'];
             }
-            if(BBs + CAs >= 3) {
+            if (BBs + CAs >= 3) {
                 return ['E', 'F'];
             }
-            if(CL + DD === 0) {
+            if (BBs + CV + CVB + CAs >= 3) {
                 return ['E', 'F'];
             }
-            if(f_speed === '高速+艦隊') {
+            if (CL + DD === 0) {
+                return ['E', 'F'];
+            }
+            if (f_speed === '高速+艦隊') {
                 return 'F';
             }
-            if(BBs + CV + CVB + CAs >= 3) {
+            if (DD + DE >= 3) {
+                return 'F';
+            }
+            if (BBs <= 1) {
+                return 'F';
+            }
+            if (DD + DE <= 1) {
                 return ['E', 'F'];
             }
-            if(DD + DE >= 3) {
-                return 'F';
-            }
-            if(BBs <= 1) {
-                return 'F';
-            }
-            if(DD + DE <= 1) {
+            if (f_speed === '低速艦隊') {
                 return ['E', 'F'];
             }
-            if(BBs + CVL >= 3) {
-                if(f_speed !== '低速艦隊') {
-                    return 'F';
-                } else {
-                    return ['E', 'F'];
-                }
-            } else {
+            if (BBs + CVL >= 3) {
                 return 'F';
             }
+
+            return 'F';
+
             break;
     }
 }
@@ -154,8 +154,8 @@ function setData(fleet) {
     f1_length = fleet.fleet1.length;
     f2_length = fleet.fleet2.length;
     f_length = f1_length + f2_length;
-    let fleet1 = fleet.fleet1data;
-    let fleet2 = fleet.fleet2data;
+    let fleet1 = fleet.fleet1;
+    let fleet2 = fleet.fleet2;
     for(var i = 0;i < f1_length;i++) {
         f1_names.push(fleet1[i].name);
     }
