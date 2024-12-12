@@ -6950,7 +6950,7 @@ $(function() {
                                     sum('DtoE');
                                     sum('EtoF');
                                     return 'F';
-                                } else if(BBs + CAs > 2) {
+                                } else if (BBs + CV + CVB + CAs > 2) {
                                     sum('DtoE');
                                     sum('EtoF');
                                     return 'F';
@@ -6960,10 +6960,6 @@ $(function() {
                                     return 'F';
                                 } else if(f_speed === '高速+艦隊') {
                                     sum('DtoF');
-                                    return 'F';
-                                } else if(BBs + CV + CVB + CAs > 2) {
-                                    sum('DtoE');
-                                    sum('EtoF');
                                     return 'F';
                                 } else if(Ds > 2) {
                                     sum('DtoF');
@@ -6975,15 +6971,10 @@ $(function() {
                                     sum('DtoE');
                                     sum('EtoF');
                                     return 'F';
-                                } else if(BBs + CVL > 2) {
-                                    if(f_speed === '低速艦隊') {
-                                        sum('DtoE');
-                                        sum('EtoF');
-                                        return 'F';
-                                    } else {
-                                        sum('DtoF');
-                                        return 'F';
-                                    }
+                                } if (f_speed === '低速艦隊') {
+                                    sum('DtoE');
+                                    sum('EtoF');
+                                    return 'F';
                                 } else {
                                     sum('DtoF');
                                     return 'F';
