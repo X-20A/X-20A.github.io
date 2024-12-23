@@ -5112,6 +5112,11 @@ $(function() {
                                     sum('LtoK');
                                     sum('KtoO');
                                     return null;
+                                } else if(f_seek[1] < 60) {
+                                    sum('LtoM');
+                                    sum('MtoK');
+                                    sum('KtoO');
+                                    return null;
                                 } else if(f_seek[1] < 62 && f_seek[1] >= 60) {
                                     if(sai(50)) {
                                         sum('LtoK');
