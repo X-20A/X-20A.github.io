@@ -6541,7 +6541,7 @@ $(function() {
                                         sum('AtoB');
                                         sum('BtoC');
                                         return 'C';
-                                    } else if(AO === 1 && BBs > 2) {
+                                    } else if(AO === 1 && Ds > 2) {
                                         sum('AtoC');
                                         return 'C';
                                     } else if(CA === 0 || Ds === 0 || (BBs > 0 && !isInclude('羽黒'))) {
@@ -6570,8 +6570,7 @@ $(function() {
                                             sum('BtoC');
                                             return 'C';
                                         } else if(CA + CL + Ds === f_length) {
-                                            sum('AtoB');
-                                            sum('BtoC');
+                                            sum('AtoC');
                                             return 'C';
                                         } else {
                                             sum('AtoB');
