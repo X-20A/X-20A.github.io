@@ -33,6 +33,9 @@ export default class SimController {
     }
 
     public start(): SimResult[] {
+        // NOTE: 一本道と終点について、予めMapとSetを用意するのを試したが、遅くなったので没
+        // 非同期処理で、 0.6ms - 60ms
+        // 同期処理で 24ms - 28ms 😢
         const scanners: Scanner[] = [new Scanner([null], null, 1)];
         const results: SimResult[] = [];
         const area_routes = edges[this.area_id];
@@ -102,6 +105,7 @@ export default class SimController {
         const f_arctic = fleet.arctic_gear_carrier_count;
 
         const track = scanner.route;
+        console.log('fleet.countSBB: ', fleet.countSBB());
 
         const composition = fleet.composition;
         const BB = composition.BB;
@@ -139,38 +143,249 @@ export default class SimController {
                     case null:
                         return '1';
                     case 'A':
-                        switch (f_length) {
-                            case 1:
-                                return [
-                                    { node: 'B', rate: 0.2 },
-                                    { node: 'C', rate: 0.8 },
-                                ];
-                            case 2:
-                                return [
-                                    { node: 'B', rate: 0.25 },
-                                    { node: 'C', rate: 0.75 },
-                                ];
-                            case 3:
-                                return [
-                                    { node: 'B', rate: 0.3 },
-                                    { node: 'C', rate: 0.7 },
-                                ];
-                            case 4:
-                                return [
-                                    { node: 'B', rate: 0.35 },
-                                    { node: 'C', rate: 0.65 },
-                                ];
-                            case 5:
-                                return [
-                                    { node: 'B', rate: 0.4 },
-                                    { node: 'C', rate: 0.6 },
-                                ];
-                            case 6:
-                                return [
-                                    { node: 'B', rate: 0.55 },
-                                    { node: 'C', rate: 0.45 },
-                                ];
+                        if (f_length === 1) {
+                            return [
+                                { node: 'B', rate: 0.2 },
+                                { node: 'C', rate: 0.8 },
+                            ];
+                        } else if (f_length === 2) {
+                            return [
+                                { node: 'B', rate: 0.25 },
+                                { node: 'C', rate: 0.75 },
+                            ];
+                        } else if (f_length === 3) {
+                            return [
+                                { node: 'B', rate: 0.3 },
+                                { node: 'C', rate: 0.7 },
+                            ];
+                        } else if (f_length === 4) {
+                            return [
+                                { node: 'B', rate: 0.35 },
+                                { node: 'C', rate: 0.65 },
+                            ];
+                        } else if (f_length === 5) {
+                            return [
+                                { node: 'B', rate: 0.4 },
+                                { node: 'C', rate: 0.6 },
+                            ];
+                        } else if (f_length >= 6) {
+                            return [
+                                { node: 'B', rate: 0.55 },
+                                { node: 'C', rate: 0.45 },
+                            ];
                         }
+                }
+                break;
+            case '1-2':
+                switch (node) {
+                    case null:
+                        return '1';
+                    case '1':
+                        if (Ds === 4 && f_length < 6) {
+                            return 'A';
+                        }  else {
+                            if (f_length > 5) {
+                                return [
+                                    { node: 'A', rate: 0.4 },
+                                    { node: 'B', rate: 0.6 },
+                                ];
+                            } else if (f_length === 5) {
+                                return [
+                                    { node: 'A', rate: 0.5 },
+                                    { node: 'B', rate: 0.5 },
+                                ];
+                            } else if (f_length === 4) {
+                                return [
+                                    { node: 'A', rate: 0.6 },
+                                    { node: 'B', rate: 0.4 },
+                                ];
+                            } else { // f_length < 4
+                                return [
+                                    { node: 'A', rate: 0.7 },
+                                    { node: 'B', rate: 0.3 },
+                                ];
+                            }
+                        }
+                        break;
+                    case 'A':
+                        if (f_speed !== '低速艦隊') {
+                            return 'E';
+                        } else if (Ds < 4) {
+                            return 'D';
+                        } else if (Ds === 6) {
+                            return 'E';
+                        } else if (CL + CT === 1 && Ds === 5) {
+                            return 'E';
+                        } else if (CL === 1 && Ds > 3) {
+                            return 'E';
+                        } else {
+                            return [
+                                { node: 'D', rate: 0.35 },
+                                { node: 'E', rate: 0.65 },
+                            ];
+                        }
+                }
+                break;
+            case '1-3':
+                switch (node) {
+                    case null:
+                        return '1';
+                    break;
+                    case '1':
+                        if (AO + AV > 0) {
+                            return 'A';
+                        } else if (CVs > 0) {
+                            return 'C';
+                        } else {
+                            return [
+                                { node: 'A', rate: 0.5 },
+                                { node: 'C', rate: 0.5 },
+                            ];
+                        }
+                        break;
+                    case 'A':
+                        if (AO > 0) {
+                            return 'D';
+                        } else if (DE > 3) {
+                            return 'D';
+                        } else if (AV > 0 || Ds > 3) {
+                            return [
+                                { node: 'D', rate: 0.8 },
+                                { node: 'E', rate: 0.2 },
+                            ];
+                        } else if (Ss > 0) {
+                            return 'E';
+                        } else {
+                            return [
+                                { node: 'D', rate: 0.5 },
+                                { node: 'E', rate: 0.5 },
+                            ];
+                        }
+                        break;
+                    case 'F':
+                        if (CV + CVB > 0) {
+                            return 'H';
+                        } else if (fleet.countSBB() > 0) {
+                            return 'H';
+                        } else if (CAV > 0 && DD > 1) {
+                            return 'J';
+                        } else if (DD > 3) {
+                            return 'J';
+                        } else if (CL + CT > 0 && Ds > 3) {
+                            return 'J';
+                        } else if (f_speed !== '低速艦隊') {
+                            return [
+                                { node: 'H', rate: 0.4 },
+                                { node: 'J', rate: 0.6 },
+                            ];
+                        } else {
+                            return [
+                                { node: 'H', rate: 0.6 },
+                                { node: 'J', rate: 0.4 },
+                            ];
+                        }
+                        break;
+                    case 'H':
+                        if (AO > 0) {
+                            return 'G';
+                        } else if (AV + CAV > 0) {
+                            return 'J';
+                        } else if (CL + CT > 0 && DD > 1) {
+                            return 'J';
+                        } else if (DD > 1) {
+                            return [
+                                { node: 'G', rate: 0.4 },
+                                { node: 'I', rate: 0.2 },
+                                { node: 'J', rate: 0.4 },
+                            ];
+                        } else {
+                            return [
+                                { node: 'I', rate: 0.6 },
+                                { node: 'J', rate: 0.4 },
+                            ];
+                        }
+                        break;
+                }
+                break;
+            case '1-4':
+                switch (node) {
+                    case null:
+                        return '1';
+                    case '1':
+                        return [
+                            { node: 'A', rate: 0.5 },
+                            { node: 'B', rate: 0.5 },
+                        ];
+                    case 'B':
+                        if (CVs > 2 || BBs > 2 || Ds === 0) {
+                            return 'D';
+                        } else if (Ds > 2) {
+                            return 'C';
+                        } else if (CL > 0) {
+                            return [
+                                { node: 'C', rate: 0.8 },
+                                { node: 'D', rate: 0.2 },
+                            ];
+                        } else {
+                            return [
+                                { node: 'C', rate: 0.6 },
+                                { node: 'D', rate: 0.4 },
+                            ];
+                        }
+                        break;
+                    case 'D':
+                        if (AS > 0) {
+                            return 'E';
+                        } else if (AV > 0) {
+                            return 'G';
+                        } else {
+                            return [
+                                { node: 'E', rate: 0.5 },
+                                { node: 'G', rate: 0.5 },
+                            ];
+                        }
+                        break;
+                    case 'F':
+                        if (Ds > 3) {
+                            return 'E';
+                        } else if (Ds > 1) {
+                            if (AV + AS + AO > 0 || BBV === 2) {
+                                return 'E';
+                            } else if (Ds === 3) {
+                                return [
+                                    { node: 'E', rate: 0.8 },
+                                    { node: 'H', rate: 0.2 },
+                                ];
+                            } else if (Ds === 2) {
+                                return [
+                                    { node: 'E', rate: 0.6 },
+                                    { node: 'H', rate: 0.4 },
+                                ];
+                            } // Dsより例外なし
+                        } else {
+                            return [
+                                { node: 'H', rate: 0.5 },
+                                { node: 'I', rate: 0.5 },
+                            ];
+                        }
+                        break;
+                    case 'J':
+                        if (CL > 0 && AV > 0 && Ds > 1) {
+                            return 'L';
+                        } else if (DD > 3) {
+                            return 'L';
+                        } else if (DD > 1) {
+                            return [
+                                { node: 'K', rate: 0.25 },
+                                { node: 'L', rate: 0.75 },
+                            ];
+                        } else {
+                            return [
+                                { node: 'K', rate: 0.35 },
+                                { node: 'L', rate: 0.65 },
+                            ];
+                        }
+                        break;
                 }
                 break;
             case '5-5':
@@ -178,22 +393,34 @@ export default class SimController {
                     case null:
                         return '1';
                     case '1':
-                        if (DD > 3 || f_drum > 3 || f_craft > 3) {
+                        if (DD > 3) {
+                            return 'A';
+                        } else if (f_drum > 3) {
+                            return 'A';
+                        } else if (f_craft > 3) {
                             return 'A';
                         } else {
                             return 'B';
                         }
                     case 'B':
-                        if (CV + CVB > 2 || BBs + CLT > 3 || CLT > 2 || DD < 2) {
+                        if (CV + CVB > 2) {
+                            return 'K';
+                        } else if (BBs + CLT > 3) {
+                            return 'K';
+                        } else if (CLT > 2) {
+                            return 'K';
+                        } else if (DD < 2) {
                             return 'K';
                         } else {
                             return 'F';
                         }
                     case 'E':
-                        if (f_speed === '最速艦隊' || (DD > 1 && f_speed === '高速+艦隊')) {
-                            return 'E';
+                        if (f_speed === '最速艦隊') {
+                            return 'H';
+                        } else if ((DD > 1 && f_speed === '高速+艦隊')) {
+                            return 'H';
                         } else {
-                            return 'E';
+                            return 'G';
                         }
                     case 'F':
                         if (option?.F === 'D') {
@@ -220,15 +447,25 @@ export default class SimController {
                     case 'M':
                         if (track.includes('N')) {
                             return 'O';
-                        } else if (BBCVs > 3 || DD < 2) {
+                        } else if (BBCVs > 3) {
+                            return 'L';
+                        } else if (DD < 2) {
                             return 'L';
                         } else {
                             return 'O';
                         }
                     case 'N':
-                        if (track.includes('M') || fleet.isFaster() || AO > 0) {
+                        if (track.includes('M')) {
                             return 'O';
-                        } else if (CV + CVB > 0 || BBs + CVL > 2 || DD < 2) {
+                        } else if (fleet.isFaster()) {
+                            return 'O';
+                        } else if (AO > 0) {
+                            return 'O';
+                        } else if (CV + CVB > 0) {
+                            return 'M';
+                        } else if (BBs + CVL > 2) {
+                            return 'M';
+                        } else if (DD < 2) {
                             return 'M';
                         } else {
                             return 'O';

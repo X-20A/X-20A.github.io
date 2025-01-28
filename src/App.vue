@@ -314,7 +314,9 @@ watch([adoptFleet, selectedArea, options], () => {
 				selectedArea.value,
 				options.value,
 			);
+			// console.time('シミュ計測');
 			const result = sim.start();
+			// console.timeEnd('シミュ計測');
 			store.UPDATE_SIM_RESULT(result);
 
 			cy = drawMap(selectedArea.value, simResult.value); // ここまでになるべく余計なことをしない

@@ -132,4 +132,18 @@ export default class AdoptFleet implements Fleet {
     public isFaster(): boolean {
         return this.speed_id >= 2;
     }
+
+    public countSBB(): number {
+        let count = 0;
+        count +=
+            this.fleets[0].ships
+            .filter(item => item.type === '戦艦' && item.speed === 0)
+            .length;
+        if (this.fleets[1]) {
+            count += this.fleets[1].ships
+                .filter(item => item.type === '戦艦' && item.speed === 0)
+                .length;
+        }
+        return count;
+    }
 }
