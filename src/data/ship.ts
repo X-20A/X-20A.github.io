@@ -1,0 +1,840 @@
+/* http://kancolle-calc.net/deckbuilder.html 様より失敬
+
+    国籍(na)を追加
+    0: 日本
+    1: アメリカ
+    2: イタリア
+    3: イギリス
+    4: ドイツ
+    5: フランス
+    6: ソ連
+    7: その他
+
+    速力グループ(sg)を追加
+    0: 高速A群
+    1: 高速B1群
+    2: 高速B2群
+    3: 高速C群
+    4: 低速A群
+    5: 低速B群
+    6: 低速C群
+    7: 低速D群
+    8: 低速E群
+    9: サミュ/改, 夕張改二特
+
+    用途
+    分岐判定
+        id
+        name
+        type
+        seek
+        max_seek
+        na
+        sg
+    gkcoiに渡すデッキビルダー生成 上記の他に
+        hp
+        ass(対潜)
+        max_ass
+        luck
+    入渠シミュの修理資源計算
+        fuel
+    
+    typeはidにした方がコンパクトだけどこっちのがわかりやすい
+*/
+import { ShipData } from '@/classes/types';
+
+const ship_datas: Array<ShipData> = [
+{"id":1,"name":"睦月","type":"駆逐","seek":4,"max_seek":17,"hp":13,"hp2":17,"asw":16,"max_asw":39,"fuel":15,"na":0,"sg":2}
+,{"id":2,"name":"如月","type":"駆逐","seek":4,"max_seek":17,"hp":13,"hp2":17,"asw":16,"max_asw":39,"fuel":15,"na":0,"sg":2}
+,{"id":6,"name":"長月","type":"駆逐","seek":4,"max_seek":17,"hp":13,"hp2":17,"asw":16,"max_asw":39,"fuel":15,"na":0,"sg":2}
+,{"id":7,"name":"三日月","type":"駆逐","seek":4,"max_seek":17,"hp":13,"hp2":17,"asw":16,"max_asw":39,"fuel":15,"na":0,"sg":2}
+,{"id":9,"name":"吹雪","type":"駆逐","seek":5,"max_seek":19,"hp":15,"hp2":19,"asw":20,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":10,"name":"白雪","type":"駆逐","seek":5,"max_seek":19,"hp":15,"hp2":19,"asw":20,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":11,"name":"深雪","type":"駆逐","seek":5,"max_seek":19,"hp":15,"hp2":19,"asw":20,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":12,"name":"磯波","type":"駆逐","seek":5,"max_seek":19,"hp":15,"hp2":19,"asw":20,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":13,"name":"綾波","type":"駆逐","seek":5,"max_seek":19,"hp":15,"hp2":19,"asw":20,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":14,"name":"敷波","type":"駆逐","seek":5,"max_seek":19,"hp":15,"hp2":19,"asw":20,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":15,"name":"曙","type":"駆逐","seek":5,"max_seek":19,"hp":15,"hp2":19,"asw":20,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":16,"name":"潮","type":"駆逐","seek":5,"max_seek":19,"hp":15,"hp2":19,"asw":20,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":17,"name":"陽炎","type":"駆逐","seek":6,"max_seek":19,"hp":16,"hp2":20,"asw":24,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":18,"name":"不知火","type":"駆逐","seek":6,"max_seek":19,"hp":16,"hp2":20,"asw":24,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":19,"name":"黒潮","type":"駆逐","seek":6,"max_seek":19,"hp":16,"hp2":20,"asw":24,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":20,"name":"雪風","type":"駆逐","seek":6,"max_seek":19,"hp":16,"hp2":20,"asw":24,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":21,"name":"長良","type":"軽巡","seek":8,"max_seek":39,"hp":26,"hp2":30,"asw":20,"max_asw":59,"fuel":25,"na":0,"sg":2}
+,{"id":22,"name":"五十鈴","type":"軽巡","seek":8,"max_seek":39,"hp":26,"hp2":30,"asw":40,"max_asw":79,"fuel":25,"na":0,"sg":2}
+,{"id":23,"name":"由良","type":"軽巡","seek":8,"max_seek":39,"hp":26,"hp2":30,"asw":40,"max_asw":79,"fuel":25,"na":0,"sg":2}
+,{"id":24,"name":"大井","type":"軽巡","seek":8,"max_seek":39,"hp":25,"hp2":29,"asw":19,"max_asw":59,"fuel":25,"na":0,"sg":2}
+,{"id":25,"name":"北上","type":"軽巡","seek":8,"max_seek":39,"hp":25,"hp2":29,"asw":19,"max_asw":59,"fuel":25,"na":0,"sg":2}
+,{"id":26,"name":"扶桑","type":"戦艦","seek":9,"max_seek":33,"hp":67,"hp2":74,"asw":0,"max_asw":0,"fuel":85,"na":0,"sg":5}
+,{"id":27,"name":"山城","type":"戦艦","seek":9,"max_seek":33,"hp":67,"hp2":74,"asw":0,"max_asw":0,"fuel":85,"na":0,"sg":5}
+,{"id":28,"name":"皐月","type":"駆逐","seek":4,"max_seek":17,"hp":13,"hp2":17,"asw":16,"max_asw":39,"fuel":15,"na":0,"sg":2}
+,{"id":29,"name":"文月","type":"駆逐","seek":4,"max_seek":17,"hp":13,"hp2":17,"asw":16,"max_asw":39,"fuel":15,"na":0,"sg":2}
+,{"id":30,"name":"菊月","type":"駆逐","seek":4,"max_seek":17,"hp":13,"hp2":17,"asw":16,"max_asw":39,"fuel":15,"na":0,"sg":2}
+,{"id":31,"name":"望月","type":"駆逐","seek":4,"max_seek":17,"hp":13,"hp2":17,"asw":16,"max_asw":39,"fuel":15,"na":0,"sg":2}
+,{"id":32,"name":"初雪","type":"駆逐","seek":5,"max_seek":19,"hp":15,"hp2":19,"asw":20,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":33,"name":"叢雲","type":"駆逐","seek":5,"max_seek":19,"hp":15,"hp2":19,"asw":20,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":34,"name":"暁","type":"駆逐","seek":5,"max_seek":19,"hp":15,"hp2":19,"asw":20,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":35,"name":"響","type":"駆逐","seek":5,"max_seek":19,"hp":15,"hp2":19,"asw":20,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":36,"name":"雷","type":"駆逐","seek":5,"max_seek":19,"hp":15,"hp2":19,"asw":20,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":37,"name":"電","type":"駆逐","seek":5,"max_seek":19,"hp":15,"hp2":19,"asw":20,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":38,"name":"初春","type":"駆逐","seek":5,"max_seek":19,"hp":16,"hp2":20,"asw":21,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":39,"name":"子日","type":"駆逐","seek":5,"max_seek":19,"hp":16,"hp2":20,"asw":21,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":40,"name":"若葉","type":"駆逐","seek":5,"max_seek":19,"hp":16,"hp2":20,"asw":21,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":41,"name":"初霜","type":"駆逐","seek":5,"max_seek":19,"hp":16,"hp2":20,"asw":21,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":42,"name":"白露","type":"駆逐","seek":5,"max_seek":19,"hp":16,"hp2":20,"asw":21,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":43,"name":"時雨","type":"駆逐","seek":5,"max_seek":19,"hp":16,"hp2":20,"asw":21,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":44,"name":"村雨","type":"駆逐","seek":5,"max_seek":19,"hp":16,"hp2":20,"asw":21,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":45,"name":"夕立","type":"駆逐","seek":5,"max_seek":19,"hp":16,"hp2":20,"asw":21,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":46,"name":"五月雨","type":"駆逐","seek":5,"max_seek":19,"hp":16,"hp2":20,"asw":21,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":47,"name":"涼風","type":"駆逐","seek":5,"max_seek":19,"hp":16,"hp2":20,"asw":21,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":48,"name":"霰","type":"駆逐","seek":5,"max_seek":19,"hp":16,"hp2":20,"asw":21,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":49,"name":"霞","type":"駆逐","seek":5,"max_seek":19,"hp":16,"hp2":20,"asw":21,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":50,"name":"島風","type":"駆逐","seek":7,"max_seek":19,"hp":19,"hp2":23,"asw":24,"max_asw":49,"fuel":20,"na":0,"sg":0}
+,{"id":51,"name":"天龍","type":"軽巡","seek":7,"max_seek":19,"hp":23,"hp2":27,"asw":18,"max_asw":59,"fuel":25,"na":0,"sg":2}
+,{"id":52,"name":"龍田","type":"軽巡","seek":7,"max_seek":19,"hp":23,"hp2":27,"asw":18,"max_asw":59,"fuel":25,"na":0,"sg":2}
+,{"id":53,"name":"名取","type":"軽巡","seek":8,"max_seek":39,"hp":26,"hp2":30,"asw":20,"max_asw":59,"fuel":25,"na":0,"sg":2}
+,{"id":54,"name":"川内","type":"軽巡","seek":8,"max_seek":39,"hp":26,"hp2":30,"asw":20,"max_asw":69,"fuel":25,"na":0,"sg":2}
+,{"id":55,"name":"神通","type":"軽巡","seek":8,"max_seek":39,"hp":26,"hp2":30,"asw":20,"max_asw":69,"fuel":25,"na":0,"sg":2}
+,{"id":56,"name":"那珂","type":"軽巡","seek":8,"max_seek":39,"hp":26,"hp2":30,"asw":24,"max_asw":69,"fuel":25,"na":0,"sg":2}
+,{"id":57,"name":"大井改","type":"雷巡","seek":8,"max_seek":39,"hp":32,"hp2":37,"asw":25,"max_asw":59,"fuel":25,"na":0,"sg":2}
+,{"id":58,"name":"北上改","type":"雷巡","seek":8,"max_seek":39,"hp":32,"hp2":37,"asw":25,"max_asw":59,"fuel":25,"na":0,"sg":2}
+,{"id":59,"name":"古鷹","type":"重巡","seek":10,"max_seek":39,"hp":36,"hp2":41,"asw":0,"max_asw":0,"fuel":35,"na":0,"sg":2}
+,{"id":60,"name":"加古","type":"重巡","seek":10,"max_seek":39,"hp":36,"hp2":41,"asw":0,"max_asw":0,"fuel":35,"na":0,"sg":2}
+,{"id":61,"name":"青葉","type":"重巡","seek":11,"max_seek":39,"hp":37,"hp2":42,"asw":0,"max_asw":0,"fuel":35,"na":0,"sg":2}
+,{"id":62,"name":"妙高","type":"重巡","seek":12,"max_seek":39,"hp":44,"hp2":50,"asw":0,"max_asw":0,"fuel":40,"na":0,"sg":2}
+,{"id":63,"name":"那智","type":"重巡","seek":12,"max_seek":39,"hp":44,"hp2":50,"asw":0,"max_asw":0,"fuel":40,"na":0,"sg":2}
+,{"id":64,"name":"足柄","type":"重巡","seek":12,"max_seek":39,"hp":44,"hp2":50,"asw":0,"max_asw":0,"fuel":40,"na":0,"sg":2}
+,{"id":65,"name":"羽黒","type":"重巡","seek":12,"max_seek":39,"hp":44,"hp2":50,"asw":0,"max_asw":0,"fuel":40,"na":0,"sg":2}
+,{"id":66,"name":"高雄","type":"重巡","seek":13,"max_seek":39,"hp":45,"hp2":51,"asw":0,"max_asw":0,"fuel":40,"na":0,"sg":2}
+,{"id":67,"name":"愛宕","type":"重巡","seek":13,"max_seek":39,"hp":45,"hp2":51,"asw":0,"max_asw":0,"fuel":40,"na":0,"sg":2}
+,{"id":68,"name":"摩耶","type":"重巡","seek":13,"max_seek":39,"hp":45,"hp2":51,"asw":0,"max_asw":0,"fuel":40,"na":0,"sg":2}
+,{"id":69,"name":"鳥海","type":"重巡","seek":13,"max_seek":39,"hp":45,"hp2":51,"asw":0,"max_asw":0,"fuel":40,"na":0,"sg":2}
+,{"id":70,"name":"最上","type":"重巡","seek":14,"max_seek":39,"hp":41,"hp2":47,"asw":0,"max_asw":0,"fuel":40,"na":0,"sg":0}
+,{"id":71,"name":"利根","type":"重巡","seek":20,"max_seek":59,"hp":44,"hp2":50,"asw":0,"max_asw":0,"fuel":45,"na":0,"sg":0}
+,{"id":72,"name":"筑摩","type":"重巡","seek":20,"max_seek":59,"hp":44,"hp2":50,"asw":0,"max_asw":0,"fuel":45,"na":0,"sg":0}
+,{"id":73,"name":"最上改","type":"航巡","seek":22,"max_seek":59,"hp":50,"hp2":57,"asw":0,"max_asw":0,"fuel":50,"na":0,"sg":0}
+,{"id":74,"name":"祥鳳","type":"軽空","seek":34,"max_seek":69,"hp":32,"hp2":37,"asw":0,"max_asw":0,"fuel":35,"na":0,"sg":2}
+,{"id":75,"name":"飛鷹","type":"軽空","seek":38,"max_seek":59,"hp":40,"hp2":46,"asw":0,"max_asw":0,"fuel":40,"na":0,"sg":5}
+,{"id":76,"name":"龍驤","type":"軽空","seek":34,"max_seek":69,"hp":31,"hp2":36,"asw":0,"max_asw":0,"fuel":35,"na":0,"sg":2}
+,{"id":77,"name":"伊勢","type":"戦艦","seek":10,"max_seek":36,"hp":74,"hp2":82,"asw":0,"max_asw":0,"fuel":85,"na":0,"sg":5}
+,{"id":78,"name":"金剛","type":"戦艦","seek":13,"max_seek":39,"hp":63,"hp2":70,"asw":0,"max_asw":0,"fuel":80,"na":0,"sg":2}
+,{"id":79,"name":"榛名","type":"戦艦","seek":13,"max_seek":39,"hp":63,"hp2":70,"asw":0,"max_asw":0,"fuel":80,"na":0,"sg":2}
+,{"id":80,"name":"長門","type":"戦艦","seek":12,"max_seek":39,"hp":80,"hp2":88,"asw":0,"max_asw":0,"fuel":100,"na":0,"sg":5}
+,{"id":81,"name":"陸奥","type":"戦艦","seek":12,"max_seek":39,"hp":80,"hp2":88,"asw":0,"max_asw":0,"fuel":100,"na":0,"sg":5}
+,{"id":82,"name":"伊勢改","type":"航戦","seek":24,"max_seek":60,"hp":77,"hp2":85,"asw":0,"max_asw":0,"fuel":95,"na":0,"sg":5}
+,{"id":83,"name":"赤城","type":"正空","seek":44,"max_seek":69,"hp":69,"hp2":76,"asw":0,"max_asw":0,"fuel":60,"na":0,"sg":2}
+,{"id":84,"name":"加賀","type":"正空","seek":40,"max_seek":69,"hp":71,"hp2":79,"asw":0,"max_asw":0,"fuel":60,"na":0,"sg":3}
+,{"id":85,"name":"霧島","type":"戦艦","seek":13,"max_seek":39,"hp":63,"hp2":70,"asw":0,"max_asw":0,"fuel":80,"na":0,"sg":2}
+,{"id":86,"name":"比叡","type":"戦艦","seek":13,"max_seek":39,"hp":63,"hp2":70,"asw":0,"max_asw":0,"fuel":80,"na":0,"sg":2}
+,{"id":87,"name":"日向","type":"戦艦","seek":10,"max_seek":36,"hp":74,"hp2":82,"asw":0,"max_asw":0,"fuel":85,"na":0,"sg":5}
+,{"id":88,"name":"日向改","type":"航戦","seek":24,"max_seek":60,"hp":77,"hp2":85,"asw":0,"max_asw":0,"fuel":95,"na":0,"sg":5}
+,{"id":89,"name":"鳳翔","type":"軽空","seek":32,"max_seek":69,"hp":30,"hp2":35,"asw":0,"max_asw":0,"fuel":25,"na":0,"sg":6}
+,{"id":90,"name":"蒼龍","type":"正空","seek":42,"max_seek":69,"hp":50,"hp2":57,"asw":0,"max_asw":0,"fuel":50,"na":0,"sg":1}
+,{"id":91,"name":"飛龍","type":"正空","seek":42,"max_seek":69,"hp":50,"hp2":57,"asw":0,"max_asw":0,"fuel":50,"na":0,"sg":1}
+,{"id":92,"name":"隼鷹","type":"軽空","seek":38,"max_seek":59,"hp":40,"hp2":46,"asw":0,"max_asw":0,"fuel":40,"na":0,"sg":6}
+,{"id":93,"name":"朧","type":"駆逐","seek":5,"max_seek":19,"hp":15,"hp2":19,"asw":20,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":94,"name":"漣","type":"駆逐","seek":5,"max_seek":19,"hp":15,"hp2":19,"asw":20,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":95,"name":"朝潮","type":"駆逐","seek":5,"max_seek":19,"hp":16,"hp2":20,"asw":21,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":96,"name":"大潮","type":"駆逐","seek":5,"max_seek":19,"hp":16,"hp2":20,"asw":21,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":97,"name":"満潮","type":"駆逐","seek":5,"max_seek":19,"hp":16,"hp2":20,"asw":21,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":98,"name":"荒潮","type":"駆逐","seek":5,"max_seek":19,"hp":16,"hp2":20,"asw":21,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":99,"name":"球磨","type":"軽巡","seek":8,"max_seek":39,"hp":25,"hp2":29,"asw":19,"max_asw":59,"fuel":25,"na":0,"sg":2}
+,{"id":100,"name":"多摩","type":"軽巡","seek":8,"max_seek":39,"hp":25,"hp2":29,"asw":19,"max_asw":59,"fuel":25,"na":0,"sg":2}
+,{"id":101,"name":"木曾","type":"軽巡","seek":8,"max_seek":39,"hp":25,"hp2":29,"asw":19,"max_asw":59,"fuel":25,"na":0,"sg":2}
+,{"id":102,"name":"千歳","type":"水母","seek":34,"max_seek":69,"hp":40,"hp2":46,"asw":0,"max_asw":0,"fuel":35,"na":0,"sg":3}
+,{"id":103,"name":"千代田","type":"水母","seek":34,"max_seek":69,"hp":40,"hp2":46,"asw":0,"max_asw":0,"fuel":35,"na":0,"sg":3}
+,{"id":104,"name":"千歳改","type":"水母","seek":36,"max_seek":69,"hp":41,"hp2":47,"asw":0,"max_asw":0,"fuel":35,"na":0,"sg":3}
+,{"id":105,"name":"千代田改","type":"水母","seek":36,"max_seek":69,"hp":41,"hp2":47,"asw":0,"max_asw":0,"fuel":35,"na":0,"sg":3}
+,{"id":106,"name":"千歳甲","type":"水母","seek":30,"max_seek":69,"hp":42,"hp2":48,"asw":0,"max_asw":0,"fuel":35,"na":0,"sg":3}
+,{"id":107,"name":"千代田甲","type":"水母","seek":30,"max_seek":69,"hp":42,"hp2":48,"asw":0,"max_asw":0,"fuel":35,"na":0,"sg":3}
+,{"id":108,"name":"千歳航","type":"軽空","seek":36,"max_seek":69,"hp":47,"hp2":53,"asw":0,"max_asw":0,"fuel":40,"na":0,"sg":2}
+,{"id":109,"name":"千代田航","type":"軽空","seek":36,"max_seek":69,"hp":47,"hp2":53,"asw":0,"max_asw":0,"fuel":40,"na":0,"sg":2}
+,{"id":110,"name":"翔鶴","type":"正空","seek":44,"max_seek":69,"hp":62,"hp2":69,"asw":0,"max_asw":0,"fuel":55,"na":0,"sg":0}
+,{"id":111,"name":"瑞鶴","type":"正空","seek":44,"max_seek":69,"hp":62,"hp2":69,"asw":0,"max_asw":0,"fuel":55,"na":0,"sg":0}
+,{"id":112,"name":"瑞鶴改","type":"正空","seek":48,"max_seek":89,"hp":75,"hp2":83,"asw":0,"max_asw":0,"fuel":65,"na":0,"sg":0}
+,{"id":113,"name":"鬼怒","type":"軽巡","seek":8,"max_seek":39,"hp":26,"hp2":30,"asw":20,"max_asw":59,"fuel":25,"na":0,"sg":2}
+,{"id":114,"name":"阿武隈","type":"軽巡","seek":8,"max_seek":39,"hp":27,"hp2":31,"asw":20,"max_asw":59,"fuel":25,"na":0,"sg":2}
+,{"id":115,"name":"夕張","type":"軽巡","seek":6,"max_seek":39,"hp":19,"hp2":23,"asw":13,"max_asw":39,"fuel":20,"na":0,"sg":3}
+,{"id":116,"name":"瑞鳳","type":"軽空","seek":34,"max_seek":69,"hp":32,"hp2":37,"asw":0,"max_asw":0,"fuel":35,"na":0,"sg":2}
+,{"id":117,"name":"瑞鳳改","type":"軽空","seek":35,"max_seek":79,"hp":45,"hp2":51,"asw":0,"max_asw":0,"fuel":40,"na":0,"sg":2}
+,{"id":118,"name":"大井改二","type":"雷巡","seek":9,"max_seek":43,"hp":43,"hp2":49,"asw":27,"max_asw":79,"fuel":25,"na":0,"sg":2}
+,{"id":119,"name":"北上改二","type":"雷巡","seek":9,"max_seek":43,"hp":43,"hp2":49,"asw":27,"max_asw":79,"fuel":25,"na":0,"sg":2}
+,{"id":120,"name":"三隈","type":"重巡","seek":14,"max_seek":39,"hp":40,"hp2":46,"asw":0,"max_asw":0,"fuel":40,"na":0,"sg":0}
+,{"id":121,"name":"三隈改","type":"航巡","seek":22,"max_seek":61,"hp":50,"hp2":57,"asw":0,"max_asw":0,"fuel":50,"na":0,"sg":0}
+,{"id":122,"name":"舞風","type":"駆逐","seek":6,"max_seek":19,"hp":16,"hp2":20,"asw":24,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":123,"name":"衣笠","type":"重巡","seek":11,"max_seek":39,"hp":37,"hp2":42,"asw":0,"max_asw":0,"fuel":35,"na":0,"sg":2}
+,{"id":124,"name":"鈴谷","type":"重巡","seek":14,"max_seek":39,"hp":40,"hp2":46,"asw":0,"max_asw":0,"fuel":40,"na":0,"sg":0}
+,{"id":125,"name":"熊野","type":"重巡","seek":14,"max_seek":39,"hp":40,"hp2":46,"asw":0,"max_asw":0,"fuel":40,"na":0,"sg":0}
+,{"id":126,"name":"伊168","type":"潜水","seek":9,"max_seek":29,"hp":10,"hp2":14,"asw":0,"max_asw":0,"fuel":10,"na":0,"sg":6}
+,{"id":127,"name":"伊58","type":"潜水","seek":10,"max_seek":39,"hp":14,"hp2":18,"asw":0,"max_asw":0,"fuel":10,"na":0,"sg":6}
+,{"id":128,"name":"伊8","type":"潜水","seek":10,"max_seek":39,"hp":15,"hp2":19,"asw":0,"max_asw":0,"fuel":10,"na":0,"sg":6}
+,{"id":129,"name":"鈴谷改","type":"航巡","seek":22,"max_seek":59,"hp":50,"hp2":57,"asw":0,"max_asw":0,"fuel":50,"na":0,"sg":0}
+,{"id":130,"name":"熊野改","type":"航巡","seek":22,"max_seek":59,"hp":50,"hp2":57,"asw":0,"max_asw":0,"fuel":50,"na":0,"sg":0}
+,{"id":131,"name":"大和","type":"戦艦","seek":15,"max_seek":39,"hp":93,"hp2":98,"asw":0,"max_asw":0,"fuel":250,"na":0,"sg":4}
+,{"id":132,"name":"秋雲","type":"駆逐","seek":6,"max_seek":19,"hp":16,"hp2":20,"asw":24,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":133,"name":"夕雲","type":"駆逐","seek":6,"max_seek":19,"hp":16,"hp2":20,"asw":27,"max_asw":52,"fuel":15,"na":0,"sg":2}
+,{"id":134,"name":"巻雲","type":"駆逐","seek":6,"max_seek":19,"hp":16,"hp2":20,"asw":27,"max_asw":52,"fuel":15,"na":0,"sg":2}
+,{"id":135,"name":"長波","type":"駆逐","seek":6,"max_seek":19,"hp":16,"hp2":20,"asw":27,"max_asw":52,"fuel":15,"na":0,"sg":2}
+,{"id":136,"name":"大和改","type":"戦艦","seek":17,"max_seek":39,"hp":96,"hp2":105,"asw":0,"max_asw":0,"fuel":250,"na":0,"sg":4}
+,{"id":137,"name":"阿賀野","type":"軽巡","seek":12,"max_seek":45,"hp":30,"hp2":35,"asw":25,"max_asw":70,"fuel":30,"na":0,"sg":1}
+,{"id":138,"name":"能代","type":"軽巡","seek":12,"max_seek":45,"hp":30,"hp2":35,"asw":25,"max_asw":70,"fuel":30,"na":0,"sg":1}
+,{"id":139,"name":"矢矧","type":"軽巡","seek":13,"max_seek":45,"hp":31,"hp2":36,"asw":25,"max_asw":70,"fuel":30,"na":0,"sg":1}
+,{"id":140,"name":"酒匂","type":"軽巡","seek":12,"max_seek":45,"hp":31,"hp2":36,"asw":27,"max_asw":72,"fuel":30,"na":0,"sg":1}
+,{"id":141,"name":"五十鈴改二","type":"軽巡","seek":15,"max_seek":59,"hp":44,"hp2":50,"asw":54,"max_asw":94,"fuel":25,"na":0,"sg":2}
+,{"id":142,"name":"衣笠改二","type":"重巡","seek":13,"max_seek":58,"hp":53,"hp2":60,"asw":0,"max_asw":0,"fuel":35,"na":0,"sg":2}
+,{"id":143,"name":"武蔵","type":"戦艦","seek":16,"max_seek":40,"hp":94,"hp2":98,"asw":0,"max_asw":0,"fuel":250,"na":0,"sg":4}
+,{"id":144,"name":"夕立改二","type":"駆逐","seek":12,"max_seek":49,"hp":31,"hp2":36,"asw":28,"max_asw":69,"fuel":15,"na":0,"sg":2}
+,{"id":145,"name":"時雨改二","type":"駆逐","seek":9,"max_seek":48,"hp":31,"hp2":36,"asw":31,"max_asw":80,"fuel":15,"na":0,"sg":2}
+,{"id":146,"name":"木曾改二","type":"雷巡","seek":13,"max_seek":49,"hp":44,"hp2":50,"asw":32,"max_asw":82,"fuel":25,"na":0,"sg":2}
+,{"id":147,"name":"Верный","type":"駆逐","seek":10,"max_seek":44,"hp":37,"hp2":42,"asw":30,"max_asw":77,"fuel":15,"na":0,"sg":2}
+,{"id":148,"name":"武蔵改","type":"戦艦","seek":18,"max_seek":40,"hp":97,"hp2":106,"asw":0,"max_asw":0,"fuel":250,"na":0,"sg":4}
+,{"id":149,"name":"金剛改二","type":"戦艦","seek":16,"max_seek":49,"hp":82,"hp2":90,"asw":0,"max_asw":0,"fuel":100,"na":0,"sg":2}
+,{"id":150,"name":"比叡改二","type":"戦艦","seek":16,"max_seek":52,"hp":83,"hp2":91,"asw":0,"max_asw":0,"fuel":100,"na":0,"sg":2}
+,{"id":151,"name":"榛名改二","type":"戦艦","seek":17,"max_seek":51,"hp":81,"hp2":89,"asw":0,"max_asw":0,"fuel":100,"na":0,"sg":2}
+,{"id":152,"name":"霧島改二","type":"戦艦","seek":15,"max_seek":49,"hp":82,"hp2":90,"asw":0,"max_asw":0,"fuel":100,"na":0,"sg":2}
+,{"id":153,"name":"大鳳","type":"装空","seek":47,"max_seek":74,"hp":67,"hp2":74,"asw":0,"max_asw":0,"fuel":70,"na":0,"sg":0}
+,{"id":154,"name":"香取","type":"練巡","seek":10,"max_seek":38,"hp":36,"hp2":41,"asw":12,"max_asw":42,"fuel":30,"na":0,"sg":5}
+,{"id":155,"name":"伊401","type":"潜空","seek":15,"max_seek":45,"hp":20,"hp2":24,"asw":0,"max_asw":0,"fuel":20,"na":0,"sg":6}
+,{"id":156,"name":"大鳳改","type":"装空","seek":50,"max_seek":77,"hp":70,"hp2":78,"asw":0,"max_asw":0,"fuel":90,"na":0,"sg":0}
+,{"id":157,"name":"龍驤改二","type":"軽空","seek":37,"max_seek":79,"hp":50,"hp2":57,"asw":0,"max_asw":0,"fuel":40,"na":0,"sg":2}
+,{"id":158,"name":"川内改二","type":"軽巡","seek":16,"max_seek":55,"hp":49,"hp2":55,"asw":38,"max_asw":74,"fuel":25,"na":0,"sg":2}
+,{"id":159,"name":"神通改二","type":"軽巡","seek":12,"max_seek":54,"hp":51,"hp2":58,"asw":40,"max_asw":80,"fuel":25,"na":0,"sg":2}
+,{"id":160,"name":"那珂改二","type":"軽巡","seek":15,"max_seek":54,"hp":48,"hp2":54,"asw":48,"max_asw":86,"fuel":25,"na":0,"sg":2}
+,{"id":161,"name":"あきつ丸","type":"揚陸","seek":3,"max_seek":13,"hp":38,"hp2":43,"asw":0,"max_asw":0,"fuel":40,"na":0,"sg":6}
+,{"id":162,"name":"神威","type":"補給","seek":5,"max_seek":15,"hp":36,"hp2":41,"asw":0,"max_asw":0,"fuel":30,"na":0,"sg":5}
+,{"id":163,"name":"まるゆ","type":"潜水","seek":1,"max_seek":9,"hp":6,"hp2":9,"asw":0,"max_asw":0,"fuel":10,"na":0,"sg":6}
+,{"id":164,"name":"弥生","type":"駆逐","seek":4,"max_seek":17,"hp":13,"hp2":17,"asw":16,"max_asw":39,"fuel":15,"na":0,"sg":2}
+,{"id":165,"name":"卯月","type":"駆逐","seek":4,"max_seek":17,"hp":13,"hp2":17,"asw":16,"max_asw":39,"fuel":15,"na":0,"sg":2}
+,{"id":166,"name":"あきつ丸改","type":"揚陸","seek":13,"max_seek":59,"hp":40,"hp2":46,"asw":0,"max_asw":0,"fuel":45,"na":0,"sg":6}
+,{"id":167,"name":"磯風","type":"駆逐","seek":8,"max_seek":19,"hp":16,"hp2":20,"asw":24,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":168,"name":"浦風","type":"駆逐","seek":7,"max_seek":19,"hp":16,"hp2":20,"asw":24,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":169,"name":"谷風","type":"駆逐","seek":7,"max_seek":19,"hp":16,"hp2":20,"asw":24,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":170,"name":"浜風","type":"駆逐","seek":7,"max_seek":19,"hp":16,"hp2":20,"asw":24,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":171,"name":"Bismarck","type":"戦艦","seek":16,"max_seek":42,"hp":90,"hp2":96,"asw":0,"max_asw":0,"fuel":90,"na":4,"sg":2}
+,{"id":172,"name":"Bismarck改","type":"戦艦","seek":18,"max_seek":52,"hp":94,"hp2":99,"asw":0,"max_asw":0,"fuel":95,"na":4,"sg":2}
+,{"id":173,"name":"Bismarck zwei","type":"戦艦","seek":19,"max_seek":54,"hp":96,"hp2":99,"asw":0,"max_asw":0,"fuel":105,"na":4,"sg":2}
+,{"id":174,"name":"Z1","type":"駆逐","seek":6,"max_seek":24,"hp":18,"hp2":22,"asw":32,"max_asw":64,"fuel":20,"na":4,"sg":2}
+,{"id":175,"name":"Z3","type":"駆逐","seek":6,"max_seek":24,"hp":18,"hp2":22,"asw":32,"max_asw":64,"fuel":20,"na":4,"sg":2}
+,{"id":176,"name":"Prinz Eugen","type":"重巡","seek":15,"max_seek":40,"hp":50,"hp2":57,"asw":0,"max_asw":0,"fuel":50,"na":4,"sg":2}
+,{"id":177,"name":"Prinz Eugen改","type":"重巡","seek":16,"max_seek":50,"hp":63,"hp2":70,"asw":0,"max_asw":0,"fuel":55,"na":4,"sg":2}
+,{"id":178,"name":"Bismarck drei","type":"戦艦","seek":22,"max_seek":59,"hp":96,"hp2":99,"asw":0,"max_asw":0,"fuel":110,"na":4,"sg":2}
+,{"id":179,"name":"Z1 zwei","type":"駆逐","seek":9,"max_seek":43,"hp":35,"hp2":40,"asw":37,"max_asw":69,"fuel":20,"na":4,"sg":2}
+,{"id":180,"name":"Z3 zwei","type":"駆逐","seek":9,"max_seek":43,"hp":35,"hp2":40,"asw":37,"max_asw":69,"fuel":20,"na":4,"sg":2}
+,{"id":181,"name":"天津風","type":"駆逐","seek":8,"max_seek":19,"hp":18,"hp2":22,"asw":26,"max_asw":54,"fuel":20,"na":0,"sg":1}
+,{"id":182,"name":"明石","type":"工作","seek":1,"max_seek":5,"hp":39,"hp2":44,"asw":0,"max_asw":0,"fuel":50,"na":0,"sg":6}
+,{"id":183,"name":"大淀","type":"軽巡","seek":24,"max_seek":80,"hp":34,"hp2":39,"asw":0,"max_asw":39,"fuel":35,"na":0,"sg":2}
+,{"id":184,"name":"大鯨","type":"潜母","seek":24,"max_seek":48,"hp":39,"hp2":44,"asw":0,"max_asw":0,"fuel":35,"na":0,"sg":5}
+,{"id":185,"name":"龍鳳","type":"軽空","seek":28,"max_seek":64,"hp":39,"hp2":44,"asw":0,"max_asw":0,"fuel":35,"na":0,"sg":2}
+,{"id":186,"name":"時津風","type":"駆逐","seek":7,"max_seek":19,"hp":16,"hp2":20,"asw":24,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":187,"name":"明石改","type":"工作","seek":2,"max_seek":6,"hp":45,"hp2":51,"asw":0,"max_asw":0,"fuel":55,"na":0,"sg":6}
+,{"id":188,"name":"利根改二","type":"航巡","seek":30,"max_seek":93,"hp":59,"hp2":66,"asw":0,"max_asw":0,"fuel":50,"na":0,"sg":0}
+,{"id":189,"name":"筑摩改二","type":"航巡","seek":30,"max_seek":94,"hp":58,"hp2":65,"asw":0,"max_asw":0,"fuel":50,"na":0,"sg":0}
+,{"id":190,"name":"初風","type":"駆逐","seek":6,"max_seek":19,"hp":16,"hp2":20,"asw":24,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":191,"name":"伊19","type":"潜水","seek":10,"max_seek":39,"hp":14,"hp2":18,"asw":0,"max_asw":0,"fuel":10,"na":0,"sg":6}
+,{"id":192,"name":"那智改二","type":"重巡","seek":20,"max_seek":63,"hp":56,"hp2":63,"asw":0,"max_asw":0,"fuel":45,"na":0,"sg":2}
+,{"id":193,"name":"足柄改二","type":"重巡","seek":17,"max_seek":57,"hp":56,"hp2":63,"asw":0,"max_asw":0,"fuel":45,"na":0,"sg":2}
+,{"id":194,"name":"羽黒改二","type":"重巡","seek":18,"max_seek":58,"hp":57,"hp2":64,"asw":0,"max_asw":0,"fuel":45,"na":0,"sg":2}
+,{"id":195,"name":"綾波改二","type":"駆逐","seek":13,"max_seek":49,"hp":32,"hp2":37,"asw":25,"max_asw":63,"fuel":15,"na":0,"sg":2}
+,{"id":196,"name":"飛龍改二","type":"正空","seek":52,"max_seek":89,"hp":67,"hp2":74,"asw":0,"max_asw":0,"fuel":70,"na":0,"sg":1}
+,{"id":197,"name":"蒼龍改二","type":"正空","seek":55,"max_seek":93,"hp":67,"hp2":74,"asw":0,"max_asw":0,"fuel":70,"na":0,"sg":1}
+,{"id":198,"name":"霰改二","type":"駆逐","seek":11,"max_seek":53,"hp":31,"hp2":36,"asw":33,"max_asw":81,"fuel":15,"na":0,"sg":2}
+,{"id":199,"name":"大潮改二","type":"駆逐","seek":12,"max_seek":54,"hp":31,"hp2":36,"asw":26,"max_asw":64,"fuel":15,"na":0,"sg":2}
+,{"id":200,"name":"阿武隈改二","type":"軽巡","seek":16,"max_seek":60,"hp":45,"hp2":51,"asw":48,"max_asw":82,"fuel":25,"na":0,"sg":2}
+,{"id":201,"name":"吹雪改","type":"駆逐","seek":7,"max_seek":39,"hp":30,"hp2":35,"asw":24,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":202,"name":"白雪改","type":"駆逐","seek":7,"max_seek":39,"hp":30,"hp2":35,"asw":24,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":203,"name":"初雪改","type":"駆逐","seek":7,"max_seek":39,"hp":30,"hp2":35,"asw":24,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":204,"name":"深雪改","type":"駆逐","seek":7,"max_seek":42,"hp":30,"hp2":35,"asw":24,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":205,"name":"叢雲改","type":"駆逐","seek":7,"max_seek":39,"hp":30,"hp2":35,"asw":24,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":206,"name":"磯波改","type":"駆逐","seek":7,"max_seek":39,"hp":30,"hp2":35,"asw":24,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":207,"name":"綾波改","type":"駆逐","seek":7,"max_seek":39,"hp":30,"hp2":35,"asw":24,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":208,"name":"敷波改","type":"駆逐","seek":7,"max_seek":39,"hp":30,"hp2":35,"asw":24,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":209,"name":"金剛改","type":"戦艦","seek":15,"max_seek":49,"hp":75,"hp2":83,"asw":0,"max_asw":0,"fuel":90,"na":0,"sg":2}
+,{"id":210,"name":"比叡改","type":"戦艦","seek":15,"max_seek":49,"hp":75,"hp2":83,"asw":0,"max_asw":0,"fuel":90,"na":0,"sg":2}
+,{"id":211,"name":"榛名改","type":"戦艦","seek":15,"max_seek":49,"hp":75,"hp2":83,"asw":0,"max_asw":0,"fuel":90,"na":0,"sg":2}
+,{"id":212,"name":"霧島改","type":"戦艦","seek":15,"max_seek":49,"hp":75,"hp2":83,"asw":0,"max_asw":0,"fuel":90,"na":0,"sg":2}
+,{"id":213,"name":"天龍改","type":"軽巡","seek":10,"max_seek":49,"hp":40,"hp2":46,"asw":24,"max_asw":69,"fuel":25,"na":0,"sg":2}
+,{"id":214,"name":"龍田改","type":"軽巡","seek":10,"max_seek":49,"hp":40,"hp2":46,"asw":24,"max_asw":69,"fuel":25,"na":0,"sg":2}
+,{"id":215,"name":"球磨改","type":"軽巡","seek":10,"max_seek":49,"hp":42,"hp2":48,"asw":24,"max_asw":79,"fuel":25,"na":0,"sg":2}
+,{"id":216,"name":"多摩改","type":"軽巡","seek":10,"max_seek":49,"hp":42,"hp2":48,"asw":24,"max_asw":79,"fuel":25,"na":0,"sg":2}
+,{"id":217,"name":"木曾改","type":"軽巡","seek":10,"max_seek":49,"hp":42,"hp2":48,"asw":24,"max_asw":79,"fuel":25,"na":0,"sg":2}
+,{"id":218,"name":"長良改","type":"軽巡","seek":10,"max_seek":49,"hp":43,"hp2":49,"asw":24,"max_asw":79,"fuel":25,"na":0,"sg":2}
+,{"id":219,"name":"五十鈴改","type":"軽巡","seek":10,"max_seek":49,"hp":37,"hp2":42,"asw":48,"max_asw":79,"fuel":25,"na":0,"sg":2}
+,{"id":220,"name":"由良改","type":"軽巡","seek":10,"max_seek":49,"hp":43,"hp2":49,"asw":48,"max_asw":79,"fuel":25,"na":0,"sg":2}
+,{"id":221,"name":"名取改","type":"軽巡","seek":10,"max_seek":49,"hp":43,"hp2":49,"asw":24,"max_asw":79,"fuel":25,"na":0,"sg":2}
+,{"id":222,"name":"川内改","type":"軽巡","seek":10,"max_seek":49,"hp":44,"hp2":50,"asw":24,"max_asw":79,"fuel":25,"na":0,"sg":2}
+,{"id":223,"name":"神通改","type":"軽巡","seek":10,"max_seek":49,"hp":44,"hp2":50,"asw":24,"max_asw":79,"fuel":25,"na":0,"sg":2}
+,{"id":224,"name":"那珂改","type":"軽巡","seek":10,"max_seek":49,"hp":44,"hp2":50,"asw":32,"max_asw":79,"fuel":25,"na":0,"sg":2}
+,{"id":225,"name":"陽炎改","type":"駆逐","seek":8,"max_seek":39,"hp":32,"hp2":37,"asw":27,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":226,"name":"不知火改","type":"駆逐","seek":8,"max_seek":39,"hp":32,"hp2":37,"asw":27,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":227,"name":"黒潮改","type":"駆逐","seek":8,"max_seek":39,"hp":32,"hp2":37,"asw":27,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":228,"name":"雪風改","type":"駆逐","seek":8,"max_seek":41,"hp":32,"hp2":37,"asw":27,"max_asw":60,"fuel":15,"na":0,"sg":2}
+,{"id":229,"name":"島風改","type":"駆逐","seek":9,"max_seek":39,"hp":36,"hp2":41,"asw":27,"max_asw":59,"fuel":20,"na":0,"sg":0}
+,{"id":230,"name":"朧改","type":"駆逐","seek":7,"max_seek":39,"hp":30,"hp2":35,"asw":24,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":231,"name":"曙改","type":"駆逐","seek":7,"max_seek":39,"hp":30,"hp2":35,"asw":24,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":232,"name":"漣改","type":"駆逐","seek":7,"max_seek":39,"hp":30,"hp2":35,"asw":24,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":233,"name":"潮改","type":"駆逐","seek":7,"max_seek":39,"hp":30,"hp2":35,"asw":24,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":234,"name":"暁改","type":"駆逐","seek":7,"max_seek":39,"hp":30,"hp2":35,"asw":24,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":235,"name":"響改","type":"駆逐","seek":7,"max_seek":39,"hp":30,"hp2":35,"asw":24,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":236,"name":"雷改","type":"駆逐","seek":7,"max_seek":39,"hp":30,"hp2":35,"asw":24,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":237,"name":"電改","type":"駆逐","seek":7,"max_seek":39,"hp":30,"hp2":35,"asw":24,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":238,"name":"初春改","type":"駆逐","seek":7,"max_seek":39,"hp":30,"hp2":35,"asw":24,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":239,"name":"子日改","type":"駆逐","seek":7,"max_seek":39,"hp":30,"hp2":35,"asw":24,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":240,"name":"若葉改","type":"駆逐","seek":7,"max_seek":39,"hp":30,"hp2":35,"asw":24,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":241,"name":"初霜改","type":"駆逐","seek":7,"max_seek":39,"hp":30,"hp2":35,"asw":24,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":242,"name":"白露改","type":"駆逐","seek":7,"max_seek":39,"hp":30,"hp2":35,"asw":24,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":243,"name":"時雨改","type":"駆逐","seek":7,"max_seek":39,"hp":30,"hp2":35,"asw":24,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":244,"name":"村雨改","type":"駆逐","seek":7,"max_seek":39,"hp":30,"hp2":35,"asw":24,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":245,"name":"夕立改","type":"駆逐","seek":7,"max_seek":39,"hp":30,"hp2":35,"asw":24,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":246,"name":"五月雨改","type":"駆逐","seek":7,"max_seek":39,"hp":30,"hp2":35,"asw":24,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":247,"name":"涼風改","type":"駆逐","seek":7,"max_seek":39,"hp":30,"hp2":35,"asw":24,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":248,"name":"朝潮改","type":"駆逐","seek":8,"max_seek":39,"hp":31,"hp2":36,"asw":24,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":249,"name":"大潮改","type":"駆逐","seek":8,"max_seek":39,"hp":31,"hp2":36,"asw":24,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":250,"name":"満潮改","type":"駆逐","seek":8,"max_seek":39,"hp":31,"hp2":36,"asw":24,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":251,"name":"荒潮改","type":"駆逐","seek":8,"max_seek":39,"hp":31,"hp2":36,"asw":24,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":252,"name":"霰改","type":"駆逐","seek":8,"max_seek":39,"hp":31,"hp2":36,"asw":24,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":253,"name":"霞改","type":"駆逐","seek":8,"max_seek":39,"hp":31,"hp2":36,"asw":24,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":254,"name":"睦月改","type":"駆逐","seek":6,"max_seek":39,"hp":24,"hp2":28,"asw":18,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":255,"name":"如月改","type":"駆逐","seek":6,"max_seek":39,"hp":24,"hp2":28,"asw":18,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":256,"name":"皐月改","type":"駆逐","seek":6,"max_seek":39,"hp":24,"hp2":28,"asw":18,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":257,"name":"文月改","type":"駆逐","seek":6,"max_seek":39,"hp":24,"hp2":28,"asw":18,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":258,"name":"長月改","type":"駆逐","seek":6,"max_seek":39,"hp":24,"hp2":28,"asw":18,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":259,"name":"菊月改","type":"駆逐","seek":6,"max_seek":39,"hp":24,"hp2":28,"asw":18,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":260,"name":"三日月改","type":"駆逐","seek":6,"max_seek":39,"hp":24,"hp2":28,"asw":18,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":261,"name":"望月改","type":"駆逐","seek":6,"max_seek":39,"hp":24,"hp2":28,"asw":18,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":262,"name":"古鷹改","type":"重巡","seek":12,"max_seek":49,"hp":48,"hp2":54,"asw":0,"max_asw":0,"fuel":35,"na":0,"sg":2}
+,{"id":263,"name":"加古改","type":"重巡","seek":12,"max_seek":49,"hp":48,"hp2":54,"asw":0,"max_asw":0,"fuel":35,"na":0,"sg":2}
+,{"id":264,"name":"青葉改","type":"重巡","seek":12,"max_seek":49,"hp":49,"hp2":55,"asw":0,"max_asw":0,"fuel":35,"na":0,"sg":2}
+,{"id":265,"name":"妙高改","type":"重巡","seek":14,"max_seek":49,"hp":55,"hp2":62,"asw":0,"max_asw":0,"fuel":40,"na":0,"sg":2}
+,{"id":266,"name":"那智改","type":"重巡","seek":14,"max_seek":49,"hp":55,"hp2":62,"asw":0,"max_asw":0,"fuel":40,"na":0,"sg":2}
+,{"id":267,"name":"足柄改","type":"重巡","seek":14,"max_seek":49,"hp":55,"hp2":62,"asw":0,"max_asw":0,"fuel":40,"na":0,"sg":2}
+,{"id":268,"name":"羽黒改","type":"重巡","seek":14,"max_seek":49,"hp":55,"hp2":62,"asw":0,"max_asw":0,"fuel":40,"na":0,"sg":2}
+,{"id":269,"name":"高雄改","type":"重巡","seek":14,"max_seek":49,"hp":57,"hp2":64,"asw":0,"max_asw":0,"fuel":40,"na":0,"sg":2}
+,{"id":270,"name":"愛宕改","type":"重巡","seek":14,"max_seek":49,"hp":57,"hp2":64,"asw":0,"max_asw":0,"fuel":40,"na":0,"sg":2}
+,{"id":271,"name":"摩耶改","type":"重巡","seek":14,"max_seek":49,"hp":55,"hp2":62,"asw":0,"max_asw":0,"fuel":40,"na":0,"sg":2}
+,{"id":272,"name":"鳥海改","type":"重巡","seek":14,"max_seek":49,"hp":57,"hp2":64,"asw":0,"max_asw":0,"fuel":40,"na":0,"sg":2}
+,{"id":273,"name":"利根改","type":"重巡","seek":24,"max_seek":79,"hp":56,"hp2":63,"asw":0,"max_asw":0,"fuel":45,"na":0,"sg":0}
+,{"id":274,"name":"筑摩改","type":"重巡","seek":24,"max_seek":79,"hp":56,"hp2":63,"asw":0,"max_asw":0,"fuel":45,"na":0,"sg":0}
+,{"id":275,"name":"長門改","type":"戦艦","seek":15,"max_seek":49,"hp":90,"hp2":98,"asw":0,"max_asw":0,"fuel":100,"na":0,"sg":5}
+,{"id":276,"name":"陸奥改","type":"戦艦","seek":15,"max_seek":49,"hp":90,"hp2":98,"asw":0,"max_asw":0,"fuel":100,"na":0,"sg":5}
+,{"id":277,"name":"赤城改","type":"正空","seek":50,"max_seek":89,"hp":77,"hp2":85,"asw":0,"max_asw":0,"fuel":75,"na":0,"sg":2}
+,{"id":278,"name":"加賀改","type":"正空","seek":50,"max_seek":89,"hp":79,"hp2":87,"asw":0,"max_asw":0,"fuel":80,"na":0,"sg":3}
+,{"id":279,"name":"蒼龍改","type":"正空","seek":46,"max_seek":89,"hp":65,"hp2":72,"asw":0,"max_asw":0,"fuel":65,"na":0,"sg":1}
+,{"id":280,"name":"飛龍改","type":"正空","seek":46,"max_seek":89,"hp":65,"hp2":72,"asw":0,"max_asw":0,"fuel":65,"na":0,"sg":1}
+,{"id":281,"name":"龍驤改","type":"軽空","seek":35,"max_seek":79,"hp":45,"hp2":51,"asw":0,"max_asw":0,"fuel":40,"na":0,"sg":2}
+,{"id":282,"name":"祥鳳改","type":"軽空","seek":35,"max_seek":79,"hp":45,"hp2":51,"asw":0,"max_asw":0,"fuel":40,"na":0,"sg":2}
+,{"id":283,"name":"飛鷹改","type":"軽空","seek":40,"max_seek":79,"hp":50,"hp2":57,"asw":0,"max_asw":0,"fuel":45,"na":0,"sg":5}
+,{"id":284,"name":"隼鷹改","type":"軽空","seek":40,"max_seek":79,"hp":50,"hp2":57,"asw":0,"max_asw":0,"fuel":45,"na":0,"sg":5}
+,{"id":285,"name":"鳳翔改","type":"軽空","seek":35,"max_seek":79,"hp":40,"hp2":46,"asw":0,"max_asw":0,"fuel":30,"na":0,"sg":5}
+,{"id":286,"name":"扶桑改","type":"航戦","seek":18,"max_seek":49,"hp":75,"hp2":83,"asw":0,"max_asw":0,"fuel":95,"na":0,"sg":5}
+,{"id":287,"name":"山城改","type":"航戦","seek":18,"max_seek":49,"hp":75,"hp2":83,"asw":0,"max_asw":0,"fuel":95,"na":0,"sg":5}
+,{"id":288,"name":"翔鶴改","type":"正空","seek":48,"max_seek":89,"hp":75,"hp2":83,"asw":0,"max_asw":0,"fuel":65,"na":0,"sg":0}
+,{"id":289,"name":"鬼怒改","type":"軽巡","seek":10,"max_seek":49,"hp":41,"hp2":47,"asw":48,"max_asw":79,"fuel":25,"na":0,"sg":2}
+,{"id":290,"name":"阿武隈改","type":"軽巡","seek":10,"max_seek":49,"hp":42,"hp2":48,"asw":48,"max_asw":79,"fuel":25,"na":0,"sg":2}
+,{"id":291,"name":"千歳航改","type":"軽空","seek":42,"max_seek":79,"hp":57,"hp2":64,"asw":0,"max_asw":0,"fuel":45,"na":0,"sg":2}
+,{"id":292,"name":"千代田航改","type":"軽空","seek":42,"max_seek":79,"hp":57,"hp2":64,"asw":0,"max_asw":0,"fuel":45,"na":0,"sg":2}
+,{"id":293,"name":"夕張改","type":"軽巡","seek":8,"max_seek":44,"hp":36,"hp2":41,"asw":24,"max_asw":69,"fuel":25,"na":0,"sg":3}
+,{"id":294,"name":"舞風改","type":"駆逐","seek":8,"max_seek":39,"hp":32,"hp2":37,"asw":27,"max_asw":72,"fuel":15,"na":0,"sg":2}
+,{"id":295,"name":"衣笠改","type":"重巡","seek":12,"max_seek":49,"hp":49,"hp2":55,"asw":0,"max_asw":0,"fuel":35,"na":0,"sg":2}
+,{"id":296,"name":"千歳航改二","type":"軽空","seek":42,"max_seek":79,"hp":58,"hp2":65,"asw":0,"max_asw":0,"fuel":45,"na":0,"sg":2}
+,{"id":297,"name":"千代田航改二","type":"軽空","seek":42,"max_seek":79,"hp":58,"hp2":65,"asw":0,"max_asw":0,"fuel":45,"na":0,"sg":2}
+,{"id":299,"name":"Scamp","type":"潜水","seek":11,"max_seek":41,"hp":13,"hp2":17,"asw":0,"max_asw":0,"fuel":10,"na":0,"sg":6}
+,{"id":300,"name":"初風改","type":"駆逐","seek":8,"max_seek":39,"hp":32,"hp2":37,"asw":27,"max_asw":64,"fuel":15,"na":0,"sg":2}
+,{"id":301,"name":"秋雲改","type":"駆逐","seek":8,"max_seek":39,"hp":32,"hp2":37,"asw":27,"max_asw":64,"fuel":15,"na":0,"sg":2}
+,{"id":302,"name":"夕雲改","type":"駆逐","seek":9,"max_seek":42,"hp":32,"hp2":37,"asw":29,"max_asw":67,"fuel":15,"na":0,"sg":2}
+,{"id":303,"name":"巻雲改","type":"駆逐","seek":9,"max_seek":42,"hp":32,"hp2":37,"asw":29,"max_asw":67,"fuel":15,"na":0,"sg":2}
+,{"id":304,"name":"長波改","type":"駆逐","seek":9,"max_seek":42,"hp":32,"hp2":37,"asw":29,"max_asw":67,"fuel":15,"na":0,"sg":2}
+,{"id":305,"name":"阿賀野改","type":"軽巡","seek":14,"max_seek":59,"hp":45,"hp2":51,"asw":26,"max_asw":82,"fuel":30,"na":0,"sg":1}
+,{"id":306,"name":"能代改","type":"軽巡","seek":14,"max_seek":59,"hp":45,"hp2":51,"asw":26,"max_asw":82,"fuel":30,"na":0,"sg":1}
+,{"id":307,"name":"矢矧改","type":"軽巡","seek":14,"max_seek":59,"hp":47,"hp2":53,"asw":26,"max_asw":82,"fuel":30,"na":0,"sg":1}
+,{"id":308,"name":"弥生改","type":"駆逐","seek":6,"max_seek":39,"hp":24,"hp2":28,"asw":18,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":309,"name":"卯月改","type":"駆逐","seek":6,"max_seek":39,"hp":24,"hp2":28,"asw":21,"max_asw":65,"fuel":15,"na":0,"sg":2}
+,{"id":310,"name":"Z1改","type":"駆逐","seek":8,"max_seek":42,"hp":33,"hp2":38,"asw":36,"max_asw":69,"fuel":20,"na":0,"sg":2}
+,{"id":311,"name":"Z3改","type":"駆逐","seek":8,"max_seek":42,"hp":33,"hp2":38,"asw":36,"max_asw":69,"fuel":20,"na":0,"sg":2}
+,{"id":312,"name":"浜風改","type":"駆逐","seek":8,"max_seek":39,"hp":32,"hp2":37,"asw":27,"max_asw":68,"fuel":15,"na":0,"sg":2}
+,{"id":313,"name":"谷風改","type":"駆逐","seek":8,"max_seek":39,"hp":32,"hp2":37,"asw":28,"max_asw":69,"fuel":15,"na":0,"sg":2}
+,{"id":314,"name":"酒匂改","type":"軽巡","seek":14,"max_seek":59,"hp":46,"hp2":52,"asw":30,"max_asw":85,"fuel":30,"na":0,"sg":1}
+,{"id":316,"name":"天津風改","type":"駆逐","seek":9,"max_seek":39,"hp":34,"hp2":39,"asw":28,"max_asw":59,"fuel":20,"na":0,"sg":1}
+,{"id":317,"name":"浦風改","type":"駆逐","seek":8,"max_seek":39,"hp":32,"hp2":37,"asw":29,"max_asw":69,"fuel":15,"na":0,"sg":2}
+,{"id":318,"name":"龍鳳改","type":"軽空","seek":30,"max_seek":74,"hp":48,"hp2":54,"asw":0,"max_asw":0,"fuel":35,"na":0,"sg":2}
+,{"id":319,"name":"妙高改二","type":"重巡","seek":19,"max_seek":61,"hp":56,"hp2":63,"asw":0,"max_asw":0,"fuel":45,"na":0,"sg":2}
+,{"id":320,"name":"磯風改","type":"駆逐","seek":9,"max_seek":49,"hp":33,"hp2":38,"asw":27,"max_asw":68,"fuel":15,"na":0,"sg":2}
+,{"id":321,"name":"大淀改","type":"軽巡","seek":28,"max_seek":84,"hp":47,"hp2":53,"asw":0,"max_asw":39,"fuel":35,"na":0,"sg":2}
+,{"id":322,"name":"時津風改","type":"駆逐","seek":8,"max_seek":39,"hp":32,"hp2":37,"asw":26,"max_asw":64,"fuel":15,"na":0,"sg":2}
+,{"id":323,"name":"春雨改","type":"駆逐","seek":7,"max_seek":39,"hp":30,"hp2":35,"asw":24,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":324,"name":"早霜改","type":"駆逐","seek":9,"max_seek":42,"hp":32,"hp2":37,"asw":29,"max_asw":67,"fuel":15,"na":0,"sg":2}
+,{"id":325,"name":"清霜改","type":"駆逐","seek":9,"max_seek":42,"hp":32,"hp2":37,"asw":29,"max_asw":67,"fuel":15,"na":0,"sg":2}
+,{"id":326,"name":"初春改二","type":"駆逐","seek":10,"max_seek":45,"hp":31,"hp2":36,"asw":30,"max_asw":69,"fuel":15,"na":0,"sg":2}
+,{"id":327,"name":"朝雲改","type":"駆逐","seek":8,"max_seek":40,"hp":31,"hp2":36,"asw":24,"max_asw":60,"fuel":15,"na":0,"sg":2}
+,{"id":328,"name":"山雲改","type":"駆逐","seek":8,"max_seek":40,"hp":31,"hp2":36,"asw":27,"max_asw":65,"fuel":15,"na":0,"sg":2}
+,{"id":329,"name":"野分改","type":"駆逐","seek":8,"max_seek":39,"hp":32,"hp2":37,"asw":28,"max_asw":68,"fuel":15,"na":0,"sg":2}
+,{"id":330,"name":"秋月改","type":"駆逐","seek":10,"max_seek":49,"hp":37,"hp2":42,"asw":30,"max_asw":72,"fuel":20,"na":0,"sg":2}
+,{"id":331,"name":"天城","type":"正空","seek":38,"max_seek":74,"hp":48,"hp2":54,"asw":0,"max_asw":0,"fuel":50,"na":0,"sg":1}
+,{"id":332,"name":"葛城","type":"正空","seek":36,"max_seek":70,"hp":48,"hp2":54,"asw":0,"max_asw":0,"fuel":50,"na":0,"sg":2}
+,{"id":334,"name":"U-511改","type":"潜水","seek":9,"max_seek":29,"hp":13,"hp2":17,"asw":0,"max_asw":0,"fuel":10,"na":0,"sg":6}
+,{"id":343,"name":"香取改","type":"練巡","seek":12,"max_seek":48,"hp":40,"hp2":46,"asw":22,"max_asw":62,"fuel":35,"na":0,"sg":5}
+,{"id":344,"name":"朝霜改","type":"駆逐","seek":10,"max_seek":43,"hp":33,"hp2":38,"asw":35,"max_asw":79,"fuel":15,"na":0,"sg":2}
+,{"id":345,"name":"高波改","type":"駆逐","seek":13,"max_seek":54,"hp":32,"hp2":37,"asw":29,"max_asw":67,"fuel":15,"na":0,"sg":2}
+,{"id":346,"name":"照月改","type":"駆逐","seek":10,"max_seek":49,"hp":37,"hp2":42,"asw":30,"max_asw":72,"fuel":20,"na":0,"sg":2}
+,{"id":347,"name":"Libeccio改","type":"駆逐","seek":10,"max_seek":46,"hp":29,"hp2":33,"asw":40,"max_asw":80,"fuel":15,"na":2,"sg":2}
+,{"id":348,"name":"瑞穂改","type":"水母","seek":38,"max_seek":94,"hp":42,"hp2":48,"asw":0,"max_asw":0,"fuel":40,"na":0,"sg":5}
+,{"id":349,"name":"風雲改","type":"駆逐","seek":9,"max_seek":42,"hp":32,"hp2":37,"asw":30,"max_asw":69,"fuel":15,"na":0,"sg":2}
+,{"id":350,"name":"海風改","type":"駆逐","seek":8,"max_seek":40,"hp":30,"hp2":35,"asw":27,"max_asw":63,"fuel":15,"na":0,"sg":2}
+,{"id":351,"name":"江風改","type":"駆逐","seek":8,"max_seek":40,"hp":30,"hp2":35,"asw":24,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":352,"name":"速吸改","type":"補給","seek":18,"max_seek":59,"hp":48,"hp2":50,"asw":12,"max_asw":36,"fuel":120,"na":0,"sg":6}
+,{"id":353,"name":"Graf Zeppelin改","type":"正空","seek":46,"max_seek":75,"hp":78,"hp2":86,"asw":0,"max_asw":0,"fuel":70,"na":4,"sg":2}
+,{"id":354,"name":"嵐改","type":"駆逐","seek":8,"max_seek":39,"hp":32,"hp2":37,"asw":30,"max_asw":70,"fuel":15,"na":0,"sg":2}
+,{"id":355,"name":"萩風改","type":"駆逐","seek":8,"max_seek":39,"hp":32,"hp2":37,"asw":28,"max_asw":68,"fuel":15,"na":0,"sg":2}
+,{"id":356,"name":"鹿島改","type":"練巡","seek":10,"max_seek":50,"hp":40,"hp2":46,"asw":24,"max_asw":69,"fuel":35,"na":0,"sg":5}
+,{"id":357,"name":"初月改","type":"駆逐","seek":10,"max_seek":49,"hp":37,"hp2":42,"asw":30,"max_asw":72,"fuel":20,"na":0,"sg":2}
+,{"id":358,"name":"Zara改","type":"重巡","seek":12,"max_seek":46,"hp":56,"hp2":63,"asw":0,"max_asw":0,"fuel":45,"na":2,"sg":2}
+,{"id":359,"name":"沖波改","type":"駆逐","seek":9,"max_seek":42,"hp":32,"hp2":37,"asw":32,"max_asw":70,"fuel":15,"na":0,"sg":2}
+,{"id":360,"name":"Iowa改","type":"戦艦","seek":30,"max_seek":71,"hp":92,"hp2":101,"asw":0,"max_asw":0,"fuel":200,"na":1,"sg":1}
+,{"id":361,"name":"Pola改","type":"重巡","seek":11,"max_seek":47,"hp":56,"hp2":63,"asw":0,"max_asw":0,"fuel":45,"na":2,"sg":2}
+,{"id":362,"name":"親潮改","type":"駆逐","seek":9,"max_seek":40,"hp":32,"hp2":37,"asw":27,"max_asw":67,"fuel":15,"na":0,"sg":2}
+,{"id":363,"name":"春風改","type":"駆逐","seek":8,"max_seek":46,"hp":23,"hp2":27,"asw":22,"max_asw":75,"fuel":15,"na":0,"sg":2}
+,{"id":364,"name":"Warspite改","type":"戦艦","seek":20,"max_seek":60,"hp":82,"hp2":90,"asw":0,"max_asw":0,"fuel":90,"na":3,"sg":5}
+,{"id":365,"name":"Aquila改","type":"正空","seek":36,"max_seek":72,"hp":48,"hp2":54,"asw":0,"max_asw":0,"fuel":45,"na":2,"sg":2}
+,{"id":366,"name":"水無月改","type":"駆逐","seek":6,"max_seek":39,"hp":24,"hp2":28,"asw":19,"max_asw":61,"fuel":15,"na":0,"sg":2}
+,{"id":367,"name":"伊26改","type":"潜空","seek":17,"max_seek":41,"hp":18,"hp2":22,"asw":0,"max_asw":0,"fuel":10,"na":0,"sg":6}
+,{"id":368,"name":"浦波改","type":"駆逐","seek":8,"max_seek":43,"hp":30,"hp2":35,"asw":24,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":369,"name":"山風改","type":"駆逐","seek":7,"max_seek":42,"hp":30,"hp2":35,"asw":30,"max_asw":73,"fuel":15,"na":0,"sg":2}
+,{"id":370,"name":"朝風改","type":"駆逐","seek":9,"max_seek":47,"hp":23,"hp2":27,"asw":18,"max_asw":68,"fuel":15,"na":0,"sg":2}
+,{"id":371,"name":"松風改","type":"駆逐","seek":9,"max_seek":47,"hp":23,"hp2":27,"asw":20,"max_asw":70,"fuel":15,"na":0,"sg":2}
+,{"id":372,"name":"Commandant Teste改","type":"水母","seek":34,"max_seek":88,"hp":43,"hp2":49,"asw":0,"max_asw":0,"fuel":40,"na":5,"sg":5}
+,{"id":373,"name":"藤波改","type":"駆逐","seek":12,"max_seek":56,"hp":32,"hp2":37,"asw":28,"max_asw":66,"fuel":15,"na":0,"sg":2}
+,{"id":374,"name":"伊13改","type":"潜空","seek":13,"max_seek":43,"hp":21,"hp2":25,"asw":0,"max_asw":0,"fuel":25,"na":0,"sg":6}
+,{"id":375,"name":"伊14改","type":"潜空","seek":14,"max_seek":44,"hp":22,"hp2":26,"asw":0,"max_asw":0,"fuel":25,"na":0,"sg":6}
+,{"id":376,"name":"占守改","type":"海防","seek":5,"max_seek":28,"hp":17,"hp2":21,"asw":35,"max_asw":77,"fuel":10,"na":0,"sg":5}
+,{"id":377,"name":"国後改","type":"海防","seek":6,"max_seek":29,"hp":17,"hp2":21,"asw":34,"max_asw":75,"fuel":10,"na":0,"sg":5}
+,{"id":378,"name":"八丈改","type":"海防","seek":5,"max_seek":29,"hp":17,"hp2":21,"asw":34,"max_asw":76,"fuel":10,"na":0,"sg":5}
+,{"id":379,"name":"石垣改","type":"海防","seek":6,"max_seek":30,"hp":17,"hp2":21,"asw":36,"max_asw":79,"fuel":10,"na":0,"sg":5}
+,{"id":380,"name":"大鷹改","type":"軽空","seek":33,"max_seek":64,"hp":47,"hp2":53,"asw":65,"max_asw":79,"fuel":30,"na":0,"sg":5}
+,{"id":381,"name":"神鷹改","type":"軽空","seek":29,"max_seek":60,"hp":48,"hp2":54,"asw":66,"max_asw":80,"fuel":30,"na":0,"sg":5}
+,{"id":382,"name":"雲鷹改","type":"軽空","seek":31,"max_seek":61,"hp":47,"hp2":53,"asw":64,"max_asw":79,"fuel":30,"na":0,"sg":5}
+,{"id":383,"name":"択捉改","type":"海防","seek":5,"max_seek":28,"hp":17,"hp2":21,"asw":37,"max_asw":79,"fuel":10,"na":0,"sg":5}
+,{"id":384,"name":"松輪改","type":"海防","seek":5,"max_seek":28,"hp":17,"hp2":21,"asw":36,"max_asw":79,"fuel":10,"na":0,"sg":5}
+,{"id":385,"name":"佐渡改","type":"海防","seek":6,"max_seek":29,"hp":17,"hp2":21,"asw":37,"max_asw":79,"fuel":10,"na":0,"sg":5}
+,{"id":386,"name":"対馬改","type":"海防","seek":5,"max_seek":28,"hp":17,"hp2":21,"asw":36,"max_asw":81,"fuel":10,"na":0,"sg":5}
+,{"id":387,"name":"旗風改","type":"駆逐","seek":8,"max_seek":46,"hp":23,"hp2":27,"asw":21,"max_asw":70,"fuel":15,"na":0,"sg":2}
+,{"id":390,"name":"天霧改","type":"駆逐","seek":7,"max_seek":39,"hp":30,"hp2":35,"asw":24,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":391,"name":"狭霧改","type":"駆逐","seek":7,"max_seek":41,"hp":30,"hp2":35,"asw":24,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":392,"name":"Richelieu改","type":"戦艦","seek":16,"max_seek":54,"hp":89,"hp2":97,"asw":0,"max_asw":0,"fuel":100,"na":5,"sg":2}
+,{"id":393,"name":"Ark Royal改","type":"正空","seek":42,"max_seek":84,"hp":71,"hp2":79,"asw":0,"max_asw":0,"fuel":65,"na":3,"sg":2}
+,{"id":394,"name":"Jervis改","type":"駆逐","seek":12,"max_seek":52,"hp":31,"hp2":36,"asw":55,"max_asw":92,"fuel":15,"na":3,"sg":2}
+,{"id":395,"name":"Ташкент改","type":"駆逐","seek":10,"max_seek":48,"hp":39,"hp2":44,"asw":40,"max_asw":73,"fuel":15,"na":6,"sg":0}
+,{"id":396,"name":"Gambier Bay改","type":"軽空","seek":38,"max_seek":68,"hp":38,"hp2":43,"asw":30,"max_asw":68,"fuel":25,"na":1,"sg":5}
+,{"id":397,"name":"Intrepid改","type":"正空","seek":52,"max_seek":90,"hp":69,"hp2":76,"asw":0,"max_asw":0,"fuel":90,"na":1,"sg":2}
+,{"id":398,"name":"伊168改","type":"潜水","seek":10,"max_seek":29,"hp":15,"hp2":19,"asw":0,"max_asw":0,"fuel":10,"na":0,"sg":6}
+,{"id":399,"name":"伊58改","type":"潜空","seek":15,"max_seek":39,"hp":18,"hp2":22,"asw":0,"max_asw":0,"fuel":10,"na":0,"sg":6}
+,{"id":400,"name":"伊8改","type":"潜空","seek":16,"max_seek":39,"hp":19,"hp2":23,"asw":0,"max_asw":0,"fuel":10,"na":0,"sg":6}
+,{"id":401,"name":"伊19改","type":"潜空","seek":15,"max_seek":39,"hp":18,"hp2":22,"asw":0,"max_asw":0,"fuel":10,"na":0,"sg":6}
+,{"id":402,"name":"まるゆ改","type":"潜水","seek":1,"max_seek":19,"hp":7,"hp2":11,"asw":0,"max_asw":0,"fuel":10,"na":0,"sg":6}
+,{"id":403,"name":"伊401改","type":"潜空","seek":15,"max_seek":45,"hp":24,"hp2":28,"asw":0,"max_asw":0,"fuel":25,"na":0,"sg":6}
+,{"id":404,"name":"雲龍","type":"正空","seek":40,"max_seek":72,"hp":48,"hp2":54,"asw":0,"max_asw":0,"fuel":50,"na":0,"sg":1}
+,{"id":405,"name":"春雨","type":"駆逐","seek":5,"max_seek":19,"hp":16,"hp2":20,"asw":21,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":406,"name":"雲龍改","type":"正空","seek":48,"max_seek":82,"hp":60,"hp2":67,"asw":0,"max_asw":0,"fuel":50,"na":0,"sg":1}
+,{"id":407,"name":"潮改二","type":"駆逐","seek":11,"max_seek":48,"hp":33,"hp2":38,"asw":32,"max_asw":75,"fuel":15,"na":0,"sg":2}
+,{"id":408,"name":"隼鷹改二","type":"軽空","seek":44,"max_seek":79,"hp":55,"hp2":62,"asw":0,"max_asw":0,"fuel":45,"na":0,"sg":5}
+,{"id":409,"name":"早霜","type":"駆逐","seek":6,"max_seek":19,"hp":16,"hp2":20,"asw":27,"max_asw":52,"fuel":15,"na":0,"sg":2}
+,{"id":410,"name":"清霜","type":"駆逐","seek":6,"max_seek":19,"hp":16,"hp2":20,"asw":27,"max_asw":52,"fuel":15,"na":0,"sg":2}
+,{"id":411,"name":"扶桑改二","type":"航戦","seek":22,"max_seek":59,"hp":77,"hp2":85,"asw":8,"max_asw":28,"fuel":105,"na":0,"sg":5}
+,{"id":412,"name":"山城改二","type":"航戦","seek":23,"max_seek":59,"hp":77,"hp2":85,"asw":8,"max_asw":29,"fuel":105,"na":0,"sg":5}
+,{"id":413,"name":"朝雲","type":"駆逐","seek":5,"max_seek":19,"hp":16,"hp2":20,"asw":21,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":414,"name":"山雲","type":"駆逐","seek":5,"max_seek":19,"hp":16,"hp2":20,"asw":23,"max_asw":50,"fuel":15,"na":0,"sg":2}
+,{"id":415,"name":"野分","type":"駆逐","seek":8,"max_seek":19,"hp":16,"hp2":20,"asw":24,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":416,"name":"古鷹改二","type":"重巡","seek":13,"max_seek":54,"hp":53,"hp2":60,"asw":0,"max_asw":0,"fuel":35,"na":0,"sg":2}
+,{"id":417,"name":"加古改二","type":"重巡","seek":14,"max_seek":55,"hp":52,"hp2":59,"asw":0,"max_asw":0,"fuel":35,"na":0,"sg":2}
+,{"id":418,"name":"皐月改二","type":"駆逐","seek":10,"max_seek":45,"hp":28,"hp2":32,"asw":30,"max_asw":81,"fuel":15,"na":0,"sg":2}
+,{"id":419,"name":"初霜改二","type":"駆逐","seek":11,"max_seek":49,"hp":32,"hp2":37,"asw":28,"max_asw":72,"fuel":15,"na":0,"sg":2}
+,{"id":420,"name":"叢雲改二","type":"駆逐","seek":9,"max_seek":42,"hp":31,"hp2":36,"asw":28,"max_asw":69,"fuel":15,"na":0,"sg":2}
+,{"id":421,"name":"秋月","type":"駆逐","seek":9,"max_seek":29,"hp":20,"hp2":24,"asw":27,"max_asw":63,"fuel":20,"na":0,"sg":2}
+,{"id":422,"name":"照月","type":"駆逐","seek":9,"max_seek":29,"hp":20,"hp2":24,"asw":27,"max_asw":63,"fuel":20,"na":0,"sg":2}
+,{"id":423,"name":"初月","type":"駆逐","seek":8,"max_seek":28,"hp":20,"hp2":24,"asw":26,"max_asw":62,"fuel":20,"na":0,"sg":2}
+,{"id":424,"name":"高波","type":"駆逐","seek":9,"max_seek":24,"hp":16,"hp2":20,"asw":27,"max_asw":52,"fuel":15,"na":0,"sg":2}
+,{"id":425,"name":"朝霜","type":"駆逐","seek":6,"max_seek":19,"hp":16,"hp2":20,"asw":35,"max_asw":70,"fuel":15,"na":0,"sg":2}
+,{"id":426,"name":"吹雪改二","type":"駆逐","seek":14,"max_seek":54,"hp":31,"hp2":36,"asw":26,"max_asw":68,"fuel":15,"na":0,"sg":2}
+,{"id":427,"name":"鳥海改二","type":"重巡","seek":22,"max_seek":62,"hp":57,"hp2":64,"asw":0,"max_asw":0,"fuel":45,"na":0,"sg":2}
+,{"id":428,"name":"摩耶改二","type":"重巡","seek":16,"max_seek":55,"hp":57,"hp2":64,"asw":0,"max_asw":0,"fuel":45,"na":0,"sg":2}
+,{"id":429,"name":"天城改","type":"正空","seek":46,"max_seek":80,"hp":60,"hp2":67,"asw":0,"max_asw":0,"fuel":50,"na":0,"sg":1}
+,{"id":430,"name":"葛城改","type":"正空","seek":44,"max_seek":78,"hp":60,"hp2":67,"asw":0,"max_asw":0,"fuel":50,"na":0,"sg":2}
+,{"id":431,"name":"U-511","type":"潜水","seek":8,"max_seek":28,"hp":8,"hp2":12,"asw":0,"max_asw":0,"fuel":10,"na":4,"sg":6}
+,{"id":432,"name":"Graf Zeppelin","type":"正空","seek":40,"max_seek":69,"hp":70,"hp2":78,"asw":0,"max_asw":0,"fuel":55,"na":4,"sg":2}
+,{"id":433,"name":"Saratoga","type":"正空","seek":40,"max_seek":68,"hp":83,"hp2":91,"asw":0,"max_asw":0,"fuel":65,"na":1,"sg":2}
+,{"id":434,"name":"睦月改二","type":"駆逐","seek":8,"max_seek":43,"hp":27,"hp2":31,"asw":28,"max_asw":69,"fuel":15,"na":0,"sg":2}
+,{"id":435,"name":"如月改二","type":"駆逐","seek":9,"max_seek":44,"hp":27,"hp2":31,"asw":27,"max_asw":69,"fuel":15,"na":0,"sg":2}
+,{"id":436,"name":"呂500","type":"潜水","seek":12,"max_seek":34,"hp":13,"hp2":17,"asw":0,"max_asw":0,"fuel":10,"na":0,"sg":6}
+,{"id":437,"name":"暁改二","type":"駆逐","seek":17,"max_seek":60,"hp":31,"hp2":36,"asw":28,"max_asw":66,"fuel":15,"na":0,"sg":2}
+,{"id":438,"name":"Saratoga改","type":"正空","seek":48,"max_seek":80,"hp":88,"hp2":96,"asw":0,"max_asw":0,"fuel":85,"na":1,"sg":2}
+,{"id":439,"name":"Warspite","type":"戦艦","seek":14,"max_seek":48,"hp":72,"hp2":80,"asw":0,"max_asw":0,"fuel":90,"na":3,"sg":5}
+,{"id":440,"name":"Iowa","type":"戦艦","seek":24,"max_seek":64,"hp":84,"hp2":92,"asw":0,"max_asw":0,"fuel":200,"na":1,"sg":1}
+,{"id":441,"name":"Littorio","type":"戦艦","seek":15,"max_seek":44,"hp":88,"hp2":94,"asw":0,"max_asw":0,"fuel":130,"na":2,"sg":2}
+,{"id":442,"name":"Roma","type":"戦艦","seek":17,"max_seek":46,"hp":88,"hp2":94,"asw":0,"max_asw":0,"fuel":130,"na":2,"sg":2}
+,{"id":443,"name":"Libeccio","type":"駆逐","seek":7,"max_seek":20,"hp":15,"hp2":19,"asw":30,"max_asw":60,"fuel":15,"na":2,"sg":2}
+,{"id":444,"name":"Aquila","type":"正空","seek":30,"max_seek":52,"hp":38,"hp2":43,"asw":0,"max_asw":0,"fuel":40,"na":2,"sg":2}
+,{"id":445,"name":"秋津洲","type":"水母","seek":22,"max_seek":42,"hp":32,"hp2":37,"asw":0,"max_asw":0,"fuel":50,"na":0,"sg":5}
+,{"id":446,"name":"Italia","type":"戦艦","seek":17,"max_seek":52,"hp":92,"hp2":98,"asw":0,"max_asw":0,"fuel":140,"na":2,"sg":2}
+,{"id":447,"name":"Roma改","type":"戦艦","seek":17,"max_seek":52,"hp":92,"hp2":98,"asw":0,"max_asw":0,"fuel":140,"na":2,"sg":2}
+,{"id":448,"name":"Zara","type":"重巡","seek":10,"max_seek":36,"hp":42,"hp2":48,"asw":0,"max_asw":0,"fuel":45,"na":2,"sg":2}
+,{"id":449,"name":"Pola","type":"重巡","seek":9,"max_seek":35,"hp":42,"hp2":48,"asw":0,"max_asw":0,"fuel":45,"na":2,"sg":2}
+,{"id":450,"name":"秋津洲改","type":"水母","seek":24,"max_seek":54,"hp":36,"hp2":41,"asw":0,"max_asw":0,"fuel":60,"na":0,"sg":5}
+,{"id":451,"name":"瑞穂","type":"水母","seek":36,"max_seek":74,"hp":41,"hp2":47,"asw":0,"max_asw":0,"fuel":35,"na":0,"sg":5}
+,{"id":452,"name":"沖波","type":"駆逐","seek":7,"max_seek":21,"hp":16,"hp2":20,"asw":28,"max_asw":53,"fuel":15,"na":0,"sg":2}
+,{"id":453,"name":"風雲","type":"駆逐","seek":6,"max_seek":19,"hp":16,"hp2":20,"asw":27,"max_asw":52,"fuel":15,"na":0,"sg":2}
+,{"id":454,"name":"嵐","type":"駆逐","seek":6,"max_seek":19,"hp":16,"hp2":20,"asw":28,"max_asw":62,"fuel":15,"na":0,"sg":2}
+,{"id":455,"name":"萩風","type":"駆逐","seek":6,"max_seek":19,"hp":16,"hp2":20,"asw":26,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":456,"name":"親潮","type":"駆逐","seek":8,"max_seek":19,"hp":16,"hp2":20,"asw":23,"max_asw":47,"fuel":15,"na":0,"sg":2}
+,{"id":457,"name":"山風","type":"駆逐","seek":5,"max_seek":18,"hp":16,"hp2":20,"asw":19,"max_asw":42,"fuel":15,"na":0,"sg":2}
+,{"id":458,"name":"海風","type":"駆逐","seek":6,"max_seek":19,"hp":16,"hp2":20,"asw":23,"max_asw":50,"fuel":15,"na":0,"sg":2}
+,{"id":459,"name":"江風","type":"駆逐","seek":6,"max_seek":19,"hp":16,"hp2":20,"asw":21,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":460,"name":"速吸","type":"補給","seek":15,"max_seek":40,"hp":43,"hp2":49,"asw":5,"max_asw":20,"fuel":100,"na":0,"sg":6}
+,{"id":461,"name":"翔鶴改二","type":"正空","seek":53,"max_seek":93,"hp":77,"hp2":85,"asw":0,"max_asw":0,"fuel":90,"na":0,"sg":0}
+,{"id":462,"name":"瑞鶴改二","type":"正空","seek":52,"max_seek":92,"hp":78,"hp2":86,"asw":0,"max_asw":0,"fuel":90,"na":0,"sg":0}
+,{"id":463,"name":"朝潮改二","type":"駆逐","seek":11,"max_seek":57,"hp":31,"hp2":36,"asw":26,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":464,"name":"霞改二","type":"駆逐","seek":14,"max_seek":55,"hp":31,"hp2":36,"asw":28,"max_asw":68,"fuel":15,"na":0,"sg":2}
+,{"id":465,"name":"鹿島","type":"練巡","seek":9,"max_seek":36,"hp":36,"hp2":41,"asw":13,"max_asw":43,"fuel":30,"na":0,"sg":5}
+,{"id":466,"name":"翔鶴改二甲","type":"装空","seek":50,"max_seek":90,"hp":78,"hp2":86,"asw":0,"max_asw":0,"fuel":100,"na":0,"sg":0}
+,{"id":467,"name":"瑞鶴改二甲","type":"装空","seek":50,"max_seek":90,"hp":79,"hp2":87,"asw":0,"max_asw":0,"fuel":100,"na":0,"sg":0}
+,{"id":468,"name":"朝潮改二丁","type":"駆逐","seek":10,"max_seek":55,"hp":34,"hp2":39,"asw":45,"max_asw":89,"fuel":15,"na":0,"sg":2}
+,{"id":469,"name":"江風改二","type":"駆逐","seek":13,"max_seek":53,"hp":31,"hp2":36,"asw":25,"max_asw":63,"fuel":15,"na":0,"sg":2}
+,{"id":470,"name":"霞改二乙","type":"駆逐","seek":15,"max_seek":56,"hp":31,"hp2":36,"asw":28,"max_asw":68,"fuel":15,"na":0,"sg":2}
+,{"id":471,"name":"神風","type":"駆逐","seek":5,"max_seek":18,"hp":12,"hp2":16,"asw":20,"max_asw":60,"fuel":15,"na":0,"sg":2}
+,{"id":472,"name":"朝風","type":"駆逐","seek":6,"max_seek":19,"hp":12,"hp2":16,"asw":17,"max_asw":55,"fuel":15,"na":0,"sg":2}
+,{"id":473,"name":"春風","type":"駆逐","seek":4,"max_seek":17,"hp":12,"hp2":16,"asw":18,"max_asw":56,"fuel":15,"na":0,"sg":2}
+,{"id":474,"name":"松風","type":"駆逐","seek":4,"max_seek":18,"hp":12,"hp2":16,"asw":21,"max_asw":62,"fuel":15,"na":0,"sg":2}
+,{"id":475,"name":"旗風","type":"駆逐","seek":4,"max_seek":17,"hp":12,"hp2":16,"asw":17,"max_asw":56,"fuel":15,"na":0,"sg":2}
+,{"id":476,"name":"神風改","type":"駆逐","seek":7,"max_seek":42,"hp":23,"hp2":27,"asw":24,"max_asw":77,"fuel":15,"na":0,"sg":2}
+,{"id":477,"name":"天龍改二","type":"軽巡","seek":12,"max_seek":53,"hp":42,"hp2":48,"asw":24,"max_asw":70,"fuel":25,"na":0,"sg":2}
+,{"id":478,"name":"龍田改二","type":"軽巡","seek":10,"max_seek":52,"hp":42,"hp2":48,"asw":50,"max_asw":82,"fuel":25,"na":0,"sg":2}
+,{"id":479,"name":"天霧","type":"駆逐","seek":5,"max_seek":20,"hp":15,"hp2":19,"asw":20,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":480,"name":"狭霧","type":"駆逐","seek":5,"max_seek":19,"hp":15,"hp2":19,"asw":20,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":481,"name":"水無月","type":"駆逐","seek":4,"max_seek":17,"hp":13,"hp2":17,"asw":17,"max_asw":41,"fuel":15,"na":0,"sg":2}
+,{"id":483,"name":"伊26","type":"潜水","seek":10,"max_seek":39,"hp":14,"hp2":18,"asw":0,"max_asw":0,"fuel":10,"na":0,"sg":6}
+,{"id":484,"name":"浜波","type":"駆逐","seek":9,"max_seek":24,"hp":16,"hp2":20,"asw":26,"max_asw":52,"fuel":15,"na":0,"sg":2}
+,{"id":485,"name":"藤波","type":"駆逐","seek":9,"max_seek":24,"hp":16,"hp2":20,"asw":26,"max_asw":53,"fuel":15,"na":0,"sg":2}
+,{"id":486,"name":"浦波","type":"駆逐","seek":5,"max_seek":19,"hp":15,"hp2":19,"asw":20,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":487,"name":"鬼怒改二","type":"軽巡","seek":15,"max_seek":60,"hp":45,"hp2":51,"asw":49,"max_asw":87,"fuel":25,"na":0,"sg":2}
+,{"id":488,"name":"由良改二","type":"軽巡","seek":17,"max_seek":64,"hp":45,"hp2":51,"asw":49,"max_asw":83,"fuel":25,"na":0,"sg":2}
+,{"id":489,"name":"満潮改二","type":"駆逐","seek":10,"max_seek":55,"hp":31,"hp2":36,"asw":26,"max_asw":60,"fuel":15,"na":0,"sg":2}
+,{"id":490,"name":"荒潮改二","type":"駆逐","seek":11,"max_seek":52,"hp":31,"hp2":36,"asw":26,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":491,"name":"Commandant Teste","type":"水母","seek":32,"max_seek":70,"hp":42,"hp2":48,"asw":0,"max_asw":0,"fuel":35,"na":5,"sg":5}
+,{"id":492,"name":"Richelieu","type":"戦艦","seek":14,"max_seek":50,"hp":85,"hp2":93,"asw":0,"max_asw":0,"fuel":100,"na":5,"sg":2}
+,{"id":493,"name":"伊400","type":"潜空","seek":15,"max_seek":46,"hp":20,"hp2":24,"asw":0,"max_asw":0,"fuel":20,"na":0,"sg":6}
+,{"id":494,"name":"伊13","type":"潜空","seek":13,"max_seek":43,"hp":18,"hp2":22,"asw":0,"max_asw":0,"fuel":15,"na":0,"sg":6}
+,{"id":495,"name":"伊14","type":"潜空","seek":14,"max_seek":44,"hp":18,"hp2":22,"asw":0,"max_asw":0,"fuel":15,"na":0,"sg":6}
+,{"id":496,"name":"Zara due","type":"重巡","seek":19,"max_seek":64,"hp":62,"hp2":69,"asw":0,"max_asw":0,"fuel":50,"na":5,"sg":2}
+,{"id":497,"name":"白露改二","type":"駆逐","seek":10,"max_seek":50,"hp":31,"hp2":36,"asw":30,"max_asw":83,"fuel":15,"na":0,"sg":2}
+,{"id":498,"name":"村雨改二","type":"駆逐","seek":9,"max_seek":47,"hp":31,"hp2":36,"asw":29,"max_asw":77,"fuel":15,"na":0,"sg":2}
+,{"id":499,"name":"神威改","type":"水母","seek":22,"max_seek":48,"hp":37,"hp2":42,"asw":0,"max_asw":0,"fuel":30,"na":0,"sg":5}
+,{"id":500,"name":"神威改母","type":"補給","seek":24,"max_seek":54,"hp":39,"hp2":44,"asw":10,"max_asw":30,"fuel":30,"na":0,"sg":5}
+,{"id":501,"name":"最上改二","type":"航巡","seek":28,"max_seek":86,"hp":60,"hp2":67,"asw":0,"max_asw":0,"fuel":55,"na":0,"sg":0}
+,{"id":503,"name":"鈴谷改二","type":"航巡","seek":26,"max_seek":83,"hp":61,"hp2":68,"asw":0,"max_asw":0,"fuel":55,"na":0,"sg":0}
+,{"id":504,"name":"熊野改二","type":"航巡","seek":25,"max_seek":81,"hp":62,"hp2":69,"asw":0,"max_asw":0,"fuel":55,"na":0,"sg":0}
+,{"id":506,"name":"最上改二特","type":"航巡","seek":24,"max_seek":80,"hp":61,"hp2":68,"asw":0,"max_asw":0,"fuel":55,"na":0,"sg":0}
+,{"id":508,"name":"鈴谷航改二","type":"軽空","seek":46,"max_seek":85,"hp":61,"hp2":68,"asw":0,"max_asw":0,"fuel":60,"na":0,"sg":0}
+,{"id":509,"name":"熊野航改二","type":"軽空","seek":45,"max_seek":83,"hp":62,"hp2":69,"asw":0,"max_asw":0,"fuel":60,"na":0,"sg":0}
+,{"id":511,"name":"Гангут","type":"戦艦","seek":8,"max_seek":30,"hp":59,"hp2":66,"asw":0,"max_asw":0,"fuel":75,"na":6,"sg":5}
+,{"id":512,"name":"Октябрьская революция","type":"戦艦","seek":10,"max_seek":36,"hp":72,"hp2":80,"asw":0,"max_asw":0,"fuel":80,"na":6,"sg":5}
+,{"id":513,"name":"Гангут два","type":"戦艦","seek":14,"max_seek":38,"hp":77,"hp2":85,"asw":0,"max_asw":0,"fuel":85,"na":6,"sg":5}
+,{"id":514,"name":"Sheffield","type":"軽巡","seek":22,"max_seek":68,"hp":38,"hp2":43,"asw":38,"max_asw":70,"fuel":35,"na":3,"sg":2}
+,{"id":515,"name":"Ark Royal","type":"正空","seek":40,"max_seek":72,"hp":55,"hp2":62,"asw":0,"max_asw":0,"fuel":55,"na":3,"sg":2}
+,{"id":516,"name":"Ташкент","type":"駆逐","seek":7,"max_seek":36,"hp":22,"hp2":26,"asw":33,"max_asw":55,"fuel":15,"na":6,"sg":0}
+,{"id":517,"name":"占守","type":"海防","seek":3,"max_seek":13,"hp":9,"hp2":13,"asw":32,"max_asw":72,"fuel":10,"na":0,"sg":5}
+,{"id":518,"name":"国後","type":"海防","seek":4,"max_seek":14,"hp":9,"hp2":13,"asw":31,"max_asw":70,"fuel":10,"na":0,"sg":5}
+,{"id":519,"name":"Jervis","type":"駆逐","seek":10,"max_seek":22,"hp":15,"hp2":19,"asw":40,"max_asw":82,"fuel":15,"na":3,"sg":2}
+,{"id":520,"name":"Janus","type":"駆逐","seek":10,"max_seek":20,"hp":15,"hp2":19,"asw":40,"max_asw":83,"fuel":15,"na":3,"sg":2}
+,{"id":521,"name":"春日丸","type":"軽空","seek":28,"max_seek":48,"hp":36,"hp2":41,"asw":0,"max_asw":0,"fuel":25,"na":0,"sg":5}
+,{"id":522,"name":"八幡丸","type":"軽空","seek":28,"max_seek":47,"hp":36,"hp2":41,"asw":0,"max_asw":0,"fuel":25,"na":0,"sg":5}
+,{"id":524,"name":"択捉","type":"海防","seek":3,"max_seek":14,"hp":9,"hp2":13,"asw":35,"max_asw":72,"fuel":10,"na":0,"sg":5}
+,{"id":525,"name":"松輪","type":"海防","seek":3,"max_seek":15,"hp":9,"hp2":13,"asw":35,"max_asw":72,"fuel":10,"na":0,"sg":5}
+,{"id":526,"name":"大鷹","type":"軽空","seek":30,"max_seek":52,"hp":37,"hp2":42,"asw":35,"max_asw":59,"fuel":30,"na":0,"sg":5}
+,{"id":527,"name":"岸波","type":"駆逐","seek":9,"max_seek":24,"hp":16,"hp2":20,"asw":26,"max_asw":54,"fuel":15,"na":0,"sg":2}
+,{"id":528,"name":"早波","type":"駆逐","seek":9,"max_seek":23,"hp":16,"hp2":20,"asw":25,"max_asw":54,"fuel":15,"na":0,"sg":2}
+,{"id":529,"name":"大鷹改二","type":"軽空","seek":40,"max_seek":68,"hp":49,"hp2":55,"asw":75,"max_asw":89,"fuel":35,"na":0,"sg":5}
+,{"id":530,"name":"伊504","type":"潜水","seek":10,"max_seek":32,"hp":14,"hp2":18,"asw":0,"max_asw":0,"fuel":10,"na":0,"sg":6}
+,{"id":531,"name":"佐渡","type":"海防","seek":3,"max_seek":15,"hp":9,"hp2":13,"asw":36,"max_asw":73,"fuel":10,"na":0,"sg":5}
+,{"id":532,"name":"涼月","type":"駆逐","seek":8,"max_seek":27,"hp":21,"hp2":25,"asw":25,"max_asw":61,"fuel":20,"na":0,"sg":2}
+,{"id":533,"name":"冬月","type":"駆逐","seek":8,"max_seek":28,"hp":21,"hp2":25,"asw":24,"max_asw":60,"fuel":20,"na":0,"sg":2}
+,{"id":534,"name":"神鷹","type":"軽空","seek":28,"max_seek":48,"hp":38,"hp2":43,"asw":36,"max_asw":60,"fuel":30,"na":0,"sg":5}
+,{"id":535,"name":"Luigi Torelli","type":"潜水","seek":6,"max_seek":24,"hp":11,"hp2":15,"asw":0,"max_asw":0,"fuel":10,"na":2,"sg":6}
+,{"id":536,"name":"神鷹改二","type":"軽空","seek":32,"max_seek":64,"hp":50,"hp2":57,"asw":73,"max_asw":88,"fuel":35,"na":0,"sg":5}
+,{"id":537,"name":"涼月改","type":"駆逐","seek":9,"max_seek":49,"hp":38,"hp2":43,"asw":28,"max_asw":71,"fuel":20,"na":0,"sg":2}
+,{"id":538,"name":"冬月改","type":"駆逐","seek":9,"max_seek":49,"hp":38,"hp2":43,"asw":29,"max_asw":71,"fuel":20,"na":0,"sg":2}
+,{"id":539,"name":"UIT-25","type":"潜水","seek":9,"max_seek":30,"hp":13,"hp2":17,"asw":0,"max_asw":0,"fuel":10,"na":2,"sg":6}
+,{"id":540,"name":"対馬","type":"海防","seek":3,"max_seek":13,"hp":9,"hp2":13,"asw":35,"max_asw":72,"fuel":10,"na":0,"sg":5}
+,{"id":541,"name":"長門改二","type":"戦艦","seek":16,"max_seek":55,"hp":91,"hp2":99,"asw":0,"max_asw":0,"fuel":180,"na":0,"sg":4}
+,{"id":542,"name":"夕雲改二","type":"駆逐","seek":12,"max_seek":46,"hp":33,"hp2":38,"asw":30,"max_asw":77,"fuel":15,"na":0,"sg":2}
+,{"id":543,"name":"長波改二","type":"駆逐","seek":10,"max_seek":45,"hp":33,"hp2":38,"asw":30,"max_asw":68,"fuel":15,"na":0,"sg":2}
+,{"id":544,"name":"Gambier Bay","type":"軽空","seek":36,"max_seek":60,"hp":28,"hp2":32,"asw":20,"max_asw":60,"fuel":25,"na":1,"sg":5}
+,{"id":545,"name":"Saratoga Mk.II","type":"正空","seek":54,"max_seek":93,"hp":89,"hp2":97,"asw":0,"max_asw":0,"fuel":90,"na":1,"sg":2}
+,{"id":546,"name":"武蔵改二","type":"戦艦","seek":18,"max_seek":58,"hp":99,"hp2":108,"asw":0,"max_asw":0,"fuel":275,"na":0,"sg":4}
+,{"id":547,"name":"多摩改二","type":"軽巡","seek":14,"max_seek":61,"hp":46,"hp2":52,"asw":43,"max_asw":85,"fuel":25,"na":0,"sg":2}
+,{"id":548,"name":"文月改二","type":"駆逐","seek":11,"max_seek":47,"hp":27,"hp2":31,"asw":30,"max_asw":81,"fuel":15,"na":0,"sg":2}
+,{"id":549,"name":"Intrepid","type":"正空","seek":50,"max_seek":80,"hp":65,"hp2":72,"asw":0,"max_asw":0,"fuel":75,"na":1,"sg":2}
+,{"id":550,"name":"Saratoga Mk.II Mod.2","type":"装空","seek":56,"max_seek":95,"hp":89,"hp2":97,"asw":0,"max_asw":0,"fuel":100,"na":1,"sg":2}
+,{"id":551,"name":"日振","type":"海防","seek":3,"max_seek":15,"hp":9,"hp2":13,"asw":40,"max_asw":78,"fuel":10,"na":0,"sg":5}
+,{"id":552,"name":"大東","type":"海防","seek":3,"max_seek":12,"hp":9,"hp2":13,"asw":40,"max_asw":77,"fuel":10,"na":0,"sg":5}
+,{"id":553,"name":"伊勢改二","type":"航戦","seek":30,"max_seek":72,"hp":78,"hp2":86,"asw":0,"max_asw":0,"fuel":110,"na":0,"sg":5}
+,{"id":554,"name":"日向改二","type":"航戦","seek":32,"max_seek":75,"hp":78,"hp2":86,"asw":68,"max_asw":85,"fuel":115,"na":0,"sg":5}
+,{"id":555,"name":"瑞鳳改二","type":"軽空","seek":40,"max_seek":80,"hp":59,"hp2":66,"asw":0,"max_asw":0,"fuel":40,"na":0,"sg":2}
+,{"id":556,"name":"浦風丁改","type":"駆逐","seek":10,"max_seek":48,"hp":33,"hp2":38,"asw":45,"max_asw":88,"fuel":15,"na":0,"sg":2}
+,{"id":557,"name":"磯風乙改","type":"駆逐","seek":10,"max_seek":52,"hp":34,"hp2":39,"asw":31,"max_asw":71,"fuel":15,"na":0,"sg":2}
+,{"id":558,"name":"浜風乙改","type":"駆逐","seek":9,"max_seek":47,"hp":33,"hp2":38,"asw":32,"max_asw":73,"fuel":15,"na":0,"sg":2}
+,{"id":559,"name":"谷風丁改","type":"駆逐","seek":8,"max_seek":42,"hp":33,"hp2":38,"asw":44,"max_asw":86,"fuel":15,"na":0,"sg":2}
+,{"id":560,"name":"瑞鳳改二乙","type":"軽空","seek":40,"max_seek":77,"hp":59,"hp2":66,"asw":32,"max_asw":48,"fuel":40,"na":0,"sg":2}
+,{"id":561,"name":"Samuel B.Roberts","type":"駆逐","seek":12,"max_seek":20,"hp":14,"hp2":18,"asw":48,"max_asw":80,"fuel":15,"na":1,"sg":9}
+,{"id":562,"name":"Johnston","type":"駆逐","seek":20,"max_seek":32,"hp":17,"hp2":21,"asw":50,"max_asw":82,"fuel":20,"na":1,"sg":2}
+,{"id":563,"name":"巻雲改二","type":"駆逐","seek":11,"max_seek":43,"hp":33,"hp2":38,"asw":30,"max_asw":72,"fuel":15,"na":0,"sg":2}
+,{"id":564,"name":"風雲改二","type":"駆逐","seek":10,"max_seek":45,"hp":33,"hp2":38,"asw":29,"max_asw":78,"fuel":15,"na":0,"sg":2}
+,{"id":565,"name":"福江","type":"海防","seek":3,"max_seek":13,"hp":9,"hp2":13,"asw":35,"max_asw":72,"fuel":10,"na":0,"sg":5}
+,{"id":566,"name":"陽炎改二","type":"駆逐","seek":10,"max_seek":42,"hp":33,"hp2":38,"asw":30,"max_asw":67,"fuel":15,"na":0,"sg":2}
+,{"id":567,"name":"不知火改二","type":"駆逐","seek":11,"max_seek":43,"hp":33,"hp2":38,"asw":30,"max_asw":68,"fuel":15,"na":0,"sg":2}
+,{"id":568,"name":"黒潮改二","type":"駆逐","seek":11,"max_seek":41,"hp":33,"hp2":38,"asw":31,"max_asw":70,"fuel":15,"na":0,"sg":2}
+,{"id":569,"name":"沖波改二","type":"駆逐","seek":10,"max_seek":44,"hp":33,"hp2":38,"asw":29,"max_asw":80,"fuel":15,"na":0,"sg":2}
+,{"id":570,"name":"平戸","type":"海防","seek":3,"max_seek":15,"hp":9,"hp2":13,"asw":34,"max_asw":74,"fuel":10,"na":0,"sg":5}
+,{"id":571,"name":"Nelson","type":"戦艦","seek":12,"max_seek":42,"hp":82,"hp2":90,"asw":0,"max_asw":0,"fuel":95,"na":3,"sg":5}
+,{"id":572,"name":"Rodney","type":"戦艦","seek":12,"max_seek":43,"hp":81,"hp2":89,"asw":0,"max_asw":0,"fuel":95,"na":3,"sg":5}
+,{"id":573,"name":"陸奥改二","type":"戦艦","seek":15,"max_seek":56,"hp":91,"hp2":99,"asw":0,"max_asw":0,"fuel":180,"na":0,"sg":4}
+,{"id":574,"name":"Gotland","type":"軽巡","seek":45,"max_seek":70,"hp":32,"hp2":37,"asw":36,"max_asw":58,"fuel":30,"na":7,"sg":2}
+,{"id":575,"name":"Maestrale","type":"駆逐","seek":7,"max_seek":20,"hp":15,"hp2":19,"asw":30,"max_asw":60,"fuel":15,"na":2,"sg":2}
+,{"id":576,"name":"Nelson改","type":"戦艦","seek":14,"max_seek":48,"hp":93,"hp2":98,"asw":0,"max_asw":0,"fuel":95,"na":3,"sg":5}
+,{"id":577,"name":"Rodney改","type":"戦艦","seek":13,"max_seek":48,"hp":92,"hp2":98,"asw":0,"max_asw":0,"fuel":95,"na":3,"sg":5}
+,{"id":578,"name":"朝霜改二","type":"駆逐","seek":10,"max_seek":44,"hp":33,"hp2":38,"asw":29,"max_asw":76,"fuel":15,"na":0,"sg":2}
+,{"id":579,"name":"Gotland改","type":"軽巡","seek":18,"max_seek":55,"hp":43,"hp2":49,"asw":38,"max_asw":62,"fuel":30,"na":7,"sg":2}
+,{"id":580,"name":"Maestrale改","type":"駆逐","seek":10,"max_seek":46,"hp":29,"hp2":33,"asw":40,"max_asw":80,"fuel":15,"na":2,"sg":2}
+,{"id":581,"name":"日進","type":"水母","seek":40,"max_seek":80,"hp":45,"hp2":51,"asw":0,"max_asw":0,"fuel":40,"na":0,"sg":3}
+,{"id":582,"name":"夏雲","type":"駆逐","seek":5,"max_seek":19,"hp":16,"hp2":20,"asw":21,"max_asw":48,"fuel":15,"na":0,"sg":2}
+,{"id":583,"name":"峯雲","type":"駆逐","seek":5,"max_seek":18,"hp":16,"hp2":20,"asw":21,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":584,"name":"八丈","type":"海防","seek":3,"max_seek":13,"hp":9,"hp2":13,"asw":31,"max_asw":72,"fuel":10,"na":0,"sg":5}
+,{"id":585,"name":"石垣","type":"海防","seek":4,"max_seek":15,"hp":9,"hp2":13,"asw":32,"max_asw":75,"fuel":10,"na":0,"sg":5}
+,{"id":586,"name":"日進甲","type":"水母","seek":48,"max_seek":96,"hp":49,"hp2":55,"asw":0,"max_asw":0,"fuel":40,"na":0,"sg":3}
+,{"id":587,"name":"海風改二","type":"駆逐","seek":11,"max_seek":51,"hp":31,"hp2":36,"asw":28,"max_asw":82,"fuel":15,"na":0,"sg":2}
+,{"id":588,"name":"山風改二","type":"駆逐","seek":8,"max_seek":41,"hp":30,"hp2":35,"asw":30,"max_asw":86,"fuel":15,"na":0,"sg":2}
+,{"id":589,"name":"L.d.S.D.d.Abruzzi","type":"軽巡","seek":12,"max_seek":41,"hp":37,"hp2":42,"asw":20,"max_asw":39,"fuel":40,"na":2,"sg":2}
+,{"id":590,"name":"G.Garibaldi","type":"軽巡","seek":12,"max_seek":40,"hp":37,"hp2":42,"asw":20,"max_asw":40,"fuel":40,"na":2,"sg":2}
+,{"id":591,"name":"金剛改二丙","type":"戦艦","seek":17,"max_seek":51,"hp":86,"hp2":94,"asw":0,"max_asw":0,"fuel":100,"na":0,"sg":2}
+,{"id":592,"name":"比叡改二丙","type":"戦艦","seek":17,"max_seek":53,"hp":86,"hp2":94,"asw":0,"max_asw":0,"fuel":100,"na":0,"sg":2}
+,{"id":593,"name":"榛名改二乙","type":"戦艦","seek":16,"max_seek":53,"hp":85,"hp2":93,"asw":0,"max_asw":0,"fuel":100,"na":0,"sg":2}
+,{"id":594,"name":"赤城改二","type":"正空","seek":51,"max_seek":91,"hp":81,"hp2":89,"asw":0,"max_asw":0,"fuel":95,"na":0,"sg":2}
+,{"id":595,"name":"Houston","type":"重巡","seek":15,"max_seek":50,"hp":43,"hp2":49,"asw":0,"max_asw":0,"fuel":40,"na":1,"sg":2}
+,{"id":596,"name":"Fletcher","type":"駆逐","seek":20,"max_seek":33,"hp":18,"hp2":22,"asw":50,"max_asw":83,"fuel":20,"na":1,"sg":2}
+,{"id":597,"name":"Atlanta","type":"軽巡","seek":11,"max_seek":40,"hp":27,"hp2":31,"asw":10,"max_asw":20,"fuel":30,"na":1,"sg":2}
+,{"id":598,"name":"Honolulu","type":"軽巡","seek":17,"max_seek":65,"hp":38,"hp2":43,"asw":0,"max_asw":35,"fuel":35,"na":1,"sg":2}
+,{"id":599,"name":"赤城改二戊","type":"正空","seek":50,"max_seek":90,"hp":81,"hp2":89,"asw":0,"max_asw":0,"fuel":95,"na":0,"sg":2}
+,{"id":600,"name":"Houston改","type":"重巡","seek":16,"max_seek":53,"hp":54,"hp2":61,"asw":0,"max_asw":0,"fuel":40,"na":1,"sg":2}
+,{"id":601,"name":"Colorado","type":"戦艦","seek":9,"max_seek":37,"hp":77,"hp2":85,"asw":0,"max_asw":0,"fuel":90,"na":1,"sg":5}
+,{"id":602,"name":"South Dakota","type":"戦艦","seek":15,"max_seek":48,"hp":79,"hp2":87,"asw":0,"max_asw":0,"fuel":150,"na":1,"sg":2}
+,{"id":603,"name":"Hornet","type":"正空","seek":45,"max_seek":70,"hp":67,"hp2":74,"asw":0,"max_asw":0,"fuel":60,"na":1,"sg":2}
+,{"id":604,"name":"De Ruyter","type":"軽巡","seek":10,"max_seek":42,"hp":28,"hp2":32,"asw":10,"max_asw":40,"fuel":30,"na":7,"sg":2}
+,{"id":605,"name":"Luigi Torelli改","type":"潜水","seek":8,"max_seek":28,"hp":13,"hp2":17,"asw":0,"max_asw":0,"fuel":10,"na":2,"sg":6}
+,{"id":606,"name":"伊400改","type":"潜空","seek":16,"max_seek":46,"hp":24,"hp2":28,"asw":0,"max_asw":0,"fuel":25,"na":0,"sg":6}
+,{"id":607,"name":"伊47改","type":"潜水","seek":11,"max_seek":30,"hp":18,"hp2":22,"asw":0,"max_asw":0,"fuel":10,"na":0,"sg":6}
+,{"id":609,"name":"De Ruyter改","type":"軽巡","seek":12,"max_seek":55,"hp":43,"hp2":49,"asw":15,"max_asw":50,"fuel":30,"na":7,"sg":2}
+,{"id":610,"name":"加賀改二戊","type":"正空","seek":50,"max_seek":89,"hp":84,"hp2":92,"asw":0,"max_asw":0,"fuel":100,"na":0,"sg":3}
+,{"id":611,"name":"御蔵","type":"海防","seek":3,"max_seek":14,"hp":9,"hp2":13,"asw":40,"max_asw":78,"fuel":10,"na":0,"sg":5}
+,{"id":612,"name":"屋代","type":"海防","seek":3,"max_seek":15,"hp":9,"hp2":13,"asw":40,"max_asw":79,"fuel":10,"na":0,"sg":5}
+,{"id":613,"name":"Perth","type":"軽巡","seek":9,"max_seek":40,"hp":29,"hp2":33,"asw":15,"max_asw":50,"fuel":30,"na":7,"sg":2}
+,{"id":614,"name":"Grecale","type":"駆逐","seek":7,"max_seek":20,"hp":15,"hp2":19,"asw":30,"max_asw":60,"fuel":15,"na":2,"sg":2}
+,{"id":615,"name":"Helena","type":"軽巡","seek":18,"max_seek":64,"hp":39,"hp2":44,"asw":0,"max_asw":36,"fuel":35,"na":1,"sg":2}
+,{"id":616,"name":"御蔵改","type":"海防","seek":5,"max_seek":29,"hp":17,"hp2":21,"asw":40,"max_asw":84,"fuel":10,"na":0,"sg":5}
+,{"id":617,"name":"屋代改","type":"海防","seek":5,"max_seek":30,"hp":17,"hp2":21,"asw":39,"max_asw":85,"fuel":10,"na":0,"sg":5}
+,{"id":618,"name":"Perth改","type":"軽巡","seek":10,"max_seek":50,"hp":45,"hp2":51,"asw":20,"max_asw":55,"fuel":30,"na":7,"sg":2}
+,{"id":619,"name":"Grecale改","type":"駆逐","seek":10,"max_seek":46,"hp":29,"hp2":33,"asw":38,"max_asw":79,"fuel":15,"na":2,"sg":2}
+,{"id":620,"name":"Helena改","type":"軽巡","seek":24,"max_seek":76,"hp":53,"hp2":60,"asw":0,"max_asw":40,"fuel":35,"na":1,"sg":2}
+,{"id":621,"name":"神州丸","type":"揚陸","seek":20,"max_seek":52,"hp":37,"hp2":42,"asw":20,"max_asw":40,"fuel":35,"na":0,"sg":5}
+,{"id":622,"name":"夕張改二","type":"軽巡","seek":11,"max_seek":52,"hp":41,"hp2":47,"asw":49,"max_asw":83,"fuel":30,"na":0,"sg":2}
+,{"id":623,"name":"夕張改二特","type":"軽巡","seek":10,"max_seek":50,"hp":41,"hp2":47,"asw":27,"max_asw":70,"fuel":30,"na":0,"sg":9}
+,{"id":624,"name":"夕張改二丁","type":"軽巡","seek":12,"max_seek":54,"hp":41,"hp2":47,"asw":50,"max_asw":89,"fuel":30,"na":0,"sg":2}
+,{"id":625,"name":"秋霜","type":"駆逐","seek":6,"max_seek":20,"hp":16,"hp2":20,"asw":27,"max_asw":53,"fuel":15,"na":0,"sg":2}
+,{"id":626,"name":"神州丸改","type":"揚陸","seek":24,"max_seek":58,"hp":39,"hp2":44,"asw":30,"max_asw":48,"fuel":40,"na":0,"sg":5}
+,{"id":627,"name":"敷波改二","type":"駆逐","seek":11,"max_seek":48,"hp":31,"hp2":36,"asw":30,"max_asw":79,"fuel":15,"na":0,"sg":2}
+,{"id":628,"name":"Fletcher改 Mod.2","type":"駆逐","seek":22,"max_seek":64,"hp":37,"hp2":42,"asw":52,"max_asw":93,"fuel":20,"na":1,"sg":2}
+,{"id":629,"name":"Fletcher Mk.II","type":"駆逐","seek":23,"max_seek":66,"hp":38,"hp2":43,"asw":55,"max_asw":97,"fuel":25,"na":1,"sg":2}
+,{"id":630,"name":"Gotland andra","type":"軽巡","seek":46,"max_seek":72,"hp":47,"hp2":53,"asw":36,"max_asw":60,"fuel":30,"na":7,"sg":2}
+,{"id":631,"name":"薄雲","type":"駆逐","seek":4,"max_seek":19,"hp":15,"hp2":19,"asw":19,"max_asw":49,"fuel":15,"na":0,"sg":2}
+,{"id":632,"name":"有明","type":"駆逐","seek":5,"max_seek":19,"hp":16,"hp2":20,"asw":21,"max_asw":50,"fuel":15,"na":0,"sg":2}
+,{"id":633,"name":"夕暮","type":"駆逐","seek":5,"max_seek":20,"hp":16,"hp2":20,"asw":21,"max_asw":50,"fuel":15,"na":0,"sg":2}
+,{"id":634,"name":"迅鯨","type":"潜母","seek":20,"max_seek":38,"hp":32,"hp2":37,"asw":0,"max_asw":0,"fuel":30,"na":0,"sg":5}
+,{"id":635,"name":"長鯨","type":"潜母","seek":20,"max_seek":37,"hp":31,"hp2":36,"asw":0,"max_asw":0,"fuel":30,"na":0,"sg":5}
+,{"id":636,"name":"伊47","type":"潜水","seek":7,"max_seek":27,"hp":14,"hp2":18,"asw":0,"max_asw":0,"fuel":10,"na":0,"sg":6}
+,{"id":637,"name":"第四号海防","type":"海防","seek":2,"max_seek":11,"hp":8,"hp2":12,"asw":30,"max_asw":67,"fuel":10,"na":0,"sg":5}
+,{"id":638,"name":"第三〇号海防","type":"海防","seek":2,"max_seek":11,"hp":9,"hp2":13,"asw":30,"max_asw":65,"fuel":10,"na":0,"sg":5}
+,{"id":639,"name":"迅鯨改","type":"潜母","seek":22,"max_seek":44,"hp":38,"hp2":43,"asw":0,"max_asw":0,"fuel":30,"na":0,"sg":5}
+,{"id":640,"name":"長鯨改","type":"潜母","seek":22,"max_seek":43,"hp":37,"hp2":42,"asw":0,"max_asw":0,"fuel":30,"na":0,"sg":5}
+,{"id":641,"name":"松","type":"駆逐","seek":10,"max_seek":25,"hp":14,"hp2":18,"asw":30,"max_asw":75,"fuel":15,"na":0,"sg":2}
+,{"id":642,"name":"竹","type":"駆逐","seek":9,"max_seek":24,"hp":14,"hp2":18,"asw":29,"max_asw":74,"fuel":15,"na":0,"sg":2}
+,{"id":643,"name":"梅","type":"駆逐","seek":11,"max_seek":24,"hp":14,"hp2":18,"asw":26,"max_asw":76,"fuel":15,"na":0,"sg":2}
+,{"id":644,"name":"桃","type":"駆逐","seek":8,"max_seek":24,"hp":14,"hp2":18,"asw":27,"max_asw":76,"fuel":15,"na":0,"sg":2}
+,{"id":645,"name":"宗谷","type":"補給","seek":9,"max_seek":18,"hp":23,"hp2":27,"asw":0,"max_asw":2,"fuel":20,"na":0,"sg":5}
+,{"id":646,"name":"加賀改二護","type":"正空","seek":54,"max_seek":93,"hp":84,"hp2":92,"asw":72,"max_asw":84,"fuel":105,"na":0,"sg":3}
+,{"id":647,"name":"浦波改二","type":"駆逐","seek":12,"max_seek":44,"hp":31,"hp2":36,"asw":25,"max_asw":66,"fuel":15,"na":0,"sg":2}
+,{"id":648,"name":"秋雲改二","type":"駆逐","seek":10,"max_seek":42,"hp":33,"hp2":38,"asw":28,"max_asw":75,"fuel":15,"na":0,"sg":2}
+,{"id":649,"name":"高波改二","type":"駆逐","seek":14,"max_seek":60,"hp":33,"hp2":38,"asw":30,"max_asw":72,"fuel":15,"na":0,"sg":2}
+,{"id":650,"name":"宗谷","type":"補給","seek":16,"max_seek":32,"hp":23,"hp2":27,"asw":0,"max_asw":4,"fuel":25,"na":0,"sg":5}
+,{"id":651,"name":"丹陽","type":"駆逐","seek":15,"max_seek":50,"hp":35,"hp2":40,"asw":26,"max_asw":60,"fuel":15,"na":0,"sg":2}
+,{"id":652,"name":"球磨改二","type":"軽巡","seek":13,"max_seek":58,"hp":46,"hp2":52,"asw":40,"max_asw":80,"fuel":25,"na":0,"sg":2}
+,{"id":653,"name":"Scirocco","type":"駆逐","seek":7,"max_seek":20,"hp":15,"hp2":19,"asw":29,"max_asw":60,"fuel":15,"na":2,"sg":2}
+,{"id":654,"name":"Washington","type":"戦艦","seek":14,"max_seek":46,"hp":81,"hp2":89,"asw":0,"max_asw":0,"fuel":140,"na":1,"sg":2}
+,{"id":655,"name":"Northampton","type":"重巡","seek":14,"max_seek":51,"hp":44,"hp2":50,"asw":0,"max_asw":0,"fuel":40,"na":1,"sg":2}
+,{"id":656,"name":"雪風改二","type":"駆逐","seek":14,"max_seek":48,"hp":35,"hp2":40,"asw":28,"max_asw":74,"fuel":15,"na":0,"sg":2}
+,{"id":657,"name":"球磨改二丁","type":"軽巡","seek":13,"max_seek":53,"hp":46,"hp2":52,"asw":48,"max_asw":84,"fuel":25,"na":0,"sg":2}
+,{"id":658,"name":"Scirocco改","type":"駆逐","seek":10,"max_seek":46,"hp":28,"hp2":32,"asw":39,"max_asw":80,"fuel":15,"na":2,"sg":2}
+,{"id":659,"name":"Washington改","type":"戦艦","seek":18,"max_seek":62,"hp":93,"hp2":100,"asw":0,"max_asw":0,"fuel":150,"na":1,"sg":2}
+,{"id":660,"name":"Northampton改","type":"重巡","seek":15,"max_seek":52,"hp":55,"hp2":62,"asw":0,"max_asw":0,"fuel":40,"na":1,"sg":2}
+,{"id":662,"name":"能代改二","type":"軽巡","seek":15,"max_seek":61,"hp":53,"hp2":60,"asw":32,"max_asw":84,"fuel":35,"na":0,"sg":1}
+,{"id":663,"name":"矢矧改二","type":"軽巡","seek":15,"max_seek":60,"hp":54,"hp2":61,"asw":31,"max_asw":83,"fuel":40,"na":0,"sg":1}
+,{"id":665,"name":"曙改二","type":"駆逐","seek":10,"max_seek":46,"hp":31,"hp2":36,"asw":30,"max_asw":74,"fuel":15,"na":0,"sg":2}
+,{"id":666,"name":"磯波改二","type":"駆逐","seek":9,"max_seek":43,"hp":30,"hp2":35,"asw":28,"max_asw":75,"fuel":15,"na":0,"sg":2}
+,{"id":667,"name":"山風改二丁","type":"駆逐","seek":8,"max_seek":41,"hp":30,"hp2":35,"asw":28,"max_asw":82,"fuel":15,"na":0,"sg":2}
+,{"id":668,"name":"矢矧改二乙","type":"軽巡","seek":15,"max_seek":60,"hp":53,"hp2":60,"asw":30,"max_asw":80,"fuel":45,"na":0,"sg":1}
+,{"id":670,"name":"親潮改二","type":"駆逐","seek":9,"max_seek":42,"hp":33,"hp2":38,"asw":30,"max_asw":69,"fuel":15,"na":0,"sg":2}
+,{"id":671,"name":"巻波","type":"駆逐","seek":9,"max_seek":23,"hp":16,"hp2":20,"asw":24,"max_asw":54,"fuel":15,"na":0,"sg":2}
+,{"id":674,"name":"玉波","type":"駆逐","seek":9,"max_seek":23,"hp":16,"hp2":20,"asw":22,"max_asw":53,"fuel":15,"na":0,"sg":2}
+,{"id":675,"name":"涼波","type":"駆逐","seek":9,"max_seek":22,"hp":16,"hp2":20,"asw":24,"max_asw":55,"fuel":15,"na":0,"sg":2}
+,{"id":678,"name":"日振改","type":"海防","seek":6,"max_seek":29,"hp":18,"hp2":22,"asw":40,"max_asw":83,"fuel":10,"na":0,"sg":5}
+,{"id":679,"name":"大東改","type":"海防","seek":5,"max_seek":28,"hp":18,"hp2":22,"asw":40,"max_asw":85,"fuel":10,"na":0,"sg":5}
+,{"id":680,"name":"浜波改","type":"駆逐","seek":12,"max_seek":56,"hp":32,"hp2":37,"asw":28,"max_asw":65,"fuel":15,"na":0,"sg":2}
+,{"id":681,"name":"Samuel B.Roberts改","type":"駆逐","seek":14,"max_seek":48,"hp":27,"hp2":31,"asw":50,"max_asw":88,"fuel":15,"na":1,"sg":9}
+,{"id":684,"name":"平戸改","type":"海防","seek":5,"max_seek":29,"hp":17,"hp2":21,"asw":35,"max_asw":81,"fuel":10,"na":0,"sg":5}
+,{"id":685,"name":"福江改","type":"海防","seek":5,"max_seek":27,"hp":17,"hp2":21,"asw":37,"max_asw":80,"fuel":10,"na":0,"sg":5}
+,{"id":686,"name":"岸波改","type":"駆逐","seek":10,"max_seek":44,"hp":32,"hp2":37,"asw":30,"max_asw":72,"fuel":15,"na":0,"sg":2}
+,{"id":687,"name":"峯雲改","type":"駆逐","seek":8,"max_seek":37,"hp":31,"hp2":36,"asw":24,"max_asw":58,"fuel":15,"na":0,"sg":2}
+,{"id":688,"name":"早波改","type":"駆逐","seek":12,"max_seek":55,"hp":32,"hp2":37,"asw":26,"max_asw":69,"fuel":15,"na":0,"sg":2}
+,{"id":689,"name":"Johnston改","type":"駆逐","seek":20,"max_seek":60,"hp":34,"hp2":39,"asw":52,"max_asw":90,"fuel":20,"na":1,"sg":2}
+,{"id":690,"name":"日進改","type":"水母","seek":48,"max_seek":95,"hp":47,"hp2":53,"asw":0,"max_asw":0,"fuel":40,"na":0,"sg":3}
+,{"id":691,"name":"G.Garibaldi改","type":"軽巡","seek":13,"max_seek":48,"hp":52,"hp2":59,"asw":25,"max_asw":60,"fuel":40,"na":2,"sg":2}
+,{"id":692,"name":"Fletcher改","type":"駆逐","seek":20,"max_seek":62,"hp":35,"hp2":40,"asw":52,"max_asw":91,"fuel":20,"na":1,"sg":2}
+,{"id":693,"name":"L.d.S.D.d.Abruzzi改","type":"軽巡","seek":13,"max_seek":49,"hp":52,"hp2":59,"asw":25,"max_asw":59,"fuel":40,"na":2,"sg":2}
+,{"id":695,"name":"秋霜改","type":"駆逐","seek":9,"max_seek":43,"hp":32,"hp2":37,"asw":28,"max_asw":68,"fuel":15,"na":0,"sg":2}
+,{"id":696,"name":"Atlanta改","type":"軽巡","seek":11,"max_seek":50,"hp":41,"hp2":47,"asw":12,"max_asw":32,"fuel":30,"na":1,"sg":2}
+,{"id":697,"name":"South Dakota改","type":"戦艦","seek":18,"max_seek":60,"hp":91,"hp2":100,"asw":0,"max_asw":0,"fuel":160,"na":1,"sg":2}
+,{"id":698,"name":"加賀改二","type":"正空","seek":51,"max_seek":90,"hp":84,"hp2":92,"asw":0,"max_asw":0,"fuel":100,"na":0,"sg":3}
+,{"id":699,"name":"宗谷","type":"補給","seek":2,"max_seek":12,"hp":23,"hp2":27,"asw":8,"max_asw":32,"fuel":20,"na":0,"sg":5}
+,{"id":700,"name":"薄雲改","type":"駆逐","seek":7,"max_seek":41,"hp":30,"hp2":35,"asw":22,"max_asw":60,"fuel":15,"na":0,"sg":2}
+,{"id":701,"name":"第四号海防改","type":"海防","seek":4,"max_seek":20,"hp":15,"hp2":19,"asw":32,"max_asw":76,"fuel":10,"na":0,"sg":5}
+,{"id":702,"name":"松改","type":"駆逐","seek":15,"max_seek":45,"hp":27,"hp2":31,"asw":35,"max_asw":80,"fuel":15,"na":0,"sg":2}
+,{"id":703,"name":"有明改","type":"駆逐","seek":6,"max_seek":39,"hp":30,"hp2":35,"asw":16,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":704,"name":"Hornet改","type":"正空","seek":49,"max_seek":90,"hp":81,"hp2":89,"asw":0,"max_asw":0,"fuel":70,"na":1,"sg":2}
+,{"id":705,"name":"Sheffield改","type":"軽巡","seek":24,"max_seek":72,"hp":52,"hp2":59,"asw":40,"max_asw":77,"fuel":40,"na":3,"sg":2}
+,{"id":706,"name":"竹改","type":"駆逐","seek":14,"max_seek":43,"hp":26,"hp2":30,"asw":34,"max_asw":79,"fuel":15,"na":0,"sg":2}
+,{"id":707,"name":"Gambier Bay Mk.II","type":"軽空","seek":39,"max_seek":70,"hp":53,"hp2":60,"asw":40,"max_asw":77,"fuel":30,"na":1,"sg":5}
+,{"id":708,"name":"桃改","type":"駆逐","seek":13,"max_seek":43,"hp":26,"hp2":30,"asw":33,"max_asw":81,"fuel":15,"na":0,"sg":2}
+,{"id":709,"name":"巻波改","type":"駆逐","seek":11,"max_seek":54,"hp":32,"hp2":37,"asw":27,"max_asw":66,"fuel":15,"na":0,"sg":2}
+,{"id":710,"name":"涼波改","type":"駆逐","seek":10,"max_seek":54,"hp":32,"hp2":37,"asw":26,"max_asw":69,"fuel":15,"na":0,"sg":2}
+,{"id":711,"name":"Honolulu改","type":"軽巡","seek":22,"max_seek":76,"hp":53,"hp2":60,"asw":0,"max_asw":43,"fuel":35,"na":1,"sg":2}
+,{"id":712,"name":"第三〇号海防改","type":"海防","seek":4,"max_seek":19,"hp":15,"hp2":19,"asw":30,"max_asw":74,"fuel":10,"na":0,"sg":5}
+,{"id":713,"name":"Victorious改","type":"装空","seek":46,"max_seek":85,"hp":74,"hp2":82,"asw":0,"max_asw":0,"fuel":75,"na":3,"sg":2}
+,{"id":714,"name":"昭南改","type":"海防","seek":6,"max_seek":28,"hp":18,"hp2":22,"asw":38,"max_asw":81,"fuel":10,"na":0,"sg":5}
+,{"id":715,"name":"Scamp改","type":"潜水","seek":13,"max_seek":43,"hp":17,"hp2":21,"asw":0,"max_asw":0,"fuel":10,"na":1,"sg":6}
+,{"id":716,"name":"梅改","type":"駆逐","seek":16,"max_seek":45,"hp":27,"hp2":31,"asw":33,"max_asw":80,"fuel":15,"na":0,"sg":2}
+,{"id":717,"name":"山汐丸改","type":"補給","seek":23,"max_seek":63,"hp":39,"hp2":44,"asw":32,"max_asw":82,"fuel":35,"na":0,"sg":5}
+,{"id":718,"name":"玉波改","type":"駆逐","seek":12,"max_seek":53,"hp":32,"hp2":37,"asw":25,"max_asw":66,"fuel":15,"na":0,"sg":2}
+,{"id":719,"name":"伊201改","type":"潜水","seek":13,"max_seek":48,"hp":13,"hp2":17,"asw":0,"max_asw":0,"fuel":20,"na":0,"sg":7}
+,{"id":720,"name":"早潮改","type":"駆逐","seek":9,"max_seek":41,"hp":32,"hp2":37,"asw":26,"max_asw":65,"fuel":15,"na":0,"sg":2}
+,{"id":721,"name":"夏雲改","type":"駆逐","seek":6,"max_seek":36,"hp":31,"hp2":36,"asw":24,"max_asw":57,"fuel":15,"na":0,"sg":2}
+,{"id":722,"name":"Brooklyn改","type":"軽巡","seek":22,"max_seek":77,"hp":53,"hp2":60,"asw":0,"max_asw":43,"fuel":35,"na":1,"sg":2}
+,{"id":723,"name":"Ranger改","type":"正空","seek":40,"max_seek":82,"hp":64,"hp2":71,"asw":0,"max_asw":0,"fuel":65,"na":1,"sg":2}
+,{"id":724,"name":"Jean Bart改","type":"戦艦","seek":15,"max_seek":53,"hp":88,"hp2":96,"asw":0,"max_asw":0,"fuel":100,"na":5,"sg":2}
+,{"id":725,"name":"夕暮改","type":"駆逐","seek":6,"max_seek":40,"hp":30,"hp2":35,"asw":16,"max_asw":59,"fuel":15,"na":0,"sg":2}
+,{"id":726,"name":"Heywood L.E.改","type":"駆逐","seek":20,"max_seek":61,"hp":34,"hp2":39,"asw":52,"max_asw":90,"fuel":20,"na":1,"sg":2}
+,{"id":727,"name":"第百一号輸送改","type":"揚陸","seek":3,"max_seek":13,"hp":19,"hp2":23,"asw":0,"max_asw":0,"fuel":15,"na":0,"sg":5}
+,{"id":728,"name":"第二十二号海防改","type":"海防","seek":4,"max_seek":22,"hp":17,"hp2":21,"asw":33,"max_asw":79,"fuel":10,"na":0,"sg":5}
+,{"id":729,"name":"白雲改","type":"駆逐","seek":5,"max_seek":40,"hp":30,"hp2":35,"asw":24,"max_asw":67,"fuel":15,"na":0,"sg":2}
+,{"id":730,"name":"稲木改","type":"海防","seek":4,"max_seek":24,"hp":17,"hp2":21,"asw":46,"max_asw":85,"fuel":10,"na":0,"sg":5}
+,{"id":731,"name":"C.Cappellini改","type":"潜水","seek":7,"max_seek":28,"hp":11,"hp2":15,"asw":0,"max_asw":0,"fuel":10,"na":2,"sg":6}
+,{"id":877,"name":"Conte di Cavour","type":"戦艦","seek":6,"max_seek":29,"hp":57,"hp2":64,"asw":0,"max_asw":0,"fuel":70,"na":2,"sg":2}
+,{"id":878,"name":"Conte di Cavour改","type":"戦艦","seek":11,"max_seek":40,"hp":73,"hp2":81,"asw":0,"max_asw":0,"fuel":75,"na":2,"sg":2}
+,{"id":879,"name":"Conte di Cavour nuovo","type":"戦艦","seek":18,"max_seek":58,"hp":78,"hp2":86,"asw":0,"max_asw":0,"fuel":85,"na":2,"sg":2}
+,{"id":881,"name":"伊201","type":"潜水","seek":8,"max_seek":39,"hp":12,"hp2":16,"asw":0,"max_asw":0,"fuel":15,"na":0,"sg":7}
+,{"id":882,"name":"伊203","type":"潜水","seek":8,"max_seek":38,"hp":12,"hp2":16,"asw":0,"max_asw":0,"fuel":15,"na":0,"sg":7}
+,{"id":883,"name":"龍鳳改二戊","type":"軽空","seek":30,"max_seek":77,"hp":61,"hp2":68,"asw":36,"max_asw":50,"fuel":40,"na":0,"sg":5}
+,{"id":884,"name":"雲鷹","type":"軽空","seek":29,"max_seek":52,"hp":39,"hp2":44,"asw":34,"max_asw":59,"fuel":30,"na":0,"sg":5}
+,{"id":885,"name":"Victorious","type":"装空","seek":39,"max_seek":73,"hp":59,"hp2":66,"asw":0,"max_asw":0,"fuel":65,"na":3,"sg":2}
+,{"id":886,"name":"早潮","type":"駆逐","seek":9,"max_seek":19,"hp":16,"hp2":20,"asw":22,"max_asw":46,"fuel":15,"na":0,"sg":2}
+,{"id":887,"name":"伊203改","type":"潜水","seek":14,"max_seek":48,"hp":13,"hp2":17,"asw":0,"max_asw":0,"fuel":20,"na":0,"sg":7}
+,{"id":888,"name":"龍鳳改二","type":"軽空","seek":33,"max_seek":80,"hp":63,"hp2":70,"asw":32,"max_asw":46,"fuel":60,"na":0,"sg":2}
+,{"id":889,"name":"雲鷹改二","type":"軽空","seek":37,"max_seek":66,"hp":49,"hp2":55,"asw":74,"max_asw":89,"fuel":35,"na":0,"sg":5}
+,{"id":891,"name":"Salmon","type":"潜水","seek":10,"max_seek":42,"hp":12,"hp2":16,"asw":0,"max_asw":0,"fuel":10,"na":1,"sg":6}
+,{"id":893,"name":"Janus改","type":"駆逐","seek":12,"max_seek":52,"hp":31,"hp2":36,"asw":53,"max_asw":93,"fuel":15,"na":3,"sg":2}
+,{"id":894,"name":"鳳翔改二","type":"軽空","seek":43,"max_seek":82,"hp":57,"hp2":64,"asw":33,"max_asw":69,"fuel":35,"na":0,"sg":8}
+,{"id":895,"name":"昭南","type":"海防","seek":3,"max_seek":14,"hp":9,"hp2":13,"asw":38,"max_asw":76,"fuel":10,"na":0,"sg":5}
+,{"id":896,"name":"Brooklyn","type":"軽巡","seek":18,"max_seek":67,"hp":38,"hp2":43,"asw":0,"max_asw":35,"fuel":35,"na":1,"sg":2}
+,{"id":897,"name":"Salmon改","type":"潜水","seek":12,"max_seek":45,"hp":15,"hp2":19,"asw":0,"max_asw":0,"fuel":10,"na":1,"sg":6}
+,{"id":898,"name":"第二十二号海防","type":"海防","seek":2,"max_seek":13,"hp":8,"hp2":12,"asw":30,"max_asw":71,"fuel":10,"na":0,"sg":5}
+,{"id":899,"name":"鳳翔改二戦艦","type":"軽空","seek":36,"max_seek":76,"hp":57,"hp2":64,"asw":34,"max_asw":71,"fuel":35,"na":0,"sg":8}
+,{"id":900,"name":"山汐丸","type":"補給","seek":13,"max_seek":53,"hp":36,"hp2":41,"asw":23,"max_asw":63,"fuel":35,"na":0,"sg":5}
+,{"id":901,"name":"Javelin","type":"駆逐","seek":10,"max_seek":21,"hp":15,"hp2":19,"asw":40,"max_asw":81,"fuel":15,"na":3,"sg":2}
+,{"id":903,"name":"天霧改二","type":"駆逐","seek":10,"max_seek":44,"hp":31,"hp2":36,"asw":27,"max_asw":76,"fuel":15,"na":0,"sg":2}
+,{"id":904,"name":"能美","type":"海防","seek":3,"max_seek":13,"hp":9,"hp2":13,"asw":38,"max_asw":80,"fuel":10,"na":0,"sg":5}
+,{"id":905,"name":"倉橋","type":"海防","seek":3,"max_seek":14,"hp":9,"hp2":13,"asw":40,"max_asw":80,"fuel":10,"na":0,"sg":5}
+,{"id":906,"name":"Javelin改","type":"駆逐","seek":12,"max_seek":53,"hp":31,"hp2":36,"asw":53,"max_asw":92,"fuel":15,"na":3,"sg":2}
+,{"id":908,"name":"天霧改二丁","type":"駆逐","seek":10,"max_seek":44,"hp":31,"hp2":36,"asw":25,"max_asw":79,"fuel":15,"na":0,"sg":2}
+,{"id":909,"name":"能美改","type":"海防","seek":5,"max_seek":28,"hp":17,"hp2":21,"asw":39,"max_asw":87,"fuel":10,"na":0,"sg":5}
+,{"id":910,"name":"倉橋改","type":"海防","seek":5,"max_seek":29,"hp":17,"hp2":21,"asw":40,"max_asw":86,"fuel":10,"na":0,"sg":5}
+,{"id":911,"name":"大和改二","type":"戦艦","seek":18,"max_seek":59,"hp":98,"hp2":107,"asw":0,"max_asw":0,"fuel":290,"na":0,"sg":1}
+,{"id":913,"name":"Maryland","type":"戦艦","seek":9,"max_seek":36,"hp":77,"hp2":85,"asw":0,"max_asw":0,"fuel":90,"na":1,"sg":5}
+,{"id":915,"name":"早潮改二","type":"駆逐","seek":10,"max_seek":41,"hp":33,"hp2":38,"asw":30,"max_asw":65,"fuel":15,"na":0,"sg":2}
+,{"id":916,"name":"大和改二重","type":"航戦","seek":20,"max_seek":68,"hp":98,"hp2":107,"asw":16,"max_asw":48,"fuel":300,"na":0,"sg":4}
+,{"id":918,"name":"Maryland改","type":"戦艦","seek":16,"max_seek":51,"hp":91,"hp2":98,"asw":0,"max_asw":0,"fuel":95,"na":1,"sg":5}
+,{"id":920,"name":"Samuel B.Roberts Mk.II","type":"駆逐","seek":15,"max_seek":52,"hp":29,"hp2":33,"asw":51,"max_asw":90,"fuel":15,"na":1,"sg":3}
+,{"id":921,"name":"鵜来","type":"海防","seek":3,"max_seek":14,"hp":9,"hp2":13,"asw":42,"max_asw":84,"fuel":10,"na":0,"sg":5}
+,{"id":922,"name":"稲木","type":"海防","seek":3,"max_seek":13,"hp":9,"hp2":13,"asw":41,"max_asw":83,"fuel":10,"na":0,"sg":5}
+,{"id":923,"name":"Tuscaloosa","type":"重巡","seek":15,"max_seek":55,"hp":43,"hp2":49,"asw":0,"max_asw":0,"fuel":40,"na":1,"sg":2}
+,{"id":924,"name":"Nevada","type":"戦艦","seek":8,"max_seek":36,"hp":74,"hp2":82,"asw":0,"max_asw":0,"fuel":85,"na":1,"sg":5}
+,{"id":925,"name":"Langley","type":"軽空","seek":40,"max_seek":68,"hp":31,"hp2":36,"asw":16,"max_asw":52,"fuel":35,"na":1,"sg":2}
+,{"id":926,"name":"鵜来改","type":"海防","seek":5,"max_seek":27,"hp":17,"hp2":21,"asw":48,"max_asw":88,"fuel":10,"na":0,"sg":5}
+,{"id":928,"name":"Tuscaloosa改","type":"重巡","seek":16,"max_seek":57,"hp":53,"hp2":60,"asw":0,"max_asw":0,"fuel":40,"na":1,"sg":2}
+,{"id":929,"name":"Nevada改","type":"戦艦","seek":13,"max_seek":50,"hp":89,"hp2":95,"asw":0,"max_asw":0,"fuel":90,"na":1,"sg":5}
+,{"id":930,"name":"Langley改","type":"軽空","seek":50,"max_seek":80,"hp":44,"hp2":50,"asw":18,"max_asw":58,"fuel":40,"na":1,"sg":2}
+,{"id":931,"name":"Ranger","type":"正空","seek":38,"max_seek":68,"hp":48,"hp2":54,"asw":0,"max_asw":0,"fuel":50,"na":1,"sg":2}
+,{"id":933,"name":"Massachusetts","type":"戦艦","seek":15,"max_seek":47,"hp":79,"hp2":87,"asw":0,"max_asw":0,"fuel":150,"na":1,"sg":2}
+,{"id":934,"name":"C.Cappellini","type":"潜水","seek":5,"max_seek":24,"hp":10,"hp2":14,"asw":0,"max_asw":0,"fuel":10,"na":2,"sg":6}
+,{"id":935,"name":"Jean Bart","type":"戦艦","seek":12,"max_seek":48,"hp":84,"hp2":92,"asw":0,"max_asw":0,"fuel":100,"na":5,"sg":2}
+,{"id":936,"name":"Nevada改 Mod.2","type":"戦艦","seek":15,"max_seek":52,"hp":90,"hp2":96,"asw":0,"max_asw":0,"fuel":90,"na":1,"sg":5}
+,{"id":938,"name":"Massachusetts改","type":"戦艦","seek":18,"max_seek":59,"hp":91,"hp2":100,"asw":0,"max_asw":0,"fuel":160,"na":1,"sg":2}
+,{"id":939,"name":"UIT-24","type":"潜水","seek":9,"max_seek":31,"hp":12,"hp2":16,"asw":0,"max_asw":0,"fuel":10,"na":2,"sg":6}
+,{"id":940,"name":"伊503","type":"潜水","seek":10,"max_seek":33,"hp":13,"hp2":17,"asw":0,"max_asw":0,"fuel":10,"na":0,"sg":6}
+,{"id":941,"name":"Heywood L.E.","type":"駆逐","seek":20,"max_seek":33,"hp":17,"hp2":21,"asw":49,"max_asw":83,"fuel":20,"na":1,"sg":2}
+,{"id":943,"name":"熊野丸","type":"揚陸","seek":13,"max_seek":56,"hp":38,"hp2":43,"asw":22,"max_asw":64,"fuel":40,"na":0,"sg":5}
+,{"id":945,"name":"第百一号輸送","type":"揚陸","seek":2,"max_seek":9,"hp":11,"hp2":15,"asw":0,"max_asw":0,"fuel":15,"na":0,"sg":5}
+,{"id":948,"name":"熊野丸改","type":"揚陸","seek":15,"max_seek":60,"hp":40,"hp2":46,"asw":30,"max_asw":74,"fuel":45,"na":0,"sg":5}
+,{"id":951,"name":"天津風改二","type":"駆逐","seek":10,"max_seek":44,"hp":35,"hp2":40,"asw":29,"max_asw":67,"fuel":20,"na":0,"sg":0}
+,{"id":953,"name":"朝日","type":"練巡","seek":1,"max_seek":3,"hp":36,"hp2":41,"asw":0,"max_asw":0,"fuel":35,"na":0,"sg":5}
+,{"id":954,"name":"榛名改二丙","type":"戦艦","seek":16,"max_seek":52,"hp":85,"hp2":93,"asw":0,"max_asw":0,"fuel":100,"na":0,"sg":1}
+,{"id":955,"name":"清霜改二","type":"駆逐","seek":9,"max_seek":43,"hp":33,"hp2":38,"asw":28,"max_asw":76,"fuel":15,"na":0,"sg":2}
+,{"id":958,"name":"朝日改","type":"工作","seek":1,"max_seek":4,"hp":37,"hp2":42,"asw":0,"max_asw":0,"fuel":40,"na":0,"sg":5}
+,{"id":959,"name":"深雪改二","type":"駆逐","seek":13,"max_seek":51,"hp":31,"hp2":36,"asw":25,"max_asw":65,"fuel":15,"na":0,"sg":2}
+,{"id":960,"name":"清霜改二丁","type":"駆逐","seek":12,"max_seek":50,"hp":33,"hp2":38,"asw":27,"max_asw":74,"fuel":15,"na":0,"sg":2}
+,{"id":961,"name":"時雨改三","type":"駆逐","seek":12,"max_seek":51,"hp":34,"hp2":39,"asw":39,"max_asw":88,"fuel":15,"na":0,"sg":2}
+,{"id":964,"name":"白雲","type":"駆逐","seek":3,"max_seek":19,"hp":15,"hp2":19,"asw":19,"max_asw":48,"fuel":15,"na":0,"sg":2}
+,{"id":1496,"name":"Colorado改","type":"戦艦","seek":16,"max_seek":52,"hp":91,"hp2":98,"asw":0,"max_asw":0,"fuel":95,"na":1,"sg":5}
+,{"id":502,"name":"三隈改二","type":"航巡","seek":25,"max_seek":82,"hp":59,"hp2":66,"asw":0,"max_asw":0,"fuel":55,"na":0,"sg":0}
+,{"id":507,"name":"三隈改二特","type":"水母","seek":32,"max_seek":89,"hp":59,"hp2":66,"asw":0,"max_asw":0,"fuel":60,"na":0,"sg":0}
+,{"id":971,"name":"伊36","type":"潜水","seek":9,"max_seek":31,"hp":14,"hp2":18,"asw":0,"max_asw":0,"fuel":10,"na":0,"sg":6}
+,{"id":976,"name":"伊36改","type":"潜空","seek":10,"max_seek":33,"hp":18,"hp2":22,"asw":0,"max_asw":0,"fuel":10,"na":0,"sg":6}
+,{"id":944,"name":"平安丸","type":"潜母","seek":11,"max_seek":30,"hp":36,"hp2":41,"asw":0,"max_asw":0,"fuel":30,"na":0,"sg":5}
+,{"id":949,"name":"平安丸改","type":"潜母","seek":18,"max_seek":39,"hp":39,"hp2":44,"asw":0,"max_asw":0,"fuel":30,"na":0,"sg":5}
+,{"id":892,"name":"Drum","type":"潜水","seek":11,"max_seek":43,"hp":13,"hp2":17,"asw":0,"max_asw":0,"fuel":10,"na":0,"sg":6}
+,{"id":732,"name":"Drum改","type":"潜水","seek":12,"max_seek":43,"hp":17,"hp2":21,"asw":0,"max_asw":0,"fuel":10,"na":0,"sg":6}
+,{"id":972,"name":"伊41","type":"潜空","seek":10,"max_seek":30,"hp":14,"hp2":18,"asw":0,"max_asw":0,"fuel":10,"na":0,"sg":6}
+,{"id":977,"name":"伊41改","type":"潜空","seek":11,"max_seek":33,"hp":18,"hp2":22,"asw":0,"max_asw":0,"fuel":10,"na":0,"sg":6}
+,{"id":975,"name":"春雨改二","type":"駆逐","seek":10,"max_seek":51,"hp":31,"hp2":36,"asw":29,"max_asw":78,"fuel":15,"na":0,"sg":2}
+,{"id":979,"name":"稲木改二","type":"海防","seek":5,"max_seek":42,"hp":27,"hp2":31,"asw":47,"max_asw":87,"fuel":10,"na":0,"sg":7}
+,{"id":968,"name":"初月改二","type":"駆逐","seek":12,"max_seek":54,"hp":39,"hp2":44,"asw":32,"max_asw":75,"fuel":25,"na":0,"sg":2}
+,{"id":927,"name":"Valiant","type":"戦艦","seek":15,"max_seek":47,"hp":73,"hp2":81,"asw":0,"max_asw":0,"fuel":90,"na":3,"sg":5}
+,{"id":733,"name":"Valiant改","type":"戦艦","seek":18,"max_seek":59,"hp":83,"hp2":91,"asw":0,"max_asw":0,"fuel":90,"na":3,"sg":5}
+,{"id":962,"name":"Mogador","type":"駆逐","seek":8,"max_seek":38,"hp":21,"hp2":25,"asw":32,"max_asw":52,"fuel":10,"na":5,"sg":2}
+,{"id":967,"name":"Mogador改","type":"駆逐","seek":11,"max_seek":50,"hp":38,"hp2":43,"asw":38,"max_asw":63,"fuel":15,"na":5,"sg":2}
+,{"id":965,"name":"Gloire","type":"軽巡","seek":20,"max_seek":64,"hp":33,"hp2":38,"asw":0,"max_asw":36,"fuel":30,"na":5,"sg":2}
+,{"id":970,"name":"Gloire改","type":"軽巡","seek":24,"max_seek":76,"hp":46,"hp2":52,"asw":0,"max_asw":45,"fuel":35,"na":5,"sg":2}
+,{"id":969,"name":"Richelieu Deux","type":"戦艦","seek":19,"max_seek":58,"hp":91,"hp2":100,"asw":0,"max_asw":0,"fuel":195,"na":5,"sg":2}
+,{"id":952,"name":"Phoenix","type":"軽巡","seek":18,"max_seek":68,"hp":38,"hp2":43,"asw":0,"max_asw":34,"fuel":35,"na":1,"sg":2}
+,{"id":734,"name":"Phoenix改","type":"軽巡","seek":22,"max_seek":78,"hp":53,"hp2":60,"asw":0,"max_asw":42,"fuel":35,"na":1,"sg":2}
+,{"id":957,"name":"General Belgrano","type":"軽巡","seek":40,"max_seek":90,"hp":55,"hp2":62,"asw":0,"max_asw":45,"fuel":55,"na":1,"sg":2}
+,{"id":966,"name":"Lexington","type":"正空","seek":40,"max_seek":67,"hp":84,"hp2":92,"asw":0,"max_asw":0,"fuel":65,"na":1,"sg":2}
+,{"id":735,"name":"Lexington改","type":"正空","seek":46,"max_seek":80,"hp":89,"hp2":97,"asw":0,"max_asw":0,"fuel":85,"na":1,"sg":2}
+,{"id":694,"name":"霧島改二丙","type":"戦艦","seek":16,"max_seek":52,"hp":85,"hp2":93,"asw":0,"max_asw":0,"fuel":100,"na":0,"sg":2}
+,{"id":956,"name":"早霜改二","type":"駆逐","seek":11,"max_seek":42,"hp":33,"hp2":38,"asw":28,"max_asw":75,"fuel":15,"na":0,"sg":2}
+,{"id":981,"name":"藤波改二","type":"駆逐","seek":12,"max_seek":56,"hp":33,"hp2":38,"asw":30,"max_asw":78,"fuel":15,"na":0,"sg":2}
+];
+
+export default ship_datas;
