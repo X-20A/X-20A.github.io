@@ -134,6 +134,44 @@ const option_data: OptionSelector = {
 			],
 		},
 	},
+	'57-7': {
+		'phase': {
+			label: 'Phase',
+			options: [
+				{ value: '1', label: 'Hボス出現後' },
+				{ value: '2', label: 'F-H開通後' },
+				{ value: '3', label: 'Pボス出現後' },
+				{ value: '4', label: '出撃地点3解放後' },
+				{ value: '5', label: 'C2-L開通後' },
+				{ value: '6', label: 'Zボス出現後' },
+				{ value: '7', label: 'L-V & L-X開通後' },
+			],
+		},
+		'A2': {
+			options: [
+				{ value: 'A3' },
+				{ value: 'B' },
+			],
+		},
+		'B2': {
+			options: [
+				{ value: 'B3' },
+				{ value: 'B4' },
+			],
+		},
+		'C': {
+			options: [
+				{ value: 'A3' },
+				{ value: 'C1' },
+			],
+		},
+		'J': {
+			options: [
+				{ value: 'K' },
+				{ value: 'L' },
+			],
+		},
+	},
 	'58-1': {
 		'phase': {
 			label: 'Phase',
@@ -435,7 +473,6 @@ const stopDrag = () => {
 }
 .inner {
 	display: flex;
-	align-items: center;
 }
 .inner:not(:last-child) {
 	border-bottom: 1px solid #9A9A9B;
@@ -443,6 +480,8 @@ const stopDrag = () => {
 .title {
 	width: 80px;
 	margin-left: 4px;
+	display: flex;
+	align-items: center;
 }
 .value-box {
 	width: 170px;

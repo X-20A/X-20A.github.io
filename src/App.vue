@@ -320,6 +320,7 @@ watch([adoptFleet, selectedArea, options], () => {
 			store.UPDATE_SIM_RESULT(result);
 
 			cy = drawMap(selectedArea.value, simResult.value); // ここまでになるべく余計なことをしない
+			// console.timeEnd('読込 → マップ表示');
 			branchHtml.value = null;
 			store.UPDATE_DREW_AREA(selectedArea.value);
 
@@ -327,7 +328,9 @@ watch([adoptFleet, selectedArea, options], () => {
 				if (cy) {
 					const target = element.target;
 					if (target.data('name')) { // node
-						branchHtml.value = generarteBranchHtml(target.data('name'));
+						const html = generarteBranchHtml(target.data('name'));
+						if (!html) return;
+						branchHtml.value = html;
 						adjustBranchStyle(cy, element);
 					} else { // 背景
 						branchHtml.value = null;
@@ -364,10 +367,21 @@ const branchStyle = reactive({
 
 const node = ref<string | null>(null);
 
-const generarteBranchHtml = (node_name: string): string => {
+const generarteBranchHtml = (node_name: string): string | null => {
 	node.value = node_name;
 
-	let node_data = branch_data[selectedArea.value!][node_name];
+	let key = selectedArea.value!;
+	
+	if (options.value && selectedArea.value === '7-3') {
+		const option = options.value['7-3']!;
+		if (option['phase']) {
+			key += `-${option['phase']}`;
+		}
+	}
+
+	let node_data = branch_data[key][node_name];
+
+	if (!node_data) return null;;
 
 	const location = sanitizeText(`${selectedArea.value}-${node_name}`);
 

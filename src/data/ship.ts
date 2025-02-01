@@ -835,6 +835,7 @@ const ship_datas: Array<ShipData> = [
 ,{"id":694,"name":"霧島改二丙","type":"戦艦","seek":16,"max_seek":52,"hp":85,"hp2":93,"asw":0,"max_asw":0,"fuel":100,"na":0,"sg":2}
 ,{"id":956,"name":"早霜改二","type":"駆逐","seek":11,"max_seek":42,"hp":33,"hp2":38,"asw":28,"max_asw":75,"fuel":15,"na":0,"sg":2}
 ,{"id":981,"name":"藤波改二","type":"駆逐","seek":12,"max_seek":56,"hp":33,"hp2":38,"asw":30,"max_asw":78,"fuel":15,"na":0,"sg":2}
+,{"id": 986,"name":"白雪改二","type":"駆逐","seek":13,"max_seek":54,"hp":31,"hp2": 38,"asw": 26,"max_asw":65,"fuel":15,"na":0,"sg":2}
 ];
 
 export default ship_datas;

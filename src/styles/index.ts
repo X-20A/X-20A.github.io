@@ -1,9 +1,9 @@
-import nodes from './node';
 import edges from './edge';
+import nodes from './node';
 
 const styles = [
-    ...nodes,
-    ...edges
+    ...edges,
+    ...nodes
 ];
 
 export default styles;

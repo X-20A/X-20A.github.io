@@ -3,7 +3,7 @@ import App from './App.vue';
 import { createPinia } from 'pinia';
 import vuetify from "./plugins/vuetify";
 
-// console.time('main.ts → マップ表示まで');
+// console.time('読込 → マップ表示');
 
 const app = createApp(App);
 const pinia = createPinia();

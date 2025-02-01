@@ -5,21 +5,34 @@ import CustomError from './CustomError';
  * シミュに使用する走査子
  */
 export default class Scanner {
+    /** 経由したnode */
     public route: (string | null)[] = [];
+
+    /** 現在のnode */
     public currentNode: string | null;
-    public rate: number;
+
+    /** this.routeの割合 0 - 1.0 */
+    public rate: Decimal;
+
+    /** 走査か完了したか */
     public is_fin: boolean = false;
 
+    /** 進行した回数 */
     public progress_count: number = 0;
+
+    /** Scannerあたりの許容する進行の回数(無限ループ防止) */
+    private readonly MAX_PROGRESS_COUNT: number = 30; 
 
     constructor(
         route: (string | null)[],
         startNode: string | null,
-        rate: number
+        rate: number | Decimal
     ) {
         this.route = route;
         this.currentNode = startNode;
-        this.rate = rate;
+        this.rate = typeof rate === 'number' // ここから表示までDecimalで一貫する
+            ? new Decimal(rate)
+            : rate;
     }
 
     /**
@@ -39,16 +52,14 @@ export default class Scanner {
         this.route.push(nextNode);
         this.currentNode = nextNode;
 
-        // 不動点小数回避
-        this.rate = new Decimal(this.rate).times(rate).toNumber();
+        this.rate = this.rate.times(rate); // 不動点小数回避
 
         this.progress_count++;
-        if (this.progress_count >= 30) {
+        if (this.progress_count >= this.MAX_PROGRESS_COUNT) {
             console.group('Debug');
             console.log('経路: ', this.route);
             console.groupEnd();
-            throw new CustomError('あー！無限ループ');
+            throw new CustomError('あー！無限ループ！');
         }
     }
-
 }

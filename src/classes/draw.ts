@@ -9,7 +9,7 @@ export default function drawMap(
     sim_result: SimResult[]
 ): cytoscape.Core {
     // データの形式を調整
-    const transit_data = {} as { [key: string]: number };
+    const transit_data = {} as { [key: string]: Decimal };
 
     // ルートを分解して格納
     sim_result.forEach(item => {
@@ -20,7 +20,7 @@ export default function drawMap(
             const pair = [route[i], route[i + 1]].join('e');
 
             if (transit_data[pair]) {
-                transit_data[pair] += rate;  // 同じペアがあればrateを加算
+                transit_data[pair] = transit_data[pair].plus(rate);  // 同じペアがあればrateを加算
             } else {
                 transit_data[pair] = rate;  // 新しいペアはそのままrateを設定
             }

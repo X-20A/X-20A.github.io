@@ -73,7 +73,8 @@ export type SelectedType = 1|2|3|4|5|6|7
 
 export type FleetTypeId = 0|1|2|3
 
-export type FleetTypeName = '通常艦隊' | '遊撃部隊' | '空母機動部隊' | '水上打撃部隊' | '輸送護衛部隊'
+// 遊撃部隊は隻数から判定する
+export type FleetTypeName = '通常艦隊' | '空母機動部隊' | '水上打撃部隊' | '輸送護衛部隊'
 
 export interface Fleet {
   /** 艦隊速度 */
@@ -123,7 +124,7 @@ export type BranchInfo = {
 
 export type SimResult = {
     route: string[];
-    rate: number;
+    rate: Decimal;
 }
 
 export type NodeType = "st"|"po"|"bo"|"ab"|"ad"|"ac"|"en"|"su"|"ca"|"wh"|"re"|"ni"|"sc"|"as"|"tl"|"un"

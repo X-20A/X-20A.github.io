@@ -72,7 +72,6 @@ export default class Ship {
 		this.asw = asw ? asw : ship_data.asw;
         this.luck = luck ? luck : 0;
         this.equip_in_decks = equip_in_decks;
-        console.log(this.equip_in_decks);
 		this.status_seek = this.calcStatusSeek(ship_data, equips, lv);
 		this.equip_seek = this.calcEquipSeek(equips);
 		this.drum_count = equips.filter(item => item.id === 75).length;

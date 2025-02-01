@@ -8,10 +8,14 @@ import {
     Seek,
 } from "./types";
 import Composition from "./Composition";
-import { convertFleetSpeedIdToName, convertFleetTypeIdToName } from "@/utils/convertUtil";
+import {
+    convertFleetSpeedIdToName,
+    convertFleetTypeIdToName,
+} from "@/utils/convertUtil";
 
 /**
- * 実際に表示やシミュレートで使う艦隊
+ * 実際に表示やシミュレートで使う艦隊    
+ * フィールド or メソッド で持つ判断は今のところ、頻繁に使うかどうかくらい
  */
 export default class AdoptFleet implements Fleet {
     /**
@@ -133,17 +137,61 @@ export default class AdoptFleet implements Fleet {
         return this.speed_id >= 2;
     }
 
+    /**
+     * 低速戦艦の数を返す。実際の速度とは無関係にステータスが低速な戦艦、及び航戦
+     * @returns 低速戦艦の数
+     */
     public countSBB(): number {
         let count = 0;
-        count +=
-            this.fleets[0].ships
-            .filter(item => item.type === '戦艦' && item.speed === 0)
+        count += this.fleets[0].ships
+            .filter(item => ['戦艦','航戦'].includes(item.type) && item.speed_group >= 4)
             .length;
         if (this.fleets[1]) {
             count += this.fleets[1].ships
-                .filter(item => item.type === '戦艦' && item.speed === 0)
+                .filter(item => ['戦艦', '航戦'].includes(item.type) && item.speed_group >= 4)
                 .length;
         }
         return count;
     }
+    /**
+     * 艦隊構成艦にtarget_nameが含まれるか判定(部分一致)して返す(配列もいいぞ)    
+     * '夕張'とすると、夕張/改/改二/改二特 が対象
+     * @param target_name - 判定する艦の名前(部分一致)
+     * @returns - 艦が在籍していればtrue
+     */
+    public isInclude(target_name: string | string[]): boolean {
+        if (Array.isArray(target_name)) {
+            // いづれかに部分一致すればtrueを返す
+            return target_name.some(
+                name => this.ship_names.some(ship_name => ship_name.includes(name))
+            );
+        } else {
+            return this.ship_names.some(ship_name => ship_name.includes(target_name));
+        }
+    }
+    /**
+     * 旗艦が軽巡であるか判定して返す
+     * @returns
+     */
+    public isFCL(): boolean {
+        return this.fleets[0].ships[0].type === '軽巡';
+    }
+    /**
+     * 艦隊構成艦に含まれる簡明がtarget_name(部分一致)の艦をカウントして返す    
+     * '夕張'とすると、夕張/改/改二/改二特 が対象
+     * @param target_name - 判定する艦の名前(部分一致)
+     * @returns - 該当する艦の隻数
+     */
+    public countShip(target_name: string): number {
+        return this.ship_names.filter(ship_name => ship_name.includes(target_name)).length
+    }
+    /**
+     * 艦隊内の大鷹型の数を返す
+     * @returns 
+     */
+    public countTaiyo(): number {
+        const taiyos = ['春日丸', '大鷹', '八幡丸', '雲鷹', '神鷹'];
+        return this.ship_names.filter(ship_name => taiyos.some(name => ship_name.startsWith(name))).length;
+    }
+
 }

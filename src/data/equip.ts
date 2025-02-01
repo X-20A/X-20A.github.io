@@ -556,6 +556,7 @@ const equip_datas: EquipType[] = [
 ,{"id":550,"name":"試製 明星(増加試作機)","type":[3,5,7,7,16],"seek":1}
 ,{"id":551,"name":"明星","type":[3,5,7,7,16],"seek":2}
 ,{"id":552,"name":"九九式練爆二二型改(夜間装備実験機)","type":[3,5,7,7,16],"seek":4}
+,{"id":553,"name":"10cm連装高角砲改","type":[1,1,1,16,0],"seek":0}
 ];
 
 export default equip_datas;

@@ -27,7 +27,7 @@
         <div style="flex-grow: 12;"> <!-- イベント海域 -->
           <div v-for="(event, index) in events" :key="'event-' + index">
             <div class="world-box">
-              <span class="world-name" :style="{ color: event.color || 'inherit' }">
+              <span class="world-name" :style="{ color: event.color || '' }">
                 {{ event.name }}
               </span>
               <hr class="beside-bar" />
