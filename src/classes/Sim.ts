@@ -4432,6 +4432,170 @@ export default class SimController {
                 }
                 break;
             case '58-3':
+                switch (node) {
+                    case null:
+                        if (fleet.isUnion()) {
+                            return '1';
+                        } else {
+                            if (option.phase === '1') {
+                                return '2';
+                            } else { // Number(option.phase) > 1
+                                if (AO > 0) {
+                                    return '3';
+                                } else if (CL > 0 && DD > 2 && f_speed !== '低速艦隊') {
+                                    return '3';
+                                } else if (fleet.countAktmrPlusCVs() > 0) {
+                                    return '2';
+                                } else if (BBs > 0) {
+                                    return '2';
+                                } else if (AO + LHA + AV > 1) {
+                                    return '2';
+                                } else if (Number(option.phase) < 3) {
+                                    return '3';
+                                } else { // option.phase === '3'
+                                    if (option.difficulty === '4' && AS > 0 && Ss > 2) {
+                                        return '4';
+                                    } if (option.difficulty === '3' && Ss > 2) {
+                                        return '4';
+                                    } if (option.difficulty === '2' && Ss > 1) {
+                                        return '4';
+                                    } if (option.difficulty === '1' && Ss > 0) {
+                                        return '4';
+                                    } if (option.difficulty === '1' && Ds > 2) {
+                                        return '4';
+                                    } else {
+                                        return '2';
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    case 'B':
+                        if (BBCVs > 5) {
+                            return 'C';
+                        } else if (f_speed !== '低速艦隊') {
+                            return 'D';
+                        } else if (CL > 1 && Ds > 3) {
+                            return 'D';
+                        } else {
+                            return 'C';
+                        }
+                        break;
+                    case 'D':
+                        if (BBCVs > 6) {
+                            return 'E';
+                        } else if (BBs > 3) {
+                            return 'E';
+                        } else if (CV + CVB > 2) {
+                            return 'E';
+                        } else {
+                            return 'F';
+                        }
+                        break;
+                    case 'F':
+                        if (f_seek[1] >= 65) {
+                            return 'O';
+                        } else {
+                            return 'G';
+                        }
+                        break;
+                    case 'H':
+                        if (CL > 0 && DD > 3 && f_speed !== '低速艦隊') {
+                            return 'J';
+                        } else {
+                            return 'I';
+                        }
+                        break;
+                    case 'I':
+                        if (BBCVs > 4) {
+                            return 'L';
+                        } else if (Ds < 2) {
+                            return 'L';
+                        } else if (f_speed !== '低速艦隊') {
+                            return 'M';
+                        } else if (BBs > 1) {
+                            return 'L';
+                        } else if (Ds > 1) {
+                            return 'L';
+                        } else {
+                            return 'M';
+                        }
+                        break;
+                    case 'J':
+                        return 'N';
+                    case 'L':
+                        return 'M';
+                    case 'O':
+                        if (f_seek[1] < 75) {
+                            return 'O1';
+                        } else if (BBs < 3) {
+                            return 'O3';
+                        } else if (CL > 1) {
+                            return 'O3';
+                        } else {
+                            return 'O2';
+                        }
+                        break;
+                    case 'P':
+                        if (f_seek[3] >= 98) {
+                            return 'R';
+                        } else {
+                            return 'Q';
+                        }
+                        break;
+                    case 'R':
+                        if (fleet.isFaster()) {
+                            return 'U';
+                        } else {
+                            return 'S';
+                        }
+                        break;
+                    case 'S':
+                        if (f_speed === '低速艦隊') {
+                            return 'T';
+                        } else {
+                            return 'U';
+                        }
+                        break;
+                    case 'W':
+                        if (AV + LHA > 0) {
+                            return 'X';
+                        } else if (option.difficulty === '4' && AS > 0 && Ss > 3) {
+                            return 'Y';
+                        } else if (option.difficulty === '4' && DD > 1) {
+                            return 'Y';
+                        } else if (Number(option.difficulty) < 4) {
+                            return 'Y';
+                        } else {
+                            return 'X';
+                        }
+                        break;
+                    case 'Y':
+                        if (CAs + CL + CT + CLT + AV + LHA > 2) {
+                            return 'Y1';
+                        } else if (CAs + AV === 2) {
+                            return 'Y1';
+                        } else if (DD > 0) {
+                            return 'Y2';
+                        } else if (Ss > 4) {
+                            return 'Y2';
+                        } else if (CAs + CL + CT + CLT + AV + LHA === 2) {
+                            return 'Y1';
+                        } else if (Ss < 4) {
+                            return 'Y1';
+                        } else {
+                            return 'Y2';
+                        }
+                        break;
+                    case 'M':
+                        if (option.M === 'P') {
+                            return 'P';
+                        } else {
+                            return 'N';
+                        }
+                        break;
+                }
+                break;
             case '58-4':
             case '59-1':
             case '59-2':

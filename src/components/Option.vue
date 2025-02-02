@@ -223,10 +223,9 @@ const option_data: OptionSelector = {
 		'phase': {
 			label: 'Phase',
 			options: [
-				{ value: '1', label: '第一ボス出現前' },
-				{ value: '2', label: '第一ボス出現後' },
-				{ value: '3', label: '第二ボス出現後' },
-				{ value: '4', label: '第三ボス出現後' },
+				{ value: '1', label: '出撃地点3解放前' },
+				{ value: '2', label: '出撃地点3解放後' },
+				{ value: '3', label: '出撃地点4解放後' },
 			],
 		},
 		'difficulty': {

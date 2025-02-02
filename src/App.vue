@@ -402,8 +402,6 @@ const generarteBranchHtml = (node_name: string): string | null => {
 		`<a href="https://x-20a.github.io/reference/?topic=${location}" style="color:blue;" target="_blank" rel="noopener noreferrer">`,
 	);
 	node_data = node_data.replaceAll('$ro', '</a>');
-	node_data = node_data.replaceAll('/*', '<span class="popup-no-decoration">');
-	node_data = node_data.replaceAll('*/', '</span>');
 
 	node_data = `<p>${node_data}</p>`;
 	

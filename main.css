@@ -127,10 +127,6 @@ li {
 	padding: 3px 15px !important;
 	margin-left: 5px;
 }
-.popup-no-decoration {
-	text-decoration: underline;
-	text-decoration-color: white;
-}
 /* v-htmlなんかはstyle scopedが効かないのでこっちに書く */
 /*デザインボタン*/
 .design-button {
