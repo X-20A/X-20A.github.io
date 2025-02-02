@@ -42,7 +42,6 @@ export default class Scanner {
     public clone(): Scanner {
         return new Scanner([...this.route], this.currentNode, this.rate);
     }
-
     /**
      * nextNode に進む
      * @param nextNode - 進行するnode

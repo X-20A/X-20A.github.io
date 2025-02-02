@@ -399,7 +399,12 @@ const generarteBranchHtml = (node_name: string): string | null => {
 	node_data = node_data.replaceAll('$ob', '</span>');
 	node_data = node_data.replaceAll(
 		'$or',
-		`<a href="https://x-20a.github.io/reference/?topic=${location}" style="color:blue;" target="_blank" rel="noopener noreferrer">`,
+		`<a
+			href="https://x-20a.github.io/reference/?topic=${location}"
+			style="color:blue;"
+			target="_blank"
+			rel="noopener noreferrer"
+		>`,
 	);
 	node_data = node_data.replaceAll('$ro', '</a>');
 

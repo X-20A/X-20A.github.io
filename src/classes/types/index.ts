@@ -114,7 +114,7 @@ export type AreaId =
     | '58-1' | '58-2' | '58-3' | '58-4'
     | '59-1' | '59-2' | '59-3' | '59-4' | '59-5'
 
-export type BranchInfo = {
+export type BranchResponse = {
     node: string;
     rate: number;
 };
@@ -157,9 +157,12 @@ export type SaveData = {
     options: OptionsType | null,
 }
 
+export type BranchLastUpdate = {
+    [key in AreaId]: string | null
+}
+
 export type BranchType = {
-    [key: string]: {
-        [key: string]: string | null;
-        date: string | null;
+    [key: string]: { // key in AreaId としたいが、7-3がネックになる
+        [key: string]: string;
     }
 };

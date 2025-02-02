@@ -2,7 +2,7 @@ import { edges } from "@/data/map";
 import CustomError from "./CustomError";
 import AdoptFleet from "./AdoptFleet";
 import Scanner from "./Scanner";
-import { SimResult, BranchInfo, AreaId, OptionsType } from "./types";
+import { SimResult, BranchResponse, AreaId, OptionsType } from "./types";
 
 /**
  * シミュコントローラ    
@@ -101,7 +101,7 @@ export default class SimController {
      * @param node 
      * @returns 
      */
-    private branch(node: string | null, scanner: Scanner): BranchInfo[] | string {
+    private branch(node: string | null, scanner: Scanner): BranchResponse[] | string {
         // AdoptFleet展開
         // コーディングを減らしたいだけ 処理コストは変わらないと思う
         const fleet = this.fleet;
