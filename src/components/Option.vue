@@ -248,12 +248,9 @@ const option_data: OptionSelector = {
 		'phase': {
 			label: 'Phase',
 			options: [
-				{ value: '1', label: '開始時点' },
-				{ value: '2', label: '第一ギミック完了後' },
-				{ value: '3', label: '第一ボス出現後' },
-				{ value: '4', label: '第二ボス出現後' },
-				{ value: '5', label: '第三ボス出現後' },
-				{ value: '6', label: '第四ボス出現後' },
+				{ value: '1', label: 'Oボス出現前' },
+				{ value: '2', label: 'Oボス出現後' },
+				{ value: '3', label: 'Sボス出現後' },
 			],
 		},
 		'difficulty': {
@@ -263,6 +260,13 @@ const option_data: OptionSelector = {
 				{ value: '3', label: '乙' },
 				{ value: '2', label: '丙' },
 				{ value: '1', label: '丁' },
+			],
+		},
+		'tag': {
+			label: '出撃札',
+			options: [
+				{ value: '1', label: '新編竜巻部隊のみ' },
+				{ value: '0', label: 'その他' },
 			],
 		},
 		'B': {

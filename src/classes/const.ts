@@ -34,7 +34,7 @@ export default class Const {
         '58-1': { 'phase': '1', 'A': 'D', 'I': 'N1', 'F': 'G' },
         '58-2': { 'phase': '1', 'difficulty': '4', 'B': 'E' },
         '58-3': { 'phase': '1', 'difficulty': '4', 'M': 'P' },
-        '58-4': { 'phase': '1', 'difficulty': '4', 'B': 'D' },
+        '58-4': { 'phase': '1', 'difficulty': '4', 'tag': '0', 'B': 'D' },
         '59-1': { 'phase': '1', 'C': 'C1', 'E': 'F' },
         '59-2': { 'L': 'M', 'N': 'O', 'P': 'Q' },
         '59-3': { 'phase': '1', 'C': 'C1' },

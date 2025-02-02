@@ -4014,10 +4014,10 @@ export default class SimController {
                                 return 'X';
                             } else if (DD > 7 && f_speed !== '低速艦隊') {
                                 return 'X';
-                            } else if (fleet.countShip('大和') + fleet.countShip('武蔵') < 2
+                            } else if (fleet.countYamatoClass() < 2
                                 && fleet.isFaster()) {
                                 return 'V';
-                            } else if (fleet.countShip('大和') + fleet.countShip('武蔵') < 2
+                            } else if (fleet.countYamatoClass() < 2
                                 && BBs + CV + CVB < 5
                                 && CV + CVB < 3
                                 && CL + DD > 4
@@ -4597,11 +4597,264 @@ export default class SimController {
                 }
                 break;
             case '58-4':
+                switch (node) {
+                    case null:
+                        if (option.phase === '1') {
+                            return '1';
+                        } else if (Number(option.phase) > 1) {
+                            if (!fleet.isUnion()) {
+                                return '1';
+                            } else if (f_type === '輸送護衛部隊') {
+                                return '2';
+                            } else if (f_type === '水上打撃部隊') {
+                                if (BBV + CAV === 2 && CL === 1 && BBV + CL + Ds + AO + AS + LHA === 12) {
+                                    return '2';
+                                } else if (((BBV + CAV === 1) || (BBV + CAV === 2)) && CL + CT === 2 && BBV + CAV + CL + CT + Ds + AO + AS + LHA === 12) {
+                                    return '2';
+                                } else if (Number(option.phase) < 3) {
+                                    return '1';
+                                } else if (option.phase === '3') {
+                                    return '3';
+                                }
+                            } else if (f_type === '空母機動部隊') {
+                                return '1';
+                            }
+                        }
+                        break;
+                    case '1':
+                        if (Number(option.phase) < 2 && Ss > 0) {
+                            return 'A1';
+                        } else if (CV + CVB > 3) {
+                            return 'A';
+                        } else if (fleet.countYamatoClass() > 1 && f_speed === '低速艦隊') {
+                            return 'A';
+                        } else if (Number(option.phase) > 1 && option.tag === '1') {
+                            return 'P';
+                        } else if (AS + Ss > 0) {
+                            return 'A1';
+                        } else if (fleet.isUnion()) {
+                            return 'A1';
+                        } else if (option.difficulty === '1') {
+                            return 'A1';
+                        } else { // Number(option.diffculty) > 1
+                            return 'A';
+                        }
+                        break;
+                    case '3':
+                        if (f_speed === '高速艦隊') {
+                            return 'T';
+                        } else if (Ds > 4) {
+                            return 'T';
+                        } else if (CVs > 2) {
+                            return 'F';
+                        } else if (fleet.countYamatoClass() === 1) {
+                            return 'F';
+                        } else {
+                            return 'T';
+                        }
+                        break;
+                    case 'A':
+                        if (!fleet.isUnion()) {
+                            return 'A1';
+                        } else if (CV + CVB > 3) {
+                            return 'A1';
+                        } else if (Ds > 3) {
+                            return 'B';
+                        } else {
+                            return 'A1';
+                        }
+                        break;
+                    case 'A1':
+                        if (!fleet.isUnion()) {
+                            return 'A2';
+                        } else {
+                            return 'B';
+                        }
+                        break;
+                    case 'C':
+                        if (AV > 1) {
+                            return 'C2';
+                        } else if (f_speed !== '低速艦隊') {
+                            return 'C1';
+                        } else if (CVs > 3) {
+                            return 'C2';
+                        } else if (CAs > 2) {
+                            return 'C2';
+                        } else {
+                            return 'C1';
+                        }
+                        break;
+                    case 'D':
+                        if (BB > 0) {
+                            return 'D2';
+                        } else if (CL + CT > 2) {
+                            return 'D1';
+                        } else if (CVL > 0 && Ds > 3) {
+                            return 'D1';
+                        } else if (CVL === 0 && BBV === 0 && CL + CT > 1 && f_speed === '低速艦隊') {
+                            return 'D1';
+                        } else if (CVL === 0 && CL + CT === 2 && Ds > 3) {
+                            return 'D1';
+                        } else {
+                            return 'D2';
+                        }
+                        break;
+                    case 'E':
+                        if (fleet.countYamatoClass() === 2 && DD < 5) {
+                            return 'F';
+                        } else if (fleet.countYamatoClass() === 1 && DD < 4) {
+                            return 'F';
+                        } else if (fleet.countYamatoClass() === 0 && DD < 3) {
+                            return 'F';
+                        } else if (BBCVs < 5) {
+                            return 'F1';
+                        } else if (f_speed === '低速艦隊') {
+                            return 'F';
+                        } else if (BBCVs === 5) {
+                            return 'F1';
+                        } else if (CL > 1) {
+                            return 'F1';
+                        } else {
+                            return 'F';
+                        }
+                        break;
+                    case 'F':
+                        if (!fleet.isUnion()) {
+                            return 'J1';
+                        } else if (f_type === '輸送護衛部隊') {
+                            return 'J1';
+                        } else if (track.includes('P')) {
+                            return 'J1';
+                        } else if (track.includes('1')) {
+                            return 'F1';
+                        } else if (track.includes('2')) {
+                            return 'J1';
+                        } else if (track.includes('3')) {
+                            return 'U';
+                        }
+                        break;
+                    case 'F1':
+                        return 'G';
+                    case 'H':
+                        if (f_speed === '低速艦隊') {
+                            return 'I';
+                        } else {
+                            return 'J';
+                        }
+                        break;
+                    case 'I1':
+                        if (DD > 7) {
+                            return 'I3';
+                        } else {
+                            return 'I2';
+                        }
+                        break;
+                    case 'J':
+                        if (option.phase === '1') {
+                            return 'J1';
+                        } else if (BBs + fleet.countAktmrPlusCVs() > 0) {
+                            return 'F';
+                        } else if (option.difficulty === '4' && Ss > 3 && CAs < 2) {
+                            return 'J1';
+                        } else if (Number(option.difficulty) < 4 && Ss > 2) {
+                            return 'J1';
+                        } else {
+                            return 'F';
+                        }
+                        break;
+                    case 'J1':
+                        if (fleet.isUnion()) {
+                            return 'J2';
+                        } else if (BBs + fleet.countAktmrPlusCVs() > 0) {
+                            return 'Q';
+                        } else if (CL === 1 && DD === 2 && AS === 1 && Ss === 3) {
+                            return 'R';
+                        } else if (option.diffculty === '1' && CL > 0 && DD > 2) {
+                            return 'R';
+                        } else if (AS === 0) {
+                            return 'Q';
+                        } else if (CAs + CL + CT + CLT > 0) {
+                            return 'Q';
+                        } else if (AV > 1) {
+                            return 'Q';
+                        } else if (DD > 2) {
+                            return 'Q';
+                        } else if (Ss > 3) {
+                            return 'R';
+                        } else if (AV === 0) {
+                            return 'R';
+                        } else {
+                            return 'Q';
+                        }
+                        break;
+                    case 'J2':
+                        if (track.includes('2')) {
+                            if (DD > 7) {
+                                return 'M';
+                            } else {
+                                return 'L';
+                            }
+                        } else if (track.includes('3')) {
+                            if ( CVs > 2) {
+                                return 'L';
+                            } else {
+                                return 'V';
+                            }
+                        }
+                        break;
+                    case 'L':
+                        return 'M';
+                    case 'M':
+                        if (f_seek[1] >= 52) {
+                            return 'O';
+                        } else {
+                            return 'N';
+                        }
+                        break;
+                    case 'U':
+                        if (BBs < 4 && CV + CVB === 0 && CVL < 2 && CL > 1 && Ds > 3) {
+                            return 'V';
+                        } else if (fleet.countYamatoClass() < 2 && CV + CVB < 2 && DD > 3 && f_speed !== '低速艦隊') {
+                            return 'V';
+                        } else if (fleet.countYamatoClass() < 2 && CL > 1 && f_speed !== '低速艦隊') {
+                            return 'V';
+                        } else {
+                            return 'J2';
+                        }
+                        break;
+                    case 'V':
+                        if (fleet.isInclude(['明石改', '朝日改', '秋津洲改'])) {
+                            return 'W';
+                        } else {
+                            return 'X';
+                        }
+                        break;
+                    case 'X':
+                        if (f_seek[1] >= 84) {
+                            return 'Z';
+                        } else {
+                            return 'Y';
+                        }
+                        break;
+                    case 'B':
+                        if (option.B === 'C') {
+                            return 'C';
+                        } else {
+                            return 'D';
+                        }
+                        break;
+                }
+                break;
             case '59-1':
+
             case '59-2':
+
             case '59-3':
+
             case '59-4':
+
             case '59-5':
+
         }
 
         console.log('node: ', node);

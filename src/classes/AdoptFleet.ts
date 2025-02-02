@@ -222,4 +222,7 @@ export default class AdoptFleet implements Fleet {
         }
         return count;
     }
+    public countYamatoClass() {
+        return this.countShip('大和') + this.countShip('武蔵');
+    }
 }
