@@ -101,8 +101,8 @@ const option_data: OptionSelector = {
 		'phase': {
 				label: '第二ボス',
 				options: [
-					{ value: '1', label: '解放前' },
-					{ value: '2', label: '解放後' },
+					{ value: '1', label: '出現前' },
+					{ value: '2', label: '出現後' },
 				],
 			},
 		},
@@ -323,7 +323,7 @@ const option_data: OptionSelector = {
 			label: 'Phase',
 			options: [
 				{ value: '1', label: '開始時点' },
-				{ value: '2', label: '出撃地点3出現後' },
+				{ value: '2', label: '出撃地点3解放後' },
 				{ value: '3', label: '短縮後' },
 			],
 		},
@@ -360,7 +360,7 @@ const option_data: OptionSelector = {
 			label: 'Phase',
 			options: [
 				{ value: '1', label: '開始時点' },
-				{ value: '2', label: '出撃地点3出現後' },
+				{ value: '2', label: '出撃地点3解放後' },
 				{ value: '3', label: 'ZZボス出現後' },
 			],
 		},
