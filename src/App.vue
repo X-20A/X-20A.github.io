@@ -283,21 +283,27 @@ const adjustFleetType = (selected_type: SelectedType) => { // 入力系とimport
 
 // cacheFleets, selectedTypeからシミュに使用する艦隊をセット
 watch([cacheFleets, selectedType], () => {
-	let fleets = [] as CacheFleet[];
-	let fleet_type = 0 as FleetTypeId;
-	if (selectedType.value >= 5) {
-		fleets = [cacheFleets.value[0], cacheFleets.value[1]];
-		fleet_type = selectedType.value - 4 as FleetTypeId;
-	} else {
-		fleets = [cacheFleets.value[selectedType.value - 1]];
-	}
+	try { // ここでも一応、変な値が保存されてるとエラーになり得る
+		let fleets = [] as CacheFleet[];
+		let fleet_type = 0 as FleetTypeId;
+		if (selectedType.value >= 5) {
+			fleets = [cacheFleets.value[0], cacheFleets.value[1]];
+			fleet_type = selectedType.value - 4 as FleetTypeId;
+		} else {
+			fleets = [cacheFleets.value[selectedType.value - 1]];
+		}
 
-	const adopt_fleet = new AdoptFleet(
-		fleets,
-		fleet_type,
-	);
+		const adopt_fleet = new AdoptFleet(
+			fleets,
+			fleet_type,
+		);
 
-	store.UPDATE_ADOPT_FLEET(adopt_fleet);
+		store.UPDATE_ADOPT_FLEET(adopt_fleet);
+	} catch (e: any | CustomError) {
+			modalStore.SHOW_ERROR(e);
+			console.error(e);
+			return;
+		}
 });
 
 // 艦隊 & 海域 & オプション が揃ったらシミュ開始

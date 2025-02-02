@@ -95,9 +95,6 @@ export interface Fleet {
   /** 大発系 装備艦数 */
   readonly craft_carrier_count: number;
 
-  /** 寒冷地装備＆甲板要員 装備艦数 */
-  readonly arctic_gear_carrier_count: number;
-
   /** 総ドラム缶装備数 */
   readonly total_drum_count: number;
 

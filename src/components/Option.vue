@@ -176,9 +176,9 @@ const option_data: OptionSelector = {
 		'phase': {
 			label: 'Phase',
 			options: [
-				{ value: '1', label: 'ギミック1終了' },
-				{ value: '2', label: '輸送終了' },
-				{ value: '3', label: 'ボス出現後' },
+				{ value: '1', label: '出撃地点2解放前' },
+				{ value: '2', label: '出撃地点2解放後' },
+				{ value: '3', label: 'Xボス出現後' },
 			],
 		},
 		'A': {

@@ -29,8 +29,6 @@ export default class Ship {
 	public readonly valid_craft_count: number;
 	public readonly has_arctic_gear: boolean;
 	
-
-
 	constructor(
 		fleet_index: number,
 		ship_index: number,

@@ -12,6 +12,7 @@ import {
     convertFleetSpeedIdToName,
     convertFleetTypeIdToName,
 } from "@/utils/convertUtil";
+import Decimal from 'decimal.js';
 
 /**
  * 実際に表示やシミュレートで使う艦隊    
@@ -42,9 +43,6 @@ export default class AdoptFleet implements Fleet {
 
     /** 大発系 装備艦数 */
     public readonly craft_carrier_count: number;
-
-    /** 寒冷地装備＆甲板要員 装備艦数 */
-    public readonly arctic_gear_carrier_count: number;
 
     /** 総ドラム缶装備数 */
     public readonly total_drum_count: number;
@@ -89,17 +87,16 @@ export default class AdoptFleet implements Fleet {
 
             // mapを使うと as が必要になる
             this.seek = [
-                fleets[0].seek[0] + fleets[1].seek[0],
-                fleets[0].seek[1] + fleets[1].seek[1],
-                fleets[0].seek[2] + fleets[1].seek[2],
-                fleets[0].seek[3] + fleets[1].seek[3],
+                new Decimal(fleets[0].seek[0]).plus(fleets[1].seek[0]).toNumber(),
+                new Decimal(fleets[0].seek[1]).plus(fleets[1].seek[1]).toNumber(),
+                new Decimal(fleets[0].seek[2]).plus(fleets[1].seek[2]).toNumber(),
+                new Decimal(fleets[0].seek[3]).plus(fleets[1].seek[3]).toNumber(),
             ];
 
             this.drum_carrier_count = fleets[0].drum_carrier_count + fleets[1].drum_carrier_count;
             this.radar_carrier_count = fleets[0].radar_carrier_count + fleets[1].radar_carrier_count;
             this.radar5_carrier_count = fleets[0].radar5_carrier_count + fleets[1].radar5_carrier_count;
             this.craft_carrier_count = fleets[0].craft_carrier_count + fleets[1].craft_carrier_count;
-            this.arctic_gear_carrier_count = fleets[0].arctic_gear_carrier_count + fleets[1].arctic_gear_carrier_count;
             this.total_drum_count = fleets[0].total_drum_count + fleets[1].total_drum_count;
             this.total_valid_craft_count = fleets[0].total_valid_craft_count + fleets[1].total_valid_craft_count;
         } else {
@@ -115,7 +112,6 @@ export default class AdoptFleet implements Fleet {
             this.radar_carrier_count = fleet.radar_carrier_count;
             this.radar5_carrier_count = fleet.radar5_carrier_count;
             this.craft_carrier_count = fleet.craft_carrier_count;
-            this.arctic_gear_carrier_count = fleet.arctic_gear_carrier_count;
             this.total_drum_count = fleet.total_drum_count;
             this.total_valid_craft_count = fleet.total_valid_craft_count;
         }
@@ -155,7 +151,7 @@ export default class AdoptFleet implements Fleet {
     }
     /**
      * 艦隊構成艦にtarget_nameが含まれるか判定(部分一致)して返す(配列もいいぞ)    
-     * '夕張'とすると、夕張/改/改二/改二特 が対象
+     * '夕張'とすると、夕張/改/改二/改二特 が対象。熊野とかは注意。無いと思うけど
      * @param target_name - 判定する艦の名前(部分一致)
      * @returns - 艦が在籍していればtrue
      */
@@ -176,9 +172,12 @@ export default class AdoptFleet implements Fleet {
     public isFCL(): boolean {
         return this.fleets[0].ships[0].type === '軽巡';
     }
+    public isUnion(): boolean {
+        return this.fleets.length === 2;
+    }
     /**
-     * 艦隊構成艦に含まれる簡明がtarget_name(部分一致)の艦をカウントして返す    
-     * '夕張'とすると、夕張/改/改二/改二特 が対象
+     * 艦隊構成艦に含まれる艦名がtarget_name(部分一致)の艦をカウントして返す    
+     * '夕張'とすると、夕張/改/改二/改二特 が対象。熊野とかは注意。無いと思うけど
      * @param target_name - 判定する艦の名前(部分一致)
      * @returns - 該当する艦の隻数
      */
@@ -193,5 +192,34 @@ export default class AdoptFleet implements Fleet {
         const taiyos = ['春日丸', '大鷹', '八幡丸', '雲鷹', '神鷹'];
         return this.ship_names.filter(ship_name => taiyos.some(name => ship_name.startsWith(name))).length;
     }
-
+    /**
+     * 空母系+あきつ丸の数を返す
+     * @returns 
+     */
+    public countAktmrPlusCVs(): number {
+        const composition = this.composition;
+        return this.countShip('あきつ丸')
+            + composition.CV
+            + composition.CVB
+            + composition.CVL
+        ;
+    }
+    /**
+     * 寒冷地装備＆甲板要員を装備していない、空母系orあきつ丸の数を返す    
+     * 伊勢改二、日向改二も対象になったことがあったみたい。必要になったら拡張する
+     */
+    public countNotEquipArctic(): number {
+        // 滅多に呼ばれないのでやや強引に
+        let count = 0;
+        for (const fleet of this.fleets) {
+            for (const ship of fleet.ships) {
+                if (['正空', '装空', '軽空'].includes(ship.type) || ship.name.includes('あきつ丸')) {
+                    if (!ship.has_arctic_gear) {
+                        count++;
+                    }
+                }
+            }
+        }
+        return count;
+    }
 }

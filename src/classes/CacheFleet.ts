@@ -1,7 +1,6 @@
 import Ship from '@/classes/Ship';
-import { Fleet, FleetTypeId, SpeedId, Seek } from '@/classes/types';
+import { Fleet, SpeedId, Seek } from '@/classes/types';
 import Decimal from 'decimal.js';
-import Composition from '@/classes/Composition';
 
 
 export default class CacheFleet implements Fleet {
@@ -28,9 +27,6 @@ export default class CacheFleet implements Fleet {
 	/** 大発系 装備艦数 */
 	public readonly craft_carrier_count: number;
 
-	/** 寒冷地装備＆甲板要員 装備艦数 */
-	public readonly arctic_gear_carrier_count: number;
-
 	/** 総ドラム缶装備数 */
 	public readonly total_drum_count: number;
 
@@ -50,7 +46,6 @@ export default class CacheFleet implements Fleet {
 		this.radar_carrier_count = this.ships.filter(item => item.has_radar).length;
 		this.radar5_carrier_count = this.ships.filter(item => item.has_radar5).length;
 		this.craft_carrier_count = this.ships.filter(item => item.has_craft).length;
-		this.arctic_gear_carrier_count = this.ships.filter(item => item.has_arctic_gear).length;
 		this.total_drum_count = this.ships.reduce((total, item) => {
 			return total + item.drum_count;
 		}, 0);
