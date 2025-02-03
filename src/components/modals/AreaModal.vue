@@ -1,6 +1,6 @@
 <template>
   <div
-		v-show="isAreaVisible"
+		v-if="isAreaVisible"
 		@click.stop
 		class="area-container"
 	>

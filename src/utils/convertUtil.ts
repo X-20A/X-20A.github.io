@@ -54,6 +54,28 @@ export function convertFleetTypeIdToName(fleet_type_id: FleetTypeId): FleetTypeN
 	return fleet_type_name;
 }
 
-export function convertFleetTypeNameToId() {
+/**
+ * branch_dataをhtml文字列に変換して返す。サニタイズはしませんよ
+ * @param data 
+ * @returns 
+ */
+export function convertBranchDataToHTML(data: string): string {
+    data = data.replaceAll('$e', '<br>');
+    data = data.replaceAll('$i', '&nbsp;&nbsp;&nbsp;&nbsp;');
+    data = data.replaceAll('$co', '<span style="color:red;">');
+    data = data.replaceAll('$oc', '</span>');
+    data = data.replaceAll('$bo', '<span style="font-weight:bold;">');
+    data = data.replaceAll('$ob', '</span>');
+    data = data.replaceAll(
+        '$or',
+        `<a
+			href="https://x-20a.github.io/reference/?topic=${location}"
+			style="color:blue;"
+			target="_blank"
+			rel="noopener noreferrer"
+		>`,
+    );
+    data = data.replaceAll('$ro', '</a>');
 
+    return data;
 }

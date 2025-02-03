@@ -2,7 +2,7 @@
 <template>
 	<div
 		class="modal-content"
-		v-show="isErrorVisible"
+		v-if="isErrorVisible"
 		@click.stop
 	>
 		<p>{{ errorMessage }}</p>

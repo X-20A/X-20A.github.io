@@ -18,6 +18,21 @@ import '@mdi/font/css/materialdesignicons.css';
 // 動的に読み込まれる components は拾わないらしいので注意
 
 const vuetify = createVuetify({
+    theme: {
+        themes: {
+            light: {
+                colors: {
+                    primary: '#fff',
+                    secondary: '#fff',
+                    accent: '#fff',
+                    error: '#fff',
+                    warning: '#fff',
+                    info: '#fff',
+                    success: '#fff',
+                },
+            },
+        },
+    },
     icons: {
         sets: {
             mdi,

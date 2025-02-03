@@ -11,7 +11,6 @@ import {
     SaveData,
     OptionsType,
 } from '@/classes/types';
-import Sim from '@/classes/Sim';
 
 export const useStore = defineStore('compass', {
 	state: () => ({
@@ -21,33 +20,25 @@ export const useStore = defineStore('compass', {
          * 保存する
          */
 		selectedType: 0 as SelectedType,
-
 		/**
 		 * デッキビルダーで第四艦隊まで読み込んだやつ    
 		 * ここからselectedTypeに応じてadoptFleetを選ぶ    
 		 * 保存する
 		 */
 		cacheFleets: [] as CacheFleet[],
-
 		/** 実際にシミュで使う艦隊 */
 		adoptFleet: null as AdoptFleet | null,
-
 		/**
 		 * 選択された海域    
 		 * 保存する
 		 */
 		selectedArea: null as AreaId | null,
-
         /** 能動分岐、攻略フェイズ、難易度の設定値 */
         options: null as OptionsType | null,
-
         /** 現在描画されている海域 */
         drewArea: null as AreaId | null,
-
         /** シミュレーション結果 */
         simResult: [] as SimResult[],
-
-        cy: null as cytoscape.Core | null,
 	}),
 	actions: {
 		UPDATE_SELECTED_TYPE(value: SelectedType): void {
@@ -72,16 +63,9 @@ export const useStore = defineStore('compass', {
             this.options = value;
         },
         UPDATE_OPTION_WITH_KEY(area: AreaId, key: string, value: string): void {
-            if (this.options) {
-                const options = this.options[area];
-                if (options) {
-                    console.log('value: ', value);
-                    options[key] = value;
-                }
+            if (this.options?.[area]) {
+                this.options[area][key] = value;
             }
-        },
-        UPDATE_CY(value: cytoscape.Core): void {
-            this.cy = value;
         },
         LOAD_DATA(): void {
             let data = localStorage.getItem('compass-v2');
@@ -124,32 +108,52 @@ export const useStore = defineStore('compass', {
 
 export const useModalStore = defineStore('modal', {
 	state: () => ({
-        isAreaVisible: false, // 海域選択モーダルの表示状態
-		isErrorVisible: false, // エラーモーダルの表示状態
-		errorMessage: '' // 表示するエラーメッセージ
+        /** 海域選択モーダルの表示状態 */
+        isAreaVisible: false,
+        /** 資料モーダル表示状態 */
+        isRefferenceVisible: false,
+        /** エラーモーダルの表示状態 */
+		isErrorVisible: false,
+        /** 表示するエラーメッセージ */
+		errorMessage: '',
+        currentRefferenceTab: 'Route' as 'Route' | 'Branch',
 	}),
 	actions: {
+        /**
+         * 海域選択モーダル表示
+         */
         SHOW_AREA(): void {
             this.isAreaVisible = true;
         },
-        HIDE_AREA(): void {
-            this.isAreaVisible = false;
+        /**
+         * 資料モーダル表示
+         */
+        SHOW_REFFERENCE(): void {
+            this.isRefferenceVisible = true;
         },
+        /**
+         * エラーモーダル    
+         * ユーザーに伝えたいエラーはCustomErrorでthrow
+         */
+        SHOW_ERROR(error: any): void {
+            if (error instanceof CustomError) {
+                this.errorMessage = error.message;
+            } else {
+                this.errorMessage = '予期しないエラーが発生しました';
+            }
+            this.isErrorVisible = true;
+        },
+        /**
+         * モーダル非表示。種類に関わらず、全てこれを呼ぶ
+         */
         HIDE_MODALS(): void {
             this.isAreaVisible = false;
+            this.isRefferenceVisible = false;
             this.isErrorVisible = false;
+            this.errorMessage = '';
         },
-		/**
-		 * ユーザーに伝えたいエラーはCustomErrorでthrow
-		 * 
-		 */
-		SHOW_ERROR(error: any): void {
-			if (error instanceof CustomError) {
-				this.errorMessage = error.message;
-			} else {
-				this.errorMessage = '予期しないエラーが発生しました';
-			}
-			this.isErrorVisible = true;
-		},
+        UPDATE_CURRENT_REFFERENCE_TAB(value: 'Route' | 'Branch'): void {
+            this.currentRefferenceTab = value;
+        }
 	}
 });

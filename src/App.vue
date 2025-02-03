@@ -17,7 +17,7 @@
             </div>
             <span
               class="type-select"
-              v-show="isVisibleTypeSelect"
+              v-if="isVisibleTypeSelect"
               @mouseover="showFleetOptions"
               @mouseleave="hideFleetOptions"
             >艦隊種別</span>
@@ -95,21 +95,29 @@
 			</p>
     </div>
     <div class="result-container">
-			<v-icon
-				@click="screenShot"
-				icon="mdi:mdi-camera-outline"
-				class="screen-shot icon-on-map"
-			/>
+			<template v-if="simResult.length > 0">
+				<v-icon
+					@click="showRefference"
+					icon="md:layers"
+					class="reference icon-on-map"
+				/>
+				<v-icon
+					@click="screenShot"
+					icon="mdi:mdi-camera-outline"
+					class="screen-shot icon-on-map"
+				/>
+			</template>
       <div id="cy" class="cy">
       </div>
     </div>
   </div>
 	<div
-		v-show="isAreaVisible || isErrorVisible"
+		v-if="isAreaVisible || isRefferenceVisible || isErrorVisible"
 		class="modal-overlay"
 		@click="closeModals"
 	>
 		<AreaModal />
+		<RefferenceModal />
 		<ErrorModal />
 	</div>
 	<template v-if="branchHtml === '<p>$sw</p>'">
@@ -135,7 +143,7 @@
 			class="popup"
 			id="popup-info"
 			:style="branchStyle"
-			v-show="branchHtml"
+			v-if="branchHtml"
 			v-html="branchHtml"
 		>
 	</div>
@@ -148,6 +156,7 @@ import { onMounted, watch, ref, reactive, computed } from 'vue';
 import { useStore, useModalStore } from '@/stores'
 import Option from './components/Option.vue';
 import AreaModal from './components/modals/AreaModal.vue';
+import RefferenceModal from './components/modals/RefferenceModal.vue';
 import ErrorModal from './components/modals/ErrorModal.vue';
 import { SelectedType, FleetTypeId } from '@/classes/types';
 import CustomError from '@/classes/CustomError';
@@ -165,20 +174,10 @@ import drawMap from '@/classes/draw';
 import { edges } from './data/map';
 import branch_data from './data/branch';
 import { getGkcoiBlob, getCyBlob, combineAndDownloadBlobs } from '@/utils/renderUtil';
-import { convertFleetSpeedNameToId } from './utils/convertUtil';
+import { convertBranchDataToHTML, convertFleetSpeedNameToId } from './utils/convertUtil';
 
 const store = useStore();
 const modalStore = useModalStore();
-
-const isAreaVisible = computed(() => modalStore.isAreaVisible);
-const isErrorVisible = computed(() => modalStore.isErrorVisible);
-
-const showArea = () => {
-	modalStore.SHOW_AREA();
-}
-const closeModals = () => {
-	modalStore.HIDE_MODALS();
-}
 
 const fleetInput = ref(''); // 入力取得用
 const fleetInputRef = ref<HTMLInputElement | null>(null); // focus用
@@ -197,13 +196,6 @@ const options = computed(() => store.options);
 
 const simResult = computed(() => store.simResult);
 
-/**
- * cytoscapeインスタンス    
- * storeに登録しようとするとMap maximum size exceeded    
- * たぶん大きすぎる為
- */
-let cy = null as cytoscape.Core | null;
-
 const isVisibleTypeSelect = cacheFleets.value.filter(item => item !== null).length >= 2;
 const isFleetOptionsVisible = ref(false);
 
@@ -213,6 +205,27 @@ const showFleetOptions = () => {
 const hideFleetOptions = () => {
 	isFleetOptionsVisible.value = false;
 };
+
+const isAreaVisible = computed(() => modalStore.isAreaVisible);
+const isRefferenceVisible = computed(() => modalStore.isRefferenceVisible);
+const isErrorVisible = computed(() => modalStore.isErrorVisible);
+
+const showArea = () => {
+	modalStore.SHOW_AREA();
+}
+const showRefference = () => {
+	modalStore.SHOW_REFFERENCE();
+}
+const closeModals = () => {
+	modalStore.HIDE_MODALS();
+}
+
+/**
+ * cytoscapeインスタンス    
+ * storeに登録しようとするとMap maximum size exceeded    
+ * たぶん大きすぎる為
+ */
+let cy = null as cytoscape.Core | null;
 
 // import
 watch(fleetInput, (text) => {
@@ -306,6 +319,7 @@ watch([cacheFleets, selectedType], () => {
 		}
 });
 
+let is_first_run = true;
 // 艦隊 & 海域 & オプション が揃ったらシミュ開始
 watch([adoptFleet, selectedArea, options], () => {
 	if (
@@ -326,7 +340,9 @@ watch([adoptFleet, selectedArea, options], () => {
 			store.UPDATE_SIM_RESULT(result);
 
 			cy = drawMap(selectedArea.value, simResult.value); // ここまでになるべく余計なことをしない
-			// console.timeEnd('読込 → マップ表示');
+			
+			if (is_first_run) console.timeEnd('読込 → マップ表示'); // debug
+			
 			branchHtml.value = null;
 			store.UPDATE_DREW_AREA(selectedArea.value);
 
@@ -391,22 +407,7 @@ const generarteBranchHtml = (node_name: string): string | null => {
 
 	const location = sanitizeText(`${selectedArea.value}-${node_name}`);
 
-	node_data = node_data!.replaceAll('$e', '<br>');
-	node_data = node_data.replaceAll('$i', '&nbsp;&nbsp;&nbsp;&nbsp;');
-	node_data = node_data.replaceAll('$co', '<span style="color:red;">');
-	node_data = node_data.replaceAll('$oc', '</span>');
-	node_data = node_data.replaceAll('$bo', '<span style="font-weight:bold;">');
-	node_data = node_data.replaceAll('$ob', '</span>');
-	node_data = node_data.replaceAll(
-		'$or',
-		`<a
-			href="https://x-20a.github.io/reference/?topic=${location}"
-			style="color:blue;"
-			target="_blank"
-			rel="noopener noreferrer"
-		>`,
-	);
-	node_data = node_data.replaceAll('$ro', '</a>');
+	node_data = convertBranchDataToHTML(node_data);
 
 	node_data = `<p>${node_data}</p>`;
 	
@@ -575,6 +576,9 @@ onMounted(() => {
 	position: relative;
 	display: flex;
 	justify-content: center;
+}
+.reference {
+	right: 46px;
 }
 .screen-shot {
 	right: 12px;

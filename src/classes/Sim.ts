@@ -903,8 +903,8 @@ export default class SimController {
                     case 'F':
                         if (CVL > 0 && Ds > 1) {
                             return [
-                                { node: 'A', rate: 7.5 },
-                                { node: 'J', rate: 92.5 },
+                                { node: 'A', rate: 0.075 },
+                                { node: 'J', rate: 0.925 },
                             ];
                         } else if (CVL > 0) {
                             return [
