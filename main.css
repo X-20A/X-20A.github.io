@@ -1,10 +1,33 @@
 @charset "UTF-8";
 body {
     margin:0;
-	background-color: #FAFAFA;
+	overflow-x: hidden;
+	scrollbar-width: none;
 }
-body::-webkit-scrollbar {
-    display: none;
+::-webkit-scrollbar {
+	width: 8px;
+}
+
+::-webkit-scrollbar:horizontal {
+	height: 8px;
+}
+
+::-webkit-scrollbar-track {
+	background: rgba(128, 128, 128, 0.2);
+}
+
+::-webkit-scrollbar-thumb {
+	border-radius: 1px;
+	background: rgb(128, 128, 128, 0.7);
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: rgb(177, 177, 177);
+}
+
+/* Firefox ScrollBar */
+* {
+	scrollbar-width: thin;
 }
 input[type="radio"] {
     width:10px;

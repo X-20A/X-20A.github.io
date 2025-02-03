@@ -1,7 +1,7 @@
 <template>
   <div
 		v-if="isAreaVisible"
-		@click.stop
+		@mousedown.stop
 		class="area-container"
 	>
     <div class="box">
