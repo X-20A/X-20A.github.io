@@ -1,7 +1,19 @@
-import Const from "@/classes/const";
 import { CyStyle } from "@/classes/types";
-
-const NODE_ICONS = `${Const.CDN}/media/nodes`;
+// ぶっちゃけCDNと速さでは変わらない。ただ、埋め込みなら一斉にパッと点くので採用
+import start from '/icons/start.png';
+import port from '/icons/port.png';
+import boss from '/icons/boss.png';
+import airB from '/icons/air-b.png';
+import airD from '/icons/air-d.png';
+import calm from '/icons/calm.png';
+import enemy from '/icons/enemy.png';
+import whirl from '/icons/whirl.png';
+import resource from '/icons/resource.png';
+import night from '/icons/night.png';
+import scout from '/icons/scout.png';
+import unknown from '/icons/unknown.png';
+import airstrikeSupported from '/icons/airstrike_supported.png';
+import transportLoadout from '/icons/transport_loadout.png';
 
 const nodes: CyStyle[] = [
     {
@@ -17,13 +29,13 @@ const nodes: CyStyle[] = [
             'text-halign': 'center',
             'padding': '0pt',
             'font-size': '15px',
-            'background-clip': 'none',// z-indexでedgesの下に潜り込ませるは上手くいかなかった
+            'background-clip': 'none',// z-indexでedgesの下に潜り込ませるのは上手くいかなかった
         }
     }, // マスの分類ごとに表示分岐
     {
         selector: 'node[label = "st"]', // 出撃
         style: {
-            'background-image': `${NODE_ICONS}/start.png`,
+            'background-image': start,
             'font-weight': '600',
             'text-outline-width': '2px',
             'font-size': '20px',
@@ -37,7 +49,7 @@ const nodes: CyStyle[] = [
     {
         selector: 'node[label = "po"]',  // 港湾
         style: {
-            'background-image': `${NODE_ICONS}/port.png`,
+            'background-image': port,
             'width': '48px',
             'height': '48px',
             'background-opacity': 0,
@@ -48,7 +60,7 @@ const nodes: CyStyle[] = [
     {
         selector: 'node[label = "bo"]', // ボス
         style: {
-            'background-image': `${NODE_ICONS}/boss.png`,
+            'background-image': boss,
             'width': '48px',
             'height': '48px',
             'background-opacity': 0,
@@ -59,7 +71,7 @@ const nodes: CyStyle[] = [
     {
         selector: 'node[label = "ab"]',  // 航空戦
         style: {
-            'background-image': `${NODE_ICONS}/air-b.png`,
+            'background-image': airB,
             'width': '48px',
             'height': '27px',
             'background-opacity': 0,
@@ -69,7 +81,7 @@ const nodes: CyStyle[] = [
     {
         selector: 'node[label = "ad"]',  // 空襲
         style: {
-            'background-image': `${NODE_ICONS}/air-d.png`,
+            'background-image': airD,
             'width': '44px',
             'height': '25px',
             'background-opacity': 0,
@@ -78,7 +90,7 @@ const nodes: CyStyle[] = [
     {
         selector: 'node[label = "ac"]',  // 能動分岐
         style: {
-            'background-image': `${NODE_ICONS}/calm.png`,
+            'background-image': calm,
             'border-width': 3, // ボーダーの太さ
             'border-color': '#2c4dff',  // #ff3f87
             'width': '27px',
@@ -90,7 +102,7 @@ const nodes: CyStyle[] = [
     {
         selector: 'node[label = "en"]', // 通常戦 基本設定
         style: {
-            'background-image': `${NODE_ICONS}/enemy.png`,
+            'background-image': enemy,
             'width': '27px', // enemy系
             'height': '27px',
             'background-opacity': 0,
@@ -101,7 +113,7 @@ const nodes: CyStyle[] = [
     {
         selector: 'node[label = "su"]', // 対潜
         style: {
-            'background-image': `${NODE_ICONS}/enemy.png`,
+            'background-image': enemy,
             'width': '27px', // enemy系
             'height': '27px',
             'background-opacity': 0,
@@ -112,7 +124,7 @@ const nodes: CyStyle[] = [
     {
         selector: 'node[label = "ca"]', // 気のせい
         style: {
-            'background-image': `${NODE_ICONS}/calm.png`,
+            'background-image': calm,
             'width': '27px', // enemy系
             'height': '27px',
             'background-opacity': 0,
@@ -123,7 +135,7 @@ const nodes: CyStyle[] = [
     {
         selector: 'node[label = "wh"]',  // 渦潮
         style: {
-            'background-image': `${NODE_ICONS}/whirl.png`,
+            'background-image': whirl,
             'width': '27px', // enemy系
             'height': '27px',
             'background-opacity': 0,
@@ -134,7 +146,7 @@ const nodes: CyStyle[] = [
     {
         selector: 'node[label = "re"]',  // 資源
         style: {
-            'background-image': `${NODE_ICONS}/resource.png`,
+            'background-image': resource,
             'width': '27px', // enemy系
             'height': '27px',
             'background-opacity': 0,
@@ -145,7 +157,7 @@ const nodes: CyStyle[] = [
     {
         selector: 'node[label = "ni"]',  // 夜戦
         style: {
-            'background-image': `${NODE_ICONS}/night.png`,
+            'background-image': night,
             'width': '27px', // enemy系
             'height': '27px',
             'background-opacity': 0,
@@ -156,7 +168,7 @@ const nodes: CyStyle[] = [
     {
         selector: 'node[label = "sc"]',  // 航空偵察
         style: {
-            'background-image': `${NODE_ICONS}/scout.png`,
+            'background-image': scout,
             'width': '27px', // enemy系
             'height': '27px',
             'background-opacity': 0,
@@ -167,7 +179,7 @@ const nodes: CyStyle[] = [
     {
         selector: 'node[label = "un"]', // 不明
         style: {
-            'background-image': `${NODE_ICONS}/unknown.png`,
+            'background-image': unknown,
             'width': '27px', // enemy系
             'height': '27px',
             'background-opacity': 0,
@@ -178,7 +190,7 @@ const nodes: CyStyle[] = [
     {
         selector: 'node[label = "as"]', // 対潜空襲
         style: {
-            'background-image': `${NODE_ICONS}/airstrike_supported.png`,
+            'background-image': airstrikeSupported,
             'width': '48px',
             'height': '27px',
             'background-opacity': 0,
@@ -189,7 +201,7 @@ const nodes: CyStyle[] = [
     {
         selector: 'node[label = "tl"]', // 揚陸地点
         style: {
-            'background-image': `${NODE_ICONS}/transport_loadout.png`,
+            'background-image': transportLoadout,
             'width': '48px',
             'height': '27px',
             'background-opacity': 0,

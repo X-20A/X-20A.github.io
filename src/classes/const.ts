@@ -15,6 +15,7 @@ export default class Const {
 
     /**
      * X-20AリポジトリのAPIエンドポイント
+     * raw.githubusercontent.comでも変わらず
      */
     public static readonly CDN =
         'https://cdn.jsdelivr.net/gh/X-20A/X-20A.github.io@main';

@@ -96,16 +96,18 @@
     </div>
     <div class="result-container">
 			<template v-if="simResult.length > 0">
-				<v-icon
+				<SvgIcon
 					@click="showRefference"
-					icon="md:layers"
+					name="layers"
+					color="#fff"
 					class="reference icon-on-map"
-				/>
-				<v-icon
+				></SvgIcon>
+				<SvgIcon
 					@click="screenShot"
-					icon="mdi:mdi-camera-outline"
+					name="camera-outline"
+					color="#fff"
 					class="screen-shot icon-on-map"
-				/>
+				></SvgIcon>
 			</template>
       <div id="cy" class="cy">
       </div>
@@ -162,7 +164,9 @@
 					<p>3.海域をセット</p>
 					<p>4.オプションがあれば選択(能動分岐、攻略段階、難易度等)</p>
 					<br>
-					<p style="text-align: center;">or</p>
+					<div class="gap">
+							<span class="or">or</span>
+					</div>
 					<br>
 					<p>1.制空シミュの編成ページを開く</p>
 					<p>2.[共有] &gt; [デッキビルダー形式データ] コピー</p>
@@ -218,11 +222,13 @@
 
 <script setup lang="ts">
 import { onMounted, watch, ref, reactive, computed } from 'vue';
-import { useStore, useModalStore } from '@/stores'
+import { useStore, useModalStore } from '@/stores';
+import 'virtual:svg-icons-register';
 import Option from './components/Option.vue';
 import AreaModal from './components/modals/AreaModal.vue';
 import RefferenceModal from './components/modals/RefferenceModal.vue';
 import ErrorModal from './components/modals/ErrorModal.vue';
+import SvgIcon from './components/SvgIcon.vue';
 import { SelectedType, FleetTypeId } from '@/classes/types';
 import CustomError from '@/classes/CustomError';
 import CacheFleet from './classes/CacheFleet';
@@ -654,6 +660,7 @@ onMounted(() => {
 	cursor: pointer;
 	padding: 3px;
 	border-radius: 100%;
+	height: 22px;
 	width: 22px;
 	top: 4px;
 	position: absolute;
@@ -690,6 +697,7 @@ onMounted(() => {
 }
 .detail-box {
 	margin: auto;
+	margin-bottom: 210px;
 	max-width: 480px;
 }
 .panel-title {
@@ -701,5 +709,20 @@ onMounted(() => {
 }
 .panel-text p {
 	padding: 4px 0px;
+}
+.gap {
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+.gap::before,
+.gap::after {
+    content: '';
+    flex-grow: 1;
+    height: 1px;
+    background: #c4c4c4;
+}
+.or {
+    margin: 0 18px;
 }
 </style>
