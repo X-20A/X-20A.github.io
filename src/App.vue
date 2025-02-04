@@ -26,19 +26,19 @@
               @mouseover="showFleetOptions"
               @mouseleave="hideFleetOptions"
             >
-              <span class="fleet-type" @click=updateSelectedType(1)>第一艦隊</span>
-              <span class="fleet-type" @click=updateSelectedType(2)>第二艦隊</span>
-              <span class="fleet-type" @click=updateSelectedType(3)>第三艦隊</span>
-              <span class="fleet-type" @click=updateSelectedType(4)>第四艦隊</span>
-              <span class="fleet-type" @click=updateSelectedType(5)>空母機動部隊</span>
-              <span class="fleet-type" @click=updateSelectedType(6)>水上打撃部隊</span>
-              <span class="fleet-type" @click=updateSelectedType(7)>輸送護衛部隊</span>
+              <span class="fleet-type" @mousedown=updateSelectedType(1)>第一艦隊</span>
+              <span class="fleet-type" @mousedown=updateSelectedType(2)>第二艦隊</span>
+              <span class="fleet-type" @mousedown=updateSelectedType(3)>第三艦隊</span>
+              <span class="fleet-type" @mousedown=updateSelectedType(4)>第四艦隊</span>
+              <span class="fleet-type" @mousedown=updateSelectedType(5)>空母機動部隊</span>
+              <span class="fleet-type" @mousedown=updateSelectedType(6)>水上打撃部隊</span>
+              <span class="fleet-type" @mousedown=updateSelectedType(7)>輸送護衛部隊</span>
             </div>
           </div>
           <div style="flex: 1;">
             <button
 							class="design-button"
-							@click="showArea"
+							@mousedown="showArea"
 						>{{ selectedArea ? '海域: ' + selectedArea : '海域' }}</button>
           </div>
 					<Option />
@@ -97,13 +97,19 @@
     <div class="result-container">
 			<template v-if="simResult.length > 0">
 				<SvgIcon
-					@click="showRefference"
+					@mousedown="showRefference"
+					name="radar-8"
+					color="#fff"
+					class="ignore-seek icon-on-map"
+				></SvgIcon>
+				<SvgIcon
+					@mousedown="showRefference"
 					name="layers"
 					color="#fff"
 					class="reference icon-on-map"
 				></SvgIcon>
 				<SvgIcon
-					@click="screenShot"
+					@mousedown="screenShot"
 					name="camera-outline"
 					color="#fff"
 					class="screen-shot icon-on-map"
@@ -133,7 +139,7 @@
 				<button
 					class="design-button remote-active"
 					:value="`${node}`"
-					@click="switchActive"
+					@mousedown="switchActive"
 				>
 					切替
 				</button>
@@ -153,11 +159,19 @@
 	<div class="detail-box">
 		<v-expansion-panels
 			v-model="openPanel"
-			multiple
 			color="primary"
+			multiple
 		>
 			<v-expansion-panel>
-				<v-expansion-panel-title class="panel-title">使い方</v-expansion-panel-title>
+				<v-expansion-panel-title class="panel-title">
+					使い方
+					<template v-slot:actions="{ expanded }">
+						<SvgIcon
+							:name="expanded ? 'menu-up' : 'menu-down'"
+							class="panel-icon"
+						></SvgIcon>
+					</template>
+				</v-expansion-panel-title>
 				<v-expansion-panel-text class="panel-text">
 					<p>1.制空シミュの編成ページを開く</p>
 					<p>2.[共有] &gt; [羅針盤シミュで開く]</p>
@@ -176,7 +190,15 @@
 				</v-expansion-panel-text>
 			</v-expansion-panel>
 			<v-expansion-panel>
-				<v-expansion-panel-title class="panel-title">謝辞</v-expansion-panel-title>
+				<v-expansion-panel-title class="panel-title">
+					謝辞
+					<template v-slot:actions="{ expanded }">
+						<SvgIcon
+							:name="expanded ? 'menu-up' : 'menu-down'"
+							class="panel-icon"
+						></SvgIcon>
+					</template>
+				</v-expansion-panel-title>
 				<v-expansion-panel-text class="panel-text">
 					<p><a href="https://tsunkit.net/nav/" target="_blank">KCNav</a>: マップ周り</p>
 					<p><a href="http://kancolle-calc.net/deckbuilder.html" target="_blank">デッキビルダー</a>: 艦/装備データ</p>
@@ -188,7 +210,15 @@
 				</v-expansion-panel-text>
 			</v-expansion-panel>
 			<v-expansion-panel>
-				<v-expansion-panel-title class="panel-title">分岐法則について</v-expansion-panel-title>
+				<v-expansion-panel-title class="panel-title">
+					分岐法則について
+					<template v-slot:actions="{ expanded }">
+						<SvgIcon
+							:name="expanded ? 'menu-up' : 'menu-down'"
+							class="panel-icon"
+						></SvgIcon>
+					</template>
+				</v-expansion-panel-title>
 				<v-expansion-panel-text class="panel-text">
 					<p>通常海域は日本語版wiki、イベント海域はNGAに則ります</p>
 					<p>表示されたマップの分岐マスをクリックすると分岐条件が表示されます</p>
@@ -200,7 +230,15 @@
 				</v-expansion-panel-text>
 			</v-expansion-panel>
 			<v-expansion-panel>
-				<v-expansion-panel-title class="panel-title">アプデ履歴</v-expansion-panel-title>
+				<v-expansion-panel-title class="panel-title">
+					アプデ履歴
+					<template v-slot:actions="{ expanded }">
+						<SvgIcon
+							:name="expanded ? 'menu-up' : 'menu-down'"
+							class="panel-icon"
+						></SvgIcon>
+					</template>
+				</v-expansion-panel-title>
 				<v-expansion-panel-text class="panel-text">
 					<p>2024/05/02_v1.1.8  資源マスでの獲得資源予測</p>
 					<p>2024/03/16_v1.1.7  <del>合致する条件に下線表示</del> 廃止</p>
@@ -223,7 +261,6 @@
 <script setup lang="ts">
 import { onMounted, watch, ref, reactive, computed } from 'vue';
 import { useStore, useModalStore } from '@/stores';
-import 'virtual:svg-icons-register';
 import Option from './components/Option.vue';
 import AreaModal from './components/modals/AreaModal.vue';
 import RefferenceModal from './components/modals/RefferenceModal.vue';
@@ -237,7 +274,11 @@ import {
 	createCacheFleetsFromDeckBuilder,
 	createDeckBuilderFromAdoptFleet
 } from './utils/deckBuilderUtil';
-import { generateFormatedTime, isNumber } from '@/utils/util';
+import {
+	generateFormatedTime,
+	isNumber,
+	sanitizeText
+} from '@/utils/util';
 import AdoptFleet from './classes/AdoptFleet';
 import DeckBuilder from '@/classes/types/DeckBuilder';
 import { DeckBuilder as GkcoiDeckBuilder } from 'gkcoi/dist/type';
@@ -441,18 +482,6 @@ watch([adoptFleet, selectedArea, options], () => {
   }
 }, { deep: true });
 
-function sanitizeText(input: string): string {
-  const map: { [key: string]: string } = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;',
-  };
-
-  return input.replace(/[&<>"']/g, (char) => map[char]);
-}
-
 const branchHtml = ref<string | null>(null);
 
 const branchStyle = reactive({
@@ -478,9 +507,9 @@ const generarteBranchHtml = (node_name: string): string | null => {
 
 	if (!node_data) return null;;
 
-	const location = sanitizeText(`${selectedArea.value}-${node_name}`);
+	const topic = sanitizeText(`${selectedArea.value}-${node_name}`);
 
-	node_data = convertBranchDataToHTML(node_data);
+	node_data = convertBranchDataToHTML(node_data, topic);
 
 	node_data = `<p>${node_data}</p>`;
 	
@@ -649,6 +678,9 @@ onMounted(() => {
 	display: flex;
 	justify-content: center;
 }
+.ignore-seek {
+	right: 80px;
+}
 .reference {
 	right: 46px;
 }
@@ -698,11 +730,17 @@ onMounted(() => {
 .detail-box {
 	margin: auto;
 	margin-bottom: 210px;
-	max-width: 480px;
+	max-width: 500px;
 }
 .panel-title {
 	border: none;
 	height: 20px;
+	cursor: pointer;
+}
+.panel-icon {
+	height: 22.5px;
+	width: 22.5px;
+	pointer-events: auto;
 }
 .panel-text {
 	border-top: 1px solid #dadada;

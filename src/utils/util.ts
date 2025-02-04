@@ -17,3 +17,20 @@ export function generateFormatedTime() {
     minutes = minutes < 10 ? '0' + minutes : minutes;
     return `${hours}${minutes}`;
 }
+
+/**
+ * html文字列を無害化して返す
+ * @param input 
+ * @returns 
+ */
+export function sanitizeText(input: string): string {
+    const map: { [key: string]: string } = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+    };
+
+    return input.replace(/[&<>"']/g, (char) => map[char]);
+}

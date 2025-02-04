@@ -17,7 +17,7 @@
 							:key="area.value"
 							class="areas"
 							:value="area.value"
-							@click="selectArea(area.value)"
+							@mousedown="selectArea(area.value)"
 						>
 							{{ area.label }}
 						</button>
@@ -37,7 +37,7 @@
               :key="area.value"
               class="areas"
               :value="area.value"
-              @click="selectArea(area.value)"
+              @mousedown="selectArea(area.value)"
             >
               {{ area.label }}
             </button>

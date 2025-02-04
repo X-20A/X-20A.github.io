@@ -59,7 +59,7 @@ export function convertFleetTypeIdToName(fleet_type_id: FleetTypeId): FleetTypeN
  * @param data 
  * @returns 
  */
-export function convertBranchDataToHTML(data: string): string {
+export function convertBranchDataToHTML(data: string, topic: string): string {
     data = data.replaceAll('$e', '<br>');
     data = data.replaceAll('$i', '&nbsp;&nbsp;&nbsp;&nbsp;');
     data = data.replaceAll('$co', '<span style="color:red;">');
@@ -69,7 +69,7 @@ export function convertBranchDataToHTML(data: string): string {
     data = data.replaceAll(
         '$or',
         `<a
-			href="https://x-20a.github.io/reference/?topic=${location}"
+			href="https://x-20a.github.io/reference/?topic=${topic}"
 			style="color:blue;"
 			target="_blank"
 			rel="noopener noreferrer"

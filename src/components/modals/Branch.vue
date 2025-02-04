@@ -1,6 +1,7 @@
 <template>
 	<div class="branch-container">
 		<template v-if="selectedArea">
+			<p>{{ selectedArea }}</p>
 			<table>
 				<tbody>
 					<template v-for="([key, html]) in Object.entries(formated_branch)" :key="key">
@@ -25,6 +26,7 @@ import { useStore } from '@/stores';
 import { branch_info } from '@/data/branch';
 import branch_data from '@/data/branch';
 import { convertBranchDataToHTML } from '@/utils/convertUtil';
+import { sanitizeText } from '@/utils/util';
 
 const store = useStore();
 
@@ -37,9 +39,11 @@ watch(selectedArea, () => {
 
 	const area_branch = branch_data[selectedArea.value];
 
+
 	formated_branch.value = Object.fromEntries(
     Object.entries(area_branch).map(([key, node_branch]) => {
-        let html = convertBranchDataToHTML(node_branch);
+				const topic = sanitizeText(`${selectedArea.value}-${node_branch}`);
+        let html = convertBranchDataToHTML(node_branch, topic);
 				
         if (html === '$sw') html = '能動分岐';
         
@@ -68,5 +72,6 @@ table td, table tr {
 }
 .text {
 	padding: 2px 8px;
+	width: 100%;
 }
 </style>

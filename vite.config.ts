@@ -6,6 +6,7 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 // import { visualizer } from 'rollup-plugin-visualizer'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 // import viteCompression from 'vite-plugin-compression';
+// import legacy from '@vitejs/plugin-legacy';
 import path from 'path';
 
 export default defineConfig({
@@ -20,7 +21,13 @@ export default defineConfig({
             symbolId: 'icon-[name]', // アイコンのIDを `icon-xxx` の形式にする
             customDomId: '__svg__icons__dom__',
         }),
-        /* visualizer({
+        /*
+        legacy({
+            targets: ['defaults', 'not IE 11'],
+            modernPolyfills: true,
+        }), */
+        /*
+        visualizer({
             filename: './dist/stats.html', // 出力ファイルのパス
             template: 'flamegraph', // これ以外だとtreemapくらいかな
             open: true, // ビルド後に自動でブラウザで開く
