@@ -67,6 +67,9 @@ export const useStore = defineStore('compass', {
                 this.options[area][key] = value;
             }
         },
+        SWITCH_SEEK(): void {
+            this.adoptFleet?.switchSeek();
+        },
         LOAD_DATA(): void {
             let data = localStorage.getItem('compass-v2');
             if (data) {

@@ -18,7 +18,7 @@ export default defineConfig({
 		createHtmlPlugin({}),
         createSvgIconsPlugin({
             // SVGファイルを格納するディレクトリ
-            iconDirs: [path.resolve(process.cwd(), 'svgs')],
+            iconDirs: [path.resolve(process.cwd(), 'src/icons/svgs')],
             symbolId: 'icon-[name]', // アイコンのIDを `icon-xxx` の形式にする
             customDomId: '__svg__icons__dom__',
         }),
@@ -40,6 +40,7 @@ export default defineConfig({
 			'@': path.resolve(__dirname, './src'),
 		},
 	},
+    base: '/compass/v2/',
     /* なんかサイズ大きくなっちゃった。設定がまずい？
     css: {
         transformer: 'lightningcss',

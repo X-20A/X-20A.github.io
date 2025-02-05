@@ -1,19 +1,19 @@
 import { CyStyle } from "@/classes/types";
 // ぶっちゃけCDNと速さでは変わらない。ただ、埋め込みなら一斉にパッと点くので採用
-import start from '/icons/start.png';
-import port from '/icons/port.png';
-import boss from '/icons/boss.png';
-import airB from '/icons/air-b.png';
-import airD from '/icons/air-d.png';
-import calm from '/icons/calm.png';
-import enemy from '/icons/enemy.png';
-import whirl from '/icons/whirl.png';
-import resource from '/icons/resource.png';
-import night from '/icons/night.png';
-import scout from '/icons/scout.png';
-import unknown from '/icons/unknown.png';
-import airstrikeSupported from '/icons/airstrike_supported.png';
-import transportLoadout from '/icons/transport_loadout.png';
+import start from '@/icons/nodes/start.png';
+import port from '@/icons/nodes/port.png';
+import boss from '@/icons/nodes/boss.png';
+import airB from '@/icons/nodes/air-b.png';
+import airD from '@/icons/nodes/air-d.png';
+import calm from '@/icons/nodes/calm.png';
+import enemy from '@/icons/nodes/enemy.png';
+import whirl from '@/icons/nodes/whirl.png';
+import resource from '@/icons/nodes/resource.png';
+import night from '@/icons/nodes/night.png';
+import scout from '@/icons/nodes/scout.png';
+import unknown from '@/icons/nodes/unknown.png';
+import airstrikeSupported from '@/icons/nodes/airstrike_supported.png';
+import transportLoadout from '@/icons/nodes/transport_loadout.png';
 
 const nodes: CyStyle[] = [
     {

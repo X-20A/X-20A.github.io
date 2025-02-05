@@ -31,7 +31,8 @@ export default class AdoptFleet implements Fleet {
     public readonly fleet_length: number;
     public readonly speed_id: SpeedId;
     public readonly speed: FleetSpeedName;
-    public readonly seek: Seek;
+    public seek: Seek;
+    private save_seek: Seek;
     /** ドラム缶 装備艦数 */
     public readonly drum_carrier_count: number;
 
@@ -92,6 +93,7 @@ export default class AdoptFleet implements Fleet {
                 new Decimal(fleets[0].seek[2]).plus(fleets[1].seek[2]).toNumber(),
                 new Decimal(fleets[0].seek[3]).plus(fleets[1].seek[3]).toNumber(),
             ];
+            this.save_seek = this.seek;
 
             this.drum_carrier_count = fleets[0].drum_carrier_count + fleets[1].drum_carrier_count;
             this.radar_carrier_count = fleets[0].radar_carrier_count + fleets[1].radar_carrier_count;
@@ -108,6 +110,7 @@ export default class AdoptFleet implements Fleet {
             this.speed_id = fleet.speed_id;
             this.speed = convertFleetSpeedIdToName(this.speed_id);
             this.seek = fleet.seek;
+            this.save_seek = this.seek;
             this.drum_carrier_count = fleet.drum_carrier_count;
             this.radar_carrier_count = fleet.radar_carrier_count;
             this.radar5_carrier_count = fleet.radar5_carrier_count;
@@ -213,7 +216,7 @@ export default class AdoptFleet implements Fleet {
         let count = 0;
         for (const fleet of this.fleets) {
             for (const ship of fleet.ships) {
-                if (['正空', '装空', '軽空'].includes(ship.type) || ship.name.includes('あきつ丸')) {
+                if (['正空','装空','軽空'].includes(ship.type) || ship.name.includes('あきつ丸')) {
                     if (!ship.has_arctic_gear) {
                         count++;
                     }
@@ -224,5 +227,13 @@ export default class AdoptFleet implements Fleet {
     }
     public countYamatoClass() {
         return this.countShip('大和') + this.countShip('武蔵');
+    }
+    public switchSeek(): void {
+        if (this.seek.every(item => item === 999)) {
+            this.seek = this.save_seek;
+        } else {
+            this.save_seek = this.seek;
+            this.seek = [999, 999, 999, 999];
+        }
     }
 }

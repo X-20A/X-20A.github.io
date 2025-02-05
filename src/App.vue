@@ -5,24 +5,23 @@
       <div class="split">
         <div class="inputs">
           <div style="flex: 1;position: relative; user-select: none;">
-            <div style="margin-left: 4px;">
+            <div>
               <input
                 type="text"
-                class="input"
+                class="import"
 								id="fleet-import"
                 placeholder="DeckBuilder"
-                style="width: 115px;"
                 v-model="fleetInput"
 								ref="fleetInputRef"
               /><!-- #fleet-importは七四式読込に残しとく -->
             </div>
-            <span
+            <p
               class="type-select"
               v-if="isVisibleTypeSelect"
               @mouseover="showFleetOptions"
-              @mouseleave="hideFleetOptions"
-            >艦隊種別</span>
+            >艦隊種別</p>
             <div
+							v-if="isFleetOptionsVisible"
               class="fleet-option-box"
               @mouseover="showFleetOptions"
               @mouseleave="hideFleetOptions"
@@ -83,7 +82,9 @@
 					<span v-if="index < adoptFleet.fleet_length - 1"> | </span>
 				</template>
       </template>
-			<p>
+			<p
+				:style="adoptFleet.seek.every(item => item === 999) ? 'color: #f6a306' : ''"
+			>
 				<span>索敵値: </span>
 				<strong>1: </strong>
 				<span>{{  adoptFleet.seek[0] }}</span>
@@ -98,9 +99,9 @@
     <div class="result-container">
 			<template v-if="simResult.length > 0">
 				<SvgIcon
-					@mousedown="showRefference"
+					@mousedown="switchSeek"
 					name="radar-8"
-					color="#fff"
+					:color="adoptFleet?.seek.every(item => item === 999) ? '#f6a306' : '#fff'"
 					class="ignore-seek icon-on-map"
 				></SvgIcon>
 				<SvgIcon
@@ -262,13 +263,13 @@
 				バグ報告、要望等は<a class="odaibako" href="https://odaibako.net/u/__poyo" target="_blank" rel="noopener noreferrer">お題箱</a>まで
 		</span>
 		<span>
-				作者: <a href="https://kancolle.social/@momemi" target="_blank" rel="noopener noreferrer">
+				作者: <a href="https://kancolle.social/@momemi" target="_blank" rel="noopener noreferrer" aria-label="作者mastodon">
 					<SvgIcon
 						name="mastodon"
 						class="sns-icon mastodon"
 					></SvgIcon>
 				</a>
-				<a href="https://twitter.com/momemi_kc" target="_blank" rel="noopener noreferrer">
+				<a href="https://twitter.com/momemi_kc" target="_blank" rel="noopener noreferrer" aria-label="作者Twitter">
 					<SvgIcon
 						name="twitter"
 						class="sns-icon twitter"
@@ -329,7 +330,7 @@ const options = computed(() => store.options);
 
 const simResult = computed(() => store.simResult);
 
-const isVisibleTypeSelect = cacheFleets.value.filter(item => item !== null).length >= 2;
+const isVisibleTypeSelect = computed(() => cacheFleets.value.filter(item => item !== null).length >= 2);
 const isFleetOptionsVisible = ref(false);
 
 const showFleetOptions = () => {
@@ -441,6 +442,8 @@ watch([cacheFleets, selectedType], () => {
 			fleets = [cacheFleets.value[selectedType.value - 1]];
 		}
 
+		if (!fleets[0]) throw new CustomError('艦隊が空です');
+
 		const adopt_fleet = new AdoptFleet(
 			fleets,
 			fleet_type,
@@ -493,7 +496,6 @@ watch([adoptFleet, selectedArea, options], () => {
 						branchHtml.value = null;
 					}
 				}
-				
 			});
 		} catch (e: any | CustomError) {
 			modalStore.SHOW_ERROR(e);
@@ -582,6 +584,10 @@ const switchActive = (event: Event) => {
 	}
 };
 
+const switchSeek = () => {
+	store.SWITCH_SEEK();
+};
+
 const screenShot = async () => {
 	if (adoptFleet.value && cy) {
 		const gkcoi = await import('gkcoi'); // 動的import
@@ -627,22 +633,22 @@ onMounted(() => {
 	padding-bottom: 8px;
   width:960px;
 	background-color: #fff;
-	border-radius: 4px;
 }
 .input-container {
 	text-align: center;
 	padding: 15px 120px 20px 225px;
 }
 .type-select {
-	display: none;
 	margin-left: 3px;
-	width:111px;
+	width:119px;
 	border: solid 1px;
 	font-size: 14px;
 	padding-left: 2px;
+	border-radius: 2px;
+	color: #5f5f5f;
 }
 .fleet-option-box {
-	width: 113px;
+	width: 121px;
 	font-size: 14px;
 	z-index: 9999;
 	background-color: white;
@@ -650,10 +656,13 @@ onMounted(() => {
 	top: 24px;
 	position: absolute;
 	border: 1px solid;
-	display: none;
 }
 .import-display {
 	padding-left: 230px;
+}
+.alert {
+	width: 20px;
+	height: 20px;
 }
 .split {
 	display: flex;
@@ -685,9 +694,9 @@ onMounted(() => {
 	flex:1;
 	display: flex;
 }
-.input {
-  margin:0 10px 0 2px;
-	width: 60px;
+.import {
+  margin:0px 10px 0px 3px;
+	width: 115px;
 }
 .non-margin {
 	margin: 0;
