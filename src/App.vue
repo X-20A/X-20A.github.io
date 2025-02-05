@@ -1,4 +1,5 @@
 <template>
+	<Header />
   <div class="container">
     <div class="input-container">
       <div class="split">
@@ -198,13 +199,13 @@
 							class="panel-icon"
 						></SvgIcon>
 					</template>
-				</v-expansion-panel-title>
+				</v-expansion-panel-title><!-- panel-textはv-ifしても変わらなかったのでそのまま -->
 				<v-expansion-panel-text class="panel-text">
-					<p><a href="https://tsunkit.net/nav/" target="_blank">KCNav</a>: マップ周り</p>
-					<p><a href="http://kancolle-calc.net/deckbuilder.html" target="_blank">デッキビルダー</a>: 艦/装備データ</p>
-					<p><a href="https://noro6.github.io/kc-web/#/" target="_blank">制空権シミュレータ</a>: 速度演算、コーディング全般</p>
-					<p><a href="https://jervis.vercel.app/" target="_blank">作戦室 Jervis</a>: 海域選択レイアウト</p>
-					<p><a href="https://github.com/Nishisonic/gkcoi" target="_blank">gkcoi</a>: 編成のグラフィック出力</p>
+					<p><a href="https://tsunkit.net/nav/" target="_blank"  rel="noopener noreferrer">KCNav</a>: マップ周り</p>
+					<p><a href="http://kancolle-calc.net/deckbuilder.html" target="_blank"  rel="noopener noreferrer">デッキビルダー</a>: 艦/装備データ</p>
+					<p><a href="https://noro6.github.io/kc-web/#/" target="_blank"  rel="noopener noreferrer">制空権シミュレータ</a>: 速度演算、コーディング全般</p>
+					<p><a href="https://jervis.vercel.app/" target="_blank"  rel="noopener noreferrer">作戦室 Jervis</a>: 海域選択レイアウト</p>
+					<p><a href="https://github.com/Nishisonic/gkcoi" target="_blank"  rel="noopener noreferrer">gkcoi</a>: 編成のグラフィック出力</p>
 					<p>本ツールは以上のサイトを大いに参考にして制作しました。先人に感謝。</p>
 					<p>This tool was created with great reference to the above sites. Thanks to our predecessors.</p>
 				</v-expansion-panel-text>
@@ -256,11 +257,31 @@
 			</v-expansion-panel>
 		</v-expansion-panels>
   </div>
+	<div class="footer">
+		<span>
+				バグ報告、要望等は<a class="odaibako" href="https://odaibako.net/u/__poyo" target="_blank" rel="noopener noreferrer">お題箱</a>まで
+		</span>
+		<span>
+				作者: <a href="https://kancolle.social/@momemi" target="_blank" rel="noopener noreferrer">
+					<SvgIcon
+						name="mastodon"
+						class="sns-icon mastodon"
+					></SvgIcon>
+				</a>
+				<a href="https://twitter.com/momemi_kc" target="_blank" rel="noopener noreferrer">
+					<SvgIcon
+						name="twitter"
+						class="sns-icon twitter"
+					></SvgIcon>
+				</a>
+		</span>
+	</div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, watch, ref, reactive, computed } from 'vue';
 import { useStore, useModalStore } from '@/stores';
+import Header from './components/Header.vue';
 import Option from './components/Option.vue';
 import AreaModal from './components/modals/AreaModal.vue';
 import RefferenceModal from './components/modals/RefferenceModal.vue';
@@ -762,5 +783,33 @@ onMounted(() => {
 }
 .or {
     margin: 0 18px;
+}
+.footer {
+	z-index: 9999;
+	padding: 2px;
+	font-size: 13px;
+	color: white;
+	background-color: #333333;
+	width: 100%;
+	position: fixed;
+	bottom: 0;
+	text-align: center;
+}
+.odaibako {
+    color: #82b1ff;
+    text-decoration: underline;
+}
+.sns-icon {
+    vertical-align: middle;
+		margin-right: 3px;
+		height: 16px;
+		width: 16px;
+		color: inherit;
+}
+.mastodon {
+	color: #3089D4;
+}
+.twitter {
+	color: #00A0E8;
 }
 </style>

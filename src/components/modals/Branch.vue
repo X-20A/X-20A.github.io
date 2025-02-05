@@ -1,7 +1,14 @@
 <template>
 	<div class="branch-container">
 		<template v-if="selectedArea">
-			<p>{{ selectedArea }}</p>
+			<div class="info">
+				<p class="area">{{ selectedArea }}</p>
+				<p>
+					<span>出典: </span>
+					<span><a :href="source.url" target="_blank" rel="noopener noreferrer">{{ source.label }}</a>, </span>
+					<span>出典元の最終更新: {{ last_update }}</span>
+				</p>
+			</div>
 			<table>
 				<tbody>
 					<template v-for="([key, html]) in Object.entries(formated_branch)" :key="key">
@@ -32,6 +39,18 @@ const store = useStore();
 
 const selectedArea = computed(() => store.selectedArea);
 
+interface Source {
+	label: string,
+	url: string,
+}
+
+const source = ref<Source>({
+	label: '',
+	url: '',
+});
+
+const last_update = ref<string>('');
+
 const formated_branch = ref<Record<string, string>>({});
 
 watch(selectedArea, () => {
@@ -39,25 +58,84 @@ watch(selectedArea, () => {
 
 	const area_branch = branch_data[selectedArea.value];
 
-
 	formated_branch.value = Object.fromEntries(
     Object.entries(area_branch).map(([key, node_branch]) => {
-				const topic = sanitizeText(`${selectedArea.value}-${node_branch}`);
-        let html = convertBranchDataToHTML(node_branch, topic);
-				
-        if (html === '$sw') html = '能動分岐';
-        
-        return [key, html];
+			const topic = sanitizeText(`${selectedArea.value}-${node_branch}`);
+			let html = convertBranchDataToHTML(node_branch, topic);
+			
+			if (html === '$sw') html = '能動分岐';
+			
+			return [key, html];
     })
-);
+	);
 
+	const split = selectedArea.value.split('-');
+	const world = Number(split[0]);
+	const area = Number(split[1]);
+	let url = '';
+	if (world > 7) {
+		source.value.label = 'NGA';
+		url = 'https://bbs.nga.cn/read.php?tid=';
+		switch (world) {
+			case 57:
+				url += '37312153&rand=689';
+				break;
+			case 58:
+				url += '39444989&rand=541';
+				break;
+			case 59:
+				url += '41012551&rand=650';
+				break;
+		}
+	} else {
+		source.value.label = '日wiki';
+		url = 'https://wikiwiki.jp/kancolle/';
+		switch (world) {
+			case 1:
+				url += '鎮守府海域';
+				break;
+			case 2:
+				url += '南西諸島海域';
+				break;
+			case 3:
+				url += '北方海域';
+				break;
+			case 4:
+				url += '南西海域';
+				break;
+			case 5:
+				url += '南方海域';
+				break;
+			case 6:
+				url += '中部海域';
+				break;
+			case 7:
+				url += '南西海域';
+				break;
+		}
+		url += `#area${area}`;
+	}
+	source.value.url = url;
+
+	last_update.value = 
+		branch_info[selectedArea.value] !== null
+		? branch_info[selectedArea.value]!
+		: '情報なし'
+	;
 }, { immediate: true });
 </script>
 
 <style scoped>
 .branch-container {
-	padding: 20px 40px 0px 40px;
+	padding: 10px 40px 0px 40px;
 	font-size: 13px;
+}
+.info {
+	text-align: center;
+}
+.area {
+	font-weight: 600;
+	font-size: 16px;
 }
 table {
 	border-collapse: collapse;

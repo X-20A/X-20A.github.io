@@ -7,6 +7,7 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 // import viteCompression from 'vite-plugin-compression';
 // import legacy from '@vitejs/plugin-legacy';
+// import lightningcss from 'lightningcss';
 import path from 'path';
 
 export default defineConfig({
@@ -39,4 +40,14 @@ export default defineConfig({
 			'@': path.resolve(__dirname, './src'),
 		},
 	},
+    /* なんかサイズ大きくなっちゃった。設定がまずい？
+    css: {
+        transformer: 'lightningcss',
+        lightningcss: {
+            // Lightning CSSのオプションをここに設定
+        }
+    },
+    build: {
+        cssMinify: 'lightningcss',
+    },*/
 })
