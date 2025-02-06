@@ -83,7 +83,7 @@
 				</template>
       </template>
 			<p
-				:style="adoptFleet.seek[0] === 999 ? 'color: #f6a306' : ''"
+				:style="adoptFleet?.seek[0] === 999 ? 'color: #f6a306' : ''"
 			>
 				<span>索敵値: </span>
 				<strong>1: </strong>
@@ -101,7 +101,7 @@
 				<SvgIcon
 					@mousedown="switchSeek"
 					name="radar-8"
-					:color="adoptFleet.seek[0] === 999 ? '#f6a306' : '#fff'"
+					:color="adoptFleet?.seek[0] === 999 ? '#f6a306' : '#fff'"
 					class="ignore-seek icon-on-map"
 				></SvgIcon>
 				<SvgIcon
