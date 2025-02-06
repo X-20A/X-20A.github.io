@@ -1,0 +1,53 @@
+name: Deploy Compass Build to Main Branch
+
+on:
+  push:
+    branches:
+      - compass_dev  # ソースコードのあるブランチ
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # --- Step 1: compass_devブランチのソースをチェックアウトしてビルド ---
+      - name: Checkout source (compass_dev)
+        uses: actions/checkout@v3
+        with:
+          ref: compass_dev
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'
+
+      - name: Install dependencies and build
+        run: |
+          npm install
+          npm run build
+        # ※ビルド後、同ディレクトリ直下に「dist」フォルダが生成される前提
+
+      # --- Step 2: mainブランチをサブディレクトリにチェックアウト ---
+      - name: Checkout main branch into subdirectory
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ github.repository }}
+          ref: main
+          path: main_branch  # 別ディレクトリとしてチェックアウト
+
+      # --- Step 3: mainブランチ内のcompassディレクトリを更新 ---
+      - name: Update compass directory in main branch
+        run: |
+          # mainブランチ内の古いcompassディレクトリを削除
+          rm -rf main_branch/compass/v2
+          # ビルド成果物(dist)をcompassディレクトリとしてコピー
+          cp -R dist main_branch/compass/v2
+          # mainブランチのディレクトリに移動
+          cd main_branch
+          # Gitの設定
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          # 変更をステージングしてコミット（変更がない場合はエラーを無視）
+          git add .
+          git commit -m "Update compass build [skip ci]" || echo "No changes to commit"
+          # mainブランチへプッシュ
+          git push origin main
