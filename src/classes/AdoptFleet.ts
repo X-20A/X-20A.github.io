@@ -24,32 +24,42 @@ export default class AdoptFleet implements Fleet {
      * 必要ならフィールドなりメソッドなりで対応する
      */
     public readonly fleets: CacheFleet[];
+
+    /** 艦種 */
     public readonly composition: Composition;
+
+    /** 艦名配列 */
     public readonly ship_names: string[];
+    
+    /** 艦隊種別ID */
     public readonly fleet_type_id: FleetTypeId;
+
+    /** 艦隊種別(文字列) */
     public readonly fleet_type: FleetTypeName;
+
+    /** 総艦数 */
     public readonly fleet_length: number;
+
+    /** 艦隊速度ID */
     public readonly speed_id: SpeedId;
+
+    /** 艦隊速度(文字列) */
     public readonly speed: FleetSpeedName;
+
+    /** 艦隊索敵値 */
     public seek: Seek;
+
+    /** 艦隊索敵値(退避) */
     private save_seek: Seek;
+
     /** ドラム缶 装備艦数 */
     public readonly drum_carrier_count: number;
 
     /** 電探系 装備艦数 */
     public readonly radar_carrier_count: number;
 
-    /** 索敵値5以上の電探 装備艦数 */
-    public readonly radar5_carrier_count: number;
-
     /** 大発系 装備艦数 */
     public readonly craft_carrier_count: number;
-
-    /** 総ドラム缶装備数 */
-    public readonly total_drum_count: number;
-
-    /** 総大発系装備数 */
-    public readonly total_valid_craft_count: number;
 
     constructor(fleets: CacheFleet[], fleet_type_id: FleetTypeId) {
         this.fleets = fleets;
@@ -97,10 +107,7 @@ export default class AdoptFleet implements Fleet {
 
             this.drum_carrier_count = fleets[0].drum_carrier_count + fleets[1].drum_carrier_count;
             this.radar_carrier_count = fleets[0].radar_carrier_count + fleets[1].radar_carrier_count;
-            this.radar5_carrier_count = fleets[0].radar5_carrier_count + fleets[1].radar5_carrier_count;
             this.craft_carrier_count = fleets[0].craft_carrier_count + fleets[1].craft_carrier_count;
-            this.total_drum_count = fleets[0].total_drum_count + fleets[1].total_drum_count;
-            this.total_valid_craft_count = fleets[0].total_valid_craft_count + fleets[1].total_valid_craft_count;
         } else {
             const fleet = fleets[0];
 
@@ -113,10 +120,7 @@ export default class AdoptFleet implements Fleet {
             this.save_seek = this.seek;
             this.drum_carrier_count = fleet.drum_carrier_count;
             this.radar_carrier_count = fleet.radar_carrier_count;
-            this.radar5_carrier_count = fleet.radar5_carrier_count;
             this.craft_carrier_count = fleet.craft_carrier_count;
-            this.total_drum_count = fleet.total_drum_count;
-            this.total_valid_craft_count = fleet.total_valid_craft_count;
         }
     }
 
@@ -225,9 +229,16 @@ export default class AdoptFleet implements Fleet {
         }
         return count;
     }
+    /**
+     * 大和型をカウントして返す
+     * @returns 
+     */
     public countYamatoClass() {
         return this.countShip('大和') + this.countShip('武蔵');
     }
+    /**
+     * 索敵無視の為に索敵値を退避フィールドと切替
+     */
     public switchSeek(): void {
         if (this.seek.every(item => item === 999)) {
             this.seek = this.save_seek;
@@ -236,4 +247,42 @@ export default class AdoptFleet implements Fleet {
             this.seek = [999, 999, 999, 999];
         }
     }
+    /**
+     * 艦隊内のドラム缶の総数を返す
+     * @returns 
+     */
+    public getTotalDrumCount(): number {
+        if (this.fleets.length === 2) {
+            return this.fleets[0].total_drum_count
+                + this.fleets[1].total_drum_count;
+        } else {
+            return this.fleets[0].total_drum_count
+        }
+    }
+    /**
+     * 資源マスでの獲得資源増加に有効な艦隊内の大発の総数を返す
+     * @returns 
+     */
+    public getTotalValidCraftCount(): number {
+        if (this.fleets.length === 2) {
+            return this.fleets[0].total_valid_craft_count
+                + this.fleets[1].total_valid_craft_count
+        } else {
+            return this.fleets[0].total_valid_craft_count;
+        }
+    }
+    /**
+     * 索敵値5以上の電探を装備した艦の数を返す
+     * 57-7 から 25/02/06 現在使われてない
+     * @returns 
+     */
+    /*
+    public getRadar5CarrierCount(): number {
+        if (this.fleets.length === 2) {
+            return this.fleets[0].radar5_carrier_count
+                + this.fleets[1].radar5_carrier_count;
+        } else {
+            return this.fleets[0].radar5_carrier_count;
+        }
+    }*/
 }

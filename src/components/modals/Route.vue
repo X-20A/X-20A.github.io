@@ -6,12 +6,20 @@
 					<input type="checkbox" v-model="isBattleOnly" />
 					戦闘マスのみ
 				</label>
-				<SvgIcon
-					name="content-copy"
-					@mousedown="copyRoutes"
-					color="#959594"
-					class="copy-icon"
-				></SvgIcon>
+				<div style="display: flex;">
+					<span
+						v-if="isMessageVisible"
+						style="margin-right: 7px;color: #70D800;"
+					>
+						copied.
+					</span>
+					<SvgIcon
+						name="content-copy"
+						@mousedown="copyRoutes"
+						color="#959594"
+						class="copy-icon"
+					></SvgIcon>
+				</div>
 			</div>
 			<template v-for="result in formated_result">
 				<div class="result">
@@ -69,6 +77,8 @@ watch([simResult, isBattleOnly], () => {
 	}
 }, { immediate: true });
 
+const isMessageVisible = ref(false);
+
 const copyRoutes = () => { // 桁揃えるぞ～
 	if (!formated_result.value?.length) return;
 
@@ -91,6 +101,11 @@ const copyRoutes = () => { // 桁揃えるぞ～
 
 	// クリップボードにコピー
 	navigator.clipboard.writeText(text);
+
+	isMessageVisible.value = true;
+	setTimeout(() => {
+		isMessageVisible.value = false;
+	}, 2000);
 };
 
 </script>

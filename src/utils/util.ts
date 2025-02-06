@@ -34,3 +34,14 @@ export function sanitizeText(input: string): string {
 
     return input.replace(/[&<>"']/g, (char) => map[char]);
 }
+
+export function getParam(name: string, url = location.href): string | null {
+    const params = new URLSearchParams(new URL(url).search);
+    return params.get(name);
+}
+
+export function deleteParam(): void {
+    const url = new URL(window.location.href);
+    url.search = "";
+    history.replaceState(null, "", url.toString());
+}

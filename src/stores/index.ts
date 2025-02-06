@@ -70,12 +70,12 @@ export const useStore = defineStore('compass', {
         SWITCH_SEEK(): void {
             this.adoptFleet?.switchSeek();
         },
-        LOAD_DATA(): void {
+        LOAD_DATA(is_fleet_load: boolean): void {
             let data = localStorage.getItem('compass-v2');
             if (data) {
                 try {
                     const json = JSON.parse(data) as SaveData;
-                    if (json.fleets) this.UPDATE_CACHE_FLEETS(json.fleets);
+                    if (json.fleets && is_fleet_load) this.UPDATE_CACHE_FLEETS(json.fleets);
                     if (json.selected_type) this.UPDATE_SELECTED_TYPE(json.selected_type);
                     if (json.area) this.UPDATE_SELECTED_AREA(json.area);
                     if (json.options) {

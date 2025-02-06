@@ -111,7 +111,7 @@
 					class="reference icon-on-map"
 				></SvgIcon>
 				<SvgIcon
-					@mousedown="screenShot"
+					@click="screenShot"
 					name="camera-outline"
 					color="#fff"
 					class="screen-shot icon-on-map"
@@ -130,11 +130,11 @@
 		<RefferenceModal />
 		<ErrorModal />
 	</div>
-	<template v-if="branchHtml === '<p>$sw</p>'">
+	<template v-if="popupHtml === '<p>$sw</p>'">
 		<div
 			class="popup"
 			id="popup-info"
-			:style="branchStyle"
+			:style="popupStyle"
 		>
 			<p>
 				<span>能動分岐</span>
@@ -152,9 +152,9 @@
 		<div
 			class="popup"
 			id="popup-info"
-			:style="branchStyle"
-			v-if="branchHtml"
-			v-html="branchHtml"
+			:style="popupStyle"
+			v-if="popupHtml"
+			v-html="popupHtml"
 		>
 	</div>
 	</template>
@@ -280,7 +280,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, watch, ref, reactive, computed } from 'vue';
+import { onMounted, watch, ref, computed } from 'vue';
 import { useStore, useModalStore } from '@/stores';
 import Header from './components/Header.vue';
 import Option from './components/Option.vue';
@@ -297,7 +297,9 @@ import {
 	createDeckBuilderFromAdoptFleet
 } from './utils/deckBuilderUtil';
 import {
+	deleteParam,
 	generateFormatedTime,
+	getParam,
 	isNumber,
 	sanitizeText
 } from '@/utils/util';
@@ -308,7 +310,7 @@ import drawMap from '@/classes/draw';
 import { edges } from './data/map';
 import branch_data from './data/branch';
 import { getGkcoiBlob, getCyBlob, combineAndDownloadBlobs } from '@/utils/renderUtil';
-import { convertBranchDataToHTML, convertFleetSpeedNameToId } from './utils/convertUtil';
+import { convertBranchDataToHTML, convertFleetSpeedNameToId, generateResourceHtml } from './utils/convertUtil';
 
 const store = useStore();
 const modalStore = useModalStore();
@@ -356,6 +358,19 @@ const closeModals = () => {
 
 const openPanel = ref([0]);
 
+/* v-expantionをmousedownにしたかったが厳しそう
+const togglePanel = (event: MouseEvent, index: number) => {
+	event.preventDefault();
+	openPanel.value.includes(index)
+		? openPanel.value = openPanel.value.filter(item => item !== index)
+		: openPanel.value.push(index)
+	;
+};
+
+const stopEvent = (event: MouseEvent) => {
+	event.preventDefault();
+};*/
+
 /**
  * cytoscapeインスタンス    
  * storeに登録しようとするとMap maximum size exceeded    
@@ -365,45 +380,48 @@ let cy = null as cytoscape.Core | null;
 
 // import
 watch(fleetInput, (text) => {
-		if (!text) return;
-		if (fleetInput.value) fleetInput.value = ''; // 空欄化
-		try {
-			let deck = null;
-			try {
-				deck = JSON.parse(text) as DeckBuilder;
-			} catch (e) {
-				throw new CustomError('デッキビルダーのデータ形式に誤りがあります');
-			}
-			const cache_fleets = createCacheFleetsFromDeckBuilder(deck);
-			store.UPDATE_CACHE_FLEETS(cache_fleets);
-			store.SAVE_DATA();
+	if (!text) return;
+	if (fleetInput.value) fleetInput.value = ''; // 空欄化
+	try {
+		loadFleet(text);
+	} catch (e: any|CustomError) {
+		modalStore.SHOW_ERROR(e);
+		console.error(e);
+		return;
+	}
+});
 
-			let selected_type = 1 as SelectedType;
-			if (deck?.f1?.t) {
-				const fleet_type = isNumber(deck.f1.t) && [0, 1, 2, 3].includes(Number(deck.f1.t))
-					? Number(deck.f1.t) as FleetTypeId
-					: 0 as FleetTypeId
-					;
-				switch (fleet_type) {
-						case 1:
-								selected_type = 5;
-								break;
-						case 2:
-								selected_type = 6;
-								break;
-						case 3:
-								selected_type = 7;
-								break;
-				}
-			}
-			adjustFleetType(selected_type);
-		} catch (e: any|CustomError) {
-			modalStore.SHOW_ERROR(e);
-			console.error(e);
-			return;
+const loadFleet = (text: string) => {
+	let deck = null;
+	try {
+		deck = JSON.parse(text) as DeckBuilder;
+	} catch (e) {
+		throw new CustomError('デッキビルダーのデータ形式に誤りがあります');
+	}
+	const cache_fleets = createCacheFleetsFromDeckBuilder(deck);
+	store.UPDATE_CACHE_FLEETS(cache_fleets);
+	store.SAVE_DATA();
+
+	let selected_type = 1 as SelectedType;
+	if (deck?.f1?.t) {
+		const fleet_type = isNumber(deck.f1.t) && [0, 1, 2, 3].includes(Number(deck.f1.t))
+			? Number(deck.f1.t) as FleetTypeId
+			: 0 as FleetTypeId
+		;
+		switch (fleet_type) {
+			case 1:
+					selected_type = 5;
+					break;
+			case 2:
+					selected_type = 6;
+					break;
+			case 3:
+					selected_type = 7;
+					break;
 		}
 	}
-);
+	adjustFleetType(selected_type);
+};
 
 const updateSelectedType = (type_id: number) => {
 	if ([1,2,3,4,5,6,7].includes(type_id)) adjustFleetType(type_id as SelectedType);
@@ -481,22 +499,43 @@ watch([adoptFleet, selectedArea, options], () => {
 			
 			if (is_first_run) console.timeEnd('読込 → マップ表示'); // debug
 			
-			branchHtml.value = null;
+			popupHtml.value = null;
 			store.UPDATE_DREW_AREA(selectedArea.value);
 
-			cy.on('mousedown', function (element) { //cytoscape周りはどうしてもDOM操作が必要になる
+			cy.on('mousedown', function (event) { //cytoscape周りはどうしてもDOM操作が必要になる
 				if (cy) {
-					const target = element.target;
-					if (target.data('name')) { // node
+					const target = event.target;
+					if (event.target.data('name')) { // node
 						const html = generarteBranchHtml(target.data('name'));
 						if (!html) return;
-						branchHtml.value = html;
-						adjustBranchStyle(cy, element);
+						popupHtml.value = html;
+						adjustBranchStyle(cy, event);
 					} else { // 背景
-						branchHtml.value = null;
+						popupHtml.value = null;
 					}
 				}
 			});
+
+			cy.on('cxttapstart', 'node', async function(event) {
+				if (!cy) return;
+				if (event.target.data('name')) {
+					const html = await generateResourceHtml(
+						drewArea.value!,
+						event.target.data('name'),
+						adoptFleet.value?.composition!,
+						adoptFleet.value?.getTotalDrumCount()!,
+						adoptFleet.value?.getTotalValidCraftCount()!,
+					);
+					if (!html) return;
+					popupHtml.value = html;
+					adjustBranchStyle(cy, event);
+				} else { // 背景
+					popupHtml.value = null;
+				}
+				
+
+			});
+
 		} catch (e: any | CustomError) {
 			modalStore.SHOW_ERROR(e);
 			console.error(e);
@@ -505,9 +544,9 @@ watch([adoptFleet, selectedArea, options], () => {
   }
 }, { deep: true });
 
-const branchHtml = ref<string | null>(null);
+const popupHtml = ref<string | null>(null);
 
-const branchStyle = reactive({
+const popupStyle = ref({
   top: '0px',
   left: '0px',
 });
@@ -559,8 +598,8 @@ const adjustBranchStyle = (
 			top = position.y + cyContainer.top - 10;
 	}
 
-	branchStyle.top = top + 'px';
-	branchStyle.left = left + 'px';
+	popupStyle.value.top = top + 'px';
+	popupStyle.value.left = left + 'px';
 };
 	
 const switchActive = (event: Event) => {
@@ -620,8 +659,42 @@ const screenShot = async () => {
   
 };
 
-onMounted(() => {
-	store.LOAD_DATA();
+onMounted(async () => {
+	let fleet_loaded = false;
+	let predeck = getParam('predeck');
+	if (predeck) { // データがない、成功、失敗の3パターンづつ
+		try {
+			loadFleet(
+				decodeURIComponent(predeck)
+			);
+			fleet_loaded = true;
+		} catch (e: any|CustomError) {
+			modalStore.SHOW_ERROR(e);
+			console.error(e);
+		}
+		deleteParam();
+	}
+
+	if (fleet_loaded) {
+		store.LOAD_DATA(false);
+	} else {
+		let pdz = getParam('pdz');
+		if (pdz) {
+			try {
+				const LZString = await import('lz-string');
+				loadFleet(
+					LZString.decompressFromEncodedURIComponent(pdz)
+				);
+				fleet_loaded = true;
+			} catch (e: any|CustomError) {
+				modalStore.SHOW_ERROR(e);
+				console.error(e);
+			}
+			deleteParam();
+		}
+
+		store.LOAD_DATA(!fleet_loaded);
+	} // けちけち
 	fleetInputRef.value?.focus();
 });
 </script>

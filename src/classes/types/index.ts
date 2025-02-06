@@ -89,17 +89,8 @@ export interface Fleet {
   /** 電探系 装備艦数 */
   readonly radar_carrier_count: number;
 
-  /** 索敵値5以上の電探 装備艦数 */
-  readonly radar5_carrier_count: number;
-
   /** 大発系 装備艦数 */
   readonly craft_carrier_count: number;
-
-  /** 総ドラム缶装備数 */
-  readonly total_drum_count: number;
-
-  /** 総大発系装備数 */
-  readonly total_valid_craft_count: number;
 }
 
 export type AreaId = 

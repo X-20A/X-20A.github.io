@@ -154,6 +154,10 @@ li {
 	padding: 3px 15px !important;
 	margin-left: 5px;
 }
+.item-icon {
+	vertical-align: -6px;
+	margin-right: 3px;
+}
 /* v-htmlなんかはstyle scopedが効かないのでこっちに書く */
 /*デザインボタン*/
 .design-button {
