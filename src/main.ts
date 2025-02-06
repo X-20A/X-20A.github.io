@@ -12,4 +12,4 @@ const pinia = createPinia();
 app
 .use(pinia)
 .use(vuetify)
-.mount('#app');
+.mount('#app');//
