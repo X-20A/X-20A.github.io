@@ -83,7 +83,7 @@
 				</template>
       </template>
 			<p
-				:style="adoptFleet.seek.every(item => item === 999) ? 'color: #f6a306' : ''"
+				:style="adoptFleet.seek[0] === 999 ? 'color: #f6a306' : ''"
 			>
 				<span>索敵値: </span>
 				<strong>1: </strong>
@@ -101,7 +101,7 @@
 				<SvgIcon
 					@mousedown="switchSeek"
 					name="radar-8"
-					:color="adoptFleet?.seek.every(item => item === 999) ? '#f6a306' : '#fff'"
+					:color="adoptFleet.seek[0] === 999 ? '#f6a306' : '#fff'"
 					class="ignore-seek icon-on-map"
 				></SvgIcon>
 				<SvgIcon
@@ -242,6 +242,7 @@
 					</template>
 				</v-expansion-panel-title>
 				<v-expansion-panel-text class="panel-text">
+					<p>2025/02/07_v2.0.0  経路/分岐条件一覧&システム全面改修</p>
 					<p>2024/05/02_v1.1.8  資源マスでの獲得資源予測</p>
 					<p>2024/03/16_v1.1.7  <del>合致する条件に下線表示</del> 廃止</p>
 					<p>2024/02/21_v1.1.6  資料室の設置</p>
@@ -308,7 +309,6 @@ import DeckBuilder from '@/classes/types/DeckBuilder';
 import { DeckBuilder as GkcoiDeckBuilder } from 'gkcoi/dist/type';
 import drawMap from '@/classes/draw';
 import { edges } from './data/map';
-import branch_data from './data/branch';
 import { getGkcoiBlob, getCyBlob, combineAndDownloadBlobs } from '@/utils/renderUtil';
 import { convertBranchDataToHTML, convertFleetSpeedNameToId, generateResourceHtml } from './utils/convertUtil';
 
@@ -377,6 +377,10 @@ const stopEvent = (event: MouseEvent) => {
  * たぶん大きすぎる為
  */
 let cy = null as cytoscape.Core | null;
+
+const branchData = computed(() => store.branchData);
+
+const icons = computed(() => store.icons);
 
 // import
 watch(fleetInput, (text) => {
@@ -477,14 +481,13 @@ watch([cacheFleets, selectedType], () => {
 
 let is_first_run = true;
 // 艦隊 & 海域 & オプション が揃ったらシミュ開始
-watch([adoptFleet, selectedArea, options], () => {
+watch([adoptFleet, selectedArea, options], async () => {
 	if (
 		adoptFleet.value
 		&& selectedArea.value
 		&& options.value
 	) {
     try {
-			
 			const sim = new Sim(
 				adoptFleet.value as AdoptFleet,
 				selectedArea.value,
@@ -497,7 +500,13 @@ watch([adoptFleet, selectedArea, options], () => {
 
 			cy = drawMap(selectedArea.value, simResult.value); // ここまでになるべく余計なことをしない
 			
-			if (is_first_run) console.timeEnd('読込 → マップ表示'); // debug
+			if (is_first_run) {
+				// console.timeEnd('読込 → マップ表示'); // debug
+				await store.DYNAMIC_LOAD();
+				console.log('Source: https://github.com/X-20A/X-20A.github.io/tree/compass_dev');
+				console.log('API guide: https://github.com/X-20A/X-20A.github.io/tree/main');
+				is_first_run = false;
+			}
 			
 			popupHtml.value = null;
 			store.UPDATE_DREW_AREA(selectedArea.value);
@@ -525,6 +534,7 @@ watch([adoptFleet, selectedArea, options], () => {
 						adoptFleet.value?.composition!,
 						adoptFleet.value?.getTotalDrumCount()!,
 						adoptFleet.value?.getTotalValidCraftCount()!,
+						icons.value,
 					);
 					if (!html) return;
 					popupHtml.value = html;
@@ -565,7 +575,7 @@ const generarteBranchHtml = (node_name: string): string | null => {
 		}
 	}
 
-	let node_data = branch_data[key][node_name];
+	let node_data = branchData.value![key][node_name];
 
 	if (!node_data) return null;;
 

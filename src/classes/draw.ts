@@ -2,14 +2,14 @@ import cytoscape from 'cytoscape';
 import { nodes, edges } from '@/data/map';
 import styles from '@/styles';
 import { AreaId, SimResult } from './types';
-import Decimal from 'decimal.js';
+import Big from 'big.js';
 
 export default function drawMap(
     selectedArea: AreaId,
     sim_result: SimResult[]
 ): cytoscape.Core {
     // データの形式を調整
-    const transit_data = {} as { [key: string]: Decimal };
+    const transit_data = {} as { [key: string]: Big };
 
     // ルートを分解して格納
     sim_result.forEach(item => {
@@ -71,7 +71,7 @@ export default function drawMap(
             // 通っていないルートはrateに無いので0に置き換え
             let ratio = 0;
             if (transit_data[source + 'e' + target]) {
-                ratio = new Decimal(transit_data[source + 'e' + target])
+                ratio = new Big(transit_data[source + 'e' + target])
                     .times(100)
                     .toNumber();
             }

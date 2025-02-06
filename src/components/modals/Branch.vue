@@ -30,14 +30,16 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue';
 import { useStore } from '@/stores';
-import { branch_info } from '@/data/branch';
-import branch_data from '@/data/branch';
 import { convertBranchDataToHTML } from '@/utils/convertUtil';
 import { sanitizeText } from '@/utils/util';
 
 const store = useStore();
 
 const selectedArea = computed(() => store.selectedArea);
+
+const branchInfo = computed(() => store.branchInfo);
+
+const branchData = computed(() => store.branchData);
 
 interface Source {
 	label: string,
@@ -54,9 +56,13 @@ const last_update = ref<string>('');
 const formated_branch = ref<Record<string, string>>({});
 
 watch(selectedArea, () => {
-	if (!selectedArea.value) return;
+	if (
+		!selectedArea.value
+		|| !branchData.value
+		|| !branchInfo.value
+	) return;
 
-	const area_branch = branch_data[selectedArea.value];
+	const area_branch = branchData.value[selectedArea.value];
 
 	formated_branch.value = Object.fromEntries(
     Object.entries(area_branch).map(([key, node_branch]) => {
@@ -118,8 +124,8 @@ watch(selectedArea, () => {
 	source.value.url = url;
 
 	last_update.value = 
-		branch_info[selectedArea.value] !== null
-		? branch_info[selectedArea.value]!
+		branchInfo.value[selectedArea.value] !== null
+		? branchInfo.value[selectedArea.value]!
 		: '情報なし'
 	;
 }, { immediate: true });

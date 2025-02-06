@@ -2,7 +2,7 @@ import Equip from '@/classes/Equip';
 import { National, SpeedId } from '@/classes/types';
 import { ShipType, ShipData, SpeedGroup, EquipInDeck } from '@/classes/types';
 import ship_datas from '@/data/ship';
-import Decimal from 'decimal.js';
+import Big from 'big.js';
 import { useModalStore } from '@/stores';
 import Const from './const';
 
@@ -13,8 +13,8 @@ export default class Ship {
 	public readonly name: string;
     public readonly lv: number;
 	public readonly type: ShipType;
-	public readonly status_seek: Decimal;
-	public readonly equip_seek: Decimal;
+    public readonly status_seek: Big;
+    public readonly equip_seek: Big;
 	public readonly national: National;
 	public readonly speed_group: SpeedGroup;
 	public readonly speed: SpeedId;
@@ -85,21 +85,21 @@ export default class Ship {
         ship_data: ShipData,
         equips: Equip[],
         lv: number
-    ): Decimal {
+    ): Big {
         // 現在のレベルにおける素索敵値を計算
-        const status_seek = new Decimal(
+        const status_seek = new Big(
             ((ship_data.max_seek - ship_data.seek) * lv) / 99 + ship_data.seek
-        ).floor();
+        ).toFixed(0, 0);
 
         // 装備ボーナスを計算
-        const bonus_seek = new Decimal(this.getSeekBonus(equips));
+        const bonus_seek = new Big(this.getSeekBonus(equips));
 
         // 素索敵値 + ボーナス値の平方根を計算
         return bonus_seek.plus(status_seek).sqrt();
     }
 
 	private calcEquipSeek(equips: Equip[]) {
-		let total = new Decimal(0);
+        let total = new Big(0);
 		for (let i = 0;i < equips.length;i++) {
 			const equip = equips[i];
 
@@ -109,7 +109,7 @@ export default class Ship {
 			const equip_conefficient = coefficients[0];
 			const implovment_coefficient = coefficients[1];
 
-			total = new Decimal(equip.implovement)
+            total = new Big(equip.implovement)
 				.sqrt()
 				.times(implovment_coefficient)
 				.plus(equip.seek)

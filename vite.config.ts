@@ -3,7 +3,7 @@ import vue from '@vitejs/plugin-vue'
 import vuetify from 'vite-plugin-vuetify'
 import { createHtmlPlugin } from 'vite-plugin-html'
 import vueDevTools from 'vite-plugin-vue-devtools'
-// import { visualizer } from 'rollup-plugin-visualizer'
+import { visualizer } from 'rollup-plugin-visualizer'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 // import viteCompression from 'vite-plugin-compression';
 // import legacy from '@vitejs/plugin-legacy';
@@ -27,12 +27,12 @@ export default defineConfig({
             targets: ['defaults', 'not IE 11'],
             modernPolyfills: true,
         }), */
-        /*
+        
         visualizer({
             filename: './dist/stats.html', // 出力ファイルのパス
             template: 'flamegraph', // これ以外だとtreemapくらいかな listでjson出力
             open: true, // ビルド後に自動でブラウザで開く
-        }), */
+        }), 
         // viteCompression(),
 	],
 	resolve: {

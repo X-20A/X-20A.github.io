@@ -1,6 +1,6 @@
 import Ship from '@/classes/Ship';
 import { Fleet, SpeedId, Seek } from '@/classes/types';
-import Decimal from 'decimal.js';
+import Big from 'big.js';
 
 
 export default class CacheFleet implements Fleet {
@@ -54,24 +54,26 @@ export default class CacheFleet implements Fleet {
 		}, 0)
 	}
 
-	private calcSeek(command_lv: number): Seek {
-		const fleet_length_mod = new Decimal(2 * (6 - this.ships.length));
-		const command_mod = new Decimal(command_lv).times(0.4);
-		const total_status_seek = this.ships.reduce((total, ship) => total.plus(ship.status_seek), new Decimal(0));
-		const total_equip_seek = this.ships.reduce((total, ship) => total.plus(ship.equip_seek), new Decimal(0));
+    private calcSeek(command_lv: number): Seek {
+        const fleet_length_mod = new Big(2 * (6 - this.ships.length));
+        const command_mod = new Big(command_lv).times(0.4);
+        const total_status_seek = this.ships.reduce((total, ship) => total.plus(ship.status_seek), new Big(0));
+        const total_equip_seek = this.ships.reduce((total, ship) => total.plus(ship.equip_seek), new Big(0));
 
-		const base_seek = total_status_seek.plus(fleet_length_mod).minus(command_mod);
-		const fleet_seek = [] as Decimal[];
+        const base_seek = total_status_seek.plus(fleet_length_mod).minus(command_mod);
+        const fleet_seek = [] as Big[];
 
-		for (let i = 1; i < 5; i++) {
-			const pre_seek = base_seek.plus(total_equip_seek.times(i));
-			fleet_seek[i - 1] = pre_seek.lt(0)
-				? pre_seek.negated().toDecimalPlaces(2, Decimal.ROUND_UP).negated()
-				: pre_seek.toDecimalPlaces(2, Decimal.ROUND_DOWN);
-		}
+        for (let i = 1; i < 5; i++) {
+            const pre_seek = base_seek.plus(total_equip_seek.times(i));
+            fleet_seek[i - 1] = pre_seek.lt(0)
+                ? new Big(pre_seek.neg().toFixed(2, 1)) // ROUND_UP equivalent
+                : new Big(pre_seek.toFixed(2, 0)); // ROUND_DOWN equivalent
+        }
 
-		return fleet_seek.map(item => item.toNumber()) as Seek;
-	}
+        return fleet_seek.map(item => parseFloat(item.toString())) as Seek;
+    }
+
+
 
 	private calcFleetSpeed(): SpeedId {
 		let speed_id = 0 as SpeedId;

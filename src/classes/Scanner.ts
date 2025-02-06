@@ -1,4 +1,4 @@
-import Decimal from 'decimal.js';
+import Big from 'big.js';
 import CustomError from './CustomError';
 
 /**
@@ -12,7 +12,7 @@ export default class Scanner {
     public currentNode: string | null;
 
     /** this.routeの割合 0 - 1.0 */
-    public rate: Decimal;
+    public rate: Big;
 
     /** 走査か完了したか */
     public is_fin: boolean = false;
@@ -26,12 +26,12 @@ export default class Scanner {
     constructor(
         route: (string | null)[],
         startNode: string | null,
-        rate: number | Decimal
+        rate: number | Big
     ) {
         this.route = route;
         this.currentNode = startNode;
-        this.rate = typeof rate === 'number' // ここから表示までDecimalで一貫する
-            ? new Decimal(rate)
+        this.rate = typeof rate === 'number' // ここから表示までBigで一貫する
+            ? new Big(rate)
             : rate;
     }
 

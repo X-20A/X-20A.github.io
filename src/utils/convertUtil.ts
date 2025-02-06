@@ -1,5 +1,5 @@
 import Composition from '@/classes/Composition';
-import { SpeedId, FleetSpeedName, FleetTypeId, FleetTypeName, AreaId } from '@/classes/types';
+import { SpeedId, FleetSpeedName, FleetTypeId, FleetTypeName, AreaId, ItemIconKey } from '@/classes/types';
 
 export function convertFleetSpeedIdToName(speed_id: SpeedId): FleetSpeedName {
 	let speed_name = '低速艦隊' as FleetSpeedName;
@@ -87,6 +87,7 @@ export async function generateResourceHtml(
     composition: Composition,
     fleet_total_drum: number,
     fleet_total_craft: number,
+    icons: Record<ItemIconKey, string>
 ) {
     let html = '';
     const resource_status = {
@@ -113,19 +114,6 @@ export async function generateResourceHtml(
         steel: 0,
         imo: 0
     };
-
-    const prepare_icons = {
-        fuel: await import('@/icons/items/fuel.png'),
-        ammo: await import('@/icons/items/ammo.png'),
-        steel: await import('@/icons/items/steel.png'),
-        imo: await import('@/icons/items/imo.png'),
-        drum: await import('@/icons/items/drum.png'),
-        craft: await import('@/icons/items/craft.png'),
-    };
-
-    const icons = Object.fromEntries(
-        Object.entries(prepare_icons).map(([key, value]) => [key, value.default])
-    );
 
     switch (drew_area) {
         case '1-2':

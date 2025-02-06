@@ -1,4 +1,6 @@
 name: Deploy Compass Build to Main Branch
+# compass_devブランチにpushされたらビルドして、
+# mainブランチのcompassディレクトリにデプロイ
 
 on:
   push:

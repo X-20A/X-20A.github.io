@@ -1,4 +1,4 @@
-import Decimal from "decimal.js";
+import Big from "big.js";
 import CacheFleet from "../CacheFleet";
 
 export enum National {
@@ -112,7 +112,7 @@ export type BranchResponse = {
 
 export type SimResult = {
     route: string[];
-    rate: Decimal;
+    rate: Big;
 }
 
 export type NodeType = "st"|"po"|"bo"|"ab"|"ad"|"ac"|"en"|"su"|"ca"|"wh"|"re"|"ni"|"sc"|"as"|"tl"|"un"
@@ -157,3 +157,5 @@ export type BranchType = {
         [key: string]: string;
     }
 };
+
+export type ItemIconKey = 'fuel'|'ammo'|'steel'|'imo'|'drum'|'craft'

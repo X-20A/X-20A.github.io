@@ -1,7 +1,7 @@
 {
   "name": "compass_sim",
   "private": true,
-  "version": "0.0.0",
+  "version": "2.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,21 +10,13 @@
     "postinstall": "patch-package"
   },
   "dependencies": {
-    "@mdi/font": "^7.4.47",
-    "@mdi/js": "^7.4.47",
     "@types/cytoscape": "^3.21.8",
-    "@types/sigmajs": "^1.0.32",
+    "big.js": "^6.2.2",
     "cytoscape": "^3.31.0",
-    "cytoscape-context-menus": "^4.2.1",
-    "decimal.js": "^10.4.3",
-    "dexie": "^4.0.10",
     "gkcoi": "1.5.2",
-    "graphology": "^0.26.0",
     "lz-string": "^1.5.0",
-    "material-design-icons-iconfont": "^6.7.0",
     "pinia": "^2.3.0",
     "rollup-plugin-visualizer": "^5.14.0",
-    "sigma": "^3.0.1",
     "vite-plugin-html": "^3.2.2",
     "vite-plugin-vue-devtools": "^7.7.0",
     "vite-plugin-vuetify": "^2.0.4",
@@ -32,18 +24,13 @@
     "vuetify": "^3.7.6"
   },
   "devDependencies": {
-    "@types/decimal.js": "^0.0.32",
+    "@types/big.js": "^6.2.2",
     "@types/node": "^22.10.5",
-    "@vitejs/plugin-legacy": "^6.0.0",
     "@vitejs/plugin-vue": "^5.2.1",
-    "@vue/tsconfig": "^0.7.0",
-    "globals": "^15.14.0",
     "lightningcss": "^1.29.1",
     "patch-package": "^8.0.0",
     "typescript": "~5.6.2",
     "vite": "^6.0.5",
-    "vite-plugin-compression": "^0.5.1",
-    "vite-plugin-imagemin": "^0.6.1",
     "vite-plugin-svg-icons": "^2.0.1",
     "vue-tsc": "^2.2.0"
   }

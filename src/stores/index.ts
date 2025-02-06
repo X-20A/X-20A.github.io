@@ -10,6 +10,9 @@ import {
     SimResult,
     SaveData,
     OptionsType,
+    BranchLastUpdate,
+    BranchType,
+    ItemIconKey
 } from '@/classes/types';
 
 export const useStore = defineStore('compass', {
@@ -39,6 +42,11 @@ export const useStore = defineStore('compass', {
         drewArea: null as AreaId | null,
         /** シミュレーション結果 */
         simResult: [] as SimResult[],
+
+        // 動的import系
+        branchInfo: null as BranchLastUpdate | null,
+        branchData: null as BranchType | null,
+        icons: {} as Record<ItemIconKey, string>,
 	}),
 	actions: {
 		UPDATE_SELECTED_TYPE(value: SelectedType): void {
@@ -105,7 +113,35 @@ export const useStore = defineStore('compass', {
             }
 
             localStorage.setItem('compass-v2', JSON.stringify(save_data));
-		}
+		},
+
+        async DYNAMIC_LOAD(): Promise<void> {
+            const module = await import('@/data/branch');
+            this.UPDATE_BRANCH_INFO(module.branch_info);
+            this.UPDATE_BRANCH_DATA(module.default);
+
+            const prepare_icons = {
+                fuel: await import('@/icons/items/fuel.png'),
+                ammo: await import('@/icons/items/ammo.png'),
+                steel: await import('@/icons/items/steel.png'),
+                imo: await import('@/icons/items/imo.png'),
+                drum: await import('@/icons/items/drum.png'),
+                craft: await import('@/icons/items/craft.png'),
+            };
+            const icons = Object.fromEntries(
+                Object.entries(prepare_icons).map(([key, value]) => [key, value.default])
+            ) as Record<ItemIconKey, string>;
+            this.UPDATE_ICONS(icons);
+        },
+        UPDATE_BRANCH_INFO(value: BranchLastUpdate): void {
+            this.branchInfo = value;
+        },
+        UPDATE_BRANCH_DATA(value: BranchType): void {
+            this.branchData = value;
+        },
+        UPDATE_ICONS(value: Record<ItemIconKey, string>) {
+            this.icons = value;
+        }
 	},
 });
 

@@ -12,7 +12,7 @@ import {
     convertFleetSpeedIdToName,
     convertFleetTypeIdToName,
 } from "@/utils/convertUtil";
-import Decimal from 'decimal.js';
+import Big from 'big.js';
 
 /**
  * 実際に表示やシミュレートで使う艦隊    
@@ -98,10 +98,10 @@ export default class AdoptFleet implements Fleet {
 
             // mapを使うと as が必要になる
             this.seek = [
-                new Decimal(fleets[0].seek[0]).plus(fleets[1].seek[0]).toNumber(),
-                new Decimal(fleets[0].seek[1]).plus(fleets[1].seek[1]).toNumber(),
-                new Decimal(fleets[0].seek[2]).plus(fleets[1].seek[2]).toNumber(),
-                new Decimal(fleets[0].seek[3]).plus(fleets[1].seek[3]).toNumber(),
+                new Big(fleets[0].seek[0]).plus(fleets[1].seek[0]).toNumber(),
+                new Big(fleets[0].seek[1]).plus(fleets[1].seek[1]).toNumber(),
+                new Big(fleets[0].seek[2]).plus(fleets[1].seek[2]).toNumber(),
+                new Big(fleets[0].seek[3]).plus(fleets[1].seek[3]).toNumber(),
             ];
             this.save_seek = this.seek;
 
