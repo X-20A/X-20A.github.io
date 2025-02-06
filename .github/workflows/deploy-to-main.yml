@@ -34,7 +34,15 @@ jobs:
           ref: main
           path: main_branch  # 別ディレクトリとしてチェックアウト
 
-      # --- Step 3: mainブランチ内のcompassディレクトリを更新 ---
+      # --- Step 3: DEPLOY_KEY を設定して SSH 経由で認証 ---
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+      # --- Step 4: mainブランチ内のcompassディレクトリを更新 ---
       - name: Update compass directory in main branch
         run: |
           # mainブランチ内の古いcompassディレクトリを削除
