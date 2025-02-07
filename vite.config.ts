@@ -40,7 +40,7 @@ export default defineConfig({
 			'@': path.resolve(__dirname, './src'),
 		},
 	},
-    base: '/compass/v2/',
+    base: '/compass/',
     /* なんかサイズ大きくなっちゃった。設定がまずい？
     css: {
         transformer: 'lightningcss',
