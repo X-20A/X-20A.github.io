@@ -8,6 +8,7 @@ export interface EquipType {
 	seek: number
 }
 
+/** 基地系はちょっと抜けてたりしますよ */
 const equip_datas: EquipType[] = [
 {"id":1,"name":"12cm単装砲","type":[1,1,1,1,0],"seek":0}
 ,{"id":2,"name":"12.7cm連装砲","type":[1,1,1,1,0],"seek":0}

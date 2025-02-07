@@ -192,6 +192,11 @@ export default class Ship {
 		return coefficients;
 	}
 
+    /**
+     * 装備ボーナス計算
+     * @param equips 
+     * @returns 
+     */
 	private getSeekBonus(equips: Equip[]): number {
 		let total_bonus = 0;
 		const disable_ids: number[] = []; // 重複不可のがきたらこれに追加

@@ -4,7 +4,7 @@ export default class Const {
     /**
      * 大発動艇,    
 	 * 大発動艇(八九式中戦車&陸戦隊),    
-	 * 特に式内火艇, 特大発動艇, 装甲艇(AB艇),    
+	 * 特二式内火艇, 特大発動艇, 装甲艇(AB艇),    
 	 * 武装大発, 大発動艇(II号戦車/北アフリカ仕様),    
 	 * 特大発動艇+一式砲戦車,    
 	 * 特四式内火艇,    
@@ -12,12 +12,6 @@ export default class Const {
      */
     public static readonly VALID_CRAFTS =
         Object.freeze([68, 166, 167, 193, 408, 409, 436, 449, 525, 526]);
-
-    /**
-     * X-20AリポジトリのAPIエンドポイント
-     * raw.githubusercontent.comでも変わらず
-     */
-    // public static readonly CDN = 'https://cdn.jsdelivr.net/gh/X-20A/X-20A.github.io@main';
 
     /**
      * オプションの初期値

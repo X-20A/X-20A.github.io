@@ -51,6 +51,7 @@ jobs:
           git remote set-url origin https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}.git
           # 変更をステージングしてコミット（変更がない場合はエラーを無視）
           git add .
-          git commit -m "Update compass build [skip ci]" || echo "No changes to commit"
+          # [skip ci] は発火ループに入らない為に必要
+          git commit -m "${{ github.event.head_commit.message }} [skip ci]" || echo "No changes to commit"
           # mainブランチへプッシュ
           git push origin main

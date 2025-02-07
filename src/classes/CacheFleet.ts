@@ -72,9 +72,10 @@ export default class CacheFleet implements Fleet {
 
         return fleet_seek.map(item => parseFloat(item.toString())) as Seek;
     }
-
-
-
+    /**
+     * 艦隊速度を判定し、速度IDを返す
+     * @returns 
+     */
 	private calcFleetSpeed(): SpeedId {
 		let speed_id = 0 as SpeedId;
 		if (this.ships.every(ship => ship.speed === 3)) {

@@ -124,6 +124,7 @@ export default class AdoptFleet implements Fleet {
         }
     }
 
+    // components > template 部で使ってるので消さないように
     public getMainFleetNames(): string[] {
         return this.fleets[0].ship_names;
     }
@@ -136,10 +137,13 @@ export default class AdoptFleet implements Fleet {
     public getEscortFleetLength(): number {
         return this.fleets[1].ships.length;
     }
+    /**
+     * 高速+以上の艦隊ならtrueを返す
+     * @returns 
+     */
     public isFaster(): boolean {
         return this.speed_id >= 2;
     }
-
     /**
      * 低速戦艦の数を返す。実際の速度とは無関係にステータスが低速な戦艦、及び航戦
      * @returns 低速戦艦の数
@@ -179,6 +183,10 @@ export default class AdoptFleet implements Fleet {
     public isFCL(): boolean {
         return this.fleets[0].ships[0].type === '軽巡';
     }
+    /**
+     * 連合艦隊ならtrueを返す
+     * @returns 
+     */
     public isUnion(): boolean {
         return this.fleets.length === 2;
     }

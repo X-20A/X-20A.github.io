@@ -309,8 +309,16 @@ import DeckBuilder from '@/classes/types/DeckBuilder';
 import { DeckBuilder as GkcoiDeckBuilder } from 'gkcoi/dist/type';
 import drawMap from '@/classes/draw';
 import { edges } from './data/map';
-import { getGkcoiBlob, getCyBlob, combineAndDownloadBlobs } from '@/utils/renderUtil';
-import { convertBranchDataToHTML, convertFleetSpeedNameToId, generateResourceHtml } from './utils/convertUtil';
+import {
+	getGkcoiBlob,
+	getCyBlob,
+	combineAndDownloadBlobs
+} from '@/utils/renderUtil';
+import {
+	convertBranchDataToHTML,
+	convertFleetSpeedNameToId,
+	generateResourceHtml
+} from './utils/convertUtil';
 
 const store = useStore();
 const modalStore = useModalStore();
@@ -414,14 +422,14 @@ const loadFleet = (text: string) => {
 		;
 		switch (fleet_type) {
 			case 1:
-					selected_type = 5;
-					break;
+				selected_type = 5;
+				break;
 			case 2:
-					selected_type = 6;
-					break;
+				selected_type = 6;
+				break;
 			case 3:
-					selected_type = 7;
-					break;
+				selected_type = 7;
+				break;
 		}
 	}
 	adjustFleetType(selected_type);
@@ -670,41 +678,33 @@ const screenShot = async () => {
 };
 
 onMounted(async () => {
-	let fleet_loaded = false;
-	let predeck = getParam('predeck');
+	store.LOAD_DATA();
+	const predeck = getParam('predeck');
 	if (predeck) { // データがない、成功、失敗の3パターンづつ
 		try {
 			loadFleet(
 				decodeURIComponent(predeck)
 			);
-			fleet_loaded = true;
 		} catch (e: any|CustomError) {
 			modalStore.SHOW_ERROR(e);
 			console.error(e);
 		}
 		deleteParam();
-	}
-
-	if (fleet_loaded) {
-		store.LOAD_DATA(false);
 	} else {
-		let pdz = getParam('pdz');
+		const pdz = getParam('pdz');
 		if (pdz) {
 			try {
 				const LZString = await import('lz-string');
 				loadFleet(
 					LZString.decompressFromEncodedURIComponent(pdz)
 				);
-				fleet_loaded = true;
 			} catch (e: any|CustomError) {
 				modalStore.SHOW_ERROR(e);
 				console.error(e);
 			}
 			deleteParam();
 		}
-
-		store.LOAD_DATA(!fleet_loaded);
-	} // けちけち
+	}
 	fleetInputRef.value?.focus();
 });
 </script>

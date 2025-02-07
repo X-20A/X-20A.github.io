@@ -1,17 +1,5 @@
 import { BranchLastUpdate, BranchType } from "@/classes/types";
-/*
-    $e:改行
-    $co:赤字初め
-    $oc:赤字終わり
-    $bo:太字
-    $ob:太字終わり
-    $or:資料室へのリンク
-    $ro:リンク終わり
-    $sw:能動分岐切り替えスイッチ
-    $i:インデント
-    
-    date:ソースの最終更新
-*/
+/* date:ソースの最終更新 */
 export const branch_info: BranchLastUpdate = {
     "1-1": null,
     "1-2": null,
@@ -61,6 +49,17 @@ export const branch_info: BranchLastUpdate = {
     "59-5": "2024-09-18 19:45",
 }
 
+/**
+ * $e:改行
+ * $co:赤字初め
+ * $oc:赤字終わり
+ * $bo:太字
+ * $ob:太字終わり
+ * $or:資料室へのリンク
+ * $ro:リンク終わり
+ * $sw:能動分岐切り替えスイッチ
+ * $i:インデント
+ */
 const branch_data: BranchType = {
     "1-1": {
         "A": "ランダム$eCマスへの割合$e6隻: 55%$e5隻: 60%$e4隻: 65%$e3隻: 70%$e2隻: 75%$e1隻: 80%",
