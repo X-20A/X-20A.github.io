@@ -674,8 +674,24 @@ const screenShot = async () => {
 		const cy_blob = getCyBlob(cy);
 		combineAndDownloadBlobs(cy_blob, g_blob, fileName);
 	}
-  
 };
+
+// スクロールバウンス回避
+watch([isAreaVisible, isRefferenceVisible, isErrorVisible], () => {
+	if (
+		isAreaVisible.value
+		|| isRefferenceVisible.value
+		|| isErrorVisible.value
+	) { // DOMはあんまし触りたくないけどしゃあないかな
+		document.body.style.position = "fixed";
+  	document.body.style.top = `-${window.scrollY}px`;
+		document.body.style.left = `${window.scrollX}px`;
+	} else {
+		document.body.style.position = "";
+  	document.body.style.top = "";
+		document.body.style.left = "";
+	}
+});
 
 onMounted(async () => {
 	store.LOAD_DATA();
