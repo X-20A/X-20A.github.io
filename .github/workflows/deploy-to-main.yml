@@ -40,18 +40,18 @@ jobs:
       - name: Update compass directory in main branch
         run: |
           # mainブランチ内の古いcompassディレクトリを削除
-          rm -rf main_branch/compass/v2
+          rm -rf main_branch/compass
           # ビルド成果物(dist)をcompassディレクトリとしてコピー
-          cp -R dist main_branch/compass/v2
+          cp -R dist main_branch/compass
           # mainブランチのディレクトリに移動
           cd main_branch
           # Gitの設定
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git remote set-url origin https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}.git
-          # 変更をステージングしてコミット（変更がない場合はエラーを無視）
+          # 変更をステージングしてcommit（変更がない場合はエラーを無視）
           git add .
           # [skip ci] は発火ループに入らない為に必要
           git commit -m "${{ github.event.head_commit.message }} [skip ci]" || echo "No changes to commit"
-          # mainブランチへプッシュ
+          # mainブランチへpush
           git push origin main
