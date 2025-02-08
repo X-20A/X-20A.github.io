@@ -33,6 +33,8 @@ import { useStore } from '@/stores';
 import { convertBranchDataToHTML } from '@/utils/convertUtil';
 import { sanitizeText } from '@/utils/util';
 
+// 分岐条件一覧
+
 const store = useStore();
 
 const selectedArea = computed(() => store.selectedArea);

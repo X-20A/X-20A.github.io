@@ -39,6 +39,8 @@ import { computed, ref, watch } from 'vue';
 import { useStore } from '@/stores';
 import { AreaId } from '@/classes/types';
 
+// オプションパネル
+
 const store = useStore();
 
 const selectedArea = computed(() => store.selectedArea);

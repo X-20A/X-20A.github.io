@@ -37,6 +37,8 @@ import { useStore } from '@/stores';
 import SvgIcon from '@/components/SvgIcon.vue';
 import { nodes } from '@/data/map';
 
+// 経路一覧
+
 const store = useStore();
 
 const selectedArea = computed(() => store.selectedArea);

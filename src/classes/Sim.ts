@@ -3119,9 +3119,9 @@ export default class SimController {
                         if (f_speed !== '低速艦隊' &&
                             ((fleet.isFCL() && DD === 3)
                                 || DD > 3)) {
-                            return '1';
+                            return 'B';
                         } else if (DD > 1) {
-                            return '1';
+                            return 'A';
                         } // これ以外は既に2へ行ってるので例外なし。でもちょっとヤだね
                         break;
                     case 'A':

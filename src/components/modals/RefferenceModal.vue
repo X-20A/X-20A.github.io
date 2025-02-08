@@ -32,6 +32,8 @@ import Route from './Route.vue';
 import Branch from './Branch.vue';
 import { useStore, useModalStore } from '@/stores';
 
+// 経路/分岐条件一覧
+
 // mousedownにしたいのでちょっと工夫
 const route = ref(Route);
 const branch = ref(Branch);

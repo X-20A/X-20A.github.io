@@ -817,7 +817,7 @@ onMounted(async () => {
 	right: 12px;
 }
 .icon-on-map {
-	color: white;;
+	color: white;
 	cursor: pointer;
 	padding: 3px;
 	border-radius: 100%;

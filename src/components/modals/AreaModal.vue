@@ -53,6 +53,8 @@ import { computed } from 'vue';
 import { useStore, useModalStore } from '@/stores';
 import { AreaId } from '@/classes/types';
 
+// 海域選択モーダル
+
 const store = useStore();
 const modalStore = useModalStore();
 

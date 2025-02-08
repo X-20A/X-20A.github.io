@@ -12,6 +12,9 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useModalStore } from '@/stores/';
+
+// エラーメッセージモーダル
+
 const store = useModalStore();
 
 // store経由でどこからでも呼び出せる

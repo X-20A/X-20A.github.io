@@ -39,6 +39,8 @@
 import { ref } from 'vue';
 import SvgIcon from './SvgIcon.vue';
 
+// ヘッダー部
+
 const sideBarRef = ref<HTMLElement | null>(null);
 const maskRef = ref<HTMLElement | null>(null);
 
