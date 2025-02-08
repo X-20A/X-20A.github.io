@@ -70,6 +70,9 @@ export default class SimController {
 
                             this.clone_count++;
                             if (this.clone_count >= this.MAX_CLONE_COUNT) {
+                                console.group('Debug');
+                                console.log('経路: ', scanner.route);
+                                console.groupEnd();
                                 throw new CustomError('あー！無限ループ！');
                             }
                         }
@@ -1410,19 +1413,19 @@ export default class SimController {
                     case 'K':
                         if (Ss > 0) {
                             return [
-                                { node: 'K', rate: 0.5 },
+                                { node: 'L', rate: 0.5 },
                                 { node: 'M', rate: 0.5 },
                             ];
                         } else if (BBs + CVL < 2) {
                             return 'M';
                         } else if (BBs + CVL === 2) {
                             return [
-                                { node: 'K', rate: 0.25 },
+                                { node: 'L', rate: 0.25 },
                                 { node: 'M', rate: 0.75 },
                             ];
                         } else if (BBs + CVL === 3) {
                             return [
-                                { node: 'K', rate: 0.5 },
+                                { node: 'L', rate: 0.5 },
                                 { node: 'M', rate: 0.5 },
                             ];
                         }

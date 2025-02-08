@@ -696,7 +696,7 @@ watch([isAreaVisible, isRefferenceVisible, isErrorVisible], () => {
 onMounted(async () => {
 	store.LOAD_DATA();
 	const predeck = getParam('predeck');
-	if (predeck) { // データがない、成功、失敗の3パターンづつ
+	if (predeck) {
 		try {
 			loadFleet(
 				decodeURIComponent(predeck)
