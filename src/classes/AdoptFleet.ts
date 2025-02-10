@@ -97,11 +97,12 @@ export default class AdoptFleet implements Fleet {
             }
 
             // mapを使うと as が必要になる
+            const is_minus = new Big(fleets[0].seek[0]).plus(fleets[1].seek[0]).lt(0);
             this.seek = [
-                new Big(fleets[0].seek[0]).plus(fleets[1].seek[0]).toNumber(),
-                new Big(fleets[0].seek[1]).plus(fleets[1].seek[1]).toNumber(),
-                new Big(fleets[0].seek[2]).plus(fleets[1].seek[2]).toNumber(),
-                new Big(fleets[0].seek[3]).plus(fleets[1].seek[3]).toNumber(),
+                new Big(fleets[0].seek[0]).plus(fleets[1].seek[0]).round(2, is_minus ? Big.roundUp : Big.roundDown).toNumber(),
+                new Big(fleets[0].seek[1]).plus(fleets[1].seek[1]).round(2, is_minus ? Big.roundUp : Big.roundDown).toNumber(),
+                new Big(fleets[0].seek[2]).plus(fleets[1].seek[2]).round(2, is_minus ? Big.roundUp : Big.roundDown).toNumber(),
+                new Big(fleets[0].seek[3]).plus(fleets[1].seek[3]).round(2, is_minus ? Big.roundUp : Big.roundDown).toNumber(),
             ];
             this.save_seek = this.seek;
 
@@ -116,7 +117,13 @@ export default class AdoptFleet implements Fleet {
             this.fleet_length = fleet.ships.length;
             this.speed_id = fleet.speed_id;
             this.speed = convertFleetSpeedIdToName(this.speed_id);
-            this.seek = fleet.seek;
+            const is_minus = new Big(fleet.seek[0]).lt(0);
+            this.seek = [
+                new Big(fleet.seek[0]).round(2, is_minus ? Big.roundUp : Big.roundDown).toNumber(),
+                new Big(fleet.seek[1]).round(2, is_minus ? Big.roundUp : Big.roundDown).toNumber(),
+                new Big(fleet.seek[2]).round(2, is_minus ? Big.roundUp : Big.roundDown).toNumber(),
+                new Big(fleet.seek[3]).round(2, is_minus ? Big.roundUp : Big.roundDown).toNumber(),
+            ];
             this.save_seek = this.seek;
             this.drum_carrier_count = fleet.drum_carrier_count;
             this.radar_carrier_count = fleet.radar_carrier_count;

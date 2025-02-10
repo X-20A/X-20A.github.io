@@ -3,6 +3,7 @@ import CustomError from "./CustomError";
 import AdoptFleet from "./AdoptFleet";
 import Scanner from "./Scanner";
 import { SimResult, BranchResponse, AreaId, OptionsType } from "./types";
+import { createDeckBuilderFromAdoptFleet } from "@/utils/deckBuilderUtil";
 
 /**
  * シミュコントローラ    
@@ -824,7 +825,7 @@ export default class SimController {
                                 { node: 'M', rate: 0.1 },
                                 { node: 'N', rate: 0.45 },
                             ];
-                        } else if (BBCVs === 6) {
+                        } else if (BBCVs > 5) {
                             return 'L';
                         } else if (BBCVs === 5) {
                             return [
@@ -1394,7 +1395,7 @@ export default class SimController {
                                 { node: 'I', rate: 0.65 },
                                 { node: 'M', rate: 0.35 },
                             ];
-                        } else if (BBCVs === 6) {
+                        } else if (BBCVs > 5) {
                             return [
                                 { node: 'I', rate: 0.85 },
                                 { node: 'M', rate: 0.15 },
@@ -2239,7 +2240,7 @@ export default class SimController {
                             return 'N';
                         } else {
                             return [
-                                { node: 'Q', rate: 0.5 },
+                                { node: 'N', rate: 0.5 },
                                 { node: 'T', rate: 0.5 },
                             ];
                         }
@@ -2266,7 +2267,7 @@ export default class SimController {
                             }
                         } else if (BBCVs > 4 || DD === 0) {
                             return 'O';
-                        } else if (f_seek[1] >= 59) {
+                        } else { // f_seek[1] >= 59
                             return 'N';
                         } // LoSより例外なし
                         break;
@@ -3249,7 +3250,7 @@ export default class SimController {
                                     { node: 'F', rate: 0.334 },
                                 ];
                             } // f_lengthより例外なし
-                        } else if (BBCVs > 0 || f_length === 6) {
+                        } else if (BBCVs > 0 || f_length > 5) {
                             return 'B';
                         } else if (f_length === 5 || AO > 0) {
                             return 'D';
@@ -3334,7 +3335,7 @@ export default class SimController {
                     case '1':
                         if (Ds < 2 || Ss > 0) {
                             return 'A';
-                        } else if (f_length === 6) {
+                        } else if (f_length > 5) {
                             if (CV + CVB > 1 || BBs + CV + CVB > 3 || CL + CT > 2) {
                                 return 'A';
                             } else {
@@ -3359,7 +3360,7 @@ export default class SimController {
                     case 'C':
                         if (AO + Ss > 0) {
                             return 'D';
-                        } else if (f_length === 6) {
+                        } else if (f_length > 5) {
                             if (BBs + CV + CVB > 0) {
                                 return 'D';
                             } else if (Ds > 3) {
@@ -4362,7 +4363,7 @@ export default class SimController {
                     case 'L':
                         if (f_type === '空母機動部隊') {
                             return 'M';
-                        } else if (f_type === '水上打撃部隊') {
+                        } else { // f_type === '水上打撃部隊'
                             return 'D';
                         }
                         break;
@@ -4797,7 +4798,7 @@ export default class SimController {
                             } else {
                                 return 'L';
                             }
-                        } else if (track.includes('3')) {
+                        } else { // track.includes('3')
                             if ( CVs > 2) {
                                 return 'L';
                             } else {
@@ -5040,6 +5041,8 @@ export default class SimController {
                             } else {
                                 return 'H';
                             }
+                        } else {
+                            return 'H';
                         }
                         break;
                     case 'I':
@@ -5673,6 +5676,7 @@ export default class SimController {
             break;
         }
 
+        
         console.log('node: ', node);
         console.log('route: ', scanner.route);
         throw new CustomError('条件漏れ');

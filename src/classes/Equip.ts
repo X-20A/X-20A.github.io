@@ -54,5 +54,4 @@ export default class Equip {
 		this.seek = equip.seek;
         this.is_ex = is_ex;
 	}
-
 }

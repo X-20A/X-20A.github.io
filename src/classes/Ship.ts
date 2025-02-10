@@ -87,22 +87,26 @@ export default class Ship {
         lv: number
     ): Big {
         // 現在のレベルにおける素索敵値を計算
-        const status_seek = new Big(
-            ((ship_data.max_seek - ship_data.seek) * lv) / 99 + ship_data.seek
-        ).toFixed(0, 0);
+        const max_seek = new Big(ship_data.max_seek);
+        const min_seek = new Big(ship_data.seek);
+        const level = new Big(lv);
+        const status_seek = max_seek.minus(min_seek)
+            .times(level)
+            .div(99)
+            .plus(min_seek)
+            .round(0, 0); // 四捨五入
 
         // 装備ボーナスを計算
         const bonus_seek = new Big(this.getSeekBonus(equips));
 
         // 素索敵値 + ボーナス値の平方根を計算
-        return bonus_seek.plus(status_seek).sqrt();
+        return status_seek.plus(bonus_seek).sqrt();
     }
 
 	private calcEquipSeek(equips: Equip[]) {
         let total = new Big(0);
 		for (let i = 0;i < equips.length;i++) {
 			const equip = equips[i];
-
 			if (equip.seek === 0) continue;
 
 			const coefficients = this.getSeekCoefficients(equip);

@@ -41,6 +41,12 @@ export default defineConfig({
 		},
 	},
     base: '/compass/',
+    optimizeDeps: {
+        exclude: [
+            'tests',
+            'patches',
+        ], // 無視させる
+    },
     /* なんかサイズ大きくなっちゃった。設定がまずい？
     css: {
         transformer: 'lightningcss',

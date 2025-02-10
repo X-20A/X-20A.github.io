@@ -83,6 +83,14 @@ const option_data: OptionSelector = {
       ],
     },
   },
+	'5-3': {
+		'O': {
+			options: [
+				{ value: 'K' },
+        { value: 'Q' },
+			],
+		}
+	},
   '5-5': {
     'F': {
       options: [
@@ -218,6 +226,12 @@ const option_data: OptionSelector = {
 				{ value: '3', label: '乙' },
 				{ value: '2', label: '丙' },
 				{ value: '1', label: '丁' },
+			],
+		},
+		'B': {
+			options: [
+				{ value: 'C' },
+				{ value: 'E' },
 			],
 		},
 	},

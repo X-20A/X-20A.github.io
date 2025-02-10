@@ -35,7 +35,7 @@ export default class CacheFleet implements Fleet {
 
 	constructor(
 		ships: Ship[],
-		command_lv: number,
+		command_lv?: number,
 	) {
 
 		this.ships = ships;
@@ -54,8 +54,8 @@ export default class CacheFleet implements Fleet {
 		}, 0)
 	}
 
-    private calcSeek(command_lv: number): Seek {
-        const fleet_length_mod = new Big(2 * (6 - this.ships.length));
+    private calcSeek(command_lv: number = 120): Seek {
+        const fleet_length_mod = new Big(2).times(new Big(6).minus(this.ships.length));
         const command_mod = new Big(command_lv).times(0.4);
         const total_status_seek = this.ships.reduce((total, ship) => total.plus(ship.status_seek), new Big(0));
         const total_equip_seek = this.ships.reduce((total, ship) => total.plus(ship.equip_seek), new Big(0));
@@ -64,13 +64,10 @@ export default class CacheFleet implements Fleet {
         const fleet_seek = [] as Big[];
 
         for (let i = 1; i < 5; i++) {
-            const pre_seek = base_seek.plus(total_equip_seek.times(i));
-            fleet_seek[i - 1] = pre_seek.lt(0)
-                ? new Big(pre_seek.neg().toFixed(2, 1)) // ROUND_UP equivalent
-                : new Big(pre_seek.toFixed(2, 0)); // ROUND_DOWN equivalent
+            fleet_seek[i - 1] = base_seek.plus(total_equip_seek.times(i));
         }
 
-        return fleet_seek.map(item => parseFloat(item.toString())) as Seek;
+        return fleet_seek.map(item => item.toNumber()) as Seek;
     }
     /**
      * 艦隊速度を判定し、速度IDを返す
