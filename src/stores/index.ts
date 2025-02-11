@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia';
 
-import CacheFleet from '@/classes/CacheFleet';
+import type CacheFleet from '@/classes/CacheFleet';
 import CustomError from "@/classes/CustomError";
-import AdoptFleet from '@/classes/AdoptFleet';
+import type AdoptFleet from '@/classes/AdoptFleet';
 import Const from '@/classes/const';
-import {
+import type {
     SelectedType,
     AreaId,
     SimResult,
@@ -79,7 +79,7 @@ export const useStore = defineStore('compass', {
             this.adoptFleet?.switchSeek();
         },
         LOAD_DATA(): void {
-            let data = localStorage.getItem('compass-v2');
+            const data = localStorage.getItem('compass-v2');
             if (data) {
                 try {
                     const json = JSON.parse(data) as SaveData;
@@ -87,24 +87,29 @@ export const useStore = defineStore('compass', {
                     if (json.selected_type) this.UPDATE_SELECTED_TYPE(json.selected_type);
                     if (json.area) this.UPDATE_SELECTED_AREA(json.area);
                     if (json.options) {
+                        // Const.OPTIONS をコピーしてから json.options をマージ
                         this.UPDATE_OPTIONS({ ...Const.OPTIONS, ...json.options });
                     } else {
-                        this.UPDATE_OPTIONS(Const.OPTIONS);
+                        // Const.OPTIONS をそのまま渡す
+                        this.UPDATE_OPTIONS({ ...Const.OPTIONS });
                     }
                 } catch (e) {
-                    this.UPDATE_OPTIONS(Const.OPTIONS);
+                    // エラーが発生した場合も Const.OPTIONS をそのまま渡す
+                    this.UPDATE_OPTIONS({ ...Const.OPTIONS });
                 }
             } else {
-                this.UPDATE_OPTIONS(Const.OPTIONS);
+                // データがない場合も Const.OPTIONS をそのまま渡す
+                this.UPDATE_OPTIONS({ ...Const.OPTIONS });
             }
         },
         /**
          * saveDataをlocalStorageに保存
          * @param save_data - 空ならstoreから取得
          */
-		SAVE_DATA(save_data?: SaveData): void {
-            if (!save_data) {
-                save_data = {
+        SAVE_DATA(save_data?: SaveData): void {
+            let localSaveData = save_data;
+            if (!localSaveData) {
+                localSaveData = {
                     fleets: this.cacheFleets as CacheFleet[],
                     selected_type: this.selectedType,
                     area: this.selectedArea,
@@ -112,9 +117,8 @@ export const useStore = defineStore('compass', {
                 };
             }
 
-            localStorage.setItem('compass-v2', JSON.stringify(save_data));
-		},
-
+            localStorage.setItem('compass-v2', JSON.stringify(localSaveData));
+        },
         async DYNAMIC_LOAD(): Promise<void> {
             const module = await import('@/data/branch');
             this.UPDATE_BRANCH_INFO(module.branch_info);
@@ -174,7 +178,7 @@ export const useModalStore = defineStore('modal', {
          * エラーモーダル    
          * ユーザーに伝えたいエラーはCustomErrorでthrow
          */
-        SHOW_ERROR(error: any): void {
+        SHOW_ERROR(error: unknown): void {
             if (error instanceof CustomError) {
                 this.errorMessage = error.message;
             } else {

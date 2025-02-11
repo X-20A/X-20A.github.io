@@ -41,7 +41,7 @@
     
     typeはidにした方がコンパクトだけどこっちのがわかりやすい
 */
-import { ShipData } from '@/classes/types';
+import type { ShipData } from '@/classes/types';
 
 const ship_datas: Array<ShipData> = [
 {"id":1,"name":"睦月","type":"駆逐","seek":4,"max_seek":17,"hp":13,"hp2":17,"asw":16,"max_asw":39,"fuel":15,"na":0,"sg":2}

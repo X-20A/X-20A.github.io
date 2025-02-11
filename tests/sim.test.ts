@@ -3,7 +3,7 @@ import Big from 'big.js';
 import Sim from '@/classes/Sim';
 import { getSimSet } from './setup';
 import Const from '@/classes/const';
-import { AreaId, OptionsType } from '@/classes/types';
+import type { AreaId, OptionsType } from '@/classes/types';
 
 describe('Simテスト', () => {
     it('Simクラス内でエラーが発生しないこと、SimResult.rateが 1 と等しいことを確認', async () => {
@@ -37,13 +37,13 @@ describe('Simテスト', () => {
             };
 
             let debug_area_id: AreaId = '1-1';
-            let debug_option;
+            let debug_option: Record<string, string> | undefined;
 
             try {
                 for (const area_id of areaIds) {
                     debug_area_id = area_id;
                     // console.log('テスト海域: ', area_id);
-                    if (adoptFleet.fleet_type_id > 0 && Number(area_id.split('-')[0]) > 7) continue;
+                    // if (adoptFleet.fleet_type_id > 0 && Number(area_id.split('-')[0]) > 7) continue; // 連合艦隊なら通常海域除外
                     if (selectableOptions[area_id]) {
                         // 該当海域に選択肢がある場合、キーごとに全組み合わせを生成する
                         const area_option = selectableOptions[area_id];
@@ -62,9 +62,9 @@ describe('Simテスト', () => {
                             if (!updatedOptions[area_id]) {
                                 updatedOptions[area_id] = {};
                             }
-                            combination.forEach(({ key, value }) => {
+                            for (const { key, value } of combination) {
                                 updatedOptions[area_id]![key] = value;
-                            });
+                            }
                             debug_option = updatedOptions[area_id];
                             // console.log('option: ', updatedOptions[area_id]);
                             await runSim(area_id, updatedOptions);
@@ -86,5 +86,5 @@ describe('Simテスト', () => {
 
             limit++;
         }
-    }, 50000);
+    }, 100000);
 });

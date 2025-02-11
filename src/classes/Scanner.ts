@@ -15,10 +15,10 @@ export default class Scanner {
     public rate: Big;
 
     /** 走査か完了したか */
-    public is_fin: boolean = false;
+    public is_fin = false;
 
     /** 進行した回数 */
-    public progress_count: number = 0;
+    public progress_count = 0;
 
     /** Scannerあたりの許容する進行の回数(無限ループ防止) */
     private readonly MAX_PROGRESS_COUNT: number = 30; 

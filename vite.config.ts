@@ -8,7 +8,7 @@ import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 // import viteCompression from 'vite-plugin-compression';
 // import legacy from '@vitejs/plugin-legacy';
 // import lightningcss from 'lightningcss';
-import path from 'path';
+import path from 'node:path';
 
 export default defineConfig({
 	plugins: [

@@ -90,7 +90,7 @@ const copyRoutes = () => { // 桁揃えるぞ～
 	const maxIntegerLength = Math.max(...results.map(result => String(Math.floor(result.rate)).length));
 	const maxDecimalLength = Math.max(...results.map(result => (String(result.rate).split('.')[1] || '').length));
 
-	let text = results
+	const text = results
 		.map(result => {
 			const [integerPart, decimalPart = ''] = String(result.rate).split('.');
 			const paddedInteger = integerPart.padStart(maxIntegerLength, ' ');

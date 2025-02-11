@@ -4,8 +4,19 @@
  * @param value なんでもどうぞ
  * @returns 
  */
-export function isNumber(value: any): boolean {
-	return !Number.isNaN(parseInt(value));
+export function isNumber(value: unknown): boolean {
+    if (typeof value === 'number') {
+        return true;
+    }
+    if (typeof value === 'string') {
+        // 全角数字をチェック
+        if (/[０-９]/.test(value)) {
+            return false;
+        }
+        // 文字列が数値に変換可能かチェック
+        return !Number.isNaN(Number(value)) && !Number.isNaN(Number.parseFloat(value));
+    }
+    return false;
 }
 
 export function generateFormatedTime() {

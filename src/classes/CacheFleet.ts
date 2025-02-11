@@ -1,5 +1,5 @@
-import Ship from '@/classes/Ship';
-import { Fleet, SpeedId, Seek } from '@/classes/types';
+import type Ship from '@/classes/Ship';
+import type { Fleet, SpeedId, Seek } from '@/classes/types';
 import Big from 'big.js';
 
 
@@ -54,7 +54,7 @@ export default class CacheFleet implements Fleet {
 		}, 0)
 	}
 
-    private calcSeek(command_lv: number = 120): Seek {
+    private calcSeek(command_lv = 120): Seek {
         const fleet_length_mod = new Big(2).times(new Big(6).minus(this.ships.length));
         const command_mod = new Big(command_lv).times(0.4);
         const total_status_seek = this.ships.reduce((total, ship) => total.plus(ship.status_seek), new Big(0));

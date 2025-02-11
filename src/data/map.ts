@@ -20,7 +20,7 @@
     un: 不明
 */
 
-import { NodeDatas, EdgeDatas } from '@/classes/types';
+import type { NodeDatas, EdgeDatas } from '@/classes/types';
 
 export const nodes: NodeDatas = {
     "1-1":{"1":[260,246,"st"],"A":[597,328,"en"],"B":[840,204,"en"],"C":[858,486,"bo"]},

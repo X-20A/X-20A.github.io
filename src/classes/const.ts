@@ -1,22 +1,43 @@
-import { OptionsType } from '@/classes/types'
+import type { OptionsType } from '@/classes/types'
 
-export default class Const {
+/**
+ * オブジェクト内部まで再帰的にフリーズして返す
+ * @param obj 
+ * @returns 
+ */
+const deepFreeze = <T>(obj: T): T => {
+    if (obj === null || typeof obj !== 'object') {
+        return obj;
+    }
+    Object.freeze(obj);  // オブジェクト自体を凍結
+
+    // オブジェクトの各プロパティも再帰的に凍結
+    for (const [key, value] of Object.entries(obj)) {
+        if (value && typeof value === 'object') {
+            deepFreeze(value);  // 再帰的に凍結
+        }
+    }
+    return obj;
+};
+const Const = {
     /**
-     * 大発動艇,    
-	 * 大発動艇(八九式中戦車&陸戦隊),    
-	 * 特二式内火艇, 特大発動艇, 装甲艇(AB艇),    
-	 * 武装大発, 大発動艇(II号戦車/北アフリカ仕様),    
-	 * 特大発動艇+一式砲戦車,    
-	 * 特四式内火艇,    
-	 * 特四式内火艇改
+     * 68 : 大発動艇,    
+	 * 166: 大発動艇(八九式中戦車&陸戦隊),    
+	 * 167: 特大発動艇,     
+     * 193: 特大発動艇,    
+     * 408: 装甲艇(AB艇),    
+	 * 409: 武装大発,    
+     * 436: 大発動艇(II号戦車/北アフリカ仕様),    
+	 * 449: 特大発動艇+一式砲戦車,    
+	 * 525: 特四式内火艇,    
+	 * 526: 特四式内火艇改
      */
-    public static readonly VALID_CRAFTS =
-        Object.freeze([68, 166, 167, 193, 408, 409, 436, 449, 525, 526]);
+    VALID_CRAFTS: Object.freeze([68, 166, 167, 193, 408, 409, 436, 449, 525, 526]),
 
     /**
      * オプションの初期値
      */
-    public static readonly OPTIONS: OptionsType = {
+    OPTIONS: deepFreeze({
         '4-5': { 'A': 'D', 'C': 'F', 'I': 'J' },
         '5-3': { 'O': 'K' },
         '5-5': { 'F': 'D' },
@@ -34,5 +55,7 @@ export default class Const {
         '59-3': { 'phase': '1', 'C': 'C1' },
         '59-4': { 'phase': '1', 'A2': 'B', 'D': 'E' },
         '59-5': { 'phase': '1', 'G': 'H', 'O2': 'P', 'W': 'Z' }
-    };
-}
+    }) as OptionsType,
+} as const;
+
+export default Const;

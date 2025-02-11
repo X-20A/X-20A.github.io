@@ -1,6 +1,6 @@
 import Equip from '@/classes/Equip';
-import { National, SpeedId } from '@/classes/types';
-import { ShipType, ShipData, SpeedGroup, EquipInDeck } from '@/classes/types';
+import type { National, SpeedId } from '@/classes/types';
+import type { ShipType, ShipData, SpeedGroup, EquipInDeck } from '@/classes/types';
 import ship_datas from '@/data/ship';
 import Big from 'big.js';
 import { useModalStore } from '@/stores';
@@ -125,7 +125,7 @@ export default class Ship {
 	}
 
 	private getSeekCoefficients(equip: Equip): number[] {
-		let coefficients = [] as number[];
+		const coefficients = [] as number[];
 
 		switch (equip.type) {
 			// 装備係数
@@ -510,12 +510,12 @@ export default class Ship {
 	}
 
 	private calcSpeed(equips: Equip[]): SpeedId {
-		let turbine = equips.filter(item => item.id === 33).length; // タービン
-		let kan = equips.filter(item => item.id === 34).length; // 強化缶
-		let new_kan = equips.filter(item => item.id === 87).length; // 新型缶
-		let power_kan = equips.filter(item => item.id === 87 && item.implovement >= 7).length; // 新型缶☆7↑
+		const turbine = equips.filter(item => item.id === 33).length; // タービン
+		const kan = equips.filter(item => item.id === 34).length; // 強化缶
+		const new_kan = equips.filter(item => item.id === 87).length; // 新型缶
+		const power_kan = equips.filter(item => item.id === 87 && item.implovement >= 7).length; // 新型缶☆7↑
 
-		let kan_total = kan + new_kan;
+		const kan_total = kan + new_kan;
 
 		let speed: SpeedId;
 		switch (this.speed_group) {

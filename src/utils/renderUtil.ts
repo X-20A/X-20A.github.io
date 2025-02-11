@@ -44,15 +44,16 @@ export function combineAndDownloadBlobs(
     const canvas = document.createElement('canvas');
     const context: CanvasRenderingContext2D = canvas.getContext('2d')!;
     // 入力Blobの高さを取得
-    let b1_height: number, b2_height: number;
+    let b1_height: number;
+    let b2_height: number;
     // BlobのためのImage要素を作成
     const img1 = new Image();
     const img2 = new Image();
     // 1つ目の画像の読み込みが完了したときの処理
-    img1.onload = function () {
+    img1.onload = () => {
         b1_height = img1.height;
         // 2つ目の画像の読み込みが完了したときの処理
-        img2.onload = function () {
+        img2.onload = () => {
             b2_height = img2.height;
             // 2つの画像の幅を比較し、大きい方に合わせる
             const max_width = Math.max(img1.width, img2.width);

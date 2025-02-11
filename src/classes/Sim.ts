@@ -1,9 +1,8 @@
 import { edges } from "@/data/map";
 import CustomError from "./CustomError";
-import AdoptFleet from "./AdoptFleet";
+import type AdoptFleet from "./AdoptFleet";
 import Scanner from "./Scanner";
-import { SimResult, BranchResponse, AreaId, OptionsType } from "./types";
-import { createDeckBuilderFromAdoptFleet } from "@/utils/deckBuilderUtil";
+import type { SimResult, BranchResponse, AreaId, OptionsType } from "./types";
 
 /**
  * シミュコントローラ    
@@ -27,7 +26,7 @@ export default class SimController {
     /**
      * Scannerが分裂した回数
      */
-    private clone_count: number = 0;
+    private clone_count = 0;
     /**
      * Scannerの分裂の最大許容数(無限ループ防止)    
      * 毎回routeをfindとかしてチェックするよりたぶん速い。基本起こらないし
@@ -2450,7 +2449,7 @@ export default class SimController {
                         } else if (fleet.isInclude('夕張') && DD >= 2) {
                             if (DD === 3
                                 || (AO === 1 && (DD === 2 || CA === 2))
-                                || (AO == 2 && (DD === 1 || CA === 2))
+                                || (AO === 2 && (DD === 1 || CA === 2))
                                 || (fleet.isInclude('祥鳳') && (CA === 2 || AO === 2))
                             ) {
                                 return 'G';
@@ -3753,7 +3752,7 @@ export default class SimController {
                         break;
                     case 'K': // KtoPは見つかってないらしい 全てMへ
                         return 'M';
-                    case 'M': // 🤮
+                    case 'M': { // 🤮
                         const flag =
                             (fleet.countSBB() > 0 && CV + CVB > 0)
                             || (BBs - fleet.countSBB() > 1)
@@ -3774,6 +3773,7 @@ export default class SimController {
                             return 'P';
                         }
                         break;
+                    }
                 }
                 break;
             case '7-5':

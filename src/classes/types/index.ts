@@ -1,15 +1,15 @@
-import Big from "big.js";
-import CacheFleet from "../CacheFleet";
+import type Big from "big.js";
+import type CacheFleet from "../CacheFleet";
 
 export enum National {
-	Japan,
-	USA,
-	Italia,
-	UK,
-	German,
-	Germany,
-	France,
-	USSR,
+	Japan   = 0,
+	USA     = 1,
+	Italia  = 2,
+	UK      = 3,
+	German  = 4,
+	Germany = 5,
+	France  = 6,
+	USSR    = 7,
 }
 
 export type ShipType =
@@ -56,7 +56,7 @@ export type SpeedGroup = 0|1|2|3|4|5|6|7|8|9
 export type SpeedId =
 	| 0 // 低速
 	| 1 // 高速
-	| 2// 高速+
+	| 2 // 高速+
 	| 3 // 最速
 
 export type FleetSpeedName = '低速艦隊' | '高速艦隊' | '高速+艦隊' | '最速艦隊'
@@ -115,7 +115,8 @@ export type SimResult = {
     rate: Big;
 }
 
-export type NodeType = "st"|"po"|"bo"|"ab"|"ad"|"ac"|"en"|"su"|"ca"|"wh"|"re"|"ni"|"sc"|"as"|"tl"|"un"
+export type NodeType =
+    "st"|"po"|"bo"|"ab"|"ad"|"ac"|"en"|"su"|"ca"|"wh"|"re"|"ni"|"sc"|"as"|"tl"|"un"
 
 export type NodeData = [
     number,

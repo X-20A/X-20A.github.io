@@ -51,7 +51,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useStore, useModalStore } from '@/stores';
-import { AreaId } from '@/classes/types';
+import type { AreaId } from '@/classes/types';
 
 // 海域選択モーダル
 

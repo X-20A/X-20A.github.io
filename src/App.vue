@@ -289,9 +289,9 @@ import AreaModal from './components/modals/AreaModal.vue';
 import RefferenceModal from './components/modals/RefferenceModal.vue';
 import ErrorModal from './components/modals/ErrorModal.vue';
 import SvgIcon from './components/SvgIcon.vue';
-import { SelectedType, FleetTypeId } from '@/classes/types';
+import type { SelectedType, FleetTypeId } from '@/classes/types';
 import CustomError from '@/classes/CustomError';
-import CacheFleet from './classes/CacheFleet';
+import type CacheFleet from './classes/CacheFleet';
 import Sim from '@/classes/Sim';
 import {
 	createCacheFleetsFromDeckBuilder,
@@ -305,8 +305,8 @@ import {
 	sanitizeText
 } from '@/utils/util';
 import AdoptFleet from './classes/AdoptFleet';
-import DeckBuilder from '@/classes/types/DeckBuilder';
-import { DeckBuilder as GkcoiDeckBuilder } from 'gkcoi/dist/type';
+import type DeckBuilder from '@/classes/types/DeckBuilder';
+import type { DeckBuilder as GkcoiDeckBuilder } from 'gkcoi/dist/type';
 import drawMap from '@/classes/draw';
 import { edges } from './data/map';
 import {
@@ -396,7 +396,7 @@ watch(fleetInput, (text) => {
 	if (fleetInput.value) fleetInput.value = ''; // 空欄化
 	try {
 		loadFleet(text);
-	} catch (e: any|CustomError) {
+	} catch (e: unknown) {
 		modalStore.SHOW_ERROR(e);
 		console.error(e);
 		return;
@@ -450,7 +450,7 @@ const adjustFleetType = (selected_type: SelectedType) => { // 入力系とimport
 				throw new CustomError('連合艦隊が指定されましたが第二艦隊が空です');
 			}
 		}
-	} catch (e: any | CustomError) {
+	} catch (e: unknown) {
 		modalStore.SHOW_ERROR(e);
 		console.error(e);
 		return;
@@ -480,7 +480,7 @@ watch([cacheFleets, selectedType], () => {
 		);
 
 		store.UPDATE_ADOPT_FLEET(adopt_fleet);
-	} catch (e: any | CustomError) {
+	} catch (e: unknown) {
 			modalStore.SHOW_ERROR(e);
 			console.error(e);
 			return;
@@ -519,7 +519,7 @@ watch([adoptFleet, selectedArea, options], async () => {
 			popupHtml.value = null;
 			store.UPDATE_DREW_AREA(selectedArea.value);
 
-			cy.on('mousedown', function (event) { //cytoscape周りはどうしてもDOM操作が必要になる
+			cy.on('mousedown', (event) => { // cytoscape周りはどうしてもDOM操作が必要になる
 				if (cy) {
 					const target = event.target;
 					if (event.target.data('name')) { // node
@@ -533,7 +533,7 @@ watch([adoptFleet, selectedArea, options], async () => {
 				}
 			});
 
-			cy.on('cxttapstart', 'node', async function(event) {
+			cy.on('cxttapstart', 'node', async (event) => {
 				if (!cy) return;
 				if (event.target.data('name')) {
 					const html = await generateResourceHtml(
@@ -554,7 +554,7 @@ watch([adoptFleet, selectedArea, options], async () => {
 
 			});
 
-		} catch (e: any | CustomError) {
+		} catch (e: unknown) {
 			modalStore.SHOW_ERROR(e);
 			console.error(e);
 			return;
@@ -578,8 +578,8 @@ const generarteBranchHtml = (node_name: string): string | null => {
 	
 	if (options.value && selectedArea.value === '7-3') {
 		const option = options.value['7-3']!;
-		if (option['phase']) {
-			key += `-${option['phase']}`;
+		if (option.phase) {
+			key += `-${option.phase}`;
 		}
 	}
 
@@ -606,7 +606,8 @@ const adjustBranchStyle = (
 	const cyContainer = cy.container()?.getBoundingClientRect()!;
 
 	// 表示位置調整
-	let top, left;
+	let top: number;
+	let left: number;
 
 	if (position.x >= 650) {
 			left = position.x + cyContainer.left - 260;
@@ -701,7 +702,7 @@ onMounted(async () => {
 			loadFleet(
 				decodeURIComponent(predeck)
 			);
-		} catch (e: any|CustomError) {
+		} catch (e: unknown) {
 			modalStore.SHOW_ERROR(e);
 			console.error(e);
 		}
@@ -714,7 +715,7 @@ onMounted(async () => {
 				loadFleet(
 					LZString.decompressFromEncodedURIComponent(pdz)
 				);
-			} catch (e: any|CustomError) {
+			} catch (e: unknown) {
 				modalStore.SHOW_ERROR(e);
 				console.error(e);
 			}

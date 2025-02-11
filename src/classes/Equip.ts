@@ -1,5 +1,5 @@
 import equip_datas from "@/data/equip";
-import { Improvement } from "./types";
+import type { Improvement } from "./types";
 import { createPinia } from 'pinia';
 import { useModalStore } from '@/stores';
 import CustomError from "@/classes/CustomError";

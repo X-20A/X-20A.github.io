@@ -7,10 +7,13 @@
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
-	"test": "npx vitest --ui",
-    "postinstall": "patch-package"
+    "test": "npx vitest --ui",
+    "postinstall": "patch-package",
+	"dep": "npx depcheck",
+	"lint": "npx biome lint"
   },
   "dependencies": {
+    "@biomejs/biome": "^1.9.4",
     "@types/cytoscape": "^3.21.8",
     "big.js": "^6.2.2",
     "cytoscape": "^3.31.0",

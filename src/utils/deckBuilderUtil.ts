@@ -1,15 +1,15 @@
 import CacheFleet from '@/classes/CacheFleet';
 import Ship from '@/classes/Ship';
-import { EquipInDeck, Improvement } from '@/classes/types';
-import DeckBuilder from '@/classes/types/DeckBuilder';
-import {
+import type { EquipInDeck, Improvement } from '@/classes/types';
+import type DeckBuilder from '@/classes/types/DeckBuilder';
+import type {
     DeckBuilderFleet,
     DeckBuilderShip,
     DeckBuilderItem
 } from '@/classes/types/DeckBuilder';
 import CustomError from "@/classes/CustomError";
 import { isNumber } from '@/utils/util';
-import AdoptFleet from '@/classes/AdoptFleet';
+import type AdoptFleet from '@/classes/AdoptFleet';
 
 
 /**
@@ -20,21 +20,21 @@ import AdoptFleet from '@/classes/AdoptFleet';
  * @throws {Error} - デッキビルダーの形式がまずかったり、艦隊が空だったりするとエラーを投げるのでcatchすること
  */
 export function createCacheFleetsFromDeckBuilder(deck: DeckBuilder): CacheFleet[] {
-	let fleets = [] as CacheFleet[];
+	const fleets = [] as CacheFleet[];
     
 	const command_lv = isNumber(deck.hqlv) ? Number(deck.hqlv): 120;
 	for (let i = 1;i < 5;i++) { // 艦隊
-        const fleet_key = 'f' + i as 'f1'|'f2'|'f3'|'f4';
+        const fleet_key = `f${i}` as 'f1'|'f2'|'f3'|'f4';
 		if (!deck[fleet_key]) continue;
 
-		let ships = [] as Ship[];
+		const ships = [] as Ship[];
 		const fleet_deck = deck[fleet_key];
 		for (let j = 1;j <= 7;j++) { // 艦
-            const ship_key = 's' + j as 's1'|'s2'|'s3'|'s4'|'s5'|'s6'|'s7';
+            const ship_key = `s${j}` as 's1'|'s2'|'s3'|'s4'|'s5'|'s6'|'s7';
 			if (!fleet_deck[ship_key]) continue;
 
 			const ship_deck = fleet_deck[ship_key];
-			let equips = [] as EquipInDeck[];
+			const equips = [] as EquipInDeck[];
 			if (ship_deck.items) {
 				const keys = Object.keys(ship_deck.items);
 				for (let k = 0; k < keys.length; k++) { // 装備

@@ -1,7 +1,7 @@
 import cytoscape from 'cytoscape';
 import { nodes, edges } from '@/data/map';
 import styles from '@/styles';
-import { AreaId, SimResult } from './types';
+import type { AreaId, SimResult } from './types';
 import Big from 'big.js';
 
 export default function drawMap(
@@ -12,7 +12,7 @@ export default function drawMap(
     const transit_data = {} as { [key: string]: Big };
 
     // ルートを分解して格納
-    sim_result.forEach(item => {
+    for (const item of sim_result) {
         const { route, rate } = item;
 
         // 途中のペアを作成して格納
@@ -25,7 +25,7 @@ export default function drawMap(
                 transit_data[pair] = rate;  // 新しいペアはそのままrateを設定
             }
         }
-    });
+    };
 
     interface Node {
         data: {
@@ -54,7 +54,7 @@ export default function drawMap(
     // nodes流し込み
     const local_nodes = nodes[selectedArea];
     for (const key in local_nodes) {
-        if (local_nodes.hasOwnProperty(key)) {
+        if (Object.hasOwn(local_nodes, key)) {
             // 座標,マスの種類
             const [x, y, label] = local_nodes[key];
             elements.nodes.push({
@@ -66,7 +66,7 @@ export default function drawMap(
     // edges流し込み
     const local_edges = edges[selectedArea];
     for (const key in local_edges) {
-        if (local_edges.hasOwnProperty(key)) {
+        if (Object.hasOwn(local_edges, key)) {
             const [source, target] = local_edges[key];
             // 通っていないルートはrateに無いので0に置き換え
             let ratio = 0;

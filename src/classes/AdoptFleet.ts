@@ -1,5 +1,5 @@
-import CacheFleet from "./CacheFleet";
-import {
+import type CacheFleet from "./CacheFleet";
+import type {
     SpeedId,
     FleetSpeedName,
     FleetTypeId,

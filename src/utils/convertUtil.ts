@@ -1,5 +1,5 @@
-import Composition from '@/classes/Composition';
-import { SpeedId, FleetSpeedName, FleetTypeId, FleetTypeName, AreaId, ItemIconKey } from '@/classes/types';
+import type Composition from '@/classes/Composition';
+import type { SpeedId, FleetSpeedName, FleetTypeId, FleetTypeName, AreaId, ItemIconKey } from '@/classes/types';
 
 export function convertFleetSpeedIdToName(speed_id: SpeedId): FleetSpeedName {
 	let speed_name = '低速艦隊' as FleetSpeedName;
@@ -57,17 +57,18 @@ export function convertFleetTypeIdToName(fleet_type_id: FleetTypeId): FleetTypeN
 
 /**
  * branch_dataをhtml文字列に変換して返す。サニタイズはしませんよ
- * @param data 
+ * @param convertedData 
  * @returns 
  */
 export function convertBranchDataToHTML(data: string, topic: string): string {
-    data = data.replaceAll('$e', '<br>');
-    data = data.replaceAll('$i', '&nbsp;&nbsp;&nbsp;&nbsp;');
-    data = data.replaceAll('$co', '<span style="color:red;">');
-    data = data.replaceAll('$oc', '</span>');
-    data = data.replaceAll('$bo', '<span style="font-weight:bold;">');
-    data = data.replaceAll('$ob', '</span>');
-    data = data.replaceAll(
+    let converted_data = data;
+    converted_data = converted_data.replaceAll('$e', '<br>');
+    converted_data = converted_data.replaceAll('$i', '&nbsp;&nbsp;&nbsp;&nbsp;');
+    converted_data = converted_data.replaceAll('$co', '<span style="color:red;">');
+    converted_data = converted_data.replaceAll('$oc', '</span>');
+    converted_data = converted_data.replaceAll('$bo', '<span style="font-weight:bold;">');
+    converted_data = converted_data.replaceAll('$ob', '</span>');
+    converted_data = converted_data.replaceAll(
         '$or',
         `<a
 			href="https://x-20a.github.io/reference/?topic=${topic}"
@@ -76,9 +77,9 @@ export function convertBranchDataToHTML(data: string, topic: string): string {
 			rel="noopener noreferrer"
 		>`,
     );
-    data = data.replaceAll('$ro', '</a>');
+    converted_data = converted_data.replaceAll('$ro', '</a>');
 
-    return data;
+    return converted_data;
 }
 
 export async function generateResourceHtml(
@@ -379,8 +380,8 @@ export async function generateResourceHtml(
                 let imo = fleet_total_drum * 6 + fleet_total_craft * 10;
                 imo += composition.BBV * 10 + composition.CVL * 7 + composition.AV * 6 + composition.AS * 5 + composition.LHA * 8 + composition.AO * 22;
                 html += `<p><img src="${icons.fuel}" class="item-icon"></p>`;
-                html += `<p>base: 40</p>`;
-                html += `<p>max: 200</p>`;
+                html += "<p>base: 40</p>";
+                html += "<p>max: 200</p>";
                 html += `<p>add: <span style="font-weight:600;color:#1e00ff;">${fuel}</span> = <img src="${icons.drum}" class="item-icon">${fleet_total_drum} * 8 + <img src="${icons.craft}" class="item-icon">${fleet_total_craft} * 7</p>`;
                 html += `<p>+ 航空戦艦 ${composition.BBV} * 10</p>`;
                 html += `<p>+ 軽空母 ${composition.CVL} * 7</p>`;
@@ -389,8 +390,8 @@ export async function generateResourceHtml(
                 html += `<p>+ 揚陸艦 ${composition.LHA} * 8</p>`;
                 html += `<p>+ 補給艦 ${composition.AO} * 22</p>`;
                 html += `<p><img src="${icons.imo}" class="item-icon"></p>`;
-                html += `<p>base: 20</p>`;
-                html += `<p>max: 120</p>`;
+                html += "<p>base: 20</p>";
+                html += "<p>max: 120</p>";
                 html += `<p>add: <span style="font-weight:600;color:#1e00ff;">${imo}</span> = <img src="${icons.drum}" class="item-icon">${fleet_total_drum} * 6 + <img src="${icons.craft}" class="item-icon">${fleet_total_craft} * 10</p>`;
                 html += `<p>+ 航空戦艦 ${composition.BBV} * 10</p>`;
                 html += `<p>+ 軽空母 ${composition.CVL} * 4</p>`;

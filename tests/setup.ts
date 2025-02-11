@@ -1,11 +1,12 @@
 import AdoptFleet from "@/classes/AdoptFleet";
 import { createCacheFleetsFromDeckBuilder } from "@/utils/deckBuilderUtil";
-import DeckBuilder, {
+import type DeckBuilder from '@/classes/types/DeckBuilder';
+import type {
     DeckBuilderFleet,
     DeckBuilderItem,
     DeckBuilderShip
 } from '@/classes/types/DeckBuilder';
-import { AreaId, FleetTypeId } from "@/classes/types";
+import type { AreaId, FleetTypeId } from "@/classes/types";
 import ship_datas from "@/data/ship";
 import LZString from 'lz-string';
 import equip_datas from "@/data/equip";
@@ -16,7 +17,7 @@ import equip_datas from "@/data/equip";
  * テストする艦隊    
  * 制空シミュのデッキビルダー or 羅針盤シミュエクスポート をそのまま貼っ付ける
  */
-let ac_export = `
+const ac_export = `
 https://x-20a.github.io/compass/?pdz=N4IgbgpgTgzglgewHYgFwBYA0IAWBHAGzDQEYAmABmwDMS1QkBDAWwjREBpvEwMyDAotJGwAXNFRAw6qUHAAmaAGwBOOdiJoFAdmwQAHozSCoAVwjY4giMxj0QcCVNmoAzHLLYo1EQF9TZazLTOriDuXqaOfg6OFJrBHqgUnt64AA5o6CTYjDAA7gEZIASGAMYA1qQAHEkwvpI2DnLlCirEqEpauvpGJjbmln52dWhkcvkh8UlwNfZpjk2xoTbhtf5O6jFjCUk4qU5YIFm5qCTpKsVlGAnYMEvTqC5zqq3l7XqoBsamvVbLAyvHc2M5BMpoNUOo9hsJjdQY51M95uMtjtHPCDqRHEFCqU0uoqugIgEFHtHgpRDpXu9umYLN8pL8HMNRnFLjYQSt0OV4WMAKxQgkYdRBSFIvKZHKkMgPM5obm8q7c-myxzNNRzcmdD49Gn9fmOEhcuLoYH8sjqZQIyphfkkbnrOIkUTMLJoXGmfHLBzoUluZnYJ3fV02BUe0gkc08ibaE3gn2kRLYbYu1Hiu6nbEXKpyRUUc0ktUdN5dT7an7Z2N3Y0h1Dc0SAvlVjFC30gf0uibu27OCHMyPR7txkV3fJo1MFaVOIFJahTKc3KcdxJAA
 `;
 
@@ -34,7 +35,7 @@ export const getSimSet = () => {
 
     const deck = generateRandomDeck();
     const cache_fleets = createCacheFleetsFromDeckBuilder(deck);
-    const fleet_type_id = deck!.f1!.t as FleetTypeId;
+    const fleet_type_id = deck?.f1?.t as FleetTypeId;
     const adoptFleet = new AdoptFleet(cache_fleets, fleet_type_id);
 
     const areaIds: AreaId[] = [
