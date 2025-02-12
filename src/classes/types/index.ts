@@ -121,7 +121,7 @@ export type NodeType =
 export type NodeData = [
     number,
     number,
-    NodeType
+    NodeType,
 ];
 export type NodeDatas = {
     [key: string]: {

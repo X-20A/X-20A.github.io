@@ -87,7 +87,7 @@ const option_data: OptionSelector = {
 		'O': {
 			options: [
 				{ value: 'K' },
-        { value: 'Q' },
+        { value: 'P' },
 			],
 		}
 	},

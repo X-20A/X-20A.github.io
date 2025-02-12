@@ -1,0 +1,31 @@
+{
+  "linter": {
+    "enabled": true,
+    "rules": {
+	  // 参考: https://x.gd/yaJmS
+      "recommended": true,
+	  "a11y": {
+		// target="_brank"だけでrel=“noreferrer·noopener”がないとエラー コンポーネントには効かない？
+		// "noBlankTarget": "error"
+	  },
+	  "correctness": {
+		"noUnreachable": "off", // 到達不可能なコードでエラー
+		"noConstantCondition": "off" // 条件式の中身が定数でエラー
+	  },
+	  "style": {
+		"useTemplate": "off", // 文字の足し算は全てテンプレート文字列(``)にする
+		"noNonNullAssertion": "off", // foo!.varの書き方でエラー
+		"noUselessElse": "off" // https://x.gd/N8oHE
+	  },
+	  "nursery": {
+		// "useCollapsedIf": "off" // https://x.gd/BmVDF
+	  }
+    }
+  },
+  "files": {
+    "ignore": [
+		"build/**",
+		"dist/**"
+	]
+  }
+}

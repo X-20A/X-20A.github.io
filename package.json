@@ -4,13 +4,13 @@
   "version": "2.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc -b && vite build",
-    "preview": "vite preview",
-    "test": "npx vitest --ui",
-    "postinstall": "patch-package",
-	"dep": "npx depcheck",
-	"lint": "npx biome lint"
+    "dev": "bun run vite",
+	"build": "bun run vue-tsc -b && bun run vite build",
+	"preview": "bun run vite preview",
+	"test": "bun run vitest --ui",
+	"postinstall": "bun run patch-package",
+	"dep": "bunx depcheck",
+	"lint": "bun run biome lint"
   },
   "dependencies": {
     "@biomejs/biome": "^1.9.4",
