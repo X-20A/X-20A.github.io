@@ -57,6 +57,22 @@ const templates = [
         "memo": "none"
     },
     // @2
+	{
+		"title": "2-1_CH",
+		"world": 2,
+		"area": 1,
+		"route": "1-C-E-H",
+		"url": "2cwk4rbz+",
+		"memo": "none"
+	},
+	{
+		"title": "2-1_CDH",
+		"world": 2,
+		"area": 1,
+		"route": "1-C-D-H",
+		"url": "2akvpfvo+",
+		"memo": "none"
+	},
     {
         "title": "2-3_EFJN",
         "world": 2,
