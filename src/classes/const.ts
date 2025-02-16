@@ -1,8 +1,7 @@
 import type { OptionsType } from '@/classes/types'
 
 /**
- * 定数系。getterからコピーを取得できる    
- * deepFreezeとかするとコピーしてもfreezeが残ってたりでかなり使いづらかったので、    
+ * 定数系。getterからコピーを取得できる       
  * getterでの取得しかできないクラスによって定数とする。邪道感はあるが
  */
 export default class Const {

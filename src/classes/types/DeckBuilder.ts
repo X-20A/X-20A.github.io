@@ -1,5 +1,3 @@
-import { EquipInDeck } from '@/classes/types';
-
 export interface DeckBuilderItem {
     /** 装備id */
     id: number,

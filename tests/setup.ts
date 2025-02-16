@@ -80,6 +80,7 @@ export const getSimSet = () => {
         adoptFleet: adoptFleet,
         areaIds: areaIds,
         options: options,
+        deck: deck,
     }
 };
 
@@ -134,4 +135,8 @@ const generateRandomFleetDeck = (ship_length: number) => {
         fleet[`s${i}` as 's1' | 's2' | 's3' | 's4' | 's5' | 's6' | 's7'] = ship;
     }
     return fleet;
+}
+
+export const convertACSimURL = (deck: DeckBuilder) => {
+
 }

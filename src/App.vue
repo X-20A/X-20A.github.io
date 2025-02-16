@@ -511,8 +511,6 @@ watch([adoptFleet, selectedArea, options], async () => {
 			if (is_first_run) {
 				// console.timeEnd('読込 → マップ表示'); // debug
 				await store.DYNAMIC_LOAD();
-				console.log('Source: https://github.com/X-20A/X-20A.github.io/tree/compass_dev');
-				console.log('API guide: https://github.com/X-20A/X-20A.github.io/tree/main');
 				is_first_run = false;
 			}
 			
@@ -723,6 +721,9 @@ onMounted(async () => {
 		}
 	}
 	fleetInputRef.value?.focus();
+
+	console.log('Source: https://github.com/X-20A/X-20A.github.io/tree/compass_dev');
+	console.log('API guide: https://github.com/X-20A/X-20A.github.io/tree/main');
 });
 </script>
 

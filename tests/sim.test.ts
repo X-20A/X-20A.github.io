@@ -68,6 +68,8 @@ describe('Simテスト', () => {
                             debug_option = updatedOptions[area_id];
                             // console.log('option: ', updatedOptions[area_id]);
                             await runSim(area_id, updatedOptions);
+
+                            // throw new Error('エラー時処理テスト');
                         }
                     } else {
                         // 選択肢がなければデフォルトで実行
@@ -81,6 +83,7 @@ describe('Simテスト', () => {
                 console.log(adoptFleet.getMainFleetNames());
                 if (adoptFleet.fleet_type_id > 0) console.log(adoptFleet.getEscortFleetNames());
                 console.log(adoptFleet.fleet_type);
+                console.log(JSON.stringify(simSet.deck));
                 throw error;
             }
 

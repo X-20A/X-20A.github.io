@@ -17,7 +17,7 @@ jobs:
         with:
           ref: compass_dev
 
-      - name: Install Bun
+      - name: Install Bun # Nodeとトータルの時間は変わんなかった
         run: |
           curl -fsSL https://bun.sh/install | bash
           echo "$HOME/.bun/bin" >> $GITHUB_PATH  # bunのパスをGITHUB_PATHに追加

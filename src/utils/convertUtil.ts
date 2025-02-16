@@ -71,7 +71,7 @@ export function convertBranchDataToHTML(data: string, topic: string): string {
     converted_data = converted_data.replaceAll(
         '$or',
         `<a
-			href="https://x-20a.github.io/reference/?topic=${topic}"
+			href="https://x-20a.github.io/reference/?topic=${encodeURIComponent(topic)}"
 			style="color:blue;"
 			target="_blank"
 			rel="noopener noreferrer"

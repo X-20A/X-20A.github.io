@@ -19,7 +19,7 @@
     "cytoscape": "^3.31.0",
     "gkcoi": "1.5.2",
     "lz-string": "^1.5.0",
-    "pinia": "^2.3.0",
+    "pinia": "^3.0.0",
     "rollup-plugin-visualizer": "^5.14.0",
     "vite-plugin-html": "^3.2.2",
     "vite-plugin-vue-devtools": "^7.7.0",

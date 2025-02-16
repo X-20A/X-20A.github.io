@@ -11,6 +11,7 @@
 		"allowSyntheticDefaultImports": true,
 		"sourceMap": true,
 		"outDir": "./build",
+		"strictFunctionTypes": true,
 		"baseUrl": ".",
 		"paths": {
 			"@/*": [
