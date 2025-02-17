@@ -39,7 +39,7 @@ export default class Ship {
 		asw?: number,
         luck?: number,
 	) {
-		const ship_data = ship_datas.find(item => item.id === ship_id);
+		const ship_data = ship_datas[ship_id];
 
 		if (!ship_data) {
 			const message = `第${fleet_index}艦隊の${ship_index}番艦は未対応です`;
@@ -66,8 +66,11 @@ export default class Ship {
 
 		this.speed_group = ship_data.sg;
 		this.speed = this.calcSpeed(equips);
-		this.hp = hp ? hp : ship_data.hp;
-		this.asw = asw ? asw : ship_data.asw;
+        // 制空シミュからのデッキビルダーには実 HP, 対潜値も載ってる
+        // なければ0 スクショくらいでしか使わないし、
+        // ちゃんと出そうとすると装備から計算しないといけないのでサボる
+		this.hp = hp ? hp : 0;
+		this.asw = asw ? asw : 0;
         this.luck = luck ? luck : 0;
         this.equip_in_decks = equip_in_decks;
 		this.status_seek = this.calcStatusSeek(ship_data, equips, lv);
@@ -87,7 +90,7 @@ export default class Ship {
         lv: number
     ): Big {
         // 現在のレベルにおける素索敵値を計算
-        const max_seek = new Big(ship_data.max_seek);
+        const max_seek = new Big(ship_data.seek2);
         const min_seek = new Big(ship_data.seek);
         const level = new Big(lv);
         const status_seek = max_seek.minus(min_seek)

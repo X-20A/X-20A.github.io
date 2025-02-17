@@ -22,7 +22,7 @@ export const useStore = defineStore('compass', {
          * 艦隊読込時にも自動で操作されたりする    
          * 保存する
          */
-		selectedType: 0 as SelectedType,
+		selectedType: null as SelectedType | null,
 		/**
 		 * デッキビルダーで第四艦隊まで読み込んだやつ    
 		 * ここからselectedTypeに応じてadoptFleetを選ぶ    

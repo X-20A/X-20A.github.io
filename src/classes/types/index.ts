@@ -34,19 +34,38 @@ export type ShipType =
 	| '工作'
 ;
 
+// 使ってないけど一応置いとく
+// データに使うと却って膨れる
+/*
+export enum ShipTypeId {
+    DD,
+    CL,
+    CA,
+    CAV,
+    BBV,
+    BB,
+    CVL,
+    CV,
+    CVB,
+    DE,
+    AO,
+    CLT,
+    AV,
+    SS,
+    SSV,
+    AS,
+    CT,
+    LHA,
+    AR,
+}*/
+
 export type Seek = [number, number, number, number]
 
 export interface ShipData {
-	id: number
 	name: string
 	type: ShipType
 	seek: number
-	max_seek: number
-	hp: number
-	hp2: number
-	asw: number
-	max_asw: number
-	fuel: number
+	seek2: number
 	na: National
 	sg: SpeedGroup
 }

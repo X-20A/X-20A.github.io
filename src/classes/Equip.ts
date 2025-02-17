@@ -33,13 +33,14 @@ export default class Equip {
      */
     public readonly is_ex: boolean;
 
-	constructor(id: number,
+	constructor(
+        id: number,
 		implovement: Improvement,
 		ship_name: string,
 		slot_index: number,
         is_ex: boolean,
 	) {
-		const equip = equip_datas.find(item => item.id === id);
+		const equip = equip_datas[id];
 
 		if (!equip) {
 			const message = `${ship_name}の${slot_index}番目の装備は未対応です`
@@ -47,7 +48,7 @@ export default class Equip {
 			throw new CustomError(message);
 		}
 
-		this.id = equip.id;
+		this.id = id;
 		this.implovement = implovement;
 		this.name = equip.name;
 		this.type = Number(equip.type.slice(0, 3).join('')); // 先頭の3つを連結して装備種別IDにしてしまう

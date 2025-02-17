@@ -21,6 +21,9 @@ const ac_export = `
 https://x-20a.github.io/compass/?pdz=N4IgbgpgTgzglgewHYgFwBYA0IAWBHAGzDQEYAmABmwDMS1QkBDAWwjREBpvEwMyDAotJGwAXNFRAw6qUHAAmaAGwBOOdiJoFAdmwQAHozSCoAVwjY4giMxj0QcCVNmoAzHLLYo1EQF9TZazLTOriDuXqaOfg6OFJrBHqgUnt64AA5o6CTYjDAA7gEZIASGAMYA1qQAHEkwvpI2DnLlCirEqEpauvpGJjbmln52dWhkcvkh8UlwNfZpjk2xoTbhtf5O6jFjCUk4qU5YIFm5qCTpKsVlGAnYMEvTqC5zqq3l7XqoBsamvVbLAyvHc2M5BMpoNUOo9hsJjdQY51M95uMtjtHPCDqRHEFCqU0uoqugIgEFHtHgpRDpXu9umYLN8pL8HMNRnFLjYQSt0OV4WMAKxQgkYdRBSFIvKZHKkMgPM5obm8q7c-myxzNNRzcmdD49Gn9fmOEhcuLoYH8sjqZQIyphfkkbnrOIkUTMLJoXGmfHLBzoUluZnYJ3fV02BUe0gkc08ibaE3gn2kRLYbYu1Hiu6nbEXKpyRUUc0ktUdN5dT7an7Z2N3Y0h1Dc0SAvlVjFC30gf0uibu27OCHMyPR7txkV3fJo1MFaVOIFJahTKc3KcdxJAA
 `;
 
+const ship_ids = Object.keys(ship_datas).map(key => Number.parseInt(key));
+const item_ids = Object.keys(equip_datas).map(key => Number.parseInt(key));
+
 export const getSimSet = () => {
     // めんどいので決めつけていく
     /*
@@ -83,9 +86,6 @@ export const getSimSet = () => {
         deck: deck,
     }
 };
-
-const ship_ids = ship_datas.map(item => item.id);
-const item_ids = equip_datas.map(item => item.id);
 
 const generateRandomDeck = () => {
     const deck = {} as DeckBuilder;

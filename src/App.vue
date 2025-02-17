@@ -462,6 +462,8 @@ const adjustFleetType = (selected_type: SelectedType) => { // 入力系とimport
 
 // cacheFleets, selectedTypeからシミュに使用する艦隊をセット
 watch([cacheFleets, selectedType], () => {
+	if (!selectedType.value) return;
+	
 	try { // ここでも一応、変な値が保存されてるとエラーになり得る
 		let fleets = [] as CacheFleet[];
 		let fleet_type = 0 as FleetTypeId;
@@ -509,7 +511,7 @@ watch([adoptFleet, selectedArea, options], async () => {
 			cy = drawMap(selectedArea.value, simResult.value); // ここまでになるべく余計なことをしない
 			
 			if (is_first_run) {
-				// console.timeEnd('読込 → マップ表示'); // debug
+				console.timeEnd('読込 → マップ表示'); // debug
 				await store.DYNAMIC_LOAD();
 				is_first_run = false;
 			}
