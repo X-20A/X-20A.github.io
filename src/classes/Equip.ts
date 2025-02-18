@@ -51,7 +51,7 @@ export default class Equip {
 		this.id = id;
 		this.implovement = implovement;
 		this.name = equip.name;
-		this.type = Number(equip.type.slice(0, 3).join('')); // 先頭の3つを連結して装備種別IDにしてしまう
+		this.type = equip.type;
 		this.seek = equip.seek;
         this.is_ex = is_ex;
 	}

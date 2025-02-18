@@ -463,7 +463,7 @@ const adjustFleetType = (selected_type: SelectedType) => { // 入力系とimport
 // cacheFleets, selectedTypeからシミュに使用する艦隊をセット
 watch([cacheFleets, selectedType], () => {
 	if (!selectedType.value) return;
-	
+
 	try { // ここでも一応、変な値が保存されてるとエラーになり得る
 		let fleets = [] as CacheFleet[];
 		let fleet_type = 0 as FleetTypeId;

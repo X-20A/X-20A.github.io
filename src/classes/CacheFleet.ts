@@ -40,8 +40,8 @@ export default class CacheFleet implements Fleet {
 
 		this.ships = ships;
         this.ship_names = ships.map(item => item.name);
-		this.speed_id = this.calcFleetSpeed();
-		this.seek = this.calcSeek(command_lv);
+		this.speed_id = this.calcFleetSpeed(ships);
+		this.seek = this.calcSeek(ships, command_lv);
 		this.drum_carrier_count = this.ships.filter(item => item.drum_count > 0).length;
 		this.radar_carrier_count = this.ships.filter(item => item.has_radar).length;
 		this.radar5_carrier_count = this.ships.filter(item => item.has_radar5).length;
@@ -54,11 +54,11 @@ export default class CacheFleet implements Fleet {
 		}, 0)
 	}
 
-    private calcSeek(command_lv = 120): Seek {
-        const fleet_length_mod = new Big(2).times(new Big(6).minus(this.ships.length));
+    private calcSeek(ships: Ship[], command_lv = 120): Seek {
+        const fleet_length_mod = new Big(2).times(new Big(6).minus(ships.length));
         const command_mod = new Big(command_lv).times(0.4);
-        const total_status_seek = this.ships.reduce((total, ship) => total.plus(ship.status_seek), new Big(0));
-        const total_equip_seek = this.ships.reduce((total, ship) => total.plus(ship.equip_seek), new Big(0));
+        const total_status_seek = ships.reduce((total, ship) => total.plus(ship.status_seek), new Big(0));
+        const total_equip_seek = ships.reduce((total, ship) => total.plus(ship.equip_seek), new Big(0));
 
         const base_seek = total_status_seek.plus(fleet_length_mod).minus(command_mod);
         const fleet_seek = [] as Big[];
@@ -73,13 +73,13 @@ export default class CacheFleet implements Fleet {
      * 艦隊速度を判定し、速度IDを返す
      * @returns 
      */
-	private calcFleetSpeed(): SpeedId {
+	private calcFleetSpeed(ships: Ship[]): SpeedId {
 		let speed_id = 0 as SpeedId;
-		if (this.ships.every(ship => ship.speed === 3)) {
+		if (ships.every(ship => ship.speed === 3)) {
 			speed_id = 3;
-		} else if (this.ships.every(ship => ship.speed >= 2)) {
+		} else if (ships.every(ship => ship.speed >= 2)) {
 			speed_id = 2
-		} else if (this.ships.every(ship => ship.speed >= 1)) {
+		} else if (ships.every(ship => ship.speed >= 1)) {
 			speed_id = 1;
 		}
 

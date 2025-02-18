@@ -53,19 +53,18 @@ export default class Ship {
 		this.type = ship_data.type;
 		this.national = ship_data.na;
 
-		const equips = equip_in_decks
-			.map((equip_in_deck, index) =>
-                new Equip(
-                    equip_in_deck.id,
-                    equip_in_deck.improvement,
-                    this.name,
-                    index,
-                    equip_in_deck.is_ex,
-                )
-            );
+		const equips = equip_in_decks.map((equip_in_deck, index) =>
+            new Equip(
+                equip_in_deck.id,
+                equip_in_deck.improvement,
+                this.name,
+                index,
+                equip_in_deck.is_ex,
+            )
+        );
 
 		this.speed_group = ship_data.sg;
-		this.speed = this.calcSpeed(equips);
+		this.speed = this.calcSpeed(equips, this.speed_group);
         // 制空シミュからのデッキビルダーには実 HP, 対潜値も載ってる
         // なければ0 スクショくらいでしか使わないし、
         // ちゃんと出そうとすると装備から計算しないといけないのでサボる
@@ -100,7 +99,7 @@ export default class Ship {
             .round(0, 0); // 四捨五入
 
         // 装備ボーナスを計算
-        const bonus_seek = new Big(this.getSeekBonus(equips));
+        const bonus_seek = new Big(this.getSeekBonus(this, equips));
 
         // 素索敵値 + ボーナス値の平方根を計算
         return status_seek.plus(bonus_seek).sqrt();
@@ -130,8 +129,8 @@ export default class Ship {
 	private getSeekCoefficients(equip: Equip): number[] {
 		const coefficients = [] as number[];
 
-		switch (equip.type) {
-			// 装備係数
+        switch (equip.type) { // 装備係数
+			// 主砲とか入ってないからdefaultはダメだよ
 			case 356: // 艦戦
 			case 357: // 艦爆
 			case 53645: // 水戦
@@ -171,8 +170,7 @@ export default class Ship {
 				break;
 		}
 
-		switch (equip.type) {
-			// 改修係数
+        switch (equip.type) { // 改修係数
 			case 31525: // 回転翼機
 			case 34425: // S51J & S51J改
 			case 162739: // 見張員
@@ -204,36 +202,36 @@ export default class Ship {
      * @param equips 
      * @returns 
      */
-	private getSeekBonus(equips: Equip[]): number {
+	private getSeekBonus(ship: Ship, equips: Equip[]): number {
 		let total_bonus = 0;
 		const disable_ids: number[] = []; // 重複不可のがきたらこれに追加
 		for (let i = 0;i < equips.length;i++) {
 			const equip = equips[i];
 			switch (equip.id) {
 				case 315: // SG初期
-					if (['丹陽', '雪風改二'].includes(this.name)) {
+                    if (['丹陽', '雪風改二'].includes(ship.name)) {
 						if (!disable_ids.includes(equip.id)) {
 							total_bonus += 3;
 							disable_ids.push(equip.id);
 						}
-					} else if (this.national === 1) { // USA
+                    } else if (ship.national === 1) { // USA
 						total_bonus += 4;
 					}
 					break;
 				case 456: // SG後期
-					if (['丹陽', '雪風改二'].includes(this.name)) {
+                    if (['丹陽', '雪風改二'].includes(ship.name)) {
 						if (!disable_ids.includes(equip.id)) {
 							total_bonus += 3;
 							disable_ids.push(equip.id);
 						}
-					} else if (this.national === 1) { // USA
+                    } else if (ship.national === 1) { // USA
 						total_bonus += 4;
-					} else if (this.national === 3) { // UK
+                    } else if (ship.national === 3) { // UK
 						total_bonus += 2;
 					}
 					break;
 				case 278: // SK
-					if (this.national === 1) { // USA
+                    if (ship.national === 1) { // USA
 						if (!disable_ids.includes(equip.id)) {
 							total_bonus += 1;
 							disable_ids.push(equip.id);
@@ -241,12 +239,12 @@ export default class Ship {
 					}
 					break;
 				case 279: // SK+SG
-					if (this.national === 1) { // USA
+                    if (ship.national === 1) { // USA
 						if (!disable_ids.includes(equip.id)) {
 							total_bonus += 2;
 							disable_ids.push(equip.id);
 						}
-					} else if (this.national === 3) { // UK
+                    } else if (ship.national === 3) { // UK
 						if (!disable_ids.includes(equip.id)) {
 							total_bonus += 1;
 							disable_ids.push(equip.id);
@@ -254,17 +252,17 @@ export default class Ship {
 					}
 					break;
 				case 517: { // 清霜逆探
-					if (this.name === '清霜改二丁') {
+                    if (ship.name === '清霜改二丁') {
 						if (!disable_ids.includes(equip.id)) {
 							total_bonus += 3;
 							disable_ids.push(equip.id);
 						}
-					} else if (['朝霜改二', '清霜改二', '初霜改二', '潮改二', 'Верный', '霞改二', '時雨改三', '雪風改二'].includes(this.name)) {
+                    } else if (['朝霜改二', '清霜改二', '初霜改二', '潮改二', 'Верный', '霞改二', '時雨改三', '雪風改二'].includes(ship.name)) {
 						if (!disable_ids.includes(equip.id)) {
 							total_bonus += 2;
 							disable_ids.push(equip.id);
 						}
-					} else if (this.national === 0 && this.type === '駆逐') {
+                    } else if (ship.national === 0 && ship.type === '駆逐') {
 						if (!disable_ids.includes(equip.id)) {
 							total_bonus += 1;
 							disable_ids.push(equip.id);
@@ -276,7 +274,7 @@ export default class Ship {
 				case 410: { // 21号対空電探改二
 					const akizuki = ['秋月', '照月', '初月', '涼月', '冬月'];
 					const mogami = ['最上改', '最上改二', '最上改二特'];
-					if (akizuki.some(item => this.name.startsWith(item)) || mogami.includes(this.name)) {
+                    if (akizuki.some(item => ship.name.startsWith(item)) || mogami.includes(ship.name)) {
 						if (!disable_ids.includes(equip.id)) {
 							total_bonus += 2;
 							disable_ids.push(equip.id);
@@ -285,7 +283,7 @@ export default class Ship {
 					break;
 				}
 				case 118: { // 紫雲
-					if (this.name.includes('大淀')) {
+                    if (ship.name.includes('大淀')) {
 						total_bonus += 2;
 						if (equip.implovement === 10) { // 改修maxで更に+1
 							total_bonus += 1;
@@ -294,8 +292,8 @@ export default class Ship {
 					break;
 				}
 				case 414: { // SOC seagull
-					if (this.national === 1) { // USA
-						if (['軽巡', '重巡'].includes(this.type)) {
+                    if (ship.national === 1) { // USA
+                        if (['軽巡', '重巡'].includes(ship.type)) {
 							if (!disable_ids.includes(equip.id)) {
 								total_bonus += 2;
 								// 改修でさらにボーナス
@@ -304,7 +302,7 @@ export default class Ship {
 								}
 								disable_ids.push(equip.id);
 							}
-						} else if (['戦艦'].includes(this.type)) {
+                        } else if (['戦艦'].includes(ship.type)) {
 							if (!disable_ids.includes(equip.id)) {
 								total_bonus += 1;
 								disable_ids.push(equip.id);
@@ -314,27 +312,27 @@ export default class Ship {
 					break;
 				}
 				case 115: // Ar196改
-					if (['Bismarck', 'Prinz Eugen'].some(item => this.name.startsWith(item))) {
+                    if (['Bismarck', 'Prinz Eugen'].some(item => ship.name.startsWith(item))) {
 						total_bonus += 2;
 					}
 					break;
 				case 371: // Fairey Seafox改
-					if (this.name.includes('Gotland')) {
+                    if (ship.name.includes('Gotland')) {
 						if (!disable_ids.includes(equip.id)) {
 							total_bonus += 6;
 							disable_ids.push(equip.id);
 						}
-					} else if (this.name.includes('Nelson')) {
+                    } else if (ship.name.includes('Nelson')) {
 						if (!disable_ids.includes(equip.id)) {
 							total_bonus += 5;
 							disable_ids.push(equip.id);
 						}
-					} else if (this.name.includes('Commandant Teste')) {
+                    } else if (ship.name.includes('Commandant Teste')) {
 						if (!disable_ids.includes(equip.id)) {
 							total_bonus += 4;
 							disable_ids.push(equip.id);
 						}
-					} else if (['Warspite', 'Richelieu', 'Jean Bart'].some(item => this.name.startsWith(item))) {
+                    } else if (['Warspite', 'Richelieu', 'Jean Bart'].some(item => ship.name.startsWith(item))) {
 						if (!disable_ids.includes(equip.id)) {
 							total_bonus += 3;
 							disable_ids.push(equip.id);
@@ -342,17 +340,17 @@ export default class Ship {
 					}
 					break;
 				case 370: // Swordfish Mk.II改(水偵型)
-					if (this.name.includes('Warspite')) {
+                    if (ship.name.includes('Warspite')) {
 						if (!disable_ids.includes(equip.id)) {
 							total_bonus += 3;
 							disable_ids.push(equip.id);
 						}
-					} else if (['Nelson', 'Sheffield', 'Gotland'].some(item => this.name.startsWith(item))) {
+                    } else if (['Nelson', 'Sheffield', 'Gotland'].some(item => ship.name.startsWith(item))) {
 						if (!disable_ids.includes(equip.id)) {
 							total_bonus += 2;
 							disable_ids.push(equip.id);
 						}
-					} else if (['Commandant Teste', '瑞穂', '神威'].some(item => this.name.startsWith(item))) {
+                    } else if (['Commandant Teste', '瑞穂', '神威'].some(item => ship.name.startsWith(item))) {
 						if (!disable_ids.includes(equip.id)) {
 							total_bonus += 1;
 							disable_ids.push(equip.id);
@@ -360,20 +358,20 @@ export default class Ship {
 					}
 					break;
 				case 194: { // Laté 298B
-					if (['Commandant Teste', 'Richelieu', 'Jean Bart', '瑞穂', '神威'].some(item => this.name.startsWith(item))) {
+                    if (['Commandant Teste', 'Richelieu', 'Jean Bart', '瑞穂', '神威'].some(item => ship.name.startsWith(item))) {
 						total_bonus += 2;
 						disable_ids.push(equip.id);
 					}
 					break;
 				}
 				case 415: // SO3C Seamew改
-					if (this.national === 1) { // USA
-						if (['軽巡', '重巡'].includes(this.type)) {
+                    if (ship.national === 1) { // USA
+                        if (['軽巡', '重巡'].includes(ship.type)) {
 							if (!disable_ids.includes(equip.id)) {
 								total_bonus += 2;
 								disable_ids.push(equip.id);
 							}
-						} else if (['戦艦'].includes(this.type)) {
+                        } else if (['戦艦'].includes(ship.type)) {
 							if (!disable_ids.includes(equip.id)) {
 								total_bonus += 1;
 								disable_ids.push(equip.id);
@@ -382,7 +380,7 @@ export default class Ship {
 					}
 					break;
 				case 369: // Swordfish Mk.III改(水上機型/熟練)
-					if (this.name === 'Gotland andra') {
+                    if (ship.name === 'Gotland andra') {
 						if (disable_ids.filter(item => item === equip.id).length === 0) {
 							total_bonus += 4;
 							disable_ids.push(equip.id);
@@ -390,12 +388,12 @@ export default class Ship {
 							total_bonus += 1;
 							disable_ids.push(equip.id);
 						}
-					} else if (['Gotland', 'Commandant Teste'].some(item => this.name.startsWith(item))) {
+                    } else if (['Gotland', 'Commandant Teste'].some(item => ship.name.startsWith(item))) {
 						if (!disable_ids.includes(equip.id)) {
 							total_bonus += 3;
 							disable_ids.push(equip.id);
 						}
-					} else if (['瑞穂', '神威'].some(item => this.name.startsWith(item))) {
+                    } else if (['瑞穂', '神威'].some(item => ship.name.startsWith(item))) {
 						if (!disable_ids.includes(equip.id)) {
 							total_bonus += 2;
 							disable_ids.push(equip.id);
@@ -403,7 +401,7 @@ export default class Ship {
 					}
 					break;
 				case 368: // Swordfish Mk.III改(水上機型)
-					if (this.name === 'Gotland andra') {
+                    if (ship.name === 'Gotland andra') {
 						if (disable_ids.filter(item => item === equip.id).length === 0) {
 							total_bonus += 4;
 							disable_ids.push(equip.id);
@@ -411,62 +409,62 @@ export default class Ship {
 							total_bonus += 3;
 							disable_ids.push(equip.id);
 						}
-					} else if (this.name.includes('Gotland')) {
+                    } else if (ship.name.includes('Gotland')) {
 						total_bonus += 3;
-					} else if (['Commandant Teste', '瑞穂', '神威'].some(item => this.name.startsWith(item))) {
+                    } else if (['Commandant Teste', '瑞穂', '神威'].some(item => ship.name.startsWith(item))) {
 						total_bonus += 2;
 					}
 					break;
 				case 367: // Swordfish(水上機型)
-					if (['Gotland', 'Commandant Teste', '瑞穂', '神威'].some(item => this.name.startsWith(item))) {
+                    if (['Gotland', 'Commandant Teste', '瑞穂', '神威'].some(item => ship.name.startsWith(item))) {
 						total_bonus += 1;
 					}
 					break;
 				case 408: // 装甲艇(AB艇)
-					if (this.name.includes('神州丸')) {
+                    if (ship.name.includes('神州丸')) {
 						total_bonus += 2;
-					} else if (this.name.includes('あきつ丸') || this.type === '駆逐') { // 本来大発の乗る駆逐艦だが、駆逐に乗ってる時点でボーナスつけちゃう
+                    } else if (ship.name.includes('あきつ丸') || ship.type === '駆逐') { // 本来大発の乗る駆逐艦だが、駆逐に乗ってる時点でボーナスつけちゃう
 						total_bonus += 1;
 					}
 					break;
 				case 409: // 武装大発
-					if (this.name.includes('神州丸')) {
+                    if (ship.name.includes('神州丸')) {
 						total_bonus += 2;
-					} else if (this.name.includes('あきつ丸')) {
+                    } else if (ship.name.includes('あきつ丸')) {
 						total_bonus += 1;
 					}
 					break;
 				case 412: // 水雷見張員
-					if (this.national === 0) {
-						if (this.type === '駆逐') {
+                    if (ship.national === 0) {
+                        if (ship.type === '駆逐') {
 							total_bonus += 1;
-						} else if (this.type === '軽巡') {
+                        } else if (ship.type === '軽巡') {
 							total_bonus += 3;
-						} else if (['重巡', '航巡'].includes(this.type)) {
+                        } else if (['重巡', '航巡'].includes(ship.type)) {
 							total_bonus += 1;
 						}
 					}
 					break;
 				case 129: // 見張員
-					if (this.national === 0) {
-						if (this.type === '駆逐') {
+                    if (ship.national === 0) {
+                        if (ship.type === '駆逐') {
 							total_bonus += 1;
-						} else if (this.type === '軽巡') {
+                        } else if (ship.type === '軽巡') {
 							total_bonus += 3;
-						} else if (['重巡', '航巡'].includes(this.type)) {
+                        } else if (['重巡', '航巡'].includes(ship.type)) {
 							total_bonus += 3;
 						}
 					}
 					break;
 				case 521: { // 紫雲(熟練)
-					if (this.name === '大淀改') {
+                    if (ship.name === '大淀改') {
 						if (equip.implovement > 0) { // 改修1以上で+5
 							total_bonus += 5;
 						}
 						if (equip.implovement > 3) { // ☆4以上で更に+1
 							total_bonus += 1;
 						}
-					} else if (this.name === '三隈改二特') {
+                    } else if (ship.name === '三隈改二特') {
 						if (equip.implovement > 0) { // 改修1以上で+4
 							total_bonus += 4;
 						}
@@ -474,22 +472,22 @@ export default class Ship {
 					break;
 				}
 				case 522: // 零式小型水上機
-					if (['潜水', '潜空'].includes(this.type)) {
+                    if (['潜水', '潜空'].includes(ship.type)) {
 						total_bonus += 3;
 					}
 					break;
 				case 523: // 零式小型水上機(熟練)
-					if (['潜水', '潜空'].includes(this.type)) {
+                    if (['潜水', '潜空'].includes(ship.type)) {
 						total_bonus += 4;
 					}
 					break;
 				case 527: // Type281 レーダー
-					if (this.national === 3) { // UK(大型)組
+                    if (ship.national === 3) { // UK(大型)組
 						total_bonus += 2;
 					}
 					break;
-				case 273: { // 彩雲(偵四) ☆2のときのみ
-					if (equip.implovement === 2) {
+				case 273: { // 彩雲(偵四)
+                    if (equip.implovement === 2) { // ☆2のときのみ
 						if (!disable_ids.includes(equip.id)) {
 							total_bonus += 1;
 							disable_ids.push(equip.id);
@@ -498,21 +496,26 @@ export default class Ship {
 					break;
 				}
 				case 510: // Walrus
-					if (['Nelson', 'Rodney'].includes(this.name)) {
-
-					} else if (['Warspite', 'Sheffield'].includes(this.name)) {
-
-					} else if (['能代改二', '矢矧改二', '矢矧改二乙'].includes(this.name)) {
-
-					}
+                    if (['Nelson', 'Rodney'].includes(ship.name)) { // 含同改
+                        total_bonus += 5;
+                    } else if (['Warspite', 'Sheffield'].includes(ship.name)) { // 含同改
+                        total_bonus += 2;
+                    }
 					break;
+                case 545: // 天山一二型甲改二(村田隊/電探装備)
+                    if (['翔鶴改二', '翔鶴改二甲'].includes(ship.name)) {
+                        total_bonus += 2;
+                    } else if (['瑞鶴改二','瑞鶴改二甲','加賀改二護','大鳳改','赤城改二戊','加賀改二戊'].includes(ship.name)) {
+                        total_bonus += 1;
+                    }
+                    break;
 			}
 		}
 
 		return total_bonus;
 	}
 
-	private calcSpeed(equips: Equip[]): SpeedId {
+	private calcSpeed(equips: Equip[], speed_group: SpeedGroup): SpeedId {
 		const turbine = equips.filter(item => item.id === 33).length; // タービン
 		const kan = equips.filter(item => item.id === 34).length; // 強化缶
 		const new_kan = equips.filter(item => item.id === 87).length; // 新型缶
@@ -521,7 +524,7 @@ export default class Ship {
 		const kan_total = kan + new_kan;
 
 		let speed: SpeedId;
-		switch (this.speed_group) {
+		switch (speed_group) {
 			case 0: // 高速A
 				speed = 1;
 				if (turbine && new_kan || power_kan > 1) {
