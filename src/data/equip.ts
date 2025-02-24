@@ -9,7 +9,7 @@ export interface EquipType {
 
 /** 基地系は除外 */
 const equip_datas: Record<number, EquipType> = {
-1:{"name":"12cm単装砲","type":111,"seek":0}
+ 1:{"name":"12cm単装砲","type":111,"seek":0}
 ,2:{"name":"12.7cm連装砲","type":111,"seek":0}
 ,3:{"name":"10cm連装高角砲","type":111,"seek":0}
 ,4:{"name":"14cm単装砲","type":112,"seek":0}
