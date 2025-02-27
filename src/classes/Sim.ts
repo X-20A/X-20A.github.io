@@ -1919,7 +1919,7 @@ export default class SimController {
                     case 'A':
                         if (AV + AO + BBV > 0) {
                             return 'B';
-                        } else if (AO > 1 && Ds > 1) {
+                        } else if (CA > 1 && Ds > 1) {
                             return 'D';
                         } else if (CVL > 0) {
                             return 'B';
@@ -2143,7 +2143,7 @@ export default class SimController {
                         }
                         break;
                     case 'C':
-                        if (option.C === 'F') {
+                        if (option.C === 'D') {
                             return 'D';
                         } else {
                             return 'F';
