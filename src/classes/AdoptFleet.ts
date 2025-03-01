@@ -152,17 +152,17 @@ export default class AdoptFleet implements Fleet {
         return this.speed_id >= 2;
     }
     /**
-     * 低速戦艦の数を返す。実際の速度とは無関係にステータスが低速な戦艦、及び航戦
+     * 低速戦艦の数を返す。実際の速度とは無関係にステータスが低速な戦艦
      * @returns 低速戦艦の数
      */
     public countSBB(): number {
         let count = 0;
         count += this.fleets[0].ships
-            .filter(item => ['戦艦','航戦'].includes(item.type) && item.speed_group >= 4)
+            .filter(ship => ship.type === '戦艦' && ship.speed_group >= 4)
             .length;
         if (this.fleets[1]) {
             count += this.fleets[1].ships
-                .filter(item => ['戦艦', '航戦'].includes(item.type) && item.speed_group >= 4)
+                .filter(item => item.type === '戦艦' && item.speed_group >= 4)
                 .length;
         }
         return count;
@@ -255,7 +255,7 @@ export default class AdoptFleet implements Fleet {
      * 索敵無視の為に索敵値を退避フィールドと切替
      */
     public switchSeek(): void {
-        if (this.seek.every(item => item === 999)) {
+        if (this.seek.every(value => value === 999)) {
             this.seek = this.save_seek;
         } else {
             this.save_seek = this.seek;
