@@ -1,54 +1,35 @@
 <template>
 	<Header />
-  <div class="container">
-    <div class="input-container">
-      <div class="split">
-        <div class="inputs">
-          <div style="flex: 1;position: relative; user-select: none;">
-            <div>
-              <input
-                type="text"
-                class="import"
-								id="fleet-import"
-                placeholder="DeckBuilder"
-                v-model="fleetInput"
-								ref="fleetInputRef"
-              /><!-- #fleet-importは七四式読込に残しとく -->
-            </div>
-            <p
-              class="type-select"
-              v-if="isVisibleTypeSelect"
-              @mouseover="showFleetOptions"
-            >艦隊種別</p>
-            <div
-							v-if="isFleetOptionsVisible"
-              class="fleet-option-box"
-              @mouseover="showFleetOptions"
-              @mouseleave="hideFleetOptions"
-            >
-              <span class="fleet-type" @mousedown=updateSelectedType(1)>第一艦隊</span>
-              <span class="fleet-type" @mousedown=updateSelectedType(2)>第二艦隊</span>
-              <span class="fleet-type" @mousedown=updateSelectedType(3)>第三艦隊</span>
-              <span class="fleet-type" @mousedown=updateSelectedType(4)>第四艦隊</span>
-              <span class="fleet-type" @mousedown=updateSelectedType(5)>空母機動部隊</span>
-              <span class="fleet-type" @mousedown=updateSelectedType(6)>水上打撃部隊</span>
-              <span class="fleet-type" @mousedown=updateSelectedType(7)>輸送護衛部隊</span>
-            </div>
-          </div>
-          <div style="flex: 1;">
-            <button
-							class="design-button"
-							@mousedown="showArea"
-						>{{ selectedArea ? '海域: ' + selectedArea : '海域' }}</button>
-          </div>
+	<div class="container">
+		<div class="input-container">
+			<div class="split">
+				<div class="inputs">
+					<div style="flex: 1;position: relative; user-select: none;">
+						<div>
+							<input type="text" class="import" id="fleet-import" placeholder="DeckBuilder" v-model="fleetInput"
+								ref="fleetInputRef" /><!-- #fleet-importは七四式読込に残しとく -->
+						</div>
+						<p class="type-select" v-if="isVisibleTypeSelect" @mouseover="showFleetOptions">艦隊種別</p>
+						<div v-if="isFleetOptionsVisible" class="fleet-option-box" @mouseover="showFleetOptions"
+							@mouseleave="hideFleetOptions">
+							<span class="fleet-type" @mousedown=updateSelectedType(1)>第一艦隊</span>
+							<span class="fleet-type" @mousedown=updateSelectedType(2)>第二艦隊</span>
+							<span class="fleet-type" @mousedown=updateSelectedType(3)>第三艦隊</span>
+							<span class="fleet-type" @mousedown=updateSelectedType(4)>第四艦隊</span>
+							<span class="fleet-type" @mousedown=updateSelectedType(5)>空母機動部隊</span>
+							<span class="fleet-type" @mousedown=updateSelectedType(6)>水上打撃部隊</span>
+							<span class="fleet-type" @mousedown=updateSelectedType(7)>輸送護衛部隊</span>
+						</div>
+					</div>
+					<div style="flex: 1;">
+						<button class="design-button" @mousedown="showArea">{{ selectedArea ? '海域: ' + selectedArea : '海域'
+							}}</button>
+					</div>
 					<Option />
-        </div>
-      </div>
-    </div>
-    <div
-      class="import-display"
-      v-if="adoptFleet"
-    >
+				</div>
+			</div>
+		</div>
+		<div class="import-display" v-if="adoptFleet">
 			<template v-if="adoptFleet.fleet_type_id > 0">
 				<p>{{ adoptFleet.fleet_type }}</p>
 			</template>
@@ -58,9 +39,10 @@
 			<p>
 				<span>{{ adoptFleet.speed }}</span>
 				<span> | </span>
-				<span>搭載艦数[ドラム缶:{{ adoptFleet.drum_carrier_count }},大発系:{{ adoptFleet.craft_carrier_count }},電探:{{ adoptFleet.radar_carrier_count }}]</span>
+				<span>搭載艦数[ドラム缶:{{ adoptFleet.drum_carrier_count }},大発系:{{ adoptFleet.craft_carrier_count }},電探:{{
+					adoptFleet.radar_carrier_count }}]</span>
 			</p>
-      <template v-if="adoptFleet.fleet_type_id > 0"><!-- 連合艦隊 -->
+			<template v-if="adoptFleet.fleet_type_id > 0"><!-- 連合艦隊 -->
 				<div>
 					<strong>主力: </strong>
 					<template v-for="(name, index) in adoptFleet.getMainFleetNames()" :key="index">
@@ -76,102 +58,62 @@
 					</template>
 				</div>
 			</template>
-      <template v-else><!-- 通常艦隊 or 遊撃部隊 -->
+			<template v-else><!-- 通常艦隊 or 遊撃部隊 -->
 				<template v-for="(name, index) in adoptFleet.ship_names" :key="index">
 					<span>{{ name }}</span>
 					<span v-if="index < adoptFleet.fleet_length - 1"> | </span>
 				</template>
-      </template>
-			<p
-				:style="adoptFleet?.seek[0] === 999 ? 'color: #f6a306' : ''"
-			>
+			</template>
+			<p :style="adoptFleet?.seek[0] === 999 ? 'color: #f6a306' : ''">
 				<span>索敵値: </span>
 				<strong>1: </strong>
-				<span>{{  adoptFleet.seek[0] }}</span>
+				<span>{{ adoptFleet.seek[0] }}</span>
 				<strong> 2: </strong>
-				<span>{{  adoptFleet.seek[1] }}</span>
+				<span>{{ adoptFleet.seek[1] }}</span>
 				<strong> 3: </strong>
-				<span>{{  adoptFleet.seek[2] }}</span>
+				<span>{{ adoptFleet.seek[2] }}</span>
 				<strong> 4: </strong>
-				<span>{{  adoptFleet.seek[3] }}</span>
+				<span>{{ adoptFleet.seek[3] }}</span>
 			</p>
-    </div>
-    <div class="result-container">
+			<p style="color: red;">イベント海域の分岐条件は未確定で、随時更新されます。</p>
+		</div>
+		<div class="result-container">
 			<template v-if="simResult.length > 0">
-				<SvgIcon
-					@mousedown="switchSeek"
-					name="radar-8"
-					:color="adoptFleet?.seek[0] === 999 ? '#f6a306' : '#fff'"
-					class="ignore-seek icon-on-map"
-				></SvgIcon>
-				<SvgIcon
-					@mousedown="showRefference"
-					name="layers"
-					color="#fff"
-					class="reference icon-on-map"
-				></SvgIcon>
-				<SvgIcon
-					@click="screenShot"
-					name="camera-outline"
-					color="#fff"
-					class="screen-shot icon-on-map"
-				></SvgIcon>
+				<SvgIcon @mousedown="switchSeek" name="radar-8" :color="adoptFleet?.seek[0] === 999 ? '#f6a306' : '#fff'"
+					class="ignore-seek icon-on-map"></SvgIcon>
+				<SvgIcon @mousedown="showRefference" name="layers" color="#fff" class="reference icon-on-map"></SvgIcon>
+				<SvgIcon @click="screenShot" name="camera-outline" color="#fff" class="screen-shot icon-on-map"></SvgIcon>
 			</template>
-      <div id="cy" class="cy">
-      </div>
-    </div>
-  </div>
-	<div
-		v-if="isAreaVisible || isRefferenceVisible || isErrorVisible"
-		class="modal-overlay"
-		@mousedown="closeModals"
-	>
+			<div id="cy" class="cy">
+			</div>
+		</div>
+	</div>
+	<div v-if="isAreaVisible || isRefferenceVisible || isErrorVisible" class="modal-overlay" @mousedown="closeModals">
 		<AreaModal />
 		<RefferenceModal />
 		<ErrorModal />
 	</div>
 	<template v-if="popupHtml === '<p>$sw</p>'">
-		<div
-			class="popup"
-			id="popup-info"
-			:style="popupStyle"
-		>
+		<div class="popup" id="popup-info" :style="popupStyle">
 			<p>
 				<span>能動分岐</span>
-				<button
-					class="design-button remote-active"
-					:value="`${node}`"
-					@mousedown="switchActive"
-				>
+				<button class="design-button remote-active" :value="`${node}`" @mousedown="switchActive">
 					切替
 				</button>
 			</p>
 		</div>
 	</template>
 	<template v-else>
-		<div
-			class="popup"
-			id="popup-info"
-			:style="popupStyle"
-			v-if="popupHtml"
-			v-html="popupHtml"
-		>
-	</div>
+		<div class="popup" id="popup-info" :style="popupStyle" v-if="popupHtml" v-html="popupHtml">
+		</div>
 	</template>
 	<div class="detail-box">
-		<v-expansion-panels
-			v-model="openPanel"
-			color="primary"
-			multiple
-		>
+		<v-expansion-panels v-model="openPanel" color="primary" multiple>
 			<v-expansion-panel>
 				<v-expansion-panel-title class="panel-title">
 					使い方
 					<template v-slot:actions="{ expanded }">
-						<SvgIcon
-							:name="expanded ? 'menu-up' : 'menu-down'"
-							class="panel-icon"
-						></SvgIcon>
+						<SvgIcon :name="expanded ? 'menu-up' : 'menu-down'" class="panel-icon"></SvgIcon>
 					</template>
 				</v-expansion-panel-title>
 				<v-expansion-panel-text class="panel-text">
@@ -181,7 +123,7 @@
 					<p>4.オプションがあれば選択(能動分岐、攻略段階、難易度等)</p>
 					<br>
 					<div class="gap">
-							<span class="or">or</span>
+						<span class="or">or</span>
 					</div>
 					<br>
 					<p>1.制空シミュの編成ページを開く</p>
@@ -195,18 +137,19 @@
 				<v-expansion-panel-title class="panel-title">
 					謝辞
 					<template v-slot:actions="{ expanded }">
-						<SvgIcon
-							:name="expanded ? 'menu-up' : 'menu-down'"
-							class="panel-icon"
-						></SvgIcon>
+						<SvgIcon :name="expanded ? 'menu-up' : 'menu-down'" class="panel-icon"></SvgIcon>
 					</template>
 				</v-expansion-panel-title><!-- panel-textはv-ifしても変わらなかったのでそのまま -->
 				<v-expansion-panel-text class="panel-text">
-					<p><a href="https://tsunkit.net/nav/" target="_blank"  rel="noopener noreferrer">KCNav</a>: マップ周り</p>
-					<p><a href="http://kancolle-calc.net/deckbuilder.html" target="_blank"  rel="noopener noreferrer">デッキビルダー</a>: 艦/装備データ</p>
-					<p><a href="https://noro6.github.io/kc-web/#/" target="_blank"  rel="noopener noreferrer">制空権シミュレータ</a>: 速度演算、コーディング全般</p>
-					<p><a href="https://jervis.vercel.app/" target="_blank"  rel="noopener noreferrer">作戦室 Jervis</a>: 海域選択レイアウト</p>
-					<p><a href="https://github.com/Nishisonic/gkcoi" target="_blank"  rel="noopener noreferrer">gkcoi</a>: 編成のグラフィック出力</p>
+					<p><a href="https://tsunkit.net/nav/" target="_blank" rel="noopener noreferrer">KCNav</a>: マップ周り</p>
+					<p><a href="http://kancolle-calc.net/deckbuilder.html" target="_blank" rel="noopener noreferrer">デッキビルダー</a>:
+						艦/装備データ</p>
+					<p><a href="https://noro6.github.io/kc-web/#/" target="_blank" rel="noopener noreferrer">制空権シミュレータ</a>:
+						速度演算、コーディング全般</p>
+					<p><a href="https://jervis.vercel.app/" target="_blank" rel="noopener noreferrer">作戦室 Jervis</a>: 海域選択レイアウト
+					</p>
+					<p><a href="https://github.com/Nishisonic/gkcoi" target="_blank" rel="noopener noreferrer">gkcoi</a>:
+						編成のグラフィック出力</p>
 					<p>本ツールは以上のサイトを大いに参考にして制作しました。先人に感謝。</p>
 					<p>This tool was created with great reference to the above sites. Thanks to our predecessors.</p>
 				</v-expansion-panel-text>
@@ -215,10 +158,7 @@
 				<v-expansion-panel-title class="panel-title">
 					分岐法則について
 					<template v-slot:actions="{ expanded }">
-						<SvgIcon
-							:name="expanded ? 'menu-up' : 'menu-down'"
-							class="panel-icon"
-						></SvgIcon>
+						<SvgIcon :name="expanded ? 'menu-up' : 'menu-down'" class="panel-icon"></SvgIcon>
 					</template>
 				</v-expansion-panel-title>
 				<v-expansion-panel-text class="panel-text">
@@ -235,47 +175,39 @@
 				<v-expansion-panel-title class="panel-title">
 					アプデ履歴
 					<template v-slot:actions="{ expanded }">
-						<SvgIcon
-							:name="expanded ? 'menu-up' : 'menu-down'"
-							class="panel-icon"
-						></SvgIcon>
+						<SvgIcon :name="expanded ? 'menu-up' : 'menu-down'" class="panel-icon"></SvgIcon>
 					</template>
 				</v-expansion-panel-title>
 				<v-expansion-panel-text class="panel-text">
-					<p>2025/02/07_v2.0.0  経路/分岐条件一覧&システム全面改修</p>
-					<p>2024/05/02_v1.1.8  資源マスでの獲得資源予測</p>
-					<p>2024/03/16_v1.1.7  <del>合致する条件に下線表示</del> 廃止</p>
-					<p>2024/02/21_v1.1.6  資料室の設置</p>
-					<p>2024/02/16_v1.1.5  スクショ機能の実装</p>
-					<p>2024/02/03_v1.1.4  マス点灯&amp;図上における能動分岐切替</p>
-					<p>2024/01/31_v1.1.3  連合艦隊読込&amp;イベント海域試験実装</p>
-					<p>2024/01/18_v1.1.2  分岐マスをクリックで条件表示</p>
-					<p>2024/01/16_v1.1.1  <del>キーボードショートカット追加</del> 廃止</p>
-					<p>2024/01/15_v1.1.0  デッキビルダー形式での読込に対応</p>
-					<p>2024/01/11_v1.0.2  手順を簡素化</p>
-					<p>2024/01/11_v1.0.1  読み込んだ艦隊を表示&amp;バグ修正</p>
-					<p>2023/10/28_v1.0.0  公開</p>
+					<p>2025/02/07_v2.0.0 経路/分岐条件一覧&システム全面改修</p>
+					<p>2024/05/02_v1.1.8 資源マスでの獲得資源予測</p>
+					<p>2024/03/16_v1.1.7 <del>合致する条件に下線表示</del> 廃止</p>
+					<p>2024/02/21_v1.1.6 資料室の設置</p>
+					<p>2024/02/16_v1.1.5 スクショ機能の実装</p>
+					<p>2024/02/03_v1.1.4 マス点灯&amp;図上における能動分岐切替</p>
+					<p>2024/01/31_v1.1.3 連合艦隊読込&amp;イベント海域試験実装</p>
+					<p>2024/01/18_v1.1.2 分岐マスをクリックで条件表示</p>
+					<p>2024/01/16_v1.1.1 <del>キーボードショートカット追加</del> 廃止</p>
+					<p>2024/01/15_v1.1.0 デッキビルダー形式での読込に対応</p>
+					<p>2024/01/11_v1.0.2 手順を簡素化</p>
+					<p>2024/01/11_v1.0.1 読み込んだ艦隊を表示&amp;バグ修正</p>
+					<p>2023/10/28_v1.0.0 公開</p>
 				</v-expansion-panel-text>
 			</v-expansion-panel>
 		</v-expansion-panels>
-  </div>
+	</div>
 	<div class="footer">
 		<span>
-				バグ報告、要望等は<a class="odaibako" href="https://odaibako.net/u/__poyo" target="_blank" rel="noopener noreferrer">お題箱</a>まで
+			バグ報告、要望等は<a class="odaibako" href="https://odaibako.net/u/__poyo" target="_blank"
+				rel="noopener noreferrer">お題箱</a>まで
 		</span>
 		<span>
-				作者: <a href="https://kancolle.social/@momemi" target="_blank" rel="noopener noreferrer" aria-label="作者mastodon">
-					<SvgIcon
-						name="mastodon"
-						class="sns-icon mastodon"
-					></SvgIcon>
-				</a>
-				<a href="https://twitter.com/momemi_kc" target="_blank" rel="noopener noreferrer" aria-label="作者Twitter">
-					<SvgIcon
-						name="twitter"
-						class="sns-icon twitter"
-					></SvgIcon>
-				</a>
+			作者: <a href="https://kancolle.social/@momemi" target="_blank" rel="noopener noreferrer" aria-label="作者mastodon">
+				<SvgIcon name="mastodon" class="sns-icon mastodon"></SvgIcon>
+			</a>
+			<a href="https://twitter.com/momemi_kc" target="_blank" rel="noopener noreferrer" aria-label="作者Twitter">
+				<SvgIcon name="twitter" class="sns-icon twitter"></SvgIcon>
+			</a>
 		</span>
 	</div>
 </template>
