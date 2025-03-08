@@ -5678,7 +5678,7 @@ export default class SimController {
                         case null:
                             if (option.phase === '1') {
                                 return '1';
-                            } else if (option.is_third === '1') {
+                            } else if ((!fleet.isUnion() && f_length === 7) || option.is_third === '1') {
                                 return '2';
                             } else if (BB > 0) {
                                 return '2';
