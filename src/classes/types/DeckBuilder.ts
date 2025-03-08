@@ -62,7 +62,7 @@ export default interface DeckBuilder {
     hqlv: number,
     lang: "jp" | "en" | "kr" | "scn" | "tcn"
     theme:
-        "dark"
+        | "dark"
         | "dark-ex"
         | "light"
         | "light-ex"

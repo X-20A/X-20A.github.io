@@ -398,6 +398,29 @@ const option_data: OptionSelector = {
 				{ value: 'Z' },
 			],
 		},
+	},
+	'60-1': {
+		'phase': {
+			label: 'Phase',
+			options: [
+				{ value: '1', label: '開始時点' },
+				{ value: '2', label: '出撃地点2解放後' },
+				{ value: '3', label: 'Oボス出現後' },
+			],
+		},
+		'is_third': {
+			label: '出撃艦隊',
+			options: [
+				{ value: '1', label: '第三艦隊' },
+				{ value: '0', label: 'それ以外' },
+			],
+		},
+		'A': {
+			options: [
+				{ value: 'B' },
+				{ value: 'D' },
+			]
+		}
 	}
 };
 

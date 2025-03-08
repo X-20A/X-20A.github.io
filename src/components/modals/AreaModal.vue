@@ -155,9 +155,20 @@ const worlds: Area[] = [
 
 // イベント
 const events: Area[] = [
+	{
+		name: '2025春',
+		color: "aqua",
+		areas: [
+			{ value: "60-1", label: "E-1" },
+			// { value: "60-2", label: "E-2" },
+			// { value: "60-3", label: "E-3" },
+			// { value: "60-4", label: "E-4" },
+			// { value: "60-5", label: "E-5" },
+			// { value: "60-6", label: "E-6" },
+		],
+	},
   {
     name: "2024夏",
-    // color: "aqua",
     areas: [
       { value: "59-1", label: "E-1" },
       { value: "59-2", label: "E-2" },

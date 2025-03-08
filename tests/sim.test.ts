@@ -40,7 +40,8 @@ describe('Simテスト', () => {
             let debug_option: Record<string, string> | undefined;
 
             try {
-                for (const area_id of areaIds) {
+                for (var area_id of areaIds) { // area_idは任意に再設定できるように
+                    // area_id = '60-1';
                     debug_area_id = area_id;
                     // console.log('テスト海域: ', area_id);
                     // if (adoptFleet.fleet_type_id > 0 && Number(area_id.split('-')[0]) > 7) continue; // 連合艦隊なら通常海域除外

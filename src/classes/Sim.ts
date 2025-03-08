@@ -5673,6 +5673,145 @@ export default class SimController {
                         }
                         break;
                 }
+                case '60-1':
+                    switch (node) {
+                        case null:
+                            if (option.phase === '1') {
+                                return '1';
+                            } else if (option.is_third === '1') {
+                                return '2';
+                            } else if (BB > 0) {
+                                return '2';
+                            } else if (BBV > 2) {
+                                return '2';
+                            } else if (CV + CVB > 0) {
+                                return '1';
+                            } else if (CVL > 1) {
+                                return '2';
+                            } else {
+                                return '1';
+                            }
+                            break;
+                        case '2':
+                            if (CL > 0 && Ds > 0) {
+                                return 'F';
+                            } else {
+                                return 'B1';
+                            }
+                            break;
+                        case 'B':
+                            if (CL > 0 && Ds > 1 && f_speed !== '低速艦隊') {
+                                return 'B2';
+                            } else if (CL > 0 && Ds > 1 && BBCVs === 0) {
+                                return 'B2';
+                            } else {
+                                return 'B1';
+                            }
+                            break;
+                        case 'B1':
+                            if (track.includes('1')) {
+                                return 'B2';
+                            } else if (BBCVs > 3) {
+                                return 'B2';
+                            } else { // track.includes('2')
+                                return 'F';
+                            }
+                            break;
+                        case 'B2':
+                            if (AS > 0) {
+                                return 'C';
+                            } else if (BBs + CAs === 0) {
+                                return 'C1';
+                            } else if (DE > 1) {
+                                return 'C1';
+                            } else if (f_speed === '低速艦隊') {
+                                return 'C';
+                            } else if (Ds < 2) {
+                                return 'C';
+                            } else if (Ds > 2) {
+                                return 'C1';
+                            } else if (BBCVs > 0) {
+                                return 'C1';
+                            } else if (f_length < 6) {
+                                return 'C1';
+                            } else {
+                                return 'C';
+                            }
+                            break;
+                        case 'C':
+                            if (Number(option.phase) < 3) {
+                                return 'G';
+                            } else if (BBs > 0) {
+                                return 'G';
+                            } else if (CV + CVB > 1) {
+                                return 'G';
+                            } else if (AV > 0) {
+                                return 'G';
+                            } else if (Ds < 3) {
+                                return 'G';
+                            } else {
+                                return 'I';
+                            }
+                            break;
+                        case 'C1':
+                            if (Number(option.phase) < 3) {
+                                return 'C2';
+                            } else {
+                                return 'K';
+                            }
+                            break;
+                        case 'D':
+                            if (f_length === 6) {
+                                return 'D1';
+                            } else if (Ds < 2) {
+                                return 'D1';
+                            } else if (Ds === 2) {
+                                return 'D2';
+                            } else if (DE > 2) {
+                                return 'D3';
+                            } else if (CVs > 0 && DE === 2) {
+                                return 'D3';
+                            } else if (CL > 0 && f_speed !== '低速艦隊' && CL + DD === f_length) {
+                                return 'D3';
+                            } else {
+                                return 'D2';
+                            }
+                            break;
+                        case 'G':
+                            if (CL === 0) {
+                                return 'K';
+                            } else if (Ds < 2) {
+                                return 'K';
+                            } else if (BBs < 2) {
+                                return 'M';
+                            } else if (f_speed !== '低速艦隊') {
+                                return 'M';
+                            } else {
+                                return 'K';
+                            }
+                            break;
+                        case 'K':
+                            if (true) {
+                                return 'L';
+                            } else {
+                                return 'M';
+                            }
+                            break;
+                        case 'M':
+                            if (f_seek[3] >= 65) {
+                                return 'O';
+                            } else {
+                                return 'N';
+                            }
+                            break;
+                        case 'A':
+                            if (option.A === 'B') {
+                                return 'B';
+                            } else {
+                                return 'D';
+                            }
+                            break;
+                    }
             break;
         }
 

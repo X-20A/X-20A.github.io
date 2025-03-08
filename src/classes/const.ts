@@ -25,7 +25,8 @@ export default class Const {
         '59-2': { 'L': 'M', 'N': 'O', 'P': 'Q' },
         '59-3': { 'phase': '1', 'C': 'C1' },
         '59-4': { 'phase': '1', 'A2': 'B', 'D': 'E' },
-        '59-5': { 'phase': '1', 'G': 'H', 'O2': 'P', 'W': 'Z' }
+        '59-5': { 'phase': '1', 'G': 'H', 'O2': 'P', 'W': 'Z' },
+        '60-1': { 'phase': '1', 'is_third': '0', 'A': 'B' },
     } as OptionsType;
 
     /**
