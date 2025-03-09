@@ -499,6 +499,10 @@ const equip_datas: Record<number, EquipType> = {
 ,551:{"name":"明星","type":357,"seek":2}
 ,552:{"name":"九九式練爆二二型改(夜間装備実験機)","type":357,"seek":4}
 ,553:{"name":"10cm連装高角砲改","type":111,"seek":0}
-};
+,554:{"name":"九七式艦攻改(北東海軍航空隊)","type":358,"seek":2}
+
+,555:{"name":"18cm/57 三連装主砲","type":112,"seek":0}
+,556:{"name":"10cm/56 単装高角砲(集中配備)","type":124,"seek":1}
+}; // @expansion
 
 export default equip_datas;

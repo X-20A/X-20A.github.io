@@ -46,8 +46,8 @@ export default class SimController {
      */
     public start(): SimResult[] {
         // NOTE: 一本道と終点について、予めMapとSetを用意するのを試したが、遅くなったので没
-        // 非同期処理で、 0.6ms - 60ms
-        // 同期処理で 24ms - 28ms 😢
+        // NOTE: 非同期処理で、 0.6ms - 60ms
+        // NOTE: 同期処理で 24ms - 28ms 😢
         const scanners: Scanner[] = [new Scanner([null], null, 1)];
         const results: SimResult[] = [];
         const area_routes = edges[this.area_id];
@@ -5812,7 +5812,8 @@ export default class SimController {
                             }
                             break;
                     }
-            break;
+                // case: ''
+            break; // @expansion
         }
 
         

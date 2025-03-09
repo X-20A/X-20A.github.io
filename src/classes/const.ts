@@ -8,7 +8,7 @@ export default class Const {
     private static readonly _VALID_CRAFTS =
         [68, 166, 167, 193, 408, 409, 436, 449, 525, 526];
 
-    private static readonly _OPTIONS = {
+    private static readonly _OPTIONS = { // @expansion
         '4-5': { 'A': 'D', 'C': 'F', 'I': 'J' },
         '5-3': { 'O': 'K' },
         '5-5': { 'F': 'D' },

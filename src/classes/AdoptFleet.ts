@@ -204,7 +204,9 @@ export default class AdoptFleet implements Fleet {
      * @returns - 該当する艦の隻数
      */
     public countShip(target_name: string): number {
-        return this.ship_names.filter(ship_name => ship_name.includes(target_name)).length
+        return this.ship_names
+            .filter(ship_name => ship_name.includes(target_name))
+            .length;
     }
     /**
      * 艦隊内の大鷹型の数を返す
@@ -212,7 +214,9 @@ export default class AdoptFleet implements Fleet {
      */
     public countTaiyo(): number {
         const taiyos = ['春日丸', '大鷹', '八幡丸', '雲鷹', '神鷹'];
-        return this.ship_names.filter(ship_name => taiyos.some(name => ship_name.startsWith(name))).length;
+        return this.ship_names
+            .filter(ship_name => taiyos.some(name => ship_name.startsWith(name)))
+            .length;
     }
     /**
      * 空母系+あきつ丸の数を返す

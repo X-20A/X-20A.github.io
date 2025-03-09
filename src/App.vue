@@ -76,6 +76,7 @@
 				<span>{{ adoptFleet.seek[3] }}</span>
 			</p>
 			<p style="color: red;">イベント海域の分岐条件は未確定で、随時更新されます。</p>
+			<p style="color: red;">新艦組の素索敵値は0で計算されています。</p>
 		</div>
 		<div class="result-container">
 			<template v-if="simResult.length > 0">
@@ -89,9 +90,9 @@
 		</div>
 	</div>
 	<div v-if="isAreaVisible || isRefferenceVisible || isErrorVisible" class="modal-overlay" @mousedown="closeModals">
-		<AreaModal />
-		<RefferenceModal />
-		<ErrorModal />
+		<Area />
+		<Refference />
+		<Error />
 	</div>
 	<template v-if="popupHtml === '<p>$sw</p>'">
 		<div class="popup" id="popup-info" :style="popupStyle">
@@ -217,9 +218,9 @@ import { onMounted, watch, ref, computed } from 'vue';
 import { useStore, useModalStore } from '@/stores';
 import Header from './components/Header.vue';
 import Option from './components/Option.vue';
-import AreaModal from './components/modals/AreaModal.vue';
-import RefferenceModal from './components/modals/RefferenceModal.vue';
-import ErrorModal from './components/modals/ErrorModal.vue';
+import Area from './components/modals/Area.vue';
+import Refference from './components/modals/Refference.vue';
+import Error from './components/modals/Error.vue';
 import SvgIcon from './components/SvgIcon.vue';
 import type { SelectedType, FleetTypeId } from '@/classes/types';
 import CustomError from '@/classes/CustomError';

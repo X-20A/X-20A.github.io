@@ -48,7 +48,8 @@ export const branch_info: BranchLastUpdate = {
     "59-4": "2024-08-26 15:01",
     "59-5": "2024-09-18 19:45",
     "60-1": "2025-03-08 20:30",
-}
+    "60-2": "",
+} // @expansion
 
 /**
  * $e:改行
@@ -543,7 +544,10 @@ const branch_data: BranchType = {
         "K": "条件不明につき、全てL",
         "M": "$bo分岐点係数4$ob$e索敵値65以上はO$eそれ以外はN",
         "A": "$sw",
-    }
-};
+    },
+    "60-2": {
+
+    },
+}; // @expansion
 
 export default branch_data;

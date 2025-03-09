@@ -8,7 +8,6 @@ import type {
 } from '@/classes/types/DeckBuilder';
 import type { AreaId, FleetTypeId } from "@/classes/types";
 import ship_datas from "@/data/ship";
-import LZString from 'lz-string';
 import equip_datas from "@/data/equip";
 
 
@@ -52,8 +51,8 @@ export const getSimSet = () => {
         '57-7',
         '58-1', '58-2', '58-3', '58-4',
         '59-1', '59-2', '59-3', '59-4', '59-5',
-        '60-1', // '60-2', '60-3', '60-4', '60-5', '60-6',
-    ];
+        '60-1', '60-2', // '60-3', '60-4', '60-5', '60-6',
+    ]; // @expansion
 
     type MapKey = `${number}-${number}`; // '4-5' などのキー
     type PhaseKey = 'phase' | 'difficulty' | 'tag' | string; // 特定のキーを定義しつつ汎用性も持たせる
@@ -79,7 +78,7 @@ export const getSimSet = () => {
         '59-4': { 'phase': ['1', '2'], 'A2': ['B','C'], 'D': ['E','F'] },
         '59-5': { 'phase': ['1', '2', '3'], 'G': ['H','I'], 'O2': ['P','Q'], 'W': ['X','Z'] },
         '60-1': { 'phase': ['1', '2', '3'], 'is_third': ['0', '1'], 'A': ['B', 'D'] },
-    };
+    }; // @expansion
 
     return {
         adoptFleet: adoptFleet,

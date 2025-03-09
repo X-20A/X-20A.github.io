@@ -421,7 +421,7 @@ const option_data: OptionSelector = {
 				{ value: 'D' },
 			]
 		}
-	}
+	}, // @expansion
 };
 
 // 海域絞り込み

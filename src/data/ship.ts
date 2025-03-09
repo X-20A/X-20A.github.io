@@ -829,6 +829,16 @@ const ship_datas: Record<number, ShipData> = {
 ,956:{"name":"早霜改二","type":"駆逐","seek":11,"seek2":42,"na":0,"sg":2}
 ,981:{"name":"藤波改二","type":"駆逐","seek":12,"seek2":56,"na":0,"sg":2}
 ,986:{"name":"白雪改二","type":"駆逐","seek":13,"seek2":54,"na":0,"sg":2}
-};
+
+,984:{"name":"Wahoo","type":"潜水","seek":0,"seek2":0,"na":1,"sg":6}
+,989:{"name":"Wahoo改","type":"潜水","seek":0,"seek2":0,"na":1,"sg":6}
+,994:{"name":"榧","type":"駆逐","seek":0,"seek2":0,"na":0,"sg":2}
+,736:{"name":"榧改","type":"駆逐","seek":0,"seek2":0,"na":0,"sg":2}
+,995:{"name":"大泊","type":"補給","seek":0,"seek2":0,"na":0,"sg":5}
+,1000:{"name":"大泊改","type":"補給","seek":0,"seek2":0,"na":0,"sg":5}
+,1001:{"name":"Киров","type":"軽巡","seek":0,"seek2":0,"na":6,"sg":1}
+,1006:{"name":"Киров改","type":"軽巡","seek":0,"seek2":0,"na":6,"sg":1}
+
+}; // @expansion
 
 export default ship_datas;

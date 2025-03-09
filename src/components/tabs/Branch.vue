@@ -81,7 +81,7 @@ watch(selectedArea, () => {
 	const world = Number(split[0]);
 	const area = Number(split[1]);
 	let url = '';
-	if (world > 7) {
+	if (world > 7) { // @expansion
 		source.value.label = 'NGA';
 		url = 'https://bbs.nga.cn/read.php?tid=';
 		switch (world) {

@@ -28,8 +28,8 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import Route from './Route.vue';
-import Branch from './Branch.vue';
+import Route from '../tabs/Route.vue';
+import Branch from '../tabs/Branch.vue';
 import { useStore, useModalStore } from '@/stores';
 
 // 経路/分岐条件一覧

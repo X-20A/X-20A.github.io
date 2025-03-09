@@ -154,13 +154,13 @@ const worlds: Area[] = [
 ];
 
 // イベント
-const events: Area[] = [
+const events: Area[] = [ // @expansion
 	{
 		name: '2025春',
 		color: "aqua",
 		areas: [
 			{ value: "60-1", label: "E-1" },
-			// { value: "60-2", label: "E-2" },
+			{ value: "60-2", label: "E-2" },
 			// { value: "60-3", label: "E-3" },
 			// { value: "60-4", label: "E-4" },
 			// { value: "60-5", label: "E-5" },

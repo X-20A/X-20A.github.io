@@ -31,7 +31,7 @@ export default class Equip {
 		const data = equip_datas[id];
 
 		if (!data) {
-            throw new CustomError(`${ship_name}の${slot_index}番目の装備は未対応です`);
+            throw new CustomError(`${ship_name}の${slot_index + 1}番目の装備は未対応です`);
 		}
 
 		this.id = id;
