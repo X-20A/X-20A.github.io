@@ -140,6 +140,7 @@ export default class Ship {
 			case 34057: // 噴式戦闘爆撃機
 			case 111: // 小口径主砲
 			case 112: // 中口径主砲
+            case 124: // 副砲
 			case 5812: // 小型電探
 			case 5813: // 大型電探
 			case 244251: // 潜水電探

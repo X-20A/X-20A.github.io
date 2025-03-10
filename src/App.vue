@@ -75,7 +75,16 @@
 				<strong> 4: </strong>
 				<span>{{ adoptFleet.seek[3] }}</span>
 			</p>
-			<p style="color: red;">イベント海域の分岐条件は未確定で、随時更新されます。</p>
+			<p style="color: red;">
+				イベント海域の分岐条件は未確定で、随時更新されます。
+				<a
+					href="https://x.com/momemi_kc/status/1898667989525827682"
+					target="_blank" rel="noopener noreferrer"
+					style="text-decoration: underline;"
+				>
+					更新履歴
+				</a>
+			</p>
 			<p style="color: red;">新艦組の素索敵値は0で計算されています。</p>
 		</div>
 		<div class="result-container">

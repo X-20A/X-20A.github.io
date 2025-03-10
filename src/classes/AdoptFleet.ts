@@ -28,7 +28,7 @@ export default class AdoptFleet implements Fleet {
     /** 艦種 */
     public readonly composition: Composition;
 
-    /** 艦名配列 */
+    /** 艦名配列 含随伴 */
     public readonly ship_names: string[];
     
     /** 艦隊種別ID */
@@ -198,15 +198,21 @@ export default class AdoptFleet implements Fleet {
         return this.fleets.length === 2;
     }
     /**
-     * 艦隊構成艦に含まれる艦名がtarget_name(部分一致)の艦をカウントして返す    
+     * 艦隊構成艦に含まれる艦名がtarget_name(部分一致)の艦をカウントして返す(配列もいいぞ)    
      * '夕張'とすると、夕張/改/改二/改二特 が対象。熊野とかは注意。無いと思うけど
      * @param target_name - 判定する艦の名前(部分一致)
      * @returns - 該当する艦の隻数
      */
-    public countShip(target_name: string): number {
-        return this.ship_names
-            .filter(ship_name => ship_name.includes(target_name))
-            .length;
+    public countShip(target_name: string | string[]): number {
+        if (Array.isArray(target_name)) {
+            return this.ship_names.filter(ship_name =>
+                target_name.some(target => ship_name.includes(target))
+            ).length;
+        } else {
+            return this.ship_names
+                .filter(ship_name => ship_name.includes(target_name))
+                .length;
+        }
     }
     /**
      * 艦隊内の大鷹型の数を返す
@@ -290,6 +296,18 @@ export default class AdoptFleet implements Fleet {
             return this.fleets[0].total_valid_craft_count;
         }
     }
+    /**
+     * 艦隊内の第五艦隊所属艦をカウント
+     * @returns 
+     */
+    public countDaigo(): number {
+        const exactMatch = new Set(['潮', '潮改', '潮改二']);
+        return this.countShip([ // 潮は衝突するので完全一致でカウント
+            '那智', '足柄', '阿武隈', '多摩', '木曾',
+            '霞', '不知火', '薄雲', '曙', '初霜', '初春', '若葉'
+        ]) + this.ship_names.filter(ship_name => exactMatch.has(ship_name)).length;
+    }
+
     /**
      * 索敵値5以上の電探を装備した艦の数を返す
      * 57-7 から 25/02/06 現在使われてない

@@ -421,8 +421,36 @@ const option_data: OptionSelector = {
 				{ value: 'D' },
 			]
 		}
-	}, // @expansion
-};
+	},
+	'60-2': {
+		'phase': {
+			label: 'Phase',
+			options: [
+				{ value: '1', label: 'Uボス出現前' },
+				{ value: '2', label: 'Uボス出現後' },
+				{ value: '3', label: 'Wボス出現後' },
+			],
+		},
+		'B': {
+			options: [
+				{ value: 'C' },
+				{ value: 'D' },
+			]
+		},
+		'E': {
+			options: [
+				{ value: 'F' },
+				{ value: 'F1' },
+			]
+		},
+		'N': {
+			options: [
+				{ value: 'O' },
+				{ value: 'P' },
+			]
+		},
+	}
+}; // @expansion
 
 // 海域絞り込み
 const matched_data = computed(() => {

@@ -49,13 +49,13 @@ export const getSimSet = () => {
         '6-1', '6-2', '6-3', '6-4', '6-5',
         '7-1', '7-2', '7-3', '7-4', '7-5',
         '57-7',
-        '58-1', '58-2', '58-3', '58-4',
+        '58-1', /*'58-2',*/ '58-3', '58-4', // 58-2はトライアングルがあるので除外
         '59-1', '59-2', '59-3', '59-4', '59-5',
         '60-1', '60-2', // '60-3', '60-4', '60-5', '60-6',
     ]; // @expansion
 
     type MapKey = `${number}-${number}`; // '4-5' などのキー
-    type PhaseKey = 'phase' | 'difficulty' | 'tag' | string; // 特定のキーを定義しつつ汎用性も持たせる
+    type PhaseKey = 'phase' | 'difficulty' | 'tag' | 'is_third' |string; // 特定のキーを定義しつつ汎用性も持たせる
     type RouteMap = Record<PhaseKey, string[]>; // 各キーに対して行き先の配列を持つ
     type Options = Record<MapKey, RouteMap>; // マップキーと対応するルート情報
 
@@ -78,6 +78,7 @@ export const getSimSet = () => {
         '59-4': { 'phase': ['1', '2'], 'A2': ['B','C'], 'D': ['E','F'] },
         '59-5': { 'phase': ['1', '2', '3'], 'G': ['H','I'], 'O2': ['P','Q'], 'W': ['X','Z'] },
         '60-1': { 'phase': ['1', '2', '3'], 'is_third': ['0', '1'], 'A': ['B', 'D'] },
+        '60-2': { 'phase': ['1', '2', '3'], 'B': ['C', 'D'], 'E': ['F', 'F1'], 'N': ['O', 'P'] },
     }; // @expansion
 
     return {
