@@ -449,7 +449,58 @@ const option_data: OptionSelector = {
 				{ value: 'P' },
 			]
 		},
-	}
+	},
+	'60-3': {
+		'phase': {
+			label: 'Phase',
+			options: [
+				{ value: '1', label: '開始時点' },
+				{ value: '2', label: 'Gボス出現後' },
+				{ value: '3', label: '出撃地点2,3解放後' },
+				{ value: '4', label: 'Rボス出現後' },
+				{ value: '5', label: 'W泊地マス解放後' },
+			]
+		},
+		'difficulty': {
+			label: '難易度',
+			options: [
+				{ value: '4', label: '甲' },
+				{ value: '3', label: '乙' },
+				{ value: '2', label: '丙' },
+				{ value: '1', label: '丁' },
+			],
+		},
+		'A': {
+			options: [
+				{ value: 'B' },
+				{ value: 'C' },
+			]
+		},
+		'C': {
+			options: [
+				{ value: 'D' },
+				{ value: 'E' },
+			]
+		},
+		'H': {
+			options: [
+				{ value: 'H1' },
+				{ value: 'I' },
+			]
+		},
+		'M': {
+			options: [
+				{ value: 'M1' },
+				{ value: 'M2' },
+			]
+		},
+		'S': {
+			options: [
+				{ value: 'S1' },
+				{ value: 'S2' },
+			]
+		},
+	},
 }; // @expansion
 
 // 海域絞り込み

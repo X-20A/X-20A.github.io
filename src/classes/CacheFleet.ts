@@ -27,6 +27,9 @@ export default class CacheFleet implements Fleet {
 	/** 大発系 装備艦数 */
 	public readonly craft_carrier_count: number;
 
+    /** 北方迷彩(＋北方装備)装備艦数 */
+    public readonly arBulge_carrier_count: number;
+
 	/** 総ドラム缶装備数 */
 	public readonly total_drum_count: number;
 
@@ -46,6 +49,7 @@ export default class CacheFleet implements Fleet {
 		this.radar_carrier_count = this.ships.filter(item => item.has_radar).length;
 		this.radar5_carrier_count = this.ships.filter(item => item.has_radar5).length;
 		this.craft_carrier_count = this.ships.filter(item => item.has_craft).length;
+        this.arBulge_carrier_count = this.ships.filter(item => item.has_arBulge).length;
 		this.total_drum_count = this.ships.reduce((total, item) => {
 			return total + item.drum_count;
 		}, 0);

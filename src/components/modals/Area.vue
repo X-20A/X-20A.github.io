@@ -161,7 +161,7 @@ const events: Area[] = [ // @expansion
 		areas: [
 			{ value: "60-1", label: "E-1" },
 			{ value: "60-2", label: "E-2" },
-			// { value: "60-3", label: "E-3" },
+			{ value: "60-3", label: "E-3" },
 			// { value: "60-4", label: "E-4" },
 			// { value: "60-5", label: "E-5" },
 			// { value: "60-6", label: "E-6" },

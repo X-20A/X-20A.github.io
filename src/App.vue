@@ -39,8 +39,47 @@
 			<p>
 				<span>{{ adoptFleet.speed }}</span>
 				<span> | </span>
-				<span>搭載艦数[ドラム缶:{{ adoptFleet.drum_carrier_count }},大発系:{{ adoptFleet.craft_carrier_count }},電探:{{
-					adoptFleet.radar_carrier_count }}]</span>
+				<span>搭載艦数[ </span>
+
+				<span class="tooltip-container"> <!-- この辺はイベント後にAdditional Stat的なのにしまうかも -->
+					<span style="color: #4800ff;">第五艦隊</span>
+					<span class="tooltip-text">
+						那智,足柄,阿武隈,多摩,木曾,霞,不知火,薄雲,曙,潮,初霜,初春,若葉
+					</span>
+				</span>
+				<span>: {{ adoptFleet.countDaigo() }}&nbsp;</span>
+
+				<span class="tooltip-container">
+					<img :src="NotSpanner" alt="寒冷地装備＆甲板要員を装備していない空母系+あきつ丸" style="height: 17px;vertical-align: -3px;">
+					<span class="tooltip-text">寒冷地装備＆甲板要員を装備していない空母系+あきつ丸</span>
+				</span>
+				<span>: {{ adoptFleet.countNotEquipArctic() }}&nbsp;</span>
+
+				<span class="tooltip-container">
+					<img :src="Bulge" alt="北方迷彩(＋北方装備)" style="height: 20px;vertical-align: -4px;">
+					<span class="tooltip-text">北方迷彩(＋北方装備)</span>
+				</span>
+				<span>: {{ adoptFleet.arBulge_carrier_count }}&nbsp;</span>
+
+				<span class="tooltip-container">
+					<img :src="Drum" alt="ドラム缶" style="height: 17px;vertical-align: -3px;">
+					<span class="tooltip-text">ドラム缶</span>
+				</span>
+				<span>: {{ adoptFleet.drum_carrier_count }}&nbsp;</span>
+
+				<span class="tooltip-container">
+					<img :src="Craft" alt="大発系" style="height: 21px;vertical-align: -4px;">
+					<span class="tooltip-text">大発系</span>
+				</span>
+				<span>: {{ adoptFleet.craft_carrier_count }}&nbsp;</span>
+
+				<span class="tooltip-container">
+					<img :src="Radar" alt="電探系" style="height: 19px;vertical-align: -5px;">
+					<span class="tooltip-text">電探系</span>
+				</span>
+				<span>: {{ adoptFleet.radar_carrier_count }}</span>
+
+				<span> ]</span>
 			</p>
 			<template v-if="adoptFleet.fleet_type_id > 0"><!-- 連合艦隊 -->
 				<div>
@@ -77,11 +116,8 @@
 			</p>
 			<p style="color: red;">
 				イベント海域の分岐条件は未確定で、随時更新されます。
-				<a
-					href="https://x.com/momemi_kc/status/1898667989525827682"
-					target="_blank" rel="noopener noreferrer"
-					style="text-decoration: underline;"
-				>
+				<a href="https://x.com/momemi_kc/status/1898667989525827682" target="_blank" rel="noopener noreferrer"
+					style="text-decoration: underline;">
 					更新履歴
 				</a>
 			</p>
@@ -261,6 +297,12 @@ import {
 	convertFleetSpeedNameToId,
 	generateResourceHtml
 } from './utils/convertUtil';
+import Bulge from '@/icons/items/bulge.png';
+import NotSpanner from '@/icons/items/not-spanner.png';
+// import Spanner from '@/icons/items/spanner.png';
+import Drum from '@/icons/items/drum.png';
+import Craft from '@/icons/items/craft.png';
+import Radar from '@/icons/items/radar.png';
 
 const store = useStore();
 const modalStore = useModalStore();
@@ -704,6 +746,30 @@ onMounted(async () => {
 }
 .import-display {
 	padding-left: 230px;
+}
+.tooltip-container {
+	position: relative;
+	display: inline-block;
+}
+.tooltip-text {
+	position: absolute;
+	/* 上に表示 */
+	bottom: 70%;
+	left: 50%;
+	transform: translateX(-50%) translateY(-5px);
+	background-color: rgba(0, 0, 0, 0.75);
+	color: white;
+	padding: 5px 10px;
+	border-radius: 4px;
+	white-space: nowrap;
+	font-size: 12px;
+	opacity: 0;
+	transition: opacity 0.2s, transform 0.2s;
+	pointer-events: none;
+}
+.tooltip-container:hover .tooltip-text {
+	opacity: 1;
+	transform: translateX(-50%) translateY(-10px);
 }
 .alert {
 	width: 20px;

@@ -117,6 +117,7 @@ export default class SimController {
         const radar = fleet.radar_carrier_count;
         // const radar5 = fleet.radar5_carrier_count; // 索敵5以上の電探を装備した艦の数
         const craft = fleet.craft_carrier_count;
+        const arBulge = fleet.arBulge_carrier_count;
 
         const track = scanner.route;
 
@@ -4640,7 +4641,7 @@ export default class SimController {
                             return 'A1';
                         } else if (option.difficulty === '1') {
                             return 'A1';
-                        } else { // Number(option.diffculty) > 1
+                        } else { // Number(option.difficulty) > 1
                             return 'A';
                         }
                         break;
@@ -4773,7 +4774,7 @@ export default class SimController {
                             return 'Q';
                         } else if (CL === 1 && DD === 2 && AS === 1 && Ss === 3) {
                             return 'R';
-                        } else if (option.diffculty === '1' && CL > 0 && DD > 2) {
+                        } else if (option.difficulty === '1' && CL > 0 && DD > 2) {
                             return 'R';
                         } else if (AS === 0) {
                             return 'Q';
@@ -5946,7 +5947,200 @@ export default class SimController {
                         break;
                 }
                 break;
-            // case '60-3':
+            case '60-3':
+                switch (node) {
+                    case null:
+                        if (Number(option.phase) < 3) {
+                            return '1';
+                        } else if (Number(option.phase) > 2) {
+                            if (fleet.isUnion()) {
+                                return '3';
+                            } else if (fleet.countDaigo() > 3) {
+                                return '1';
+                            } else {
+                                return '2';
+                            }
+                        }
+                        break;
+                    case 'B':
+                        if (CVs > 0) {
+                            return 'B1';
+                        } else if (speed === '低速艦隊') {
+                            return 'B1';
+                        } else {
+                            return 'B2';
+                        }
+                        break;
+                    case 'B2':
+                        if (true) {
+                            return 'B4';
+                        }
+                        break;
+                    case 'D':
+                        if (CVs > 0) {
+                            return 'D1';
+                        } else if (option.difficulty === '4' && fleet.countDaigo() > 5) {
+                            return 'D3';
+                        } else if (option.difficulty === '3' && fleet.countDaigo() > 3) {
+                            return 'D3';
+                        } else if (option.difficulty === '2' && fleet.countDaigo() > 2) {
+                            return 'D3';
+                        } else if (option.difficulty === '1') {
+                            return 'D3';
+                        } else {
+                            return 'D1';
+                        }
+                        break;
+                    case 'D1':
+                        if (true) {
+                            return 'D3';
+                        }
+                        break;
+                    case 'E':
+                        if (option.phase === '1') {
+                            return 'E2';
+                        } else if (CL === 0) {
+                            return 'E2';
+                        } else if (Number(option.difficulty) > 1 && arBulge > 2) {
+                            return 'F';
+                        } else { // Number(option.difficulty) < 3
+                            return 'E2';
+                        }
+                        break;
+                    case 'F1':
+                        if (option.difficulty === '1') {
+                            return 'G';
+                        } else if (speed === '低速艦隊') {
+                            return 'F3';
+                        } else if (Ds < 4) {
+                            return 'F3';
+                        } else if (option.difficulty === '4' && fleet.countDaigo() > 5) {
+                            return 'G';
+                        } else if (option.difficulty === '3' && fleet.countDaigo() > 3) {
+                            return 'G';
+                        } else if (option.difficulty === '2' && fleet.countDaigo() > 1) {
+                            return 'G';
+                        } else {
+                            return 'F3';
+                        }
+                        break;
+                    case 'F3':
+                        if (track.includes('1')) {
+                            return 'G';
+                        } else { // track.includes('3')
+                            return 'U';
+                        }
+                        break;
+                    case 'H1':
+                        if (true) {
+                            return 'H3';
+                        }
+                        break;
+                    case 'I':
+                        if (speed === '低速艦隊') {
+                            return 'I1';
+                        } else if (f_length - arBulge > 5) {
+                            return 'I2';
+                        } else { // f_length - arBulge < 6
+                            return 'J';
+                        }
+                        break;
+                    case 'K':
+                        if (track.includes('2')) {
+                            if (true) {
+                                return 'K2';
+                            }
+                        } else { // track.includes('3')
+                            return 'L';
+                        }
+                        break;
+                    case 'L':
+                        if (Number(option.phase) < 4) {
+                            return 'M';
+                        } else if (f_type === '輸送護衛部隊') {
+                            return 'N';
+                        } else {
+                            return 'M';
+                        }
+                        break;
+                    case 'M2':
+                        if (LHA > 0) {
+                            return 'Q';
+                        } else if (CL > 2) {
+                            return 'S';
+                        } else if (speed !== '低速艦隊') {
+                            return 'S';
+                        } else {
+                            return 'P';
+                        }
+                        break;
+                    case 'P':
+                        if (speed !==  '低速艦隊') {
+                            return 'O1';
+                        } else if (BBs < 3) {
+                            return 'O1';
+                        } else {
+                            return 'Q';
+                        }
+                        break;
+                    case 'Q':
+                        if (speed === '低速艦隊') {
+                            return 'O2';
+                        } else {
+                            return 'S';
+                        }
+                        break;
+                    case 'T':
+                        if (CAs > 1 && CL > 1 && Ds > 3 && BBCVs < 4 && (BBs === 0 || CV + CVB === 0) && speed !== '低速艦隊') {
+                            return 'U';
+                        } else {
+                            return 'F3';
+                        }
+                        break;
+                    case 'V':
+                        if (option.phase === '5' && fleet.countHakuchi() > 0) {
+                            return 'S3';
+                        } else {
+                            return 'X';
+                        }
+                        break;
+                    case 'A':
+                        if(option.A === 'B') {
+                            return 'B';
+                        } else {
+                            return 'C';
+                        }
+                        break;
+                    case 'C':
+                        if (option.C === 'D') {
+                            return 'D';
+                        } else {
+                            return 'E';
+                        }
+                        break;
+                    case 'H':
+                        if (option.H === 'H1') {
+                            return 'H1';
+                        } else {
+                            return 'I';
+                        }
+                        break;
+                    case 'M':
+                        if (option.M === 'M1') {
+                            return 'M1';
+                        } else {
+                            return 'M2';
+                        }
+                        break;
+                    case 'S':
+                        if (option.S === 'S1') {
+                            return 'S1';
+                        } else {
+                            return 'S2';
+                        }
+                        break;
+                }
+                break;
             // case '60-4':
             // case '69-5':
             // case '60-6':

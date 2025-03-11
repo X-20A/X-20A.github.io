@@ -61,6 +61,9 @@ export default class AdoptFleet implements Fleet {
     /** 大発系 装備艦数 */
     public readonly craft_carrier_count: number;
 
+    /** 北方迷彩(＋北方装備)装備艦数 */
+    public readonly arBulge_carrier_count: number;
+
     constructor(fleets: CacheFleet[], fleet_type_id: FleetTypeId) {
         this.fleets = fleets;
         this.fleet_type_id = fleet_type_id;
@@ -109,6 +112,7 @@ export default class AdoptFleet implements Fleet {
             this.drum_carrier_count = fleets[0].drum_carrier_count + fleets[1].drum_carrier_count;
             this.radar_carrier_count = fleets[0].radar_carrier_count + fleets[1].radar_carrier_count;
             this.craft_carrier_count = fleets[0].craft_carrier_count + fleets[1].craft_carrier_count;
+            this.arBulge_carrier_count = fleets[0].arBulge_carrier_count + fleets[1].arBulge_carrier_count;
         } else {
             const fleet = fleets[0];
 
@@ -128,6 +132,7 @@ export default class AdoptFleet implements Fleet {
             this.drum_carrier_count = fleet.drum_carrier_count;
             this.radar_carrier_count = fleet.radar_carrier_count;
             this.craft_carrier_count = fleet.craft_carrier_count;
+            this.arBulge_carrier_count = fleet.arBulge_carrier_count;
         }
     }
 
@@ -306,6 +311,12 @@ export default class AdoptFleet implements Fleet {
             '那智', '足柄', '阿武隈', '多摩', '木曾',
             '霞', '不知火', '薄雲', '曙', '初霜', '初春', '若葉'
         ]) + this.ship_names.filter(ship_name => exactMatch.has(ship_name)).length;
+    }
+    /**
+     * 泊地修理艦の数を返す
+     */
+    public countHakuchi(): number {
+        return this.countShip(['明石改', '朝日改', '秋津洲改']);
     }
 
     /**

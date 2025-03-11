@@ -27,6 +27,7 @@ export default class Ship {
 	public readonly has_radar: boolean;
 	public readonly has_radar5: boolean;
 	public readonly has_craft: boolean;
+    public readonly has_arBulge: boolean;
 	public readonly valid_craft_count: number;
 	public readonly has_arctic_gear: boolean;
 	
@@ -81,7 +82,8 @@ export default class Ship {
 		this.has_radar5 = equips.some(item => ([5812, 5813].includes(item.type) && item.seek >= 5));
 		// 特大発動艇＋戦車第11連隊及びM4A1のみ除外 M4A1はtype:84524で含まれない
 		this.has_craft = equips.some(item => ([81424, 84724].includes(item.type) && item.id !== 230));
-		this.valid_craft_count = equips.filter(item => Const.VALID_CRAFTS.includes(item.id)).length;
+        this.has_arBulge = equips.some(item => item.id === 268);
+        this.valid_craft_count = equips.filter(item => Const.VALID_CRAFTS.includes(item.id)).length;
 		this.has_arctic_gear = equips.some(item => item.id === 402);
 	}
 

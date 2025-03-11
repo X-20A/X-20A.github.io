@@ -157,8 +157,13 @@ li {
 	margin-left: 5px;
 }
 .item-icon {
-	vertical-align: -6px;
 	margin-right: 3px;
+}
+.drum-icon {
+	vertical-align: -3px;
+}
+.craft-icon {
+	vertical-align: -6px;
 }
 /* v-htmlなんかはstyle scopedが効かないのでこっちに書く */
 /*デザインボタン*/

@@ -68,6 +68,7 @@ export function convertBranchDataToHTML(data: string, topic: string): string {
     converted_data = converted_data.replaceAll('$oc', '</span>');
     converted_data = converted_data.replaceAll('$bo', '<span style="font-weight:bold;">');
     converted_data = converted_data.replaceAll('$ob', '</span>');
+    converted_data = converted_data.replaceAll('$da', '<span style="color:#4800ff;">第五艦隊</span>');
     converted_data = converted_data.replaceAll(
         '$or',
         `<a
@@ -382,7 +383,7 @@ export async function generateResourceHtml(
                 html += `<p><img src="${icons.fuel}" class="item-icon"></p>`;
                 html += "<p>base: 40</p>";
                 html += "<p>max: 200</p>";
-                html += `<p>add: <span style="font-weight:600;color:#1e00ff;">${fuel}</span> = <img src="${icons.drum}" class="item-icon">${fleet_total_drum} * 8 + <img src="${icons.craft}" class="item-icon">${fleet_total_craft} * 7</p>`;
+                html += `<p>add: <span style="font-weight:600;color:#1e00ff;">${fuel}</span> = <img src="${icons.drum}" class="item-icon drum-icon">${fleet_total_drum} * 8 + <img src="${icons.craft}" class="item-icon craft-icon">${fleet_total_craft} * 7</p>`;
                 html += `<p>+ 航空戦艦 ${composition.BBV} * 10</p>`;
                 html += `<p>+ 軽空母 ${composition.CVL} * 7</p>`;
                 html += `<p>+ 水上機母艦 ${composition.AV} * 6</p>`;
@@ -441,7 +442,7 @@ export async function generateResourceHtml(
         if (key === 'imo') {
             html += `<p>add: <span style="font-weight:600;color:#1e00ff;">${resource_total[key]}</span> = Math.trunc(${fleet_total_drum} * ${d_mag}) + ${fleet_total_craft} * ${c_mag}</p>`;
         } else {
-            html += `<p>add: <span style="font-weight:600;color:#1e00ff;">${resource_total[key]}</span> = <img src="${icons.drum}" class="item-icon">${fleet_total_drum} * ${d_mag} + <img src="${icons.craft}" class="item-icon">${fleet_total_craft} * ${c_mag}</p>`;
+            html += `<p>add: <span style="font-weight:600;color:#1e00ff;">${resource_total[key]}</span> = <img src="${icons.drum}" class="item-icon drum-icon">${fleet_total_drum} * ${d_mag} + <img src="${icons.craft}" class="item-icon craft-icon">${fleet_total_craft} * ${c_mag}</p>`;
         }
         html += `<p>max: ${resource_status[`max_${key}`] ? resource_status[`max_${key}`] : 'unknown'}</p>`;
     }
