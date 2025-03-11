@@ -393,7 +393,7 @@ export async function generateResourceHtml(
                 html += `<p><img src="${icons.imo}" class="item-icon"></p>`;
                 html += "<p>base: 20</p>";
                 html += "<p>max: 120</p>";
-                html += `<p>add: <span style="font-weight:600;color:#1e00ff;">${imo}</span> = <img src="${icons.drum}" class="item-icon">${fleet_total_drum} * 6 + <img src="${icons.craft}" class="item-icon">${fleet_total_craft} * 10</p>`;
+                html += `<p>add: <span style="font-weight:600;color:#1e00ff;">${imo}</span> = <img src="${icons.drum}" class="item-icon drum-icon">${fleet_total_drum} * 6 + <img src="${icons.craft}" class="item-icon craft-icon">${fleet_total_craft} * 10</p>`;
                 html += `<p>+ 航空戦艦 ${composition.BBV} * 10</p>`;
                 html += `<p>+ 軽空母 ${composition.CVL} * 4</p>`;
                 html += `<p>+ 水上機母艦 ${composition.AV} * 5</p>`;

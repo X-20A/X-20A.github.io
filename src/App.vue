@@ -42,7 +42,7 @@
 				<span>搭載艦数[ </span>
 
 				<span class="tooltip-container"> <!-- この辺はイベント後にAdditional Stat的なのにしまうかも -->
-					<span style="color: #4800ff;">第五艦隊</span>
+					<span style="color: #4800ff;cursor: default;">第五艦隊</span>
 					<span class="tooltip-text">
 						那智,足柄,阿武隈,多摩,木曾,霞,不知火,薄雲,曙,潮,初霜,初春,若葉
 					</span>
@@ -51,7 +51,7 @@
 
 				<span class="tooltip-container">
 					<img :src="NotSpanner" alt="寒冷地装備＆甲板要員を装備していない空母系+あきつ丸" style="height: 17px;vertical-align: -3px;">
-					<span class="tooltip-text">寒冷地装備＆甲板要員を装備していない空母系+あきつ丸</span>
+					<span class="tooltip-text">寒冷地装備＆甲板要員を装備していない(空母系+あきつ丸)</span>
 				</span>
 				<span>: {{ adoptFleet.countNotEquipArctic() }}&nbsp;</span>
 
@@ -114,14 +114,14 @@
 				<strong> 4: </strong>
 				<span>{{ adoptFleet.seek[3] }}</span>
 			</p>
-			<p style="color: red;">
+			<p style="color: #D90000;">
 				イベント海域の分岐条件は未確定で、随時更新されます。
 				<a href="https://x.com/momemi_kc/status/1898667989525827682" target="_blank" rel="noopener noreferrer"
 					style="text-decoration: underline;">
 					更新履歴
 				</a>
 			</p>
-			<p style="color: red;">新艦組の素索敵値は0で計算されています。</p>
+			<p style="color: #D90000;">新艦組の素索敵値は0で計算されています。</p>
 		</div>
 		<div class="result-container">
 			<template v-if="simResult.length > 0">
