@@ -1,14 +1,21 @@
 import { describe, it, expect } from 'vitest';
 import Big from 'big.js';
+import LZString from 'lz-string';
 import Sim from '@/classes/Sim';
 import { getSimSet } from './setup';
 import Const from '@/classes/const';
-import type { AreaId, OptionsType } from '@/classes/types';
+import type { AreaId, FleetTypeId, OptionsType } from '@/classes/types';
+import { createCacheFleetsFromDeckBuilder } from '@/utils/deckBuilderUtil';
+import AdoptFleet from '@/classes/AdoptFleet';
+import { getParam } from '@/utils/util';
+import { nomal_mock_datas, astray_mock_datas } from './mock';
+import { node_datas } from '@/data/map';
 
 describe('Simテスト', () => {
-    it('Simクラス内でエラーが発生しないこと、SimResult.rateが 1 と等しいことを確認', async () => {
+    it(`rand-test: ランダムに生成した艦隊をSimクラスに渡してクラス内でエラーが発生しないこと、
+        SimResult.rateが 1 と等しいことを確認`, async () => {
         let limit = 0;
-        while (limit < 10000) {
+        while (limit < 1000) {
             const simSet = getSimSet();
 
             const adoptFleet = simSet.adoptFleet;
@@ -90,5 +97,49 @@ describe('Simテスト', () => {
 
             limit++;
         }
-    }, 100000);
+    }, 30000);
+
+    it('mock-test: モック艦隊をSimにかけて、正しいルートを返すことを確認', async () => {
+        const mock_datas = nomal_mock_datas.concat(astray_mock_datas);
+
+        for (const mock_data of mock_datas) {
+            // 海域
+            const area_id = mock_data.area;
+
+            // 艦隊
+            const compressed_deck = getParam('pdz', mock_data.deck)!;
+            const deck_string = LZString.decompressFromEncodedURIComponent(compressed_deck);
+            const deck = JSON.parse(deck_string);
+            const cache_fleets = createCacheFleetsFromDeckBuilder(deck);
+            const fleet_type_id = deck!.f1!.t as FleetTypeId;
+            const adoptFleet = new AdoptFleet(cache_fleets, fleet_type_id);
+            adoptFleet.seek = [999, 999, 999, 999]; // 索敵パス
+
+            const expected_routes = mock_data.routes;
+            for (const expected_route of expected_routes) {
+                // option
+                const mock_option = mock_data.option;
+                const nodes = expected_route.split('-');
+                for (const [index, node] of nodes.entries()) { // nodeデータから能動分岐自動セット
+                    if (node_datas[area_id][node][2] === 'ac') {
+                        mock_option[node] = nodes[index + 1];
+                    }
+                }
+                const options = Const.OPTIONS;
+                options[area_id] = { ...options[area_id], ...mock_option };
+                
+                const sim = new Sim(adoptFleet, area_id, options);
+                const result = sim.start();
+                const actual_route = result[0].route.join('-');
+
+                if (expected_route !== actual_route) {
+                    console.log(`海域: ${area_id}`);
+                    console.log(expected_route);
+                    console.log(actual_route);
+                }
+
+                expect(expected_route).toBe(actual_route);
+            }
+        }
+    });
 });

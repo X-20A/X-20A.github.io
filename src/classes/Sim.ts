@@ -1,4 +1,4 @@
-import { edges } from "@/data/map";
+import { edge_datas } from "@/data/map";
 import CustomError from "./CustomError";
 import type AdoptFleet from "./AdoptFleet";
 import Scanner from "./Scanner";
@@ -50,7 +50,7 @@ export default class SimController {
         // NOTE: 同期処理で 24ms - 28ms 😢
         const scanners: Scanner[] = [new Scanner([null], null, 1)];
         const results: SimResult[] = [];
-        const area_routes = edges[this.area_id];
+        const area_routes = edge_datas[this.area_id];
         let i = 0;
         while (scanners.length > 0) {
             const scanner = scanners.pop()!;
@@ -5704,9 +5704,9 @@ export default class SimController {
                         }
                         break;
                     case 'B':
-                        if (CL > 0 && Ds > 1 && speed !== '低速艦隊') {
+                        if (CL + CT > 0 && Ds > 1 && speed !== '低速艦隊') {
                             return 'B2';
-                        } else if (CL > 0 && Ds > 1 && BBCVs === 0) {
+                        } else if (CL + CT > 0 && Ds > 1 && BBCVs === 0) {
                             return 'B2';
                         } else {
                             return 'B1';
@@ -5722,10 +5722,10 @@ export default class SimController {
                         }
                         break;
                     case 'B2':
-                        if (DE > 1) {
-                            return 'C1';
-                        } else if (speed === '低速艦隊') {
-                            if (BBs + CAs + CLT > 0) {
+                        if (speed === '低速艦隊') {
+                            if (DE > 1) {
+                                return 'C1';
+                            } else if (BBs + CAs + CLT > 0) {
                                 return 'C';
                             } else {
                                 return 'C1';
@@ -5733,15 +5733,13 @@ export default class SimController {
                         } else { // f_speed !== '低速艦隊'
                             if (Ss > 0) {
                                 return 'C1';
+                            } else if (BBCVs > 1) {
+                                return 'C1';
                             } else if (Ds > 2) {
                                 return 'C1';
-                            } else if (Ds < 2) {
-                                return 'C';
-                            } else if (CAs > 2) {
-                                return 'C';
-                            }  else if (BBCVs > 0) {
+                            } else if (Ds === 2 && BBCVs === 1) {
                                 return 'C1';
-                            } else if (f_length < 6) {
+                            } else if (Ds === 2 && f_length < 6) {
                                 return 'C1';
                             } else {
                                 return 'C';
@@ -5751,20 +5749,18 @@ export default class SimController {
                     case 'C':
                         if (Number(option.phase) < 3) {
                             return 'G';
-                        } else if (BBs > 0) {
-                            return 'G';
-                        } else if (CV + CVB > 1) {
-                            return 'G';
-                        } else if (AV > 0) {
-                            return 'G';
-                        } else if (Ds < 3) {
-                            return 'G';
-                        } else {
+                        } else if (BBs === 0 && CVs < 2 && CL > 0 && Ds > 2 && speed !== '低速艦隊') {
                             return 'I';
+                        } else {
+                            return 'G';
                         }
                         break;
                     case 'C1':
                         if (Number(option.phase) < 3) {
+                            return 'C2';
+                        } else if (Ss > 0) {
+                            return 'C2';
+                        } else if (DE > 1) {
                             return 'C2';
                         } else {
                             return 'K';
@@ -5779,26 +5775,24 @@ export default class SimController {
                             return 'D1';
                         } else if (Ds < 2) {
                             return 'D1';
-                        } else if (Ds === 2) {
-                            return 'D2';
                         } else if (DE > 2) {
                             return 'D3';
-                        } else if (CVs > 0 && DE === 2 && CVs + DE === f_length) {
+                        } else if (CL === 1 && Ds === 3 && f_length === 4) {
                             return 'D3';
-                        } else if (CL > 0 && speed !== '低速艦隊' && CL + DD === f_length) {
+                        } else if (CL === 1 && Ds === 4 && speed !== '低速艦隊') {
+                            return 'D3';
+                        } else if (CVs === 1 && DD === 2 && DE === 2) {
                             return 'D3';
                         } else {
                             return 'D2';
                         }
                         break;
                     case 'G':
-                        if (CL === 0) {
-                            return 'K';
-                        } else if (Ds < 2) {
-                            return 'K';
-                        } else if (BBs < 2) {
+                        if (fleet.isFaster()) {
                             return 'M';
-                        } else if (speed !== '低速艦隊') {
+                        } else if (CL > 0 && Ds > 1 && BBs < 2) {
+                            return 'M';
+                        } else if (CL > 0 && Ds > 1 && speed !== '低速艦隊') {
                             return 'M';
                         } else {
                             return 'K';
@@ -5812,7 +5806,7 @@ export default class SimController {
                         }
                         break;
                     case 'M':
-                        if (seek[3] >= 65) {
+                        if (seek[3] >= 63) {
                             return 'O';
                         } else {
                             return 'N';

@@ -7,7 +7,8 @@
     "dev": "bun run vite",
 	"build": "bun run vue-tsc -b && bun run vite build",
 	"preview": "bun run vite preview",
-	"test": "bun run vitest --ui",
+	"rand-test": "vitest --run -t 'rand-test'",
+	"mock-test": "vitest --run -t 'mock-test'",
 	"postinstall": "bun run patch-package",
 	"dep": "bunx depcheck",
 	"lint": "bun run biome lint"

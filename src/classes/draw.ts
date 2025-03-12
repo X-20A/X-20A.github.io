@@ -1,5 +1,5 @@
 import cytoscape from 'cytoscape';
-import { nodes, edges } from '@/data/map';
+import { node_datas, edge_datas } from '@/data/map';
 import styles from '@/styles';
 import type { AreaId, SimResult } from './types';
 import Big from 'big.js';
@@ -52,7 +52,7 @@ export default function drawMap(
         edges: [] as Edge[]
     };
     // nodes流し込み
-    const local_nodes = nodes[selectedArea];
+    const local_nodes = node_datas[selectedArea];
     for (const key in local_nodes) {
         if (Object.hasOwn(local_nodes, key)) {
             // 座標,マスの種類
@@ -64,7 +64,7 @@ export default function drawMap(
         }
     }
     // edges流し込み
-    const local_edges = edges[selectedArea];
+    const local_edges = edge_datas[selectedArea];
     for (const key in local_edges) {
         if (Object.hasOwn(local_edges, key)) {
             const [source, target] = local_edges[key];

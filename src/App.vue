@@ -286,7 +286,7 @@ import AdoptFleet from './classes/AdoptFleet';
 import type DeckBuilder from '@/classes/types/DeckBuilder';
 import type { DeckBuilder as GkcoiDeckBuilder } from 'gkcoi/dist/type';
 import drawMap from '@/classes/draw';
-import { edges } from './data/map';
+import { edge_datas } from './data/map';
 import {
 	getGkcoiBlob,
 	getCyBlob,
@@ -613,7 +613,7 @@ const switchActive = (event: Event) => {
 		const option = options.value[drewArea.value]!;
 		const current_selectted = option[node_name];
 
-		const area_edges = edges[drewArea.value];
+		const area_edges = edge_datas[drewArea.value];
 		const possible_edges =
 			area_edges.filter(item => item[0] === node_name);
 
