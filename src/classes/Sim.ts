@@ -5835,7 +5835,9 @@ export default class SimController {
                     case '2':
                         if (f_type === '輸送護衛部隊') {
                             return 'L';
-                        } else if (CL > 1 && Ds > 2 && BBs < 3) {
+                        } else if (CL > 1 && DD > 2 && speed !== '低速艦隊') {
+                            return 'L';
+                        } else if (CL > 1 && DD > 2 && BBs < 3 && CAs < 4) {
                             return 'L';
                         } else {
                             return 'H';
@@ -5857,19 +5859,19 @@ export default class SimController {
                     case 'C':
                         if (CL > 0 && Ds > 1) {
                             return 'H';
-                        } else if (Ds > 2 && speed !== '低速艦隊') {
+                        } else if (Ds > 1 && speed !== '低速艦隊') {
                             return 'H';
                         } else {
                             return 'G';
                         }
                         break;
                     case 'F':
-                        if (option.phase === '1') {
+                        if (track.includes('D')) {
                             return 'F2';
-                        } else if (fleet.isUnion() && CA > 1 && CL > 1 && CV + CVB === 0) {
-                            return 'R';
+                        } else if (CV + CVB > 0) {
+                            return 'F2';
                         } else {
-                            return 'F2';
+                            return 'R';
                         }
                         break;
                     case 'H':
@@ -5878,14 +5880,18 @@ export default class SimController {
                         }
                         break;
                     case 'I':
-                        if (seek[3] >= 80) {
+                        if (seek[3] >= 82) {
                             return 'K';
                         } else {
                             return 'J';
                         }
                         break;
                     case 'M':
-                        if (CA > 1 && CL > 1 && BBs < 3) {
+                        if (BBs + CV + CVB > 2) {
+                            return 'D';
+                        } else if (BB > 1 && speed === '低速艦隊') {
+                            return 'D';
+                        } else if (CA > 1 && CL > 1 && Ds > 2) {
                             return 'N';
                         } else {
                             return 'D';
@@ -5894,7 +5900,7 @@ export default class SimController {
                     case 'P':
                         if (f_type === '輸送護衛部隊') {
                             return 'R';
-                        } else if (BB + CV + CVB === 0 && speed !== '低速艦隊') {
+                        } else if (BB + CV + CVB === 0 && BBV + CVL < 2 && speed !== '低速艦隊') {
                             return 'R';
                         } else {
                             return 'F';
@@ -5903,12 +5909,18 @@ export default class SimController {
                     case 'Q':
                         if (Number(option.phase) < 3) {
                             return 'S';
-                        } else if (Ds > 5 && CL > 2) {
-                            return 'V';
-                        } else if (Ds > 5 && speed !== '低速艦隊') {
-                            return 'V';
-                        } else {
+                        } else if (Ds < 6) {
                             return 'S';
+                        } else if (CL + CT > 2) {
+                            return 'V';
+                        } else if (speed === '低速艦隊') {
+                            return 'S';
+                        } else if (BBs > 0 && CV + CVB > 0) {
+                            return 'S';
+                        } else if (CVs > 1) {
+                            return 'S';
+                        } else {
+                            return 'V';
                         }
                         break;
                     case 'V1':
