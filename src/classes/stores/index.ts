@@ -1,7 +1,7 @@
 import { atom } from 'jotai'
 import type { Mode, Ttemplate } from '../types';
 
-export const modeAtom = atom('nomal' as Mode);
+export const modeAtom = atom(60 as Mode);
 
 export const areaAtom = atom(0 as number);
 

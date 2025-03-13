@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useAtom } from 'jotai';
 import { modeAtom, areaAtom, targetAtom, templateAtom } from './classes/stores';
 import Areas from './components/Areas';
@@ -14,10 +14,9 @@ const App: React.FC = () => {
   const [target, setTarget] = useAtom(targetAtom);
   const [template, setTemplate] = useAtom(templateAtom);
   const worldInfos = Const.worldInfos;
-  const worlds = worldInfos
-                  .find(item => item.mode_id === mode)!
-                  .worlds
-  ;
+  const worlds = worldInfos.find(item => item.mode_id === mode)!.worlds;
+
+  const [memoText, setMemoText] = useState('項目をWクリックすると直接開きます');
 
   useEffect(() => {
     if (!template) return;
@@ -26,7 +25,15 @@ const App: React.FC = () => {
     const route = template.route;
     drawMap(area_id, route);
   }, [template]);
-  
+
+  useEffect(() => {
+    if (template?.memo === null) {
+      setMemoText('');
+    } else if (template?.memo) {
+      setMemoText(template.memo);
+    }
+  }, [template?.memo]);
+
   return (
     <>
       <Sidebar />
@@ -34,14 +41,10 @@ const App: React.FC = () => {
         <div className="main">
           <div className="upper">
             <div className="map">
-              {template
-                ? (
-                  <div className="cy" id="cy"></div>
-                )
-                : (
-                <span className="message">
-                  👇👇👇🙄👇
-                </span>
+              {template ? (
+                <div className="cy" id="cy"></div>
+              ) : (
+                <span className="message">👇👇👇🙄👇</span>
               )}
             </div>
             <div className="info">
@@ -57,13 +60,10 @@ const App: React.FC = () => {
                 </a>
               </p>
               <div className="memo">
-                {template?.memo
-                  ? template.memo.split('$e').map((text, index) => (
-                    <p key={index}>{text}</p>
-                  ))
-                  : '項目をWクリックすると直接開きます'}
+                {memoText
+                  ? memoText.split('$e').map((text, index) => <p key={index}>{text}</p>)
+                  : null}
               </div>
-
             </div>
           </div>
           <div className="middle">
@@ -90,7 +90,7 @@ const App: React.FC = () => {
                   className={`modes ${mode === worldInfo.mode_id ? 'mode-selected' : ''}`}
                   onMouseDown={() => setMode(worldInfo.mode_id)}
                 >
-                  { worldInfo.label }
+                  {worldInfo.label}
                 </div>
               ))}
             </div>
@@ -99,7 +99,7 @@ const App: React.FC = () => {
       </div>
       <Areas />
     </>
-  )
-}
+  );
+};
 
-export default App
+export default App;

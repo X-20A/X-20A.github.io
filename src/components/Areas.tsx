@@ -36,7 +36,8 @@ const Areas: React.FC = () => {
       items = vangards.filter(item => item.world === area);
       break;
     case 59:
-      items = templates.filter(item => item.world === 59 && item.area === area);
+    case 60:
+      items = templates.filter(item => item.world === mode && item.area === area);
       break;
   }
 

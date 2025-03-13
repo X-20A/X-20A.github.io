@@ -24,7 +24,7 @@ const templates: Ttemplate[] = [
         "area": 3,
         "route": "1-C-F-J",
         "url": "27ffz8ba+",
-        "memo": "none"
+        "memo": null
     },
     {
         "title": "1-4_BHL",
@@ -32,7 +32,7 @@ const templates: Ttemplate[] = [
         "area": 4,
         "route": "1-B-C-F-E-H-L",
         "url": "2d3n34oe+",
-        "memo": "none"
+        "memo": null
     },
     {
         "title": "1-5_ADFJ_破壊後",
@@ -48,7 +48,7 @@ const templates: Ttemplate[] = [
         "area": 6,
         "route": "1-A-E-G-F-B-N",
         "url": "255m4npx+",
-        "memo": "none"
+        "memo": null
     },
     {
         "title": "1-6_EKJD",
@@ -56,7 +56,7 @@ const templates: Ttemplate[] = [
         "area": 6,
         "route": "1-A-E-G-K-M-J-D-N",
         "url": "2xurzrzs+",
-        "memo": "none"
+        "memo": null
     },
     // @2
     {
@@ -65,7 +65,7 @@ const templates: Ttemplate[] = [
         "area": 1,
         "route": "1-C-E-H",
         "url": "2cwk4rbz+",
-        "memo": "none"
+        "memo": null
     },
     {
         "title": "2-1_CDH",
@@ -73,7 +73,7 @@ const templates: Ttemplate[] = [
         "area": 1,
         "route": "1-C-D-H",
         "url": "2akvpfvo+",
-        "memo": "none"
+        "memo": null
     },
     {
         "title": "2-3_EFJN",
@@ -81,7 +81,7 @@ const templates: Ttemplate[] = [
         "area": 3,
         "route": "1-B-E-F-J-N",
         "url": "23292uy5+",
-        "memo": "none"
+        "memo": null
     },
     {
         "title": "2-4_BLP",
@@ -97,7 +97,7 @@ const templates: Ttemplate[] = [
         "area": 5,
         "route": "1-B-F-J-O",
         "url": "24j2q4dg+",
-        "memo": "none"
+        "memo": null
     },
     {
         "title": "2-5_BFEO",
@@ -105,7 +105,7 @@ const templates: Ttemplate[] = [
         "area": 5,
         "route": "1-B-F-E-I-O",
         "url": "23e35zje+",
-        "memo": "none"
+        "memo": null
     },
     {
         "title": "2-5_CEO",
@@ -113,7 +113,7 @@ const templates: Ttemplate[] = [
         "area": 5,
         "route": "1-C-E-I-O",
         "url": "2xrxba6u+",
-        "memo": "none"
+        "memo": null
     },
     // @3
     {
@@ -122,7 +122,7 @@ const templates: Ttemplate[] = [
         "area": 1,
         "route": "1-C-F-G",
         "url": "29ffx6lz+",
-        "memo": "none"
+        "memo": null
     },
     {
         "title": "3-2_CL",
@@ -235,7 +235,7 @@ const templates: Ttemplate[] = [
         "area": 2,
         "route": "1-A-C-L",
         "url": "25avnd4u+",
-        "memo": "none"
+        "memo": null
     },
     {
         "title": "4-2_BDCL",
@@ -243,7 +243,7 @@ const templates: Ttemplate[] = [
         "area": 2,
         "route": "1-B-D-C-L",
         "url": "27umx2k3+",
-        "memo": "none"
+        "memo": null
     },
     {
         "title": "4-3_DHN",
@@ -300,7 +300,7 @@ const templates: Ttemplate[] = [
         "area": 1,
         "route": "1-B-C-F-J",
         "url": "25fp2uw7+",
-        "memo": "none"
+        "memo": null
     },
     {
         "title": "5-1_BEGJ",
@@ -308,7 +308,7 @@ const templates: Ttemplate[] = [
         "area": 1,
         "route": "1-B-E-G-J",
         "url": "2xkewumu+",
-        "memo": "none"
+        "memo": null
     },
     {
         "title": "5-2_CDFO",
@@ -316,7 +316,7 @@ const templates: Ttemplate[] = [
         "area": 2,
         "route": "1-B-C-D-F-O",
         "url": "2c7sg9zq+",
-        "memo": "none"
+        "memo": null
     },
     {
         "title": "5-3_IP",
@@ -389,7 +389,7 @@ const templates: Ttemplate[] = [
         "area": 1,
         "route": "1-A-F-G-H-K",
         "url": "2dcshnpu+",
-        "memo": "none"
+        "memo": null
     },
     {
         "title": "6-1_CFHK",
@@ -397,7 +397,7 @@ const templates: Ttemplate[] = [
         "area": 1,
         "route": "1-C-F-G-H-K",
         "url": "2avaerm2+",
-        "memo": "none"
+        "memo": null
     },
     {
         "title": "6-2_CJK",
@@ -405,7 +405,7 @@ const templates: Ttemplate[] = [
         "area": 2,
         "route": "1-C-E-J-K",
         "url": "25pprd5g+",
-        "memo": "none"
+        "memo": null
     },
     {
         "title": "6-3_CEJ",
@@ -567,6 +567,126 @@ const templates: Ttemplate[] = [
         "url": "2dls5y6z+",
         "memo": "基地未設定"
     },
-];
+    {
+        "title": "60-1_CGMO_O削り",
+        "world": 60,
+        "area": 1,
+        "route": "2-F-C-G-M-O",
+        "url": "24kmrtbb+",
+        "memo": "煙幕: ボス前M$e阻塞気球: ボス$e基地: 1部隊ボス集中"
+    },
+    {
+        "title": "60-1_CGMO_O破壊",
+        "world": 60,
+        "area": 1,
+        "route": "2-F-C-G-M-O",
+        "url": "2ypwabjq+",
+        "memo": "煙幕: ボス前M$e阻塞気球: ボス$e基地: 1部隊ボス集中"
+    },
+    {
+        "title": "60-2_A2CHIK",
+        "world": 60,
+        "area": 2,
+        "route": "1-A-A2-B-C-H-I-K",
+        "url": "29hawldm+",
+        "memo": "ギミック2想定$e基地: K, H それぞれ集中"
+    },
+    {
+        "title": "60-2_MPRU_U輸送",
+        "world": 60,
+        "area": 2,
+        "route": "2-L-M-N-P-R-T-U",
+        "url": "2ddjt972+",
+        "memo": "煙幕: P潜水$e基地: ボス、R それぞれ集中"
+    },
+    {
+        "title": "60-2_MOQVW_W削り",
+        "world": 60,
+        "area": 2,
+        "route": "2-L-M-N-O-Q-V-V1-W",
+        "url": "27zccvko+",
+        "memo": "煙幕: ボス前V$e阻塞気球: ボス$e基地: 2部隊ボス集中"
+    },
+    {
+        "title": "60-2_MOQVW_W破壊_破砕無",
+        "world": 60,
+        "area": 2,
+        "route": "2-L-M-N-O-Q-V-V1-W",
+        "url": "27mtu4s4+",
+        "memo": "煙幕: ボス前V$e阻塞気球: ボス$e基地: 2部隊ボス集中"
+    },
+    {
+        "title": "60-2_MOQVW_W破壊_破砕有",
+        "world": 60,
+        "area": 2,
+        "route": "2-L-M-N-O-Q-V-V1-W",
+        "url": "28detfdx+",
+        "memo": "煙幕: ボス前V$e阻塞気球: ボス$e基地: 2部隊ボス集中"
+    },
+    {
+        "title": "60-3_EFF1G_G削り",
+        "world": 60,
+        "area": 3,
+        "route": "1-A-C-E-F-F1-G",
+        "url": "26lmv5u9+",
+        "memo": "基地: 2部隊ボス集中"
+    },
+    {
+        "title": "60-3_EFF1G_G破壊",
+        "world": 60,
+        "area": 3,
+        "route": "1-A-C-E-F-F1-G",
+        "url": "28fwuays+",
+        "memo": "基地: 2部隊ボス集中"
+    },
+    {
+        "title": "60-3_KLM2PR_R削り",
+        "world": 60,
+        "area": 3,
+        "route": "3-K-L-M-M2-P-O1-R",
+        "url": "275oohtz+",
+        "memo": "陣形: 長門陸奥想定$e基地: 2部隊ボス集中$e阻塞気球: ボス"
+    },
+    {
+        "title": "60-3_KLM2PR_R破壊",
+        "world": 60,
+        "area": 3,
+        "route": "3-K-L-M-M2-P-O1-R",
+        "url": "2cyhopxd+",
+        "memo": "陣形: 長門陸奥想定$e基地: 2部隊ボス集中$e阻塞気球: ボス"
+    },
+    {
+        "title": "60-3_KLM2TU_Uギミック",
+        "world": 60,
+        "area": 3,
+        "route": "3-K-L-M-M2-S-S1-T-U",
+        "url": "2xtwa3lt+",
+        "memo": "陣形: 長門陸奥想定$e基地: 2部隊U集中$e阻塞気球: U"
+    },
+    {
+        "title": "60-3_KLM2VX_X削り",
+        "world": 60,
+        "area": 3,
+        "route": "3-K-L-M-M2-S-S2-V-X",
+        "url": "2aslhq7f+",
+        "memo": "陣形: 長門陸奥想定$e煙幕: L$e基地: 2部隊ボス集中"
+    },
+    {
+        "title": "60-3_KLM2VX_X破壊_破砕無",
+        "world": 60,
+        "area": 3,
+        "route": "3-K-L-M-M2-S-S2-V-X",
+        "url": "296z6t3l+",
+        "memo": "陣形: 長門陸奥想定$e煙幕: L$e基地: 2部隊ボス集中"
+    },
+    {
+        "title": "60-3_KLM2VX_X破壊_破砕有",
+        "world": 60,
+        "area": 3,
+        "route": "3-K-L-M-M2-S-S2-V-X",
+        "url": "2c5c536h+",
+        "memo": "陣形: 長門陸奥想定$e煙幕: L$e基地: 2部隊ボス集中"
+    },
+]; // @expansion
 
 export default templates;

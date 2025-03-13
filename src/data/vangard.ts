@@ -106,6 +106,6 @@ const vangards: Ttemplate[] = [
         "url": "2a6xa6vt+",
         "memo": "1戦目警戒陣$eB未満夜戦"
     },
-];
+]; // @expansion
 
 export default vangards;
