@@ -473,8 +473,8 @@ const equip_datas: Record<number, EquipType> = {
 ,524:{"name":"12cm単装高角砲＋25mm機銃増備","type":124,"seek":0}
 ,525:{"name":"特四式内火艇","type":203746,"seek":0}
 ,526:{"name":"特四式内火艇改","type":203746,"seek":0}
-,522:{"name":"零式水上偵察機","type":5710,"seek":3}
-,523:{"name":"零式水上偵察機(熟練)","type":5710,"seek":4}
+,522:{"name":"零式小型水上機","type":5710,"seek":3}
+,523:{"name":"零式小型水上機(熟練)","type":5710,"seek":4}
 ,527:{"name":"Type281 レーダー","type":5813,"seek":8}
 ,528:{"name":"Type274 射撃管制レーダー","type":5813,"seek":5}
 ,529:{"name":"12.7cm連装砲C型改三H","type":111,"seek":0}
