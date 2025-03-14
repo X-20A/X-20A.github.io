@@ -6033,7 +6033,7 @@ export default class SimController {
                             return 'E2';
                         } else if (option.difficulty === '4' && fleet.countDaigo() > 4 && f_length - arBulge < 5) {
                             return 'F';
-                        } else if (Number(option.difficulty) > 2 && f_length - arBulge < 7) {
+                        } else if (option.difficulty === '3' && f_length - arBulge < 7) {
                             return 'F';
                         } else if (Number(option.difficulty) < 3) {
                             return 'F';
