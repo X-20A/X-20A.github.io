@@ -59,7 +59,6 @@ const isRefferenceVisible = computed(() => modalStore.isRefferenceVisible);
 	border-bottom: 1px solid #E0E0E0;
 	color: #1976d2;
 	top: 0;
-	position: sticky;
 	z-index: 10;
 }
 .custom-tab {

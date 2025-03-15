@@ -43,41 +43,41 @@
 
 				<span class="tooltip-container"> <!-- この辺はイベント後にAdditional Stat的なのにしまうかも -->
 					<span style="color: #4800ff;cursor: default;">第五艦隊</span>
+					<span>: {{ adoptFleet.countDaigo() }}&nbsp;</span>
 					<span class="tooltip-text">
 						那智,足柄,阿武隈,多摩,木曾,霞,不知火,薄雲,曙,潮,初霜,初春,若葉
 					</span>
 				</span>
-				<span>: {{ adoptFleet.countDaigo() }}&nbsp;</span>
 
 				<span class="tooltip-container">
 					<img :src="NotSpanner" alt="寒冷地装備＆甲板要員を装備していない空母系+あきつ丸" style="height: 17px;vertical-align: -3px;">
+					<span>: {{ adoptFleet.countNotEquipArctic() }}&nbsp;</span>
 					<span class="tooltip-text">寒冷地装備＆甲板要員を装備していない(空母系+あきつ丸)</span>
 				</span>
-				<span>: {{ adoptFleet.countNotEquipArctic() }}&nbsp;</span>
 
 				<span class="tooltip-container">
 					<img :src="Bulge" alt="北方迷彩(＋北方装備)" style="height: 20px;vertical-align: -4px;">
+					<span>: {{ adoptFleet.arBulge_carrier_count }}&nbsp;</span>
 					<span class="tooltip-text">北方迷彩(＋北方装備)</span>
 				</span>
-				<span>: {{ adoptFleet.arBulge_carrier_count }}&nbsp;</span>
 
 				<span class="tooltip-container">
 					<img :src="Drum" alt="ドラム缶" style="height: 17px;vertical-align: -3px;">
+					<span>: {{ adoptFleet.drum_carrier_count }}&nbsp;</span>
 					<span class="tooltip-text">ドラム缶</span>
 				</span>
-				<span>: {{ adoptFleet.drum_carrier_count }}&nbsp;</span>
 
 				<span class="tooltip-container">
 					<img :src="Craft" alt="大発系" style="height: 21px;vertical-align: -4px;">
+					<span>: {{ adoptFleet.craft_carrier_count }}&nbsp;</span>
 					<span class="tooltip-text">大発系</span>
 				</span>
-				<span>: {{ adoptFleet.craft_carrier_count }}&nbsp;</span>
 
 				<span class="tooltip-container">
 					<img :src="Radar" alt="電探系" style="height: 19px;vertical-align: -5px;">
+					<span>: {{ adoptFleet.radar_carrier_count }}</span>
 					<span class="tooltip-text">電探系</span>
 				</span>
-				<span>: {{ adoptFleet.radar_carrier_count }}</span>
 
 				<span> ]</span>
 			</p>
@@ -764,7 +764,7 @@ onMounted(async () => {
 	white-space: nowrap;
 	font-size: 12px;
 	opacity: 0;
-	transition: opacity 0.2s, transform 0.2s;
+	transition: opacity 0.2s, transform 0.02s;
 	pointer-events: none;
 }
 .tooltip-container:hover .tooltip-text {

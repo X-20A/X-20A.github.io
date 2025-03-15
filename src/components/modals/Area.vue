@@ -252,7 +252,6 @@ const events: Area[] = [ // @expansion
 	line-height: 1.75;
 	padding: 6px 8px;
 	border-radius: 4px;
-	transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 	color: inherit;
 	text-transform: none;
 	min-width: 0px;
@@ -260,6 +259,6 @@ const events: Area[] = [ // @expansion
 }
 .areas:hover {
 	text-decoration: none;
-	background-color: rgba(255, 255, 255, 0.08);
+	background-color: #535353;
 }
 </style>
