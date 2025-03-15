@@ -3,6 +3,7 @@ import CustomError from "./CustomError";
 import type AdoptFleet from "./AdoptFleet";
 import Scanner from "./Scanner";
 import type { SimResult, BranchResponse, AreaId, OptionsType } from "./types";
+import Composition from "./Composition";
 
 /**
  * シミュコントローラ    
@@ -5701,7 +5702,7 @@ export default class SimController {
                     case '2':
                         if (fleet.isFaster()) {
                             return 'F';
-                        } else if (CL > 0 && Ds > 2 && BBCVs < 3) {
+                        } else if (CL + CT > 0 && Ds > 2 && BBCVs < 3) {
                             return 'F';
                         } else {
                             return 'B1';
@@ -5810,7 +5811,7 @@ export default class SimController {
                         }
                         break;
                     case 'M':
-                        if (seek[3] >= 63) {
+                        if (seek[3] >= 62) {
                             return 'O';
                         } else {
                             return 'N';
@@ -5839,9 +5840,9 @@ export default class SimController {
                     case '2':
                         if (f_type === '輸送護衛部隊') {
                             return 'L';
-                        } else if (CL > 1 && DD > 2 && speed !== '低速艦隊') {
+                        } else if (CL > 1 && Ds > 3) {
                             return 'L';
-                        } else if (CL > 1 && DD > 2 && BBs < 3 && CAs < 4) {
+                        } else if (CL > 1 && Ds > 2 && speed !== '低速艦隊') {
                             return 'L';
                         } else {
                             return 'H';
@@ -5879,8 +5880,16 @@ export default class SimController {
                         }
                         break;
                     case 'H':
-                        if (true) {
+                        if (track.includes('1')) {
                             return 'I';
+                        } else if (option.difficulty === '4' && fleet.countDaigo() > 4) {
+                            return 'L';
+                        } else if (option.difficulty === '3' && fleet.countDaigo() > 2) {
+                            return 'L';
+                        } else if (['1', '2'].includes(option.difficulty) && fleet.countDaigo() > 0) {
+                            return 'L';
+                        } else {
+                            return 'M';
                         }
                         break;
                     case 'I':
@@ -5894,6 +5903,8 @@ export default class SimController {
                         if (BBs + CV + CVB > 2) {
                             return 'D';
                         } else if (BB > 1 && speed === '低速艦隊') {
+                            return 'D';
+                        } else if (CV + CVB > 0 && speed === '低速艦隊') {
                             return 'D';
                         } else if (CA > 1 && CL > 1 && Ds > 2) {
                             return 'N';
@@ -5913,6 +5924,8 @@ export default class SimController {
                     case 'Q':
                         if (Number(option.phase) < 3) {
                             return 'S';
+                        } else if (fleet.countDaigo() > 7) {
+                            return 'V';
                         } else if (Ds < 6) {
                             return 'S';
                         } else if (CL + CT > 2) {
@@ -5928,7 +5941,7 @@ export default class SimController {
                         }
                         break;
                     case 'V1':
-                        if (seek[1] >= 65) {
+                        if (seek[1] >= 64) {
                             return 'W';
                         } else {
                             return 'V2';
@@ -6019,7 +6032,7 @@ export default class SimController {
                         }
                         break;
                     case 'E':
-                        if (seek[3] < 75) {
+                        if (seek[3] < 76) {
                             return 'E1';
                         } else if (CV + CVB > 0) {
                             return 'E2';
@@ -6031,6 +6044,8 @@ export default class SimController {
                             return 'B';
                         } else if (option.phase === '1') {
                             return 'E2';
+                        } else if (fleet.isFaster()) {
+                            return 'F';
                         } else if (option.difficulty === '4' && fleet.countDaigo() > 4 && f_length - arBulge < 5) {
                             return 'F';
                         } else if (option.difficulty === '3' && f_length - arBulge < 7) {
@@ -6047,8 +6062,6 @@ export default class SimController {
                         } else if (BBs > 1) {
                             return 'F3';
                         } else if(BBs === 1 && speed === '低速艦隊') {
-                            return 'F3';
-                        } else if (Ds < 4) {
                             return 'F3';
                         } else if (option.difficulty === '4' && fleet.countDaigo() > 5 && Ds > 3) {
                             return 'G';
@@ -6104,9 +6117,13 @@ export default class SimController {
                         }
                         break;
                     case 'M2':
-                        if (CL < 3 && speed === '低速艦隊') {
+                        if (BBCVs > 5) {
+                            return 'P';
+                        } else if (CL < 3 && speed === '低速艦隊') {
                             return 'P';
                         } else if (BBs > 3) {
+                            return 'Q';
+                        } else if (CVs > 3) {
                             return 'Q';
                         } else if (LHA > 0) {
                             return 'Q';
@@ -6115,21 +6132,25 @@ export default class SimController {
                         }
                         break;
                     case 'P':
-                        if (speed !==  '低速艦隊') {
-                            return 'O1';
-                        } else if (BBs < 3) {
-                            return 'O1';
-                        } else {
+                        if (BBCVs > 5) {
                             return 'Q';
+                        } else if (speed !==  '低速艦隊') {
+                            return 'O1';
+                        } else if (BBs > 2) {
+                            return 'Q';
+                        } else if (CV + CVB > 2) {
+                            return 'Q';
+                        } else {
+                            return 'O1';
                         }
                         break;
                     case 'Q':
-                       if (CV > 1) {
-                           return 'S';
-                       } else if (BBs > 3) {
-                           return 'S';
-                       } else {
+                       if (track.includes('M1')) {
                            return 'O2';
+                       } else if (f_type === '水上打撃部隊' && BBs < 4) {
+                           return 'O2';
+                       } else {
+                           return 'S';
                        }
                         break;
                     case 'T':
