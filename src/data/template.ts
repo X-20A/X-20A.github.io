@@ -606,7 +606,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 2,
         "route": "2-L-M-N-O-Q-V-V1-W",
-        "url": "27zccvko+",
+        "url": "2xpph9oo+",
         "memo": "煙幕: ボス前V$e阻塞気球: ボス$e基地: 2部隊ボス集中"
     },
     {
@@ -614,7 +614,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 2,
         "route": "2-L-M-N-O-Q-V-V1-W",
-        "url": "27mtu4s4+",
+        "url": "26a6vfm2+",
         "memo": "煙幕: ボス前V$e阻塞気球: ボス$e基地: 2部隊ボス集中"
     },
     {
@@ -622,7 +622,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 2,
         "route": "2-L-M-N-O-Q-V-V1-W",
-        "url": "28detfdx+",
+        "url": "22vnzmp3+",
         "memo": "煙幕: ボス前V$e阻塞気球: ボス$e基地: 2部隊ボス集中"
     },
     {
