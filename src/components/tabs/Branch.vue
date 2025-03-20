@@ -81,7 +81,7 @@ watch(selectedArea, () => {
 	const world = Number(split[0]);
 	const area = Number(split[1]);
 	let url = '';
-	if (world > 7) { // @expansion
+	if (world > 7) {
 		source.value.label = 'NGA';
 		url = 'https://bbs.nga.cn/read.php?tid=';
 		switch (world) {
@@ -97,7 +97,7 @@ watch(selectedArea, () => {
 			case 60:
 				url += '43475468&rand=866';
 				break;
-		}
+		} // @expansion
 	} else {
 		source.value.label = '日wiki';
 		url = 'https://wikiwiki.jp/kancolle/';

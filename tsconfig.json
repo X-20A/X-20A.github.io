@@ -10,6 +10,7 @@
 		"esModuleInterop": true,
 		"allowSyntheticDefaultImports": true,
 		"sourceMap": true,
+		"removeComments": true,
 		"outDir": "./build",
 		"strictFunctionTypes": true,
 		"baseUrl": ".",

@@ -1,5 +1,5 @@
 import equip_datas from "@/data/equip";
-import type { Improvement } from "./types";
+import type { EquipType, Improvement } from "./types";
 import CustomError from "@/classes/CustomError";
 
 export default class Equip {
@@ -9,11 +9,8 @@ export default class Equip {
     /** 改修値 */
 	public readonly implovement: Improvement;
 
-    /** 装備名 */
-	public readonly name: string;
-
     /** 種別ID */
-	public readonly type: number;
+	public readonly type: EquipType;
 
     /** 索敵値 */
 	public readonly seek: number;
@@ -36,9 +33,8 @@ export default class Equip {
 
 		this.id = id;
 		this.implovement = implovement;
-		this.name = data.name;
-		this.type = data.type;
-		this.seek = data.seek;
+		this.type = data[1];
+		this.seek = data[0];
         this.is_ex = is_ex;
 	}
 }

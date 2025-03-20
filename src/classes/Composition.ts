@@ -1,4 +1,5 @@
 import type CacheFleet from "./CacheFleet";
+import { ShipType } from "./types";
 
 export default class Composition {
     public BB = 0; // 戦艦
@@ -25,61 +26,61 @@ export default class Composition {
         for (const fleet of fleets) {
             for (const ship of fleet.ships) {
                 switch (ship.type) {
-                    case "戦艦":
+                    case ShipType.BB:
                         this.BB++;
                         break;
-                    case "航戦":
+                    case ShipType.BBV:
                         this.BBV++;
                         break;
-                    case "正空":
+                    case ShipType.CV:
                         this.CV++;
                         break;
-                    case "装空":
+                    case ShipType.CVB:
                         this.CVB++;
                         break;
-                    case "軽空":
+                    case ShipType.CVL:
                         this.CVL++;
                         break;
-                    case "重巡":
+                    case ShipType.CA:
                         this.CA++;
                         break;
-                    case "航巡":
+                    case ShipType.CAV:
                         this.CAV++;
                         break;
-                    case "軽巡":
+                    case ShipType.CL:
                         this.CL++;
                         break;
-                    case "雷巡":
+                    case ShipType.CLT:
                         this.CLT++;
                         break;
-                    case "練巡":
+                    case ShipType.CT:
                         this.CT++;
                         break;
-                    case "駆逐":
+                    case ShipType.DD:
                         this.DD++;
                         break;
-                    case "海防":
+                    case ShipType.DE:
                         this.DE++;
                         break;
-                    case "潜水":
+                    case ShipType.SS:
                         this.SS++;
                         break;
-                    case "潜空":
+                    case ShipType.SSV:
                         this.SSV++;
                         break;
-                    case "水母":
+                    case ShipType.AV:
                         this.AV++;
                         break;
-                    case "補給":
+                    case ShipType.AO:
                         this.AO++;
                         break;
-                    case "揚陸":
+                    case ShipType.LHA:
                         this.LHA++;
                         break;
-                    case "潜母":
+                    case ShipType.AS:
                         this.AS++;
                         break;
-                    case "工作":
+                    case ShipType.AR:
                         this.AR++;
                         break;
                 }

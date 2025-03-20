@@ -1,11 +1,12 @@
 import type CacheFleet from "./CacheFleet";
-import type {
-    SpeedId,
-    FleetSpeedName,
-    FleetTypeId,
-    FleetTypeName,
-    Fleet,
-    Seek,
+import {
+    type SpeedId,
+    type FleetSpeedName,
+    type FleetTypeId,
+    type FleetTypeName,
+    type Fleet,
+    type Seek,
+    ShipType
 } from "./types";
 import Composition from "./Composition";
 import {
@@ -163,11 +164,11 @@ export default class AdoptFleet implements Fleet {
     public countSBB(): number {
         let count = 0;
         count += this.fleets[0].ships
-            .filter(ship => ship.type === '戦艦' && ship.speed_group >= 4)
+            .filter(ship => ship.type === ShipType.BB && ship.speed_group >= 4)
             .length;
         if (this.fleets[1]) {
             count += this.fleets[1].ships
-                .filter(item => item.type === '戦艦' && item.speed_group >= 4)
+                .filter(item => item.type === ShipType.BB && item.speed_group >= 4)
                 .length;
         }
         return count;
@@ -193,7 +194,7 @@ export default class AdoptFleet implements Fleet {
      * @returns
      */
     public isFCL(): boolean {
-        return this.fleets[0].ships[0].type === '軽巡';
+        return this.fleets[0].ships[0].type === ShipType.CL;
     }
     /**
      * 連合艦隊ならtrueを返す
@@ -250,7 +251,7 @@ export default class AdoptFleet implements Fleet {
         let count = 0;
         for (const fleet of this.fleets) {
             for (const ship of fleet.ships) {
-                if (['正空','装空','軽空'].includes(ship.type) || ship.name.includes('あきつ丸')) {
+                if ([ShipType.CV, ShipType.CVB, ShipType.CVL].includes(ship.type) || ship.name.includes('あきつ丸')) {
                     if (!ship.has_arctic_gear) {
                         count++;
                     }

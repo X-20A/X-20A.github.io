@@ -63,84 +63,12 @@ type OptionSelector = {
 };
 
 const option_data: OptionSelector = {
-  '4-5': {
-    'A': {
-      options: [
-        { value: 'B' },
-        { value: 'D' },
-      ],
-    },
-    'C': {
-      options: [
-        { value: 'D' },
-        { value: 'F' },
-      ],
-    },
-    'I': {
-      options: [
-        { value: 'G' },
-        { value: 'J' },
-      ],
-    },
-  },
-	'5-3': {
-		'O': {
-			options: [
-				{ value: 'K' },
-        { value: 'P' },
-			],
-		}
-	},
-  '5-5': {
-    'F': {
-      options: [
-        { value: 'D' },
-        { value: 'J' },
-      ],
-    },
-  },
-  '6-3': {
-    'A': {
-      options: [
-        { value: 'B' },
-        { value: 'C' },
-      ],
-    },
-  },
 	'7-3': {
 		'phase': {
-				label: '第二ボス',
-				options: [
-					{ value: '1', label: '出現前' },
-					{ value: '2', label: '出現後' },
-				],
-			},
-		},
-	'7-4': {
-		'F': {
+			label: '第二ボス',
 			options: [
-				{ value: 'H' },
-				{ value: 'J' },
-			],
-		},
-	},
-	'7-5': {
-		'F': {
-			options: [
-				{ value: 'G' },
-				{ value: 'J' },
-			],
-		},
-		'H': {
-			options: [
-				{ value: 'I' },
-				{ value: 'K' },
-			],
-		},
-		'O': {
-			options: [
-				{ value: 'P' },
-				{ value: 'Q' },
+				{ value: '1', label: '出現前' },
+				{ value: '2', label: '出現後' },
 			],
 		},
 	},
@@ -157,30 +85,6 @@ const option_data: OptionSelector = {
 				{ value: '7', label: 'L-V & L-X開通後' },
 			],
 		},
-		'A2': {
-			options: [
-				{ value: 'A3' },
-				{ value: 'B' },
-			],
-		},
-		'B2': {
-			options: [
-				{ value: 'B3' },
-				{ value: 'B4' },
-			],
-		},
-		'C': {
-			options: [
-				{ value: 'A3' },
-				{ value: 'C1' },
-			],
-		},
-		'J': {
-			options: [
-				{ value: 'K' },
-				{ value: 'L' },
-			],
-		},
 	},
 	'58-1': {
 		'phase': {
@@ -189,24 +93,6 @@ const option_data: OptionSelector = {
 				{ value: '1', label: '出撃地点2解放前' },
 				{ value: '2', label: '出撃地点2解放後' },
 				{ value: '3', label: 'Xボス出現後' },
-			],
-		},
-		'A': {
-			options: [
-				{ value: 'D' },
-				{ value: 'B' },
-			],
-		},
-		'I': {
-			options: [
-				{ value: 'N1' },
-				{ value: 'D' },
-			],
-		},
-		'F': {
-			options: [
-				{ value: 'G' },
-				{ value: 'H' },
 			],
 		},
 	},
@@ -228,12 +114,6 @@ const option_data: OptionSelector = {
 				{ value: '1', label: '丁' },
 			],
 		},
-		'B': {
-			options: [
-				{ value: 'C' },
-				{ value: 'E' },
-			],
-		},
 	},
 	'58-3': {
 		'phase': {
@@ -251,12 +131,6 @@ const option_data: OptionSelector = {
 				{ value: '3', label: '乙' },
 				{ value: '2', label: '丙' },
 				{ value: '1', label: '丁' },
-			],
-		},
-		'M': {
-			options: [
-				{ value: 'P' },
-				{ value: 'N' },
 			],
 		},
 	},
@@ -285,12 +159,6 @@ const option_data: OptionSelector = {
 				{ value: '0', label: 'その他' },
 			],
 		},
-		'B': {
-			options: [
-				{ value: 'D' },
-				{ value: 'C' },
-			],
-		},
 	},
 	'59-1': {
 		'phase': {
@@ -299,38 +167,6 @@ const option_data: OptionSelector = {
 				{ value: '1', label: '開始時点' },
 				{ value: '2', label: '第一ギミック完了後' },
 				{ value: '3', label: '第二ギミック完了後' },
-			],
-		},
-		'C': {
-			options: [
-				{ value: 'C1' },
-				{ value: 'C2' },
-			],
-		},
-		'E': {
-			options: [
-				{ value: 'F' },
-				{ value: 'G' },
-			],
-		},
-	},
-	'59-2': {
-		'L': {
-			options: [
-				{ value: 'M' },
-				{ value: 'N' },
-			],
-		},
-		'N': {
-			options: [
-				{ value: 'O' },
-				{ value: 'P' },
-			],
-		},
-		'P': {
-			options: [
-				{ value: 'Q' },
-				{ value: 'R' },
 			],
 		},
 	},
@@ -343,12 +179,6 @@ const option_data: OptionSelector = {
 				{ value: '3', label: '短縮後' },
 			],
 		},
-		'C': {
-			options: [
-				{ value: 'C1' },
-				{ value: 'C2' },
-			],
-		},
 	},
 	'59-4': {
 		'phase': {
@@ -356,18 +186,6 @@ const option_data: OptionSelector = {
 			options: [
 				{ value: '1', label: '開始時点' },
 				{ value: '2', label: '第二ゲージ以降' },
-			],
-		},
-		'A2': {
-			options: [
-				{ value: 'B' },
-				{ value: 'C' },
-			],
-		},
-		'D': {
-			options: [
-				{ value: 'E' },
-				{ value: 'F' },
 			],
 		},
 	},
@@ -378,24 +196,6 @@ const option_data: OptionSelector = {
 				{ value: '1', label: '開始時点' },
 				{ value: '2', label: '出撃地点3解放後' },
 				{ value: '3', label: 'ZZボス出現後' },
-			],
-		},
-		'G': {
-			options: [
-				{ value: 'H' },
-				{ value: 'I' },
-			],
-		},
-		'O2': {
-			options: [
-				{ value: 'P' },
-				{ value: 'Q' },
-			],
-		},
-		'W': {
-			options: [
-				{ value: 'X' },
-				{ value: 'Z' },
 			],
 		},
 	},
@@ -415,12 +215,6 @@ const option_data: OptionSelector = {
 				{ value: '0', label: 'それ以外' },
 			],
 		},
-		'A': {
-			options: [
-				{ value: 'B' },
-				{ value: 'D' },
-			]
-		}
 	},
 	'60-2': {
 		'phase': {
@@ -430,24 +224,6 @@ const option_data: OptionSelector = {
 				{ value: '2', label: 'Uボス出現後' },
 				{ value: '3', label: 'Wボス出現後' },
 			],
-		},
-		'B': {
-			options: [
-				{ value: 'C' },
-				{ value: 'D' },
-			]
-		},
-		'E': {
-			options: [
-				{ value: 'F' },
-				{ value: 'F1' },
-			]
-		},
-		'N': {
-			options: [
-				{ value: 'O' },
-				{ value: 'P' },
-			]
 		},
 	},
 	'60-3': {
@@ -469,36 +245,6 @@ const option_data: OptionSelector = {
 				{ value: '2', label: '丙' },
 				{ value: '1', label: '丁' },
 			],
-		},
-		'A': {
-			options: [
-				{ value: 'B' },
-				{ value: 'C' },
-			]
-		},
-		'C': {
-			options: [
-				{ value: 'D' },
-				{ value: 'E' },
-			]
-		},
-		'H': {
-			options: [
-				{ value: 'H1' },
-				{ value: 'I' },
-			]
-		},
-		'M': {
-			options: [
-				{ value: 'M1' },
-				{ value: 'M2' },
-			]
-		},
-		'S': {
-			options: [
-				{ value: 'S1' },
-				{ value: 'S2' },
-			]
 		},
 	},
 }; // @expansion

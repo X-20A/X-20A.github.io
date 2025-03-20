@@ -1,6 +1,6 @@
 import Equip from '@/classes/Equip';
 import type { National, SpeedId } from '@/classes/types';
-import type { ShipType, ShipData, SpeedGroup, EquipInDeck } from '@/classes/types';
+import { ShipType, EquipType, ShipData, SpeedGroup, EquipInDeck } from '@/classes/types';
 import ship_datas from '@/data/ship';
 import Big from 'big.js';
 import Const from './const';
@@ -130,72 +130,42 @@ export default class Ship {
 	private getSeekCoefficients(equip: Equip): number[] {
 		const coefficients = [] as number[];
 
+        let equip_conefficient = 0.6;
         switch (equip.type) { // 装備係数
-			// 主砲とか入ってないからdefaultはダメだよ
-			case 356: // 艦戦
-			case 357: // 艦爆
-			case 53645: // 水戦
-			case 173341: // 大型飛行艇
-			case 31626: // 対潜哨戒機
-			case 31525: // 回転翼機
-			case 34425: // S51J & S51J改
-			case 34057: // 噴式戦闘爆撃機
-			case 111: // 小口径主砲
-			case 112: // 中口径主砲
-            case 124: // 副砲
-			case 5812: // 小型電探
-			case 5813: // 大型電探
-			case 244251: // 潜水電探
-			case 2332: // 潜水魚雷
-			case 71014: // ソナー
-			case 71040: // 大型ソナー
-			case 81829: // 探照灯
-			case 81842: // 大型探照灯
-			case 132335: // 航空要員
-			case 162739: // 見張員
-			case 122234: // 司令部
-			case 2422: // 甲標的
-			case 84724: // AB艇
-				coefficients[0] = 0.6;
+			case EquipType.TorpBomber: // 艦攻
+                equip_conefficient = 0.8;
 				break;
-			case 358: // 艦攻
-                coefficients[0] = 0.8;
+            case EquipType.CarrierScout: // 艦偵
+                equip_conefficient = 1;
 				break;
-			case 579: // 艦偵
-                coefficients[0] = 1;
+            case EquipType.SeaPlaneBomber: // 水爆
+                equip_conefficient = 1.1;
 				break;
-			case 54311: // 水爆
-                coefficients[0] = 1.1;
-				break;
-			case 5710: // 水偵
-                coefficients[0] = 1.2;
+            case EquipType.SeaPlane: // 水偵
+                equip_conefficient = 1.2;
 				break;
 		}
+        coefficients[0] = equip_conefficient;
 
+        let implovment_coefficient = 0;
         switch (equip.type) { // 改修係数
-			case 31525: // 回転翼機
-			case 34425: // S51J & S51J改
-			case 162739: // 見張員
-                coefficients[1] = 0;
+            case EquipType.SeaPlaneBomber: // 水爆
+                implovment_coefficient = 1.15;
 				break;
-			case 54311: // 水爆
-                coefficients[1] = 1.15;
+            case EquipType.CarrierScout: // 艦偵
+            case EquipType.FlyingBoat: // 大型飛行艇
+            case EquipType.SeaPlane: // 水偵
+                implovment_coefficient = 1.2;
 				break;
-			case 579: // 艦偵
-			case 173341: // 大型飛行艇
-			case 5710: // 水偵
-                coefficients[1] = 1.2;
+            case EquipType.RadarS: // 小型電探
+                implovment_coefficient = 1.25;
 				break;
-			case 5812: // 小型電探
-                coefficients[1] = 1.25;
-				break;
-			case 5813: // 大型電探
-                coefficients[1] = 1.4;
-				break;
-			default:
-                coefficients[1] = 0;
+			case EquipType.RadarL: // 大型電探
+                implovment_coefficient = 1.4;
 				break;
 		}
+        coefficients[1] = implovment_coefficient;
+
 		return coefficients;
 	}
 
@@ -269,7 +239,7 @@ export default class Ship {
 							total_bonus += 2;
 							disable_ids.push(equip.id);
 						}
-                    } else if (national === 0 && ship_type === '駆逐') {
+                    } else if (national === 0 && ship_type === ShipType.DD) {
 						if (!disable_ids.includes(equip.id)) {
 							total_bonus += 1;
 							disable_ids.push(equip.id);
@@ -300,7 +270,7 @@ export default class Ship {
 				}
 				case 414: { // SOC seagull
                     if (national === 1) { // USA
-                        if (['軽巡', '重巡'].includes(ship_type)) {
+                        if ([ShipType.CL, ShipType.CA].includes(ship_type)) {
 							if (!disable_ids.includes(equip.id)) {
 								total_bonus += 2;
 								// 改修でさらにボーナス
@@ -309,7 +279,7 @@ export default class Ship {
 								}
 								disable_ids.push(equip.id);
 							}
-                        } else if (['戦艦'].includes(ship_type)) {
+                        } else if (ship_type === ShipType.BB) {
 							if (!disable_ids.includes(equip.id)) {
 								total_bonus += 1;
 								disable_ids.push(equip.id);
@@ -373,12 +343,12 @@ export default class Ship {
 				}
 				case 415: // SO3C Seamew改
                     if (national === 1) { // USA
-                        if (['軽巡', '重巡'].includes(ship_type)) {
+                        if ([ShipType.CL, ShipType.CA].includes(ship_type)) {
 							if (!disable_ids.includes(equip.id)) {
 								total_bonus += 2;
 								disable_ids.push(equip.id);
 							}
-                        } else if (['戦艦'].includes(ship_type)) {
+                        } else if (ship_type === ShipType.BB) {
 							if (!disable_ids.includes(equip.id)) {
 								total_bonus += 1;
 								disable_ids.push(equip.id);
@@ -430,7 +400,7 @@ export default class Ship {
 				case 408: // 装甲艇(AB艇)
                     if (ship_name.includes('神州丸')) {
 						total_bonus += 2;
-                    } else if (ship_name.includes('あきつ丸') || ship_type === '駆逐') { // 本来大発の乗る駆逐艦だが、駆逐に乗ってる時点でボーナスつけちゃう
+                    } else if (ship_name.includes('あきつ丸') || ship_type === ShipType.DD) { // 本来大発の乗る駆逐艦だが、駆逐に乗ってる時点でボーナスつけちゃう
 						total_bonus += 1;
 					}
 					break;
@@ -443,22 +413,22 @@ export default class Ship {
 					break;
 				case 412: // 水雷見張員
                     if (national === 0) {
-                        if (ship_type === '駆逐') {
+                        if (ship_type === ShipType.DD) {
 							total_bonus += 1;
-                        } else if (['軽巡', '練巡', '雷巡'].includes(ship_type)) {
+                        } else if ([ShipType.CL, ShipType.CT, ShipType.CLT].includes(ship_type)) {
 							total_bonus += 3;
-                        } else if (['重巡', '航巡'].includes(ship_type)) {
+                        } else if ([ShipType.CA, ShipType.CAV].includes(ship_type)) {
 							total_bonus += 1;
 						}
 					}
 					break;
 				case 129: // 見張員
                     if (national === 0) {
-                        if (ship_type === '駆逐') {
+                        if (ship_type === ShipType.DD) {
 							total_bonus += 1;
-                        } else if (['軽巡', '練巡', '雷巡'].includes(ship_type)) {
+                        } else if ([ShipType.CL, ShipType.CT, ShipType.CLT].includes(ship_type)) {
 							total_bonus += 3;
-                        } else if (['重巡', '航巡'].includes(ship_type)) {
+                        } else if ([ShipType.CA, ShipType.CAV].includes(ship_type)) {
 							total_bonus += 3;
 						}
 					}
@@ -479,12 +449,12 @@ export default class Ship {
 					break;
 				}
 				case 522: // 零式小型水上機
-                    if (['潜水', '潜空'].includes(ship_type)) {
+                    if ([ShipType.SS, ShipType.SSV].includes(ship_type)) {
 						total_bonus += 3;
 					}
 					break;
 				case 523: // 零式小型水上機(熟練)
-                    if (['潜水', '潜空'].includes(ship_type)) {
+                    if ([ShipType.SS, ShipType.SSV].includes(ship_type)) {
 						total_bonus += 4;
 					}
 					break;

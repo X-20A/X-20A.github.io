@@ -1,508 +1,503 @@
+import { EquipType } from "@/classes/types";
+
 /* 
     http://kancolle-calc.net/deckbuilder.html 様より失敬
 */
-export interface EquipType {
-	name: string,
-	type: number, // 元々配列だったのを先頭の3つについて連結したもの
-	seek: number
-}
+/** 索敵値, 装備種別ID */
+export type EquipData = [number, EquipType]
 
 /** 基地系は除外 */
-const equip_datas: Record<number, EquipType> = {
- 1:{"name":"12cm単装砲","type":111,"seek":0}
-,2:{"name":"12.7cm連装砲","type":111,"seek":0}
-,3:{"name":"10cm連装高角砲","type":111,"seek":0}
-,4:{"name":"14cm単装砲","type":112,"seek":0}
-,5:{"name":"15.5cm三連装砲","type":112,"seek":0}
-,6:{"name":"20.3cm連装砲","type":112,"seek":0}
-,7:{"name":"35.6cm連装砲","type":113,"seek":0}
-,8:{"name":"41cm連装砲","type":113,"seek":0}
-,9:{"name":"46cm三連装砲","type":113,"seek":0}
-,10:{"name":"12.7cm連装高角砲","type":124,"seek":0}
-,11:{"name":"15.2cm単装砲","type":124,"seek":0}
-,12:{"name":"15.5cm三連装副砲","type":124,"seek":0}
-,13:{"name":"61cm三連装魚雷","type":235,"seek":0}
-,14:{"name":"61cm四連装魚雷","type":235,"seek":0}
-,15:{"name":"61cm四連装(酸素)魚雷","type":235,"seek":0}
-,16:{"name":"九七式艦攻","type":358,"seek":1}
-,17:{"name":"天山","type":358,"seek":1}
-,18:{"name":"流星","type":358,"seek":1}
-,19:{"name":"九六式艦戦","type":356,"seek":0}
-,20:{"name":"零式艦戦21型","type":356,"seek":0}
-,21:{"name":"零式艦戦52型","type":356,"seek":0}
-,22:{"name":"試製烈風 後期型","type":356,"seek":0}
-,23:{"name":"九九式艦爆","type":357,"seek":0}
-,24:{"name":"彗星","type":357,"seek":0}
-,25:{"name":"零式水上偵察機","type":5710,"seek":5}
-,26:{"name":"瑞雲","type":54311,"seek":6}
-,27:{"name":"13号対空電探","type":5812,"seek":3}
-,28:{"name":"22号対水上電探","type":5812,"seek":5}
-,29:{"name":"33号対水上電探","type":5812,"seek":7}
-,30:{"name":"21号対空電探","type":5813,"seek":4}
-,31:{"name":"32号対水上電探","type":5813,"seek":10}
-,32:{"name":"42号対空電探","type":5813,"seek":5}
-,33:{"name":"改良型艦本式タービン","type":63117,"seek":0}
-,34:{"name":"強化型艦本式缶","type":63117,"seek":0}
-,35:{"name":"三式弾","type":42818,"seek":0}
-,36:{"name":"九一式徹甲弾","type":42519,"seek":0}
-,37:{"name":"7.7mm機銃","type":4621,"seek":0}
-,38:{"name":"12.7mm単装機銃","type":4621,"seek":0}
-,39:{"name":"25mm連装機銃","type":4621,"seek":0}
-,40:{"name":"25mm三連装機銃","type":4621,"seek":0}
-,41:{"name":"甲標的 甲型","type":2422,"seek":0}
-,42:{"name":"応急修理要員","type":63023,"seek":0}
-,43:{"name":"応急修理女神","type":63023,"seek":0}
-,44:{"name":"九四式爆雷投射機","type":73215,"seek":0}
-,45:{"name":"三式爆雷投射機","type":73215,"seek":0}
-,46:{"name":"九三式水中聴音機","type":71014,"seek":0}
-,47:{"name":"三式水中探信儀","type":71014,"seek":0}
-,48:{"name":"12cm単装高角砲","type":111,"seek":0}
-,49:{"name":"25mm単装機銃","type":4621,"seek":0}
-,50:{"name":"20.3cm(3号)連装砲","type":112,"seek":0}
-,51:{"name":"12cm30連装噴進砲","type":42921,"seek":0}
-,52:{"name":"流星改","type":358,"seek":2}
-,53:{"name":"烈風 一一型","type":356,"seek":0}
-,54:{"name":"彩雲","type":579,"seek":9}
-,55:{"name":"紫電改二","type":356,"seek":0}
-,56:{"name":"震電改","type":356,"seek":0}
-,57:{"name":"彗星一二型甲","type":357,"seek":1}
-,58:{"name":"61cm五連装(酸素)魚雷","type":235,"seek":0}
-,59:{"name":"零式水上観測機","type":5710,"seek":6}
-,60:{"name":"零式艦戦62型(爆戦)","type":357,"seek":0}
-,61:{"name":"二式艦上偵察機","type":579,"seek":7}
-,62:{"name":"試製晴嵐","type":54311,"seek":6}
-,63:{"name":"12.7cm連装砲B型改二","type":111,"seek":0}
-,64:{"name":"Ju87C改","type":357,"seek":0}
-,65:{"name":"15.2cm連装砲","type":112,"seek":0}
-,66:{"name":"8cm高角砲","type":124,"seek":0}
-,67:{"name":"53cm艦首(酸素)魚雷","type":235,"seek":0}
-,68:{"name":"大発動艇","type":81424,"seek":0}
-,69:{"name":"カ号観測機","type":31525,"seek":0}
-,70:{"name":"三式指揮連絡機(対潜)","type":31626,"seek":1}
-,71:{"name":"10cm連装高角砲(砲架)","type":124,"seek":0}
-,72:{"name":"増設バルジ(中型艦)","type":61727,"seek":0}
-,73:{"name":"増設バルジ(大型艦)","type":61728,"seek":0}
-,74:{"name":"探照灯","type":81829,"seek":2}
-,75:{"name":"ドラム缶(輸送用)","type":91930,"seek":0}
-,76:{"name":"38cm連装砲","type":113,"seek":0}
-,77:{"name":"15cm連装副砲","type":124,"seek":0}
-,78:{"name":"12.7cm単装砲","type":111,"seek":0}
-,79:{"name":"瑞雲(六三四空)","type":54311,"seek":6}
-,80:{"name":"瑞雲12型","type":54311,"seek":6}
-,81:{"name":"瑞雲12型(六三四空)","type":54311,"seek":7}
-,82:{"name":"九七式艦攻(九三一空)","type":358,"seek":2}
-,83:{"name":"天山(九三一空)","type":358,"seek":2}
-,84:{"name":"2cm 四連装FlaK 38","type":4621,"seek":0}
-,85:{"name":"3.7cm FlaK M42","type":4621,"seek":0}
-,86:{"name":"艦艇修理施設","type":102031,"seek":0}
-,87:{"name":"新型高温高圧缶","type":63117,"seek":0}
-,88:{"name":"22号対水上電探改四","type":5812,"seek":5}
-,89:{"name":"21号対空電探改","type":5813,"seek":6}
-,90:{"name":"20.3cm(2号)連装砲","type":112,"seek":0}
-,91:{"name":"12.7cm連装高角砲(後期型)","type":121,"seek":0}
-,92:{"name":"毘式40mm連装機銃","type":4621,"seek":0}
-,93:{"name":"九七式艦攻(友永隊)","type":358,"seek":4}
-,94:{"name":"天山一二型(友永隊)","type":358,"seek":5}
-,95:{"name":"潜水艦53cm艦首魚雷(8門)","type":2332,"seek":0}
-,96:{"name":"零式艦戦21型(熟練)","type":356,"seek":1}
-,97:{"name":"九九式艦爆(熟練)","type":357,"seek":2}
-,98:{"name":"九七式艦攻(熟練)","type":358,"seek":2}
-,99:{"name":"九九式艦爆(江草隊)","type":357,"seek":3}
-,100:{"name":"彗星(江草隊)","type":357,"seek":4}
-,101:{"name":"照明弾","type":112133,"seek":0}
-,102:{"name":"九八式水上偵察機(夜偵)","type":5710,"seek":3}
-,103:{"name":"試製35.6cm三連装砲","type":113,"seek":0}
-,104:{"name":"35.6cm連装砲(ダズル迷彩)","type":113,"seek":0}
-,105:{"name":"試製41cm三連装砲","type":113,"seek":0}
-,106:{"name":"13号対空電探改","type":5812,"seek":4}
-,107:{"name":"艦隊司令部施設","type":122234,"seek":1}
-,108:{"name":"熟練艦載機整備員","type":132335,"seek":1}
-,109:{"name":"零戦52型丙(六〇一空)","type":356,"seek":0}
-,110:{"name":"烈風(六〇一空)","type":356,"seek":0}
-,111:{"name":"彗星(六〇一空)","type":357,"seek":1}
-,112:{"name":"天山(六〇一空)","type":358,"seek":2}
-,113:{"name":"流星(六〇一空)","type":358,"seek":3}
-,114:{"name":"38cm連装砲改","type":113,"seek":0}
-,115:{"name":"Ar196改","type":5710,"seek":5}
-,116:{"name":"一式徹甲弾","type":42519,"seek":0}
-,117:{"name":"試製46cm連装砲","type":113,"seek":0}
-,118:{"name":"紫雲","type":5710,"seek":8}
-,119:{"name":"14cm連装砲","type":112,"seek":0}
-,120:{"name":"91式高射装置","type":142436,"seek":0}
-,121:{"name":"94式高射装置","type":142436,"seek":0}
-,122:{"name":"10cm連装高角砲+高射装置","type":111,"seek":0}
-,123:{"name":"SKC34 20.3cm連装砲","type":112,"seek":0}
-,124:{"name":"FuMO25 レーダー","type":5813,"seek":9}
-,125:{"name":"61cm三連装(酸素)魚雷","type":235,"seek":0}
-,126:{"name":"WG42 (Wurfgerät 42)","type":152637,"seek":0}
-,127:{"name":"試製FaT仕様九五式酸素魚雷改","type":2332,"seek":0}
-,128:{"name":"試製51cm連装砲","type":113,"seek":0}
-,129:{"name":"熟練見張員","type":162739,"seek":2}
-,130:{"name":"12.7cm高角砲+高射装置","type":124,"seek":0}
-,131:{"name":"25mm三連装機銃 集中配備","type":4621,"seek":0}
-,132:{"name":"零式水中聴音機","type":71040,"seek":1}
-,133:{"name":"381mm/50 三連装砲","type":113,"seek":0}
-,134:{"name":"OTO 152mm三連装速射砲","type":124,"seek":0}
-,135:{"name":"90mm単装高角砲","type":124,"seek":0}
-,136:{"name":"プリエーゼ式水中防御隔壁","type":61728,"seek":0}
-,137:{"name":"381mm/50 三連装砲改","type":113,"seek":0}
-,138:{"name":"二式大艇","type":173341,"seek":12}
-,139:{"name":"15.2cm連装砲改","type":112,"seek":0}
-,140:{"name":"96式150cm探照灯","type":81842,"seek":3}
-,141:{"name":"32号対水上電探改","type":5813,"seek":11}
-,142:{"name":"15m二重測距儀+21号電探改二","type":5813,"seek":7}
-,143:{"name":"九七式艦攻(村田隊)","type":358,"seek":4}
-,144:{"name":"天山一二型(村田隊)","type":358,"seek":4}
-,145:{"name":"戦闘糧食","type":183443,"seek":0}
-,146:{"name":"洋上補給","type":193544,"seek":0}
-,147:{"name":"120mm/50 連装砲","type":111,"seek":0}
-,148:{"name":"試製南山","type":357,"seek":2}
-,149:{"name":"四式水中聴音機","type":71014,"seek":0}
-,150:{"name":"秋刀魚の缶詰","type":183443,"seek":0}
-,151:{"name":"試製景雲(艦偵型)","type":579,"seek":11}
-,152:{"name":"零式艦戦52型(熟練)","type":356,"seek":1}
-,153:{"name":"零戦52型丙(付岩井小隊)","type":356,"seek":1}
-,154:{"name":"零戦62型(爆戦/岩井隊)","type":357,"seek":1}
-,155:{"name":"零戦21型(付岩本小隊)","type":356,"seek":1}
-,156:{"name":"零戦52型甲(付岩本小隊)","type":356,"seek":1}
-,157:{"name":"零式艦戦53型(岩本隊)","type":356,"seek":3}
-,158:{"name":"Bf109T改","type":356,"seek":0}
-,159:{"name":"Fw190T改","type":356,"seek":0}
-,160:{"name":"10.5cm連装砲","type":124,"seek":0}
-,161:{"name":"16inch三連装砲 Mk.7","type":113,"seek":0}
-,162:{"name":"203mm/53 連装砲","type":112,"seek":0}
-,163:{"name":"Ro.43水偵","type":5710,"seek":4}
-,164:{"name":"Ro.44水上戦闘機","type":53645,"seek":2}
-,165:{"name":"二式水戦改","type":53645,"seek":1}
-,166:{"name":"大発動艇(八九式中戦車&陸戦隊)","type":81424,"seek":0}
-,167:{"name":"特二式内火艇","type":203746,"seek":0}
-,171:{"name":"OS2U","type":5710,"seek":6}
-,172:{"name":"5inch連装砲 Mk.28 mod.2","type":124,"seek":0}
-,173:{"name":"Bofors 40mm四連装機関砲","type":4621,"seek":0}
-,174:{"name":"53cm連装魚雷","type":235,"seek":0}
-,178:{"name":"PBY-5A Catalina","type":173341,"seek":9}
-,179:{"name":"試製61cm六連装(酸素)魚雷","type":235,"seek":0}
-,181:{"name":"零式艦戦32型","type":356,"seek":0}
-,182:{"name":"零式艦戦32型(熟練)","type":356,"seek":0}
-,183:{"name":"16inch三連装砲 Mk.7+GFCS","type":113,"seek":0}
-,184:{"name":"Re.2001 OR改","type":356,"seek":0}
-,188:{"name":"Re.2001 G改","type":358,"seek":0}
-,189:{"name":"Re.2005 改","type":356,"seek":0}
-,190:{"name":"38.1cm Mk.I連装砲","type":113,"seek":0}
-,191:{"name":"QF 2ポンド8連装ポンポン砲","type":4621,"seek":0}
-,192:{"name":"38.1cm Mk.I/N連装砲改","type":113,"seek":0}
-,193:{"name":"特大発動艇","type":81424,"seek":0}
-,194:{"name":"Laté 298B","type":54311,"seek":4}
-,195:{"name":"SBD","type":357,"seek":2}
-,196:{"name":"TBD","type":358,"seek":2}
-,197:{"name":"F4F-3","type":356,"seek":0}
-,198:{"name":"F4F-4","type":356,"seek":1}
-,199:{"name":"噴式景雲改","type":34057,"seek":3}
-,200:{"name":"橘花改","type":34057,"seek":0}
-,203:{"name":"艦本新設計 増設バルジ(中型艦)","type":61727,"seek":0}
-,204:{"name":"艦本新設計 増設バルジ(大型艦)","type":61728,"seek":0}
-,205:{"name":"F6F-3","type":356,"seek":1}
-,206:{"name":"F6F-5","type":356,"seek":1}
-,207:{"name":"瑞雲(六三一空)","type":54311,"seek":4}
-,208:{"name":"晴嵐(六三一空)","type":54311,"seek":6}
-,209:{"name":"彩雲(輸送用分解済)","type":234150,"seek":0}
-,210:{"name":"潜水艦搭載電探&水防式望遠鏡","type":244251,"seek":4}
-,211:{"name":"潜水艦搭載電探&逆探(E27)","type":244251,"seek":5}
-,212:{"name":"彩雲(東カロリン空)","type":579,"seek":10}
-,213:{"name":"後期型艦首魚雷(6門)","type":2332,"seek":0}
-,214:{"name":"熟練聴音員+後期型艦首魚雷(6門)","type":2332,"seek":1}
-,215:{"name":"Ro.44水上戦闘機bis","type":53645,"seek":3}
-,216:{"name":"二式水戦改(熟練)","type":53645,"seek":1}
-,217:{"name":"強風改","type":53645,"seek":1}
-,219:{"name":"零式艦戦63型(爆戦)","type":357,"seek":0}
-,220:{"name":"8cm高角砲改+増設機銃","type":124,"seek":0}
-,226:{"name":"九五式爆雷","type":73215,"seek":0}
-,227:{"name":"二式爆雷","type":73215,"seek":0}
-,228:{"name":"九六式艦戦改","type":356,"seek":0}
-,229:{"name":"12.7cm単装高角砲(後期型)","type":111,"seek":0}
-,230:{"name":"特大発動艇+戦車第11連隊","type":81424,"seek":0}
-,231:{"name":"30.5cm三連装砲","type":113,"seek":0}
-,232:{"name":"30.5cm三連装砲改","type":113,"seek":0}
-,233:{"name":"F4U-1D","type":357,"seek":1}
-,234:{"name":"15.5cm三連装副砲改","type":124,"seek":0}
-,235:{"name":"15.5cm三連装砲改","type":112,"seek":0}
-,236:{"name":"41cm三連装砲改","type":113,"seek":0}
-,237:{"name":"瑞雲(六三四空/熟練)","type":54311,"seek":7}
-,238:{"name":"零式水上偵察機11型乙","type":5710,"seek":6}
-,239:{"name":"零式水上偵察機11型乙(熟練)","type":5710,"seek":8}
-,240:{"name":"22号対水上電探改四(後期調整型)","type":5812,"seek":7}
-,241:{"name":"戦闘糧食(特別なおにぎり)","type":183443,"seek":0}
-,242:{"name":"Swordfish","type":358,"seek":1}
-,243:{"name":"Swordfish Mk.II(熟練)","type":358,"seek":2}
-,244:{"name":"Swordfish Mk.III(熟練)","type":358,"seek":5}
-,245:{"name":"38cm四連装砲","type":113,"seek":0}
-,246:{"name":"38cm四連装砲改","type":113,"seek":0}
-,247:{"name":"15.2cm三連装砲","type":124,"seek":0}
-,248:{"name":"Skua","type":357,"seek":0}
-,249:{"name":"Fulmar","type":356,"seek":1}
-,252:{"name":"Seafire Mk.III改","type":356,"seek":0}
-,254:{"name":"F6F-3N","type":356,"seek":2}
-,255:{"name":"F6F-5N","type":356,"seek":3}
-,256:{"name":"TBF","type":358,"seek":2}
-,257:{"name":"TBM-3D","type":358,"seek":4}
-,258:{"name":"夜間作戦航空要員","type":132335,"seek":0}
-,259:{"name":"夜間作戦航空要員+熟練甲板員","type":132335,"seek":0}
-,260:{"name":"Type124 ASDIC","type":71014,"seek":0}
-,261:{"name":"Type144/147 ASDIC","type":71014,"seek":0}
-,262:{"name":"HF/DF + Type144/147 ASDIC","type":71014,"seek":2}
-,266:{"name":"12.7cm連装砲C型改二","type":111,"seek":0}
-,267:{"name":"12.7cm連装砲D型改二","type":111,"seek":0}
-,268:{"name":"北方迷彩(+北方装備)","type":61727,"seek":0}
-,271:{"name":"紫電改四","type":356,"seek":0}
-,272:{"name":"遊撃部隊 艦隊司令部","type":122234,"seek":1}
-,273:{"name":"彩雲(偵四)","type":579,"seek":10}
-,274:{"name":"12cm30連装噴進砲改二","type":42921,"seek":0}
-,275:{"name":"10cm連装高角砲改+増設機銃","type":124,"seek":0}
-,276:{"name":"46cm三連装砲改","type":113,"seek":0}
-,277:{"name":"FM-2","type":357,"seek":0}
-,278:{"name":"SK レーダー","type":5813,"seek":10}
-,279:{"name":"SK+SG レーダー","type":5813,"seek":12}
-,280:{"name":"QF 4.7inch砲 Mk.XII改","type":111,"seek":0}
-,281:{"name":"51cm連装砲","type":113,"seek":0}
-,282:{"name":"130mm B-13連装砲","type":111,"seek":0}
-,283:{"name":"533mm 三連装魚雷","type":235,"seek":0}
-,284:{"name":"5inch単装砲 Mk.30","type":111,"seek":0}
-,285:{"name":"61cm三連装(酸素)魚雷後期型","type":235,"seek":0}
-,286:{"name":"61cm四連装(酸素)魚雷後期型","type":235,"seek":0}
-,287:{"name":"三式爆雷投射機 集中配備","type":73215,"seek":0}
-,288:{"name":"試製15cm9連装対潜噴進砲","type":73215,"seek":0}
-,289:{"name":"35.6cm三連装砲改(ダズル迷彩仕様)","type":113,"seek":0}
-,290:{"name":"41cm三連装砲改二","type":113,"seek":0}
-,291:{"name":"彗星二二型(六三四空)","type":357,"seek":0}
-,292:{"name":"彗星二二型(六三四空/熟練)","type":357,"seek":2}
-,293:{"name":"12cm単装砲改二","type":111,"seek":0}
-,294:{"name":"12.7cm連装砲A型改二","type":111,"seek":0}
-,295:{"name":"12.7cm連装砲A型改三(戦時改修)+高射装置","type":111,"seek":0}
-,296:{"name":"12.7cm連装砲B型改四(戦時改修)+高射装置","type":111,"seek":0}
-,297:{"name":"12.7cm連装砲A型","type":111,"seek":0}
-,298:{"name":"16inch Mk.I三連装砲","type":113,"seek":0}
-,299:{"name":"16inch Mk.I三連装砲+AFCT改","type":113,"seek":0}
-,300:{"name":"16inch Mk.I三連装砲改+FCR type284","type":113,"seek":0}
-,301:{"name":"20連装7inch UP Rocket Launchers","type":42921,"seek":0}
-,302:{"name":"九七式艦攻(九三一空/熟練)","type":358,"seek":3}
-,303:{"name":"Bofors 15.2cm連装砲 Model 1930","type":112,"seek":0}
-,304:{"name":"S9 Osprey","type":5710,"seek":4}
-,305:{"name":"Ju87C改二(KMX搭載機)","type":357,"seek":2}
-,306:{"name":"Ju87C改二(KMX搭載機/熟練)","type":357,"seek":2}
-,307:{"name":"GFCS Mk.37","type":5812,"seek":6}
-,308:{"name":"5inch単装砲 Mk.30改+GFCS Mk.37","type":111,"seek":3}
-,309:{"name":"甲標的 丙型","type":2422,"seek":0}
-,310:{"name":"14cm連装砲改","type":112,"seek":0}
-,313:{"name":"5inch単装砲 Mk.30改","type":111,"seek":0}
-,314:{"name":"533mm五連装魚雷(初期型)","type":235,"seek":0}
-,315:{"name":"SG レーダー(初期型)","type":5812,"seek":8}
-,316:{"name":"Re.2001 CB改","type":357,"seek":0}
-,317:{"name":"三式弾改","type":42818,"seek":0}
-,318:{"name":"41cm連装砲改二","type":113,"seek":0}
-,319:{"name":"彗星一二型(六三四空/三号爆弾搭載機)","type":357,"seek":0}
-,320:{"name":"彗星一二型(三一号光電管爆弾搭載機)","type":357,"seek":0}
-,322:{"name":"瑞雲改二(六三四空)","type":54311,"seek":7}
-,323:{"name":"瑞雲改二(六三四空/熟練)","type":54311,"seek":8}
-,324:{"name":"オ号観測機改","type":31525,"seek":0}
-,325:{"name":"オ号観測機改二","type":31525,"seek":1}
-,326:{"name":"S-51J","type":34425,"seek":3}
-,327:{"name":"S-51J改","type":34425,"seek":4}
-,328:{"name":"35.6cm連装砲改","type":113,"seek":0}
-,329:{"name":"35.6cm連装砲改二","type":113,"seek":0}
-,330:{"name":"16inch Mk.I連装砲","type":113,"seek":0}
-,331:{"name":"16inch Mk.V連装砲","type":113,"seek":0}
-,332:{"name":"16inch Mk.VIII連装砲改","type":113,"seek":0}
-,335:{"name":"烈風改(試製艦載型)","type":356,"seek":0}
-,336:{"name":"烈風改二","type":356,"seek":0}
-,337:{"name":"烈風改二(一航戦/熟練)","type":356,"seek":0}
-,338:{"name":"烈風改二戊型","type":356,"seek":1}
-,339:{"name":"烈風改二戊型(一航戦/熟練)","type":356,"seek":1}
-,340:{"name":"152mm/55 三連装速射砲","type":112,"seek":0}
-,341:{"name":"152mm/55 三連装速射砲改","type":112,"seek":0}
-,342:{"name":"流星改(一航戦)","type":358,"seek":4}
-,343:{"name":"流星改(一航戦/熟練)","type":358,"seek":6}
-,344:{"name":"九七式艦攻改 試製三号戊型(空六号電探改装備機)","type":358,"seek":4}
-,345:{"name":"九七式艦攻改(熟練) 試製三号戊型(空六号電探改装備機)","type":358,"seek":5}
-,346:{"name":"二式12cm迫撃砲改","type":73215,"seek":0}
-,347:{"name":"二式12cm迫撃砲改 集中配備","type":73215,"seek":0}
-,348:{"name":"艦載型 四式20cm対地噴進砲","type":152637,"seek":0}
-,349:{"name":"四式20cm対地噴進砲 集中配備","type":152637,"seek":0}
-,353:{"name":"Fw190 A-5改(熟練)","type":356,"seek":0}
-,355:{"name":"M4A1 DD","type":84524,"seek":0}
-,356:{"name":"8inch三連装砲 Mk.9","type":112,"seek":0}
-,357:{"name":"8inch三連装砲 Mk.9 mod.2","type":112,"seek":0}
-,358:{"name":"5inch 単装高角砲群","type":124,"seek":0}
-,359:{"name":"6inch 連装速射砲 Mk.XXI","type":112,"seek":0}
-,360:{"name":"Bofors 15cm連装速射砲 Mk.9 Model 1938","type":112,"seek":0}
-,361:{"name":"Bofors 15cm連装速射砲 Mk.9改+単装速射砲 Mk.10改 Model 1938","type":112,"seek":0}
-,362:{"name":"5inch連装両用砲(集中配備)","type":112,"seek":0}
-,363:{"name":"GFCS Mk.37+5inch連装両用砲(集中配備)","type":112,"seek":3}
-,364:{"name":"甲標的 丁型改(蛟龍改)","type":2422,"seek":2}
-,365:{"name":"一式徹甲弾改","type":42519,"seek":0}
-,366:{"name":"12.7cm連装砲D型改三","type":111,"seek":0}
-,367:{"name":"Swordfish(水上機型)","type":54311,"seek":2}
-,368:{"name":"Swordfish Mk.III改(水上機型)","type":54311,"seek":3}
-,369:{"name":"Swordfish Mk.III改(水上機型/熟練)","type":54311,"seek":4}
-,370:{"name":"Swordfish Mk.II改(水偵型)","type":5710,"seek":5}
-,371:{"name":"Fairey Seafox改","type":5710,"seek":6}
-,372:{"name":"天山一二型甲","type":358,"seek":2}
-,373:{"name":"天山一二型甲改(空六号電探改装備機)","type":358,"seek":5}
-,374:{"name":"天山一二型甲改(熟練/空六号電探改装備機)","type":358,"seek":6}
-,375:{"name":"XF5U","type":356,"seek":1}
-,376:{"name":"533mm五連装魚雷(後期型)","type":235,"seek":0}
-,377:{"name":"RUR-4A Weapon Alpha改","type":73215,"seek":0}
-,378:{"name":"対潜短魚雷(試作初期型)","type":73215,"seek":0}
-,379:{"name":"12.7cm単装高角砲改二","type":111,"seek":0}
-,380:{"name":"12.7cm連装高角砲改二","type":111,"seek":0}
-,381:{"name":"16inch三連装砲 Mk.6","type":113,"seek":0}
-,382:{"name":"12cm単装高角砲E型","type":111,"seek":0}
-,383:{"name":"後期型53cm艦首魚雷(8門)","type":2332,"seek":0}
-,384:{"name":"後期型潜水艦搭載電探&逆探","type":244251,"seek":7}
-,385:{"name":"16inch三連装砲 Mk.6 mod.2","type":113,"seek":0}
-,386:{"name":"6inch三連装速射砲 Mk.16","type":112,"seek":0}
-,387:{"name":"6inch三連装速射砲 Mk.16 mod.2","type":112,"seek":0}
-,389:{"name":"TBM-3W+3S","type":358,"seek":10}
-,390:{"name":"16inch三連装砲 Mk.6+GFCS","type":113,"seek":0}
-,391:{"name":"九九式艦爆二二型","type":357,"seek":2}
-,392:{"name":"九九式艦爆二二型(熟練)","type":357,"seek":3}
-,393:{"name":"120mm/50 連装砲 mod.1936","type":111,"seek":0}
-,394:{"name":"120mm/50 連装砲改 A.mod.1937","type":111,"seek":0}
-,395:{"name":"深山","type":264653,"seek":0}
-,396:{"name":"深山改","type":264653,"seek":0}
-,397:{"name":"現地改装12.7cm連装高角砲","type":111,"seek":0}
-,398:{"name":"現地改装10cm連装高角砲","type":111,"seek":0}
-,399:{"name":"6inch Mk.XXIII三連装砲","type":112,"seek":0}
-,400:{"name":"533mm 三連装魚雷(53-39型)","type":235,"seek":0}
-,402:{"name":"寒冷地装備&甲板要員","type":132335,"seek":0}
-,407:{"name":"15.2cm連装砲改二","type":112,"seek":0}
-,408:{"name":"装甲艇(AB艇)","type":84724,"seek":1}
-,409:{"name":"武装大発","type":84724,"seek":0}
-,410:{"name":"21号対空電探改二","type":5813,"seek":7}
-,411:{"name":"42号対空電探改二","type":5813,"seek":6}
-,412:{"name":"水雷戦隊 熟練見張員","type":162739,"seek":2}
-,413:{"name":"精鋭水雷戦隊 司令部","type":122234,"seek":1}
-,414:{"name":"SOC Seagull","type":5710,"seek":4}
-,415:{"name":"SO3C Seamew改","type":5710,"seek":7}
-,419:{"name":"SBD-5","type":357,"seek":3}
-,420:{"name":"SB2C-3","type":357,"seek":3}
-,421:{"name":"SB2C-5","type":357,"seek":4}
-,422:{"name":"FR-1 Fireball","type":356,"seek":0}
-,423:{"name":"Fulmar(戦闘偵察/熟練)","type":579,"seek":4}
-,424:{"name":"Barracuda Mk.II","type":358,"seek":2}
-,425:{"name":"Barracuda Mk.III","type":358,"seek":3}
-,426:{"name":"305mm/46 連装砲","type":113,"seek":0}
-,427:{"name":"305mm/46 三連装砲","type":113,"seek":0}
-,428:{"name":"320mm/44 連装砲","type":113,"seek":0}
-,429:{"name":"320mm/44 三連装砲","type":113,"seek":0}
-,430:{"name":"65mm/64 単装速射砲改","type":124,"seek":0}
-,434:{"name":"Corsair Mk.II","type":356,"seek":1}
-,435:{"name":"Corsair Mk.II(Ace)","type":356,"seek":2}
-,436:{"name":"大発動艇(II号戦車/北アフリカ仕様)","type":81424,"seek":0}
-,437:{"name":"試製 陣風","type":356,"seek":0}
-,438:{"name":"三式水中探信儀改","type":71014,"seek":0}
-,439:{"name":"Hedgehog(初期型)","type":73215,"seek":0}
-,440:{"name":"21inch艦首魚雷発射管6門(初期型)","type":2332,"seek":0}
-,441:{"name":"21inch艦首魚雷発射管6門(後期型)","type":2332,"seek":0}
-,442:{"name":"潜水艦後部魚雷発射管4門(初期型)","type":2332,"seek":0}
-,443:{"name":"潜水艦後部魚雷発射管4門(後期型)","type":2332,"seek":0}
-,447:{"name":"零式艦戦64型(複座KMX搭載機)","type":357,"seek":3}
-,449:{"name":"特大発動艇+一式砲戦車","type":81424,"seek":0}
-,450:{"name":"13号対空電探改(後期型)","type":5812,"seek":5}
-,451:{"name":"三式指揮連絡機改","type":31626,"seek":2}
-,453:{"name":"キ102乙","type":223847,"seek":0}
-,454:{"name":"キ102乙改+イ号一型乙 誘導弾","type":223847,"seek":0}
-,455:{"name":"試製 長12.7cm連装砲A型改四","type":111,"seek":0}
-,456:{"name":"SG レーダー(後期型)","type":5812,"seek":9}
-,457:{"name":"後期型艦首魚雷(4門)","type":2332,"seek":0}
-,458:{"name":"後期型電探&逆探+シュノーケル装備","type":244251,"seek":6}
-,460:{"name":"15m二重測距儀改+21号電探改二+熟練射撃指揮所","type":5813,"seek":8}
-,461:{"name":"熟練聴音員+後期型艦首魚雷(4門)","type":2332,"seek":0}
-,463:{"name":"15.5cm三連装副砲改二","type":124,"seek":0}
-,464:{"name":"10cm連装高角砲群 集中配備","type":124,"seek":0}
-,465:{"name":"試製51cm三連装砲","type":113,"seek":0}
-,466:{"name":"流星改(熟練)","type":358,"seek":5}
-,467:{"name":"5inch連装砲(副砲配置) 集中配備","type":124,"seek":0}
-,468:{"name":"38cm四連装砲改 deux","type":113,"seek":0}
-,469:{"name":"零式水上偵察機11型乙改(夜偵)","type":5710,"seek":5}
-,470:{"name":"12.7cm連装砲C型改三","type":111,"seek":0}
-,471:{"name":"Loire 130M","type":5710,"seek":3}
-,472:{"name":"Mk.32 対潜魚雷(Mk.2落射機)","type":73215,"seek":0}
-,473:{"name":"F4U-2 Night Corsair","type":356,"seek":2}
-,474:{"name":"F4U-4","type":357,"seek":2}
-,475:{"name":"AU-1","type":357,"seek":2}
-,476:{"name":"F4U-7","type":357,"seek":2}
-,477:{"name":"熟練甲板要員","type":132335,"seek":1}
-,478:{"name":"熟練甲板要員+航空整備員","type":132335,"seek":1}
-,481:{"name":"Mosquito TR Mk.33","type":358,"seek":6}
-,482:{"name":"特大発動艇+Ⅲ号戦車(北アフリカ仕様)","type":81424,"seek":0}
-,483:{"name":"三式弾改二","type":42818,"seek":0}
-,485:{"name":"強風改二","type":53645,"seek":2}
-,486:{"name":"零式艦戦64型(制空戦闘機仕様)","type":356,"seek":1}
-,487:{"name":"零式艦戦64型(熟練爆戦)","type":357,"seek":2}
-,488:{"name":"二式爆雷改二","type":73215,"seek":0}
-,489:{"name":"一式戦 隼II型改(20戦隊)","type":31626,"seek":0}
-,490:{"name":"試製 夜間瑞雲(攻撃装備)","type":54311,"seek":7}
-,491:{"name":"一式戦 隼III型改(熟練/20戦隊)","type":31626,"seek":0}
-,492:{"name":"零戦52型丙(八幡部隊)","type":356,"seek":0}
-,494:{"name":"特大発動艇+チハ","type":81424,"seek":0}
-,495:{"name":"特大発動艇+チハ改","type":81424,"seek":0}
-,496:{"name":"陸軍歩兵部隊","type":274852,"seek":0}
-,497:{"name":"九七式中戦車(チハ)","type":274852,"seek":0}
-,498:{"name":"九七式中戦車 新砲塔(チハ改)","type":274852,"seek":0}
-,499:{"name":"陸軍歩兵部隊+チハ改","type":274852,"seek":0}
-,500:{"name":"発煙装置(煙幕)","type":284954,"seek":0}
-,501:{"name":"発煙装置改(煙幕)","type":284954,"seek":0}
-,502:{"name":"35.6cm連装砲改三(ダズル迷彩仕様)","type":113,"seek":0}
-,503:{"name":"35.6cm連装砲改四","type":113,"seek":0}
-,505:{"name":"25mm対空機銃増備","type":4621,"seek":0}
-,506:{"name":"電探装備マスト(13号改+22号電探改四)","type":5812,"seek":5}
-,507:{"name":"14inch/45 連装砲","type":113,"seek":0}
-,508:{"name":"14inch/45 三連装砲","type":113,"seek":0}
-,509:{"name":"12cm単装高角砲E型改","type":111,"seek":0}
-,510:{"name":"Walrus","type":5710,"seek":4}
-,511:{"name":"21inch艦首魚雷発射管4門(初期型)","type":2332,"seek":0}
-,512:{"name":"21inch艦首魚雷発射管4門(後期型)","type":2332,"seek":0}
-,513:{"name":"阻塞気球","type":295054,"seek":0}
-,514:{"name":"特大発動艇+Ⅲ号戦車J型","type":81424,"seek":0}
-,515:{"name":"Sea Otter","type":5710,"seek":5}
-,517:{"name":"逆探(E27)+22号対水上電探改四(後期調整型)","type":5812,"seek":8}
-,518:{"name":"14cm連装砲改二","type":112,"seek":0}
-,519:{"name":"SJレーダー+潜水艦司令塔装備","type":244251,"seek":7}
-,520:{"name":"試製20.3cm(4号)連装砲","type":112,"seek":0}
-,521:{"name":"紫雲(熟練)","type":5710,"seek":9}
-,524:{"name":"12cm単装高角砲＋25mm機銃増備","type":124,"seek":0}
-,525:{"name":"特四式内火艇","type":203746,"seek":0}
-,526:{"name":"特四式内火艇改","type":203746,"seek":0}
-,522:{"name":"零式小型水上機","type":5710,"seek":3}
-,523:{"name":"零式小型水上機(熟練)","type":5710,"seek":4}
-,527:{"name":"Type281 レーダー","type":5813,"seek":8}
-,528:{"name":"Type274 射撃管制レーダー","type":5813,"seek":5}
-,529:{"name":"12.7cm連装砲C型改三H","type":111,"seek":0}
-,530:{"name":"35.6cm連装砲改三丙","type":113,"seek":0}
-,531:{"name":"艦隊通信アンテナ","type":122234,"seek":1}
-,532:{"name":"通信装置&要員","type":122234,"seek":1}
-,533:{"name":"10cm連装高角砲改+高射装置改","type":111,"seek":0}
-,534:{"name":"13.8cm連装砲","type":111,"seek":0}
-,535:{"name":"13.8cm連装砲改","type":111,"seek":0}
-,537:{"name":"15.2cm三連装主砲改","type":112,"seek":0}
-,538:{"name":"Loire 130M改(熟練)","type":5710,"seek":5}
-,536:{"name":"15.2cm三連装主砲","type":112,"seek":0}
-,541:{"name":"SBD(Yellow Wings)","type":357,"seek":2}
-,542:{"name":"TBD(Yellow Wings)","type":357,"seek":2}
-,544:{"name":"SBD VB-2(爆撃飛行隊)","type":357,"seek":2}
-,545:{"name":"天山一二型甲改二(村田隊/電探装備)","type":358,"seek":6}
-,543:{"name":"SBD VS-2(偵察飛行隊)","type":579,"seek":6}
-,539:{"name":"SOC Seagull 後期型(熟練)","type":5710,"seek":7}
-,540:{"name":"零式水上偵察機11型甲改二","type":5710,"seek":7}
-,549:{"name":"三式指揮連絡機改二","type":31626,"seek":3}
-,550:{"name":"試製 明星(増加試作機)","type":357,"seek":1}
-,551:{"name":"明星","type":357,"seek":2}
-,552:{"name":"九九式練爆二二型改(夜間装備実験機)","type":357,"seek":4}
-,553:{"name":"10cm連装高角砲改","type":111,"seek":0}
-,554:{"name":"九七式艦攻改(北東海軍航空隊)","type":358,"seek":2}
+const equip_datas: Record<number, EquipData> = {
+ 1:[0,EquipType.MainGunS] // 12cm単装砲
+,2:[0,EquipType.MainGunS] // 12.7cm連装砲
+,3:[0,EquipType.MainGunS] // 10cm連装高角砲
+,4:[0,EquipType.MainGunM] // 14cm単装砲
+,5:[0,EquipType.MainGunM] // 15.5cm三連装砲
+,6:[0,EquipType.MainGunM] // 20.3cm連装砲
+,7:[0,EquipType.MainGunL] // 35.6cm連装砲
+,8:[0,EquipType.MainGunL] // 41cm連装砲
+,9:[0,EquipType.MainGunL] // 46cm三連装砲
+,10:[0,EquipType.SecGun] // 12.7cm連装高角砲
+,11:[0,EquipType.SecGun] // 15.2cm単装砲
+,12:[0,EquipType.SecGun] // 15.5cm三連装副砲
+,13:[0,EquipType.Torpedo] // 61cm三連装魚雷
+,14:[0,EquipType.Torpedo] // 61cm四連装魚雷
+,15:[0,EquipType.Torpedo] // 61cm四連装(酸素)魚雷
+,16:[1,EquipType.TorpBomber] // 九七式艦攻
+,17:[1,EquipType.TorpBomber] // 天山
+,18:[1,EquipType.TorpBomber] // 流星
+,19:[0,EquipType.Fighter] // 九六式艦戦
+,20:[0,EquipType.Fighter] // 零式艦戦21型
+,21:[0,EquipType.Fighter] // 零式艦戦52型
+,22:[0,EquipType.Fighter] // 試製烈風 後期型
+,23:[0,EquipType.DiveBomber] // 九九式艦爆
+,24:[0,EquipType.DiveBomber] // 彗星
+,25:[5,EquipType.SeaPlane] // 零式水上偵察機
+,26:[6,EquipType.SeaPlaneBomber] // 瑞雲
+,27:[3,EquipType.RadarS] // 13号対空電探
+,28:[5,EquipType.RadarS] // 22号対水上電探
+,29:[7,EquipType.RadarS] // 33号対水上電探
+,30:[4,EquipType.RadarL] // 21号対空電探
+,31:[10,EquipType.RadarL] // 32号対水上電探
+,32:[5,EquipType.RadarL] // 42号対空電探
+,33:[0,EquipType.Engine] // 改良型艦本式タービン
+,34:[0,EquipType.Engine] // 強化型艦本式缶
+,35:[0,EquipType.ShrapnelShell] // 三式弾
+,36:[0,EquipType.APShell] // 九一式徹甲弾
+,37:[0,EquipType.AAGun] // 7.7mm機銃
+,38:[0,EquipType.AAGun] // 12.7mm単装機銃
+,39:[0,EquipType.AAGun] // 25mm連装機銃
+,40:[0,EquipType.AAGun] // 25mm三連装機銃
+,41:[0,EquipType.MidgetSub] // 甲標的 甲型
+,42:[0,EquipType.Repair] // 応急修理要員
+,43:[0,EquipType.Repair] // 応急修理女神
+,44:[0,EquipType.DepthCharge] // 九四式爆雷投射機
+,45:[0,EquipType.DepthCharge] // 三式爆雷投射機
+,46:[0,EquipType.SonarS] // 九三式水中聴音機
+,47:[0,EquipType.SonarS] // 三式水中探信儀
+,48:[0,EquipType.MainGunS] // 12cm単装高角砲
+,49:[0,EquipType.AAGun] // 25mm単装機銃
+,50:[0,EquipType.MainGunM] // 20.3cm(3号)連装砲
+,51:[0,EquipType.AAGun] // 12cm30連装噴進砲
+,52:[2,EquipType.TorpBomber] // 流星改
+,53:[0,EquipType.Fighter] // 烈風 一一型
+,54:[9,EquipType.CarrierScout] // 彩雲
+,55:[0,EquipType.Fighter] // 紫電改二
+,56:[0,EquipType.Fighter] // 震電改
+,57:[1,EquipType.DiveBomber] // 彗星一二型甲
+,58:[0,EquipType.Torpedo] // 61cm五連装(酸素)魚雷
+,59:[6,EquipType.SeaPlane] // 零式水上観測機
+,60:[0,EquipType.DiveBomber] // 零式艦戦62型(爆戦)
+,61:[7,EquipType.CarrierScout] // 二式艦上偵察機
+,62:[6,EquipType.SeaPlaneBomber] // 試製晴嵐
+,63:[0,EquipType.MainGunS] // 12.7cm連装砲B型改二
+,64:[0,EquipType.DiveBomber] // Ju87C改
+,65:[0,EquipType.MainGunM] // 15.2cm連装砲
+,66:[0,EquipType.SecGun] // 8cm高角砲
+,67:[0,EquipType.Torpedo] // 53cm艦首(酸素)魚雷
+,68:[0,EquipType.LandingCraft] // 大発動艇
+,69:[0,EquipType.AutoGyro] // カ号観測機
+,70:[1,EquipType.AswPlane] // 三式指揮連絡機(対潜)
+,71:[0,EquipType.SecGun] // 10cm連装高角砲(砲架)
+,72:[0,EquipType.BulgeM] // 増設バルジ(中型艦)
+,73:[0,EquipType.BulgeL] // 増設バルジ(大型艦)
+,74:[2,EquipType.SearchLightS] // 探照灯
+,75:[0,EquipType.Drum] // ドラム缶(輸送用)
+,76:[0,EquipType.MainGunL] // 38cm連装砲
+,77:[0,EquipType.SecGun] // 15cm連装副砲
+,78:[0,EquipType.MainGunS] // 12.7cm単装砲
+,79:[6,EquipType.SeaPlaneBomber] // 瑞雲(六三四空)
+,80:[6,EquipType.SeaPlaneBomber] // 瑞雲12型
+,81:[7,EquipType.SeaPlaneBomber] // 瑞雲12型(六三四空)
+,82:[2,EquipType.TorpBomber] // 九七式艦攻(九三一空)
+,83:[2,EquipType.TorpBomber] // 天山(九三一空)
+,84:[0,EquipType.AAGun] // 2cm 四連装FlaK 38
+,85:[0,EquipType.AAGun] // 3.7cm FlaK M42
+,86:[0,EquipType.SRF] // 艦艇修理施設
+,87:[0,EquipType.Engine] // 新型高温高圧缶
+,88:[5,EquipType.RadarS] // 22号対水上電探改四
+,89:[6,EquipType.RadarL] // 21号対空電探改
+,90:[0,EquipType.MainGunM] // 20.3cm(2号)連装砲
+,91:[0,EquipType.MainGunS] // 12.7cm連装高角砲(後期型)
+,92:[0,EquipType.AAGun] // 毘式40mm連装機銃
+,93:[4,EquipType.TorpBomber] // 九七式艦攻(友永隊)
+,94:[5,EquipType.TorpBomber] // 天山一二型(友永隊)
+,95:[0,EquipType.TorpedoSS] // 潜水艦53cm艦首魚雷(8門)
+,96:[1,EquipType.Fighter] // 零式艦戦21型(熟練)
+,97:[2,EquipType.DiveBomber] // 九九式艦爆(熟練)
+,98:[2,EquipType.TorpBomber] // 九七式艦攻(熟練)
+,99:[3,EquipType.DiveBomber] // 九九式艦爆(江草隊)
+,100:[4,EquipType.DiveBomber] // 彗星(江草隊)
+,101:[0,EquipType.StarShell] // 照明弾
+,102:[3,EquipType.SeaPlane] // 九八式水上偵察機(夜偵)
+,103:[0,EquipType.MainGunL] // 試製35.6cm三連装砲
+,104:[0,EquipType.MainGunL] // 35.6cm連装砲(ダズル迷彩)
+,105:[0,EquipType.MainGunL] // 試製41cm三連装砲
+,106:[4,EquipType.RadarS] // 13号対空電探改
+,107:[1,EquipType.FCF] // 艦隊司令部施設
+,108:[1,EquipType.Scamp] // 熟練艦載機整備員
+,109:[0,EquipType.Fighter] // 零戦52型丙(六〇一空)
+,110:[0,EquipType.Fighter] // 烈風(六〇一空)
+,111:[1,EquipType.DiveBomber] // 彗星(六〇一空)
+,112:[2,EquipType.TorpBomber] // 天山(六〇一空)
+,113:[3,EquipType.TorpBomber] // 流星(六〇一空)
+,114:[0,EquipType.MainGunL] // 38cm連装砲改
+,115:[5,EquipType.SeaPlane] // Ar196改
+,116:[0,EquipType.APShell] // 一式徹甲弾
+,117:[0,EquipType.MainGunL] // 試製46cm連装砲
+,118:[8,EquipType.SeaPlane] // 紫雲
+,119:[0,EquipType.MainGunM] // 14cm連装砲
+,120:[0,EquipType.AAFD] // 91式高射装置
+,121:[0,EquipType.AAFD] // 94式高射装置
+,122:[0,EquipType.MainGunS] // 10cm連装高角砲+高射装置
+,123:[0,EquipType.MainGunM] // SKC34 20.3cm連装砲
+,124:[9,EquipType.RadarL] // FuMO25 レーダー
+,125:[0,EquipType.Torpedo] // 61cm三連装(酸素)魚雷
+,126:[0,EquipType.WG] // WG42 (Wurfgerät 42)
+,127:[0,EquipType.TorpedoSS] // 試製FaT仕様九五式酸素魚雷改
+,128:[0,EquipType.MainGunL] // 試製51cm連装砲
+,129:[2,EquipType.Picket] // 熟練見張員
+,130:[0,EquipType.SecGun] // 12.7cm高角砲+高射装置
+,131:[0,EquipType.AAGun] // 25mm三連装機銃 集中配備
+,132:[1,EquipType.SonarL] // 零式水中聴音機
+,133:[0,EquipType.MainGunL] // 381mm/50 三連装砲
+,134:[0,EquipType.SecGun] // OTO 152mm三連装速射砲
+,135:[0,EquipType.SecGun] // 90mm単装高角砲
+,136:[0,EquipType.BulgeL] // プリエーゼ式水中防御隔壁
+,137:[0,EquipType.MainGunL] // 381mm/50 三連装砲改
+,138:[12,EquipType.FlyingBoat] // 二式大艇
+,139:[0,EquipType.MainGunM] // 15.2cm連装砲改
+,140:[3,EquipType.SearchLightL] // 96式150cm探照灯
+,141:[11,EquipType.RadarL] // 32号対水上電探改
+,142:[7,EquipType.RadarL] // 15m二重測距儀+21号電探改二
+,143:[4,EquipType.TorpBomber] // 九七式艦攻(村田隊)
+,144:[4,EquipType.TorpBomber] // 天山一二型(村田隊)
+,145:[0,EquipType.Ration] // 戦闘糧食
+,146:[0,EquipType.OilDrum] // 洋上補給
+,147:[0,EquipType.MainGunS] // 120mm/50 連装砲
+,148:[2,EquipType.DiveBomber] // 試製南山
+,149:[0,EquipType.SonarS] // 四式水中聴音機
+,150:[0,EquipType.Ration] // 秋刀魚の缶詰
+,151:[11,EquipType.CarrierScout] // 試製景雲(艦偵型)
+,152:[1,EquipType.Fighter] // 零式艦戦52型(熟練)
+,153:[1,EquipType.Fighter] // 零戦52型丙(付岩井小隊)
+,154:[1,EquipType.DiveBomber] // 零戦62型(爆戦/岩井隊)
+,155:[1,EquipType.Fighter] // 零戦21型(付岩本小隊)
+,156:[1,EquipType.Fighter] // 零戦52型甲(付岩本小隊)
+,157:[3,EquipType.Fighter] // 零式艦戦53型(岩本隊)
+,158:[0,EquipType.Fighter] // Bf109T改
+,159:[0,EquipType.Fighter] // Fw190T改
+,160:[0,EquipType.SecGun] // 10.5cm連装砲
+,161:[0,EquipType.MainGunL] // 16inch三連装砲 Mk.7
+,162:[0,EquipType.MainGunM] // 203mm/53 連装砲
+,163:[4,EquipType.SeaPlane] // Ro.43水偵
+,164:[2,EquipType.SeaPlaneFighter] // Ro.44水上戦闘機
+,165:[1,EquipType.SeaPlaneFighter] // 二式水戦改
+,166:[0,EquipType.LandingCraft] // 大発動艇(八九式中戦車&陸戦隊)
+,167:[0,EquipType.LandingTank] // 特二式内火艇
+,171:[6,EquipType.SeaPlane] // OS2U
+,172:[0,EquipType.SecGun] // 5inch連装砲 Mk.28 mod.2
+,173:[0,EquipType.AAGun] // Bofors 40mm四連装機関砲
+,174:[0,EquipType.Torpedo] // 53cm連装魚雷
+,178:[9,EquipType.FlyingBoat] // PBY-5A Catalina
+,179:[0,EquipType.Torpedo] // 試製61cm六連装(酸素)魚雷
+,181:[0,EquipType.Fighter] // 零式艦戦32型
+,182:[0,EquipType.Fighter] // 零式艦戦32型(熟練)
+,183:[0,EquipType.MainGunL] // 16inch三連装砲 Mk.7+GFCS
+,184:[0,EquipType.Fighter] // Re.2001 OR改
+,188:[0,EquipType.TorpBomber] // Re.2001 G改
+,189:[0,EquipType.Fighter] // Re.2005 改
+,190:[0,EquipType.MainGunL] // 38.1cm Mk.I連装砲
+,191:[0,EquipType.AAGun] // QF 2ポンド8連装ポンポン砲
+,192:[0,EquipType.MainGunL] // 38.1cm Mk.I/N連装砲改
+,193:[0,EquipType.LandingCraft] // 特大発動艇
+,194:[4,EquipType.SeaPlaneBomber] // Laté 298B
+,195:[2,EquipType.DiveBomber] // SBD
+,196:[2,EquipType.TorpBomber] // TBD
+,197:[0,EquipType.Fighter] // F4F-3
+,198:[1,EquipType.Fighter] // F4F-4
+,199:[3,EquipType.JetBomber] // 噴式景雲改
+,200:[0,EquipType.JetBomber] // 橘花改
+,203:[0,EquipType.BulgeM] // 艦本新設計 増設バルジ(中型艦)
+,204:[0,EquipType.BulgeL] // 艦本新設計 増設バルジ(大型艦)
+,205:[1,EquipType.Fighter] // F6F-3
+,206:[1,EquipType.Fighter] // F6F-5
+,207:[4,EquipType.SeaPlaneBomber] // 瑞雲(六三一空)
+,208:[6,EquipType.SeaPlaneBomber] // 晴嵐(六三一空)
+,209:[0,EquipType.TransportItem] // 彩雲(輸送用分解済)
+,210:[4,EquipType.SubRadar] // 潜水艦搭載電探&水防式望遠鏡
+,211:[5,EquipType.SubRadar] // 潜水艦搭載電探&逆探(E27)
+,212:[10,EquipType.CarrierScout] // 彩雲(東カロリン空)
+,213:[0,EquipType.TorpedoSS] // 後期型艦首魚雷(6門)
+,214:[1,EquipType.TorpedoSS] // 熟練聴音員+後期型艦首魚雷(6門)
+,215:[3,EquipType.SeaPlaneFighter] // Ro.44水上戦闘機bis
+,216:[1,EquipType.SeaPlaneFighter] // 二式水戦改(熟練)
+,217:[1,EquipType.SeaPlaneFighter] // 強風改
+,219:[0,EquipType.DiveBomber] // 零式艦戦63型(爆戦)
+,220:[0,EquipType.SecGun] // 8cm高角砲改+増設機銃
+,226:[0,EquipType.DepthCharge] // 九五式爆雷
+,227:[0,EquipType.DepthCharge] // 二式爆雷
+,228:[0,EquipType.Fighter] // 九六式艦戦改
+,229:[0,EquipType.MainGunS] // 12.7cm単装高角砲(後期型)
+,230:[0,EquipType.LandingCraft] // 特大発動艇+戦車第11連隊
+,231:[0,EquipType.MainGunL] // 30.5cm三連装砲
+,232:[0,EquipType.MainGunL] // 30.5cm三連装砲改
+,233:[1,EquipType.DiveBomber] // F4U-1D
+,234:[0,EquipType.SecGun] // 15.5cm三連装副砲改
+,235:[0,EquipType.MainGunM] // 15.5cm三連装砲改
+,236:[0,EquipType.MainGunL] // 41cm三連装砲改
+,237:[7,EquipType.SeaPlaneBomber] // 瑞雲(六三四空/熟練)
+,238:[6,EquipType.SeaPlane] // 零式水上偵察機11型乙
+,239:[8,EquipType.SeaPlane] // 零式水上偵察機11型乙(熟練)
+,240:[7,EquipType.RadarS] // 22号対水上電探改四(後期調整型)
+,241:[0,EquipType.Ration] // 戦闘糧食(特別なおにぎり)
+,242:[1,EquipType.TorpBomber] // Swordfish
+,243:[2,EquipType.TorpBomber] // Swordfish Mk.II(熟練)
+,244:[5,EquipType.TorpBomber] // Swordfish Mk.III(熟練)
+,245:[0,EquipType.MainGunL] // 38cm四連装砲
+,246:[0,EquipType.MainGunL] // 38cm四連装砲改
+,247:[0,EquipType.SecGun] // 15.2cm三連装砲
+,248:[0,EquipType.DiveBomber] // Skua
+,249:[1,EquipType.Fighter] // Fulmar
+,252:[0,EquipType.Fighter] // Seafire Mk.III改
+,254:[2,EquipType.Fighter] // F6F-3N
+,255:[3,EquipType.Fighter] // F6F-5N
+,256:[2,EquipType.TorpBomber] // TBF
+,257:[4,EquipType.TorpBomber] // TBM-3D
+,258:[0,EquipType.Scamp] // 夜間作戦航空要員
+,259:[0,EquipType.Scamp] // 夜間作戦航空要員+熟練甲板員
+,260:[0,EquipType.SonarS] // Type124 ASDIC
+,261:[0,EquipType.SonarS] // Type144/147 ASDIC
+,262:[2,EquipType.SonarS] // HF/DF + Type144/147 ASDIC
+,266:[0,EquipType.MainGunS] // 12.7cm連装砲C型改二
+,267:[0,EquipType.MainGunS] // 12.7cm連装砲D型改二
+,268:[0,EquipType.BulgeM] // 北方迷彩(+北方装備)
+,271:[0,EquipType.Fighter] // 紫電改四
+,272:[1,EquipType.FCF] // 遊撃部隊 艦隊司令部
+,273:[10,EquipType.CarrierScout] // 彩雲(偵四)
+,274:[0,EquipType.AAGun] // 12cm30連装噴進砲改二
+,275:[0,EquipType.SecGun] // 10cm連装高角砲改+増設機銃
+,276:[0,EquipType.MainGunL] // 46cm三連装砲改
+,277:[0,EquipType.DiveBomber] // FM-2
+,278:[10,EquipType.RadarL] // SK レーダー
+,279:[12,EquipType.RadarL] // SK+SG レーダー
+,280:[0,EquipType.MainGunS] // QF 4.7inch砲 Mk.XII改
+,281:[0,EquipType.MainGunL] // 51cm連装砲
+,282:[0,EquipType.MainGunS] // 130mm B-13連装砲
+,283:[0,EquipType.Torpedo] // 533mm 三連装魚雷
+,284:[0,EquipType.MainGunS] // 5inch単装砲 Mk.30
+,285:[0,EquipType.Torpedo] // 61cm三連装(酸素)魚雷後期型
+,286:[0,EquipType.Torpedo] // 61cm四連装(酸素)魚雷後期型
+,287:[0,EquipType.DepthCharge] // 三式爆雷投射機 集中配備
+,288:[0,EquipType.DepthCharge] // 試製15cm9連装対潜噴進砲
+,289:[0,EquipType.MainGunL] // 35.6cm三連装砲改(ダズル迷彩仕様)
+,290:[0,EquipType.MainGunL] // 41cm三連装砲改二
+,291:[0,EquipType.DiveBomber] // 彗星二二型(六三四空)
+,292:[2,EquipType.DiveBomber] // 彗星二二型(六三四空/熟練)
+,293:[0,EquipType.MainGunS] // 12cm単装砲改二
+,294:[0,EquipType.MainGunS] // 12.7cm連装砲A型改二
+,295:[0,EquipType.MainGunS] // 12.7cm連装砲A型改三(戦時改修)+高射装置
+,296:[0,EquipType.MainGunS] // 12.7cm連装砲B型改四(戦時改修)+高射装置
+,297:[0,EquipType.MainGunS] // 12.7cm連装砲A型
+,298:[0,EquipType.MainGunL] // 16inch Mk.I三連装砲
+,299:[0,EquipType.MainGunL] // 16inch Mk.I三連装砲+AFCT改
+,300:[0,EquipType.MainGunL] // 16inch Mk.I三連装砲改+FCR type284
+,301:[0,EquipType.AAGun] // 20連装7inch UP Rocket Launchers
+,302:[3,EquipType.TorpBomber] // 九七式艦攻(九三一空/熟練)
+,303:[0,EquipType.MainGunM] // Bofors 15.2cm連装砲 Model 1930
+,304:[4,EquipType.SeaPlane] // S9 Osprey
+,305:[2,EquipType.DiveBomber] // Ju87C改二(KMX搭載機)
+,306:[2,EquipType.DiveBomber] // Ju87C改二(KMX搭載機/熟練)
+,307:[6,EquipType.RadarS] // GFCS Mk.37
+,308:[3,EquipType.MainGunS] // 5inch単装砲 Mk.30改+GFCS Mk.37
+,309:[0,EquipType.MidgetSub] // 甲標的 丙型
+,310:[0,EquipType.MainGunM] // 14cm連装砲改
+,313:[0,EquipType.MainGunS] // 5inch単装砲 Mk.30改
+,314:[0,EquipType.Torpedo] // 533mm五連装魚雷(初期型)
+,315:[8,EquipType.RadarS] // SG レーダー(初期型)
+,316:[0,EquipType.DiveBomber] // Re.2001 CB改
+,317:[0,EquipType.ShrapnelShell] // 三式弾改
+,318:[0,EquipType.MainGunL] // 41cm連装砲改二
+,319:[0,EquipType.DiveBomber] // 彗星一二型(六三四空/三号爆弾搭載機)
+,320:[0,EquipType.DiveBomber] // 彗星一二型(三一号光電管爆弾搭載機)
+,322:[7,EquipType.SeaPlaneBomber] // 瑞雲改二(六三四空)
+,323:[8,EquipType.SeaPlaneBomber] // 瑞雲改二(六三四空/熟練)
+,324:[0,EquipType.AutoGyro] // オ号観測機改
+,325:[1,EquipType.AutoGyro] // オ号観測機改二
+,326:[3,EquipType.AutoGyro] // S-51J
+,327:[4,EquipType.AutoGyro] // S-51J改
+,328:[0,EquipType.MainGunL] // 35.6cm連装砲改
+,329:[0,EquipType.MainGunL] // 35.6cm連装砲改二
+,330:[0,EquipType.MainGunL] // 16inch Mk.I連装砲
+,331:[0,EquipType.MainGunL] // 16inch Mk.V連装砲
+,332:[0,EquipType.MainGunL] // 16inch Mk.VIII連装砲改
+,335:[0,EquipType.Fighter] // 烈風改(試製艦載型)
+,336:[0,EquipType.Fighter] // 烈風改二
+,337:[0,EquipType.Fighter] // 烈風改二(一航戦/熟練)
+,338:[1,EquipType.Fighter] // 烈風改二戊型
+,339:[1,EquipType.Fighter] // 烈風改二戊型(一航戦/熟練)
+,340:[0,EquipType.MainGunM] // 152mm/55 三連装速射砲
+,341:[0,EquipType.MainGunM] // 152mm/55 三連装速射砲改
+,342:[4,EquipType.TorpBomber] // 流星改(一航戦)
+,343:[6,EquipType.TorpBomber] // 流星改(一航戦/熟練)
+,344:[4,EquipType.TorpBomber] // 九七式艦攻改 試製三号戊型(空六号電探改装備機)
+,345:[5,EquipType.TorpBomber] // 九七式艦攻改(熟練) 試製三号戊型(空六号電探改装備機)
+,346:[0,EquipType.DepthCharge] // 二式12cm迫撃砲改
+,347:[0,EquipType.DepthCharge] // 二式12cm迫撃砲改 集中配備
+,348:[0,EquipType.WG] // 艦載型 四式20cm対地噴進砲
+,349:[0,EquipType.WG] // 四式20cm対地噴進砲 集中配備
+,353:[0,EquipType.Fighter] // Fw190 A-5改(熟練)
+,355:[0,EquipType.LandingCraft] // M4A1 DD
+,356:[0,EquipType.MainGunM] // 8inch三連装砲 Mk.9
+,357:[0,EquipType.MainGunM] // 8inch三連装砲 Mk.9 mod.2
+,358:[0,EquipType.SecGun] // 5inch 単装高角砲群
+,359:[0,EquipType.MainGunM] // 6inch 連装速射砲 Mk.XXI
+,360:[0,EquipType.MainGunM] // Bofors 15cm連装速射砲 Mk.9 Model 1938
+,361:[0,EquipType.MainGunM] // Bofors 15cm連装速射砲 Mk.9改+単装速射砲 Mk.10改 Model 1938
+,362:[0,EquipType.MainGunM] // 5inch連装両用砲(集中配備)
+,363:[3,EquipType.MainGunM] // GFCS Mk.37+5inch連装両用砲(集中配備)
+,364:[2,EquipType.MidgetSub] // 甲標的 丁型改(蛟龍改)
+,365:[0,EquipType.APShell] // 一式徹甲弾改
+,366:[0,EquipType.MainGunS] // 12.7cm連装砲D型改三
+,367:[2,EquipType.SeaPlaneBomber] // Swordfish(水上機型)
+,368:[3,EquipType.SeaPlaneBomber] // Swordfish Mk.III改(水上機型)
+,369:[4,EquipType.SeaPlaneBomber] // Swordfish Mk.III改(水上機型/熟練)
+,370:[5,EquipType.SeaPlane] // Swordfish Mk.II改(水偵型)
+,371:[6,EquipType.SeaPlane] // Fairey Seafox改
+,372:[2,EquipType.TorpBomber] // 天山一二型甲
+,373:[5,EquipType.TorpBomber] // 天山一二型甲改(空六号電探改装備機)
+,374:[6,EquipType.TorpBomber] // 天山一二型甲改(熟練/空六号電探改装備機)
+,375:[1,EquipType.Fighter] // XF5U
+,376:[0,EquipType.Torpedo] // 533mm五連装魚雷(後期型)
+,377:[0,EquipType.DepthCharge] // RUR-4A Weapon Alpha改
+,378:[0,EquipType.DepthCharge] // 対潜短魚雷(試作初期型)
+,379:[0,EquipType.MainGunS] // 12.7cm単装高角砲改二
+,380:[0,EquipType.MainGunS] // 12.7cm連装高角砲改二
+,381:[0,EquipType.MainGunL] // 16inch三連装砲 Mk.6
+,382:[0,EquipType.MainGunS] // 12cm単装高角砲E型
+,383:[0,EquipType.TorpedoSS] // 後期型53cm艦首魚雷(8門)
+,384:[7,EquipType.SubRadar] // 後期型潜水艦搭載電探&逆探
+,385:[0,EquipType.MainGunL] // 16inch三連装砲 Mk.6 mod.2
+,386:[0,EquipType.MainGunM] // 6inch三連装速射砲 Mk.16
+,387:[0,EquipType.MainGunM] // 6inch三連装速射砲 Mk.16 mod.2
+,389:[10,EquipType.TorpBomber] // TBM-3W+3S
+,390:[0,EquipType.MainGunL] // 16inch三連装砲 Mk.6+GFCS
+,391:[2,EquipType.DiveBomber] // 九九式艦爆二二型
+,392:[3,EquipType.DiveBomber] // 九九式艦爆二二型(熟練)
+,393:[0,EquipType.MainGunS] // 120mm/50 連装砲 mod.1936
+,394:[0,EquipType.MainGunS] // 120mm/50 連装砲改 A.mod.1937
+,397:[0,EquipType.MainGunS] // 現地改装12.7cm連装高角砲
+,398:[0,EquipType.MainGunS] // 現地改装10cm連装高角砲
+,399:[0,EquipType.MainGunM] // 6inch Mk.XXIII三連装砲
+,400:[0,EquipType.Torpedo] // 533mm 三連装魚雷(53-39型)
+,402:[0,EquipType.Scamp] // 寒冷地装備&甲板要員
+,407:[0,EquipType.MainGunM] // 15.2cm連装砲改二
+,408:[1,EquipType.LandingCraft] // 装甲艇(AB艇)
+,409:[0,EquipType.LandingCraft] // 武装大発
+,410:[7,EquipType.RadarL] // 21号対空電探改二
+,411:[6,EquipType.RadarL] // 42号対空電探改二
+,412:[2,EquipType.Picket] // 水雷戦隊 熟練見張員
+,413:[1,EquipType.FCF] // 精鋭水雷戦隊 司令部
+,414:[4,EquipType.SeaPlane] // SOC Seagull
+,415:[7,EquipType.SeaPlane] // SO3C Seamew改
+,419:[3,EquipType.DiveBomber] // SBD-5
+,420:[3,EquipType.DiveBomber] // SB2C-3
+,421:[4,EquipType.DiveBomber] // SB2C-5
+,422:[0,EquipType.Fighter] // FR-1 Fireball
+,423:[4,EquipType.CarrierScout] // Fulmar(戦闘偵察/熟練)
+,424:[2,EquipType.TorpBomber] // Barracuda Mk.II
+,425:[3,EquipType.TorpBomber] // Barracuda Mk.III
+,426:[0,EquipType.MainGunL] // 305mm/46 連装砲
+,427:[0,EquipType.MainGunL] // 305mm/46 三連装砲
+,428:[0,EquipType.MainGunL] // 320mm/44 連装砲
+,429:[0,EquipType.MainGunL] // 320mm/44 三連装砲
+,430:[0,EquipType.SecGun] // 65mm/64 単装速射砲改
+,434:[1,EquipType.Fighter] // Corsair Mk.II
+,435:[2,EquipType.Fighter] // Corsair Mk.II(Ace)
+,436:[0,EquipType.LandingCraft] // 大発動艇(II号戦車/北アフリカ仕様)
+,437:[0,EquipType.Fighter] // 試製 陣風
+,438:[0,EquipType.SonarS] // 三式水中探信儀改
+,439:[0,EquipType.DepthCharge] // Hedgehog(初期型)
+,440:[0,EquipType.TorpedoSS] // 21inch艦首魚雷発射管6門(初期型)
+,441:[0,EquipType.TorpedoSS] // 21inch艦首魚雷発射管6門(後期型)
+,442:[0,EquipType.TorpedoSS] // 潜水艦後部魚雷発射管4門(初期型)
+,443:[0,EquipType.TorpedoSS] // 潜水艦後部魚雷発射管4門(後期型)
+,447:[3,EquipType.DiveBomber] // 零式艦戦64型(複座KMX搭載機)
+,449:[0,EquipType.LandingCraft] // 特大発動艇+一式砲戦車
+,450:[5,EquipType.RadarS] // 13号対空電探改(後期型)
+,451:[2,EquipType.AswPlane] // 三式指揮連絡機改
+,455:[0,EquipType.MainGunS] // 試製 長12.7cm連装砲A型改四
+,456:[9,EquipType.RadarS] // SG レーダー(後期型)
+,457:[0,EquipType.TorpedoSS] // 後期型艦首魚雷(4門)
+,458:[6,EquipType.SubRadar] // 後期型電探&逆探+シュノーケル装備
+,460:[8,EquipType.RadarL] // 15m二重測距儀改+21号電探改二+熟練射撃指揮所
+,461:[0,EquipType.TorpedoSS] // 熟練聴音員+後期型艦首魚雷(4門)
+,463:[0,EquipType.SecGun] // 15.5cm三連装副砲改二
+,464:[0,EquipType.SecGun] // 10cm連装高角砲群 集中配備
+,465:[0,EquipType.MainGunL] // 試製51cm三連装砲
+,466:[5,EquipType.TorpBomber] // 流星改(熟練)
+,467:[0,EquipType.SecGun] // 5inch連装砲(副砲配置) 集中配備
+,468:[0,EquipType.MainGunL] // 38cm四連装砲改 deux
+,469:[5,EquipType.SeaPlane] // 零式水上偵察機11型乙改(夜偵)
+,470:[0,EquipType.MainGunS] // 12.7cm連装砲C型改三
+,471:[3,EquipType.SeaPlane] // Loire 130M
+,472:[0,EquipType.DepthCharge] // Mk.32 対潜魚雷(Mk.2落射機)
+,473:[2,EquipType.Fighter] // F4U-2 Night Corsair
+,474:[2,EquipType.DiveBomber] // F4U-4
+,475:[2,EquipType.DiveBomber] // AU-1
+,476:[2,EquipType.DiveBomber] // F4U-7
+,477:[1,EquipType.Scamp] // 熟練甲板要員
+,478:[1,EquipType.Scamp] // 熟練甲板要員+航空整備員
+,481:[6,EquipType.TorpBomber] // Mosquito TR Mk.33
+,482:[0,EquipType.LandingCraft] // 特大発動艇+Ⅲ号戦車(北アフリカ仕様)
+,483:[0,EquipType.ShrapnelShell] // 三式弾改二
+,485:[2,EquipType.SeaPlaneFighter] // 強風改二
+,486:[1,EquipType.Fighter] // 零式艦戦64型(制空戦闘機仕様)
+,487:[2,EquipType.DiveBomber] // 零式艦戦64型(熟練爆戦)
+,488:[0,EquipType.DepthCharge] // 二式爆雷改二
+,489:[0,EquipType.AswPlane] // 一式戦 隼II型改(20戦隊)
+,490:[7,EquipType.SeaPlaneBomber] // 試製 夜間瑞雲(攻撃装備)
+,491:[0,EquipType.AswPlane] // 一式戦 隼III型改(熟練/20戦隊)
+,492:[0,EquipType.Fighter] // 零戦52型丙(八幡部隊)
+,494:[0,EquipType.LandingCraft] // 特大発動艇+チハ
+,495:[0,EquipType.LandingCraft] // 特大発動艇+チハ改
+,496:[0,EquipType.ArmyUnit] // 陸軍歩兵部隊
+,497:[0,EquipType.ArmyUnit] // 九七式中戦車(チハ)
+,498:[0,EquipType.ArmyUnit] // 九七式中戦車 新砲塔(チハ改)
+,499:[0,EquipType.ArmyUnit] // 陸軍歩兵部隊+チハ改
+,500:[0,EquipType.SmokeScreen] // 発煙装置(煙幕)
+,501:[0,EquipType.SmokeScreen] // 発煙装置改(煙幕)
+,502:[0,EquipType.MainGunL] // 35.6cm連装砲改三(ダズル迷彩仕様)
+,503:[0,EquipType.MainGunL] // 35.6cm連装砲改四
+,505:[0,EquipType.AAGun] // 25mm対空機銃増備
+,506:[5,EquipType.RadarS] // 電探装備マスト(13号改+22号電探改四)
+,507:[0,EquipType.MainGunL] // 14inch/45 連装砲
+,508:[0,EquipType.MainGunL] // 14inch/45 三連装砲
+,509:[0,EquipType.MainGunS] // 12cm単装高角砲E型改
+,510:[4,EquipType.SeaPlane] // Walrus
+,511:[0,EquipType.TorpedoSS] // 21inch艦首魚雷発射管4門(初期型)
+,512:[0,EquipType.TorpedoSS] // 21inch艦首魚雷発射管4門(後期型)
+,513:[0,EquipType.SmokeScreen] // 阻塞気球
+,514:[0,EquipType.LandingCraft] // 特大発動艇+Ⅲ号戦車J型
+,515:[5,EquipType.SeaPlane] // Sea Otter
+,517:[8,EquipType.RadarS] // 逆探(E27)+22号対水上電探改四(後期調整型)
+,518:[0,EquipType.MainGunM] // 14cm連装砲改二
+,519:[7,EquipType.SubRadar] // SJレーダー+潜水艦司令塔装備
+,520:[0,EquipType.MainGunM] // 試製20.3cm(4号)連装砲
+,521:[9,EquipType.SeaPlane] // 紫雲(熟練)
+,524:[0,EquipType.SecGun] // 12cm単装高角砲＋25mm機銃増備
+,525:[0,EquipType.LandingTank] // 特四式内火艇
+,526:[0,EquipType.LandingTank] // 特四式内火艇改
+,522:[3,EquipType.SeaPlane] // 零式小型水上機
+,523:[4,EquipType.SeaPlane] // 零式小型水上機(熟練)
+,527:[8,EquipType.RadarL] // Type281 レーダー
+,528:[5,EquipType.RadarL] // Type274 射撃管制レーダー
+,529:[0,EquipType.MainGunS] // 12.7cm連装砲C型改三H
+,530:[0,EquipType.MainGunL] // 35.6cm連装砲改三丙
+,531:[1,EquipType.FCF] // 艦隊通信アンテナ
+,532:[1,EquipType.FCF] // 通信装置&要員
+,533:[0,EquipType.MainGunS] // 10cm連装高角砲改+高射装置改
+,534:[0,EquipType.MainGunS] // 13.8cm連装砲
+,535:[0,EquipType.MainGunS] // 13.8cm連装砲改
+,537:[0,EquipType.MainGunM] // 15.2cm三連装主砲改
+,538:[5,EquipType.SeaPlane] // Loire 130M改(熟練)
+,536:[0,EquipType.MainGunM] // 15.2cm三連装主砲
+,541:[2,EquipType.DiveBomber] // SBD(Yellow Wings)
+,542:[2,EquipType.TorpBomber] // TBD(Yellow Wings)
+,544:[2,EquipType.DiveBomber] // SBD VB-2(爆撃飛行隊)
+,545:[6,EquipType.TorpBomber] // 天山一二型甲改二(村田隊/電探装備)
+,543:[6,EquipType.CarrierScout] // SBD VS-2(偵察飛行隊)
+,539:[7,EquipType.SeaPlane] // SOC Seagull 後期型(熟練)
+,540:[7,EquipType.SeaPlane] // 零式水上偵察機11型甲改二
+,549:[3,EquipType.AswPlane] // 三式指揮連絡機改二
+,550:[1,EquipType.DiveBomber] // 試製 明星(増加試作機)
+,551:[2,EquipType.DiveBomber] // 明星
+,552:[4,EquipType.DiveBomber] // 九九式練爆二二型改(夜間装備実験機)
+,553:[0,EquipType.MainGunS] // 10cm連装高角砲改
+,554:[2,EquipType.TorpBomber] // 九七式艦攻改(北東海軍航空隊)
 
-,555:{"name":"18cm/57 三連装主砲","type":112,"seek":0}
-,556:{"name":"10cm/56 単装高角砲(集中配備)","type":124,"seek":1}
+,555:[0,EquipType.MainGunM] // 18cm/57 三連装主砲
+,556:[1,EquipType.SecGun] // 10cm/56 単装高角砲(集中配備)
 }; // @expansion
 
 export default equip_datas;
