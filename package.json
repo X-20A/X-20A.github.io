@@ -4,16 +4,16 @@
   "version": "2.0.0",
   "type": "module",
   "scripts": {
-    "dev": "bun run vite",
-    "build": "bun run vue-tsc -b && bun run vite build",
-    "preview": "bun run vite preview",
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview",
     "rand-test": "vitest --run -t 'rand-test'",
     "mock-test": "vitest --run -t 'mock-test'",
     "data-test": "vitest --run -t 'data-test'",
-	"tests": "bun run mock-test && bun run data-test",
-    "postinstall": "bun run patch-package",
-    "dep": "bunx depcheck",
-    "lint": "bun run biome lint"
+	"tests": "vitest run",
+    "postinstall": "patch-package",
+    "dep": "depcheck",
+    "lint": "biome lint"
   },
   "dependencies": {
     "@biomejs/biome": "^1.9.4",
