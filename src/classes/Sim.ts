@@ -6108,6 +6108,8 @@ export default class SimController {
                         if (track.includes('2')) {
                             if (seek[3] >= 74) {
                                 return 'K2';
+                            } else {
+                                return 'K1';
                             }
                         } else { // track.includes('3')
                             return 'L';
