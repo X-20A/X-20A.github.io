@@ -832,15 +832,23 @@ const ship_datas: Record<number, ShipData> = {
 ,981:{"name":"藤波改二","type":ShipType.DD,"seek":12,"seek2":56,"na":0,"sg":2}
 ,986:{"name":"白雪改二","type":ShipType.DD,"seek":13,"seek2":54,"na":0,"sg":2}
 
-,984:{"name":"Wahoo","type":ShipType.SS,"seek":0,"seek2":0,"na":1,"sg":6}
+,987:{"name":"初雪改二","type":ShipType.DD,"seek":10,"seek2":52,"na":0,"sg":2}
+
+,984:{"name":"Wahoo","type":ShipType.SS,"seek":12,"seek2":44,"na":1,"sg":6}
 ,989:{"name":"Wahoo改","type":ShipType.SS,"seek":0,"seek2":0,"na":1,"sg":6}
-,994:{"name":"榧","type":ShipType.DD,"seek":0,"seek2":0,"na":0,"sg":2}
+,994:{"name":"榧","type":ShipType.DD,"seek":8,"seek2":25,"na":0,"sg":2}
 ,736:{"name":"榧改","type":ShipType.DD,"seek":0,"seek2":0,"na":0,"sg":2}
-,995:{"name":"大泊","type":ShipType.AO,"seek":0,"seek2":0,"na":0,"sg":5}
+,995:{"name":"大泊","type":ShipType.AO,"seek":0,"seek2":14,"na":0,"sg":5}
 ,1000:{"name":"大泊改","type":ShipType.AO,"seek":0,"seek2":0,"na":0,"sg":5}
-,1001:{"name":"Киров","type":ShipType.CL,"seek":0,"seek2":0,"na":6,"sg":1}
+,1001:{"name":"Киров","type":ShipType.CL,"seek":13,"seek2":42,"na":6,"sg":1}
 ,1006:{"name":"Киров改","type":ShipType.CL,"seek":0,"seek2":0,"na":6,"sg":1}
 
+,992:{"name":"杉",type:ShipType.DD,seek:0,seek2:0,"na":0,"sg":2}
+,997:{"name":"杉改",type:ShipType.DD,seek:0,seek2:0,"na":0,"sg":2}
+,1003:{"name":"しまね丸",type:ShipType.AO,seek:0,seek2:0,"na":0,"sg":5}
+,1008:{"name":"しまね丸改",type:ShipType.AO,seek:0,seek2:0,"na":0,"sg":5}
+,1005:{"name":"Minneapolis",type:ShipType.CA,seek:0,seek2:0,"na":1,"sg":2}
+,1010:{"name":"Minneapolisa改",type:ShipType.CA,seek:0,seek2:0,"na":1,"sg":2}
 }; // @expansion
 
 export default ship_datas;

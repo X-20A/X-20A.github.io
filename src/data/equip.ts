@@ -498,6 +498,9 @@ const equip_datas: Record<number, EquipData> = {
 
 ,555:[0,EquipType.MainGunM] // 18cm/57 三連装主砲
 ,556:[1,EquipType.SecGun] // 10cm/56 単装高角砲(集中配備)
+
+,557:[1,EquipType.DiveBomber] // 零式艦戦62型改(夜間爆戦)
+,558:[2,EquipType.DiveBomber] // 零式艦戦62型改(熟練/夜間爆戦)
 }; // @expansion
 
 export default equip_datas;

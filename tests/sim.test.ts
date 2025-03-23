@@ -171,6 +171,7 @@ describe('Simテスト', () => {
         const ac_items: MasterItem[] = master.items;
 
         type MissingShip = {
+            id: number,
             ship_name: string,
             type: ShipType,
             seek: number,
@@ -189,6 +190,7 @@ describe('Simテスト', () => {
             const ship = ship_datas[id];
             if (!ship) {
                 missing_ships.push({
+                    id: id,
                     ship_name: ac_ship.name,
                     type: ac_ship.type,
                     seek: ac_ship.min_scout,
@@ -240,6 +242,7 @@ describe('Simテスト', () => {
         expect(mismatch_ship_params.length).toBe(0);
 
         type MissingEquip = {
+            id: number,
             name: string,
             seek: number,
             equip_type: EquipType,
@@ -259,6 +262,7 @@ describe('Simテスト', () => {
             const equip = equip_datas[id];
             if (!equip) {
                 missing_equips.push({
+                    id: id,
                     name: ac_item.name,
                     seek: ac_item.scout,
                     equip_type: ac_item.type,
