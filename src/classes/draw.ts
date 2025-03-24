@@ -1,5 +1,5 @@
 import cytoscape from 'cytoscape';
-import { node_datas, edge_datas } from '@/data/map';
+import { node_datas, edge_datas, NT as NodeType } from '@/data/map';
 import styles from '@/styles';
 import type { AreaId, SimResult } from './types';
 import Big from 'big.js';
@@ -31,7 +31,7 @@ export default function drawMap(
         data: {
             id: string;
             name: string;
-            label: string;
+            label: NodeType;
         };
         position: {
             x: number;

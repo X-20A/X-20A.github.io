@@ -35,7 +35,7 @@
 import { ref, watch, computed } from 'vue';
 import { useStore } from '@/stores';
 import SvgIcon from '@/components/SvgIcon.vue';
-import { node_datas } from '@/data/map';
+import { node_datas, NT as NodeType } from '@/data/map';
 
 // 経路一覧
 
@@ -63,7 +63,15 @@ watch([simResult, isBattleOnly], () => {
 			.map(item => ({
 				route: item.route
 					.filter(node => {
-						return ['en','ni','bo','ab','ad','su','as'].includes(area_nodes[node][2]);
+						return [
+							NodeType.en,
+							NodeType.ni,
+							NodeType.bo,
+							NodeType.ab,
+							NodeType.ad,
+							NodeType.su,
+							NodeType.as
+						].includes(area_nodes[node][2]);
 					}).join(" - "),
 				rate: item.rate.times(100).toNumber(),
 			})

@@ -10,7 +10,7 @@ import { createCacheFleetsFromDeckBuilder } from '@/utils/deckBuilderUtil';
 import AdoptFleet from '@/classes/AdoptFleet';
 import { getParam } from '@/utils/util';
 import { nomal_mock_datas, astray_mock_datas } from './mock';
-import { node_datas } from '@/data/map';
+import { node_datas, NT as NodeType } from '@/data/map';
 import ship_datas, { ST as ShipType } from '@/data/ship';
 import equip_datas, { EquipType } from '@/data/equip';
 
@@ -124,7 +124,7 @@ describe('Simテスト', () => {
                 const mock_option = mock_data.option;
                 const nodes = expected_route.split('-');
                 for (const [index, node] of nodes.entries()) { // nodeデータから能動分岐自動セット
-                    if (node_datas[area_id][node][2] === 'ac') {
+                    if (node_datas[area_id][node][2] === NodeType.ac) {
                         mock_option[node] = nodes[index + 1];
                     }
                 }

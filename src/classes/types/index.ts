@@ -1,6 +1,7 @@
 import type Big from "big.js";
 import type CacheFleet from "../CacheFleet";
-import { NA, SG, ST } from "@/data/ship";
+import { NA as National, SG as SpeedGroup, ST as ShipType } from "@/data/ship";
+import { NT as NodeType } from "@/data/map";
 
 export type Seek = [number, number, number, number]
 
@@ -8,15 +9,15 @@ export interface ShipData {
     /** 艦名 */
 	name: string
     /** 艦種ID */
-	type: ST
+	type: ShipType
     /** 索敵値(最小) */
 	seek: number
     /** 索敵値(lv.99) */
 	seek2: number
     /** 国籍ID */
-	na: NA
+	na: National
     /** 速力グループID */
-	sg: SG
+	sg: SpeedGroup
 }
 
 export type SpeedId =
@@ -84,9 +85,6 @@ export type SimResult = {
     route: string[];
     rate: Big;
 }
-
-export type NodeType =
-    "st"|"po"|"bo"|"ab"|"ad"|"ac"|"en"|"su"|"ca"|"wh"|"re"|"ni"|"sc"|"as"|"tl"|"un"
 
 export type NodeData = [
     number,
