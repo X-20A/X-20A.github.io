@@ -5,14 +5,14 @@ import axios from 'axios';
 import Sim from '@/classes/Sim';
 import { getSimSet } from './setup';
 import Const from '@/classes/const';
-import { AreaId, FleetTypeId, OptionsType, ShipType, EquipType } from '@/classes/types';
+import { AreaId, FleetTypeId, OptionsType } from '@/classes/types';
 import { createCacheFleetsFromDeckBuilder } from '@/utils/deckBuilderUtil';
 import AdoptFleet from '@/classes/AdoptFleet';
 import { getParam } from '@/utils/util';
 import { nomal_mock_datas, astray_mock_datas } from './mock';
 import { node_datas } from '@/data/map';
-import ship_datas from '@/data/ship';
-import equip_datas from '@/data/equip';
+import ship_datas, { ST as ShipType } from '@/data/ship';
+import equip_datas, { EquipType } from '@/data/equip';
 
 describe('Simテスト', () => {
     it(`rand-test: ランダムに生成した艦隊をSimクラスに渡してクラス内でエラーが発生しないこと、
@@ -256,7 +256,7 @@ describe('Simテスト', () => {
         const mismatch_equip_params = [] as MismatchEquipParam[];
         for (const ac_item of ac_items) { // 装備データ照合
             const id = ac_item.id;
-            // 深海、陸攻、陸戦、陸偵、深山 弾き
+            // 深海、[陸攻、陸戦、陸偵、深山] 弾き
             if (id > 1500 || [47, 48, 49, 53].includes(Number(ac_item.type))) continue;
 
             const equip = equip_datas[id];

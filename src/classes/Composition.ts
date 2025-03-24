@@ -1,5 +1,5 @@
+import { ST as ShipType } from "@/data/ship";
 import type CacheFleet from "./CacheFleet";
-import { ShipType } from "./types";
 
 export default class Composition {
     public BB = 0; // 戦艦

@@ -1,14 +1,46 @@
 import type { OptionsType } from '@/classes/types'
 
 /**
- * 定数系。getterからコピーを取得できる       
- * getterでの取得しかできないクラスによって定数とする。邪道感はあるが
+ * 定数系
  */
 export default class Const {
-    private static readonly _VALID_CRAFTS =
+    /**
+     * ルート分岐に関わる大発群    
+     * 68 : 大発動艇,    
+     * 166: 大発動艇(八九式中戦車&陸戦隊),    
+     * 167: 特二式内火艇,     
+     * 193: 特大発動艇,    
+     * 409: 武装大発,    
+     * 436: 大発動艇(II号戦車/北アフリカ仕様),    
+     * 449: 特大発動艇+一式砲戦車,    
+     * 525: 特四式内火艇,    
+     * 526: 特四式内火艇改    
+     * https://x.gd/AjX5F > ルート分岐での大発動艇について
+     */
+    public static readonly ROUTING_CRAFTS: Readonly<number[]> =
+        [68, 166, 167, 193, 409, 436, 449, 525, 526];
+
+    /**
+     * 資源獲得量増加に寄与する大発群    
+     * 68 : 大発動艇,    
+     * 166: 大発動艇(八九式中戦車&陸戦隊),    
+     * 167: 特二式内火艇,     
+     * 193: 特大発動艇,    
+     * 408: 装甲艇(AB艇),    
+     * 409: 武装大発,    
+     * 436: 大発動艇(II号戦車/北アフリカ仕様),    
+     * 449: 特大発動艇+一式砲戦車,    
+     * 525: 特四式内火艇,    
+     * 526: 特四式内火艇改    
+     * https://x.gd/0CJOt > 燃料稼ぎ
+     */
+    public static readonly RESOURCE_CRAFTS: Readonly<number[]> =
         [68, 166, 167, 193, 408, 409, 436, 449, 525, 526];
 
-    private static readonly _OPTIONS = { // @expansion
+    /**
+     * getterからコピーを取得できる
+     */
+    private static readonly _OPTIONS = {
         '4-5': { 'A': 'D', 'C': 'F', 'I': 'J' },
         '5-3': { 'O': 'K' },
         '5-5': { 'F': 'D' },
@@ -32,23 +64,8 @@ export default class Const {
         '60-4': { 'phase': '1', 'A': 'B', 'F': 'F1', 'G': 'G1' },
         // '60-5': {},
         // '60-6': {},
-    } as OptionsType;
+    } as OptionsType;  // @expansion
 
-    /**
-     * 68 : 大発動艇,    
-     * 166: 大発動艇(八九式中戦車&陸戦隊),    
-     * 167: 特大発動艇,     
-     * 193: 特大発動艇,    
-     * 408: 装甲艇(AB艇),    
-     * 409: 武装大発,    
-     * 436: 大発動艇(II号戦車/北アフリカ仕様),    
-     * 449: 特大発動艇+一式砲戦車,    
-     * 525: 特四式内火艇,    
-     * 526: 特四式内火艇改
-     */
-    static get VALID_CRAFTS() {
-        return [...Const._VALID_CRAFTS];
-    }
     /**
      * オプションの初期値
      */

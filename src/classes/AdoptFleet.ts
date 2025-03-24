@@ -6,8 +6,8 @@ import {
     type FleetTypeName,
     type Fleet,
     type Seek,
-    ShipType
 } from "./types";
+import { ST as ShipType } from "@/data/ship";
 import Composition from "./Composition";
 import {
     convertFleetSpeedIdToName,

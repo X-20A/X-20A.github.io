@@ -1,5 +1,5 @@
-import equip_datas from "@/data/equip";
-import type { EquipType, Improvement } from "./types";
+import equip_datas, { EquipType } from "@/data/equip";
+import type { Improvement } from "./types";
 import CustomError from "@/classes/CustomError";
 
 export default class Equip {

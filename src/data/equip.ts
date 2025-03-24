@@ -1,8 +1,107 @@
-import { EquipType } from "@/classes/types";
-
 /* 
     http://kancolle-calc.net/deckbuilder.html 様より失敬
 */
+
+// 同一ファイル内に定義しないとバンドル時にインライン化されないので注意
+export const enum EquipType {
+    /** 小口径主砲 */
+    MainGunS = 1,
+    /** 中口径主砲 */
+    MainGunM = 2,
+    /** 大口径主砲 */
+    MainGunL = 3,
+    /** 副砲 */
+    SecGun = 4,
+    /** 魚雷 */
+    Torpedo = 5,
+    /** 艦戦 */
+    Fighter = 6,
+    /** 艦爆 */
+    DiveBomber = 7,
+    /** 艦攻 */
+    TorpBomber = 8,
+    /** 艦偵 */
+    CarrierScout = 9,
+    /** 水偵 */
+    SeaPlane = 10,
+    /** 水爆 */
+    SeaPlaneBomber = 11,
+    /** 小型電探 */
+    RadarS = 12,
+    /** 大型電探 */
+    RadarL = 13,
+    /** 小型ソナー */
+    SonarS = 14,
+    /** 大型ソナー */
+    SonarL = 40,
+    /** 爆雷(含投射機) */
+    DepthCharge = 15,
+    /** 缶|タービン */
+    Engine = 17,
+    /** 三式弾 */
+    ShrapnelShell = 18,
+    /** 徹甲弾 */
+    APShell = 19,
+    /** 機銃 */
+    AAGun = 21,
+    /** 甲標的 */
+    MidgetSub = 22,
+    /** ダメコン */
+    Repair = 23,
+    /** 大発系 */
+    LandingCraft = 24,
+    /** 回転翼機 */
+    AutoGyro = 25,
+    /** 対潜哨戒機 */
+    AswPlane = 26,
+    /** 中型バルジ */
+    BulgeM = 27,
+    /** 大型バルジ */
+    BulgeL = 28,
+    /** 小型探照灯 */
+    SearchLightS = 29,
+    /** 大型探照灯 */
+    SearchLightL = 42,
+    /** ドラム缶 */
+    Drum = 30,
+    /** 艦艇修理施設 */
+    SRF = 31,
+    /** 潜水魚雷 */
+    TorpedoSS = 32,
+    /** 照明弾 */
+    StarShell = 33,
+    /** 司令部施設 */
+    FCF = 34,
+    /** 整備員 */
+    Scamp = 35,
+    /** 高射装置 */
+    AAFD = 36,
+    /** WG 42|四式20cm対地噴進砲 */
+    WG = 37,
+    /** 見張り員 */
+    Picket = 39,
+    /** 二式大艇|Catalina */
+    FlyingBoat = 41,
+    /** 戦闘糧食 */
+    Ration = 43,
+    /** 洋上補給 */
+    OilDrum = 44,
+    /** 水戦 */
+    SeaPlaneFighter = 45,
+    /** 内火艇 */
+    LandingTank = 46,
+    /** 彩雲(輸送用分解済) */
+    TransportItem = 50,
+    /** 潜水電探 */
+    SubRadar = 51,
+    /** 陸軍歩兵部隊|チハ */
+    ArmyUnit = 52,
+    /** 煙幕装置|阻塞気球 */
+    SmokeScreen = 54,
+    /** 噴式艦爆 */
+    JetBomber = 57,
+}
+
 /** 索敵値, 装備種別ID */
 export type EquipData = [number, EquipType]
 

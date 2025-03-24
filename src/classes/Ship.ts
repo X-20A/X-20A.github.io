@@ -1,9 +1,13 @@
 import Equip from '@/classes/Equip';
-import type { National, SpeedId } from '@/classes/types';
-import { ShipType, EquipType, ShipData, SpeedGroup, EquipInDeck } from '@/classes/types';
-import ship_datas from '@/data/ship';
+import type { SpeedId } from '@/classes/types';
+import { ShipData, EquipInDeck } from '@/classes/types';
+import
+    ship_datas,
+    { NA as National, SG as SpeedGroup, ST as ShipType }
+from '@/data/ship';
 import Big from 'big.js';
 import Const from './const';
+import { EquipType} from '@/data/equip';
 
 type Brand<T, B> = T & { __brand: B };
 /** 装備ボーナスのブランド型 */
@@ -78,12 +82,11 @@ export default class Ship {
 		this.status_seek = this.calcStatusSeek(data, bonus_seek, lv);
 		this.equip_seek = this.calcEquipSeek(equips);
 		this.drum_count = equips.filter(item => item.id === 75).length;
-		this.has_radar = equips.some(item => [5812,5813].includes(item.type));
-		this.has_radar5 = equips.some(item => ([5812, 5813].includes(item.type) && item.seek >= 5));
-		// 特大発動艇＋戦車第11連隊及びM4A1のみ除外 M4A1はtype:84524で含まれない
-		this.has_craft = equips.some(item => ([81424, 84724].includes(item.type) && item.id !== 230));
+		this.has_radar = equips.some(item => [EquipType.RadarS,EquipType.RadarL].includes(item.type));
+        this.has_radar5 = equips.some(item => ([EquipType.RadarS, EquipType.RadarL].includes(item.type) && item.seek >= 5));
+		this.has_craft = equips.some(item => Const.ROUTING_CRAFTS.includes(item.id));
         this.has_arBulge = equips.some(item => item.id === 268);
-        this.valid_craft_count = equips.filter(item => Const.VALID_CRAFTS.includes(item.id)).length;
+        this.valid_craft_count = equips.filter(item => Const.RESOURCE_CRAFTS.includes(item.id)).length;
 		this.has_arctic_gear = equips.some(item => item.id === 402);
 	}
 
@@ -191,7 +194,7 @@ export default class Ship {
 							total_bonus += 3;
 							disable_ids.push(equip.id);
 						}
-                    } else if (national === 1) { // USA
+                    } else if (national === National.USA) {
 						total_bonus += 4;
 					}
 					break;
@@ -201,14 +204,14 @@ export default class Ship {
 							total_bonus += 3;
 							disable_ids.push(equip.id);
 						}
-                    } else if (national === 1) { // USA
+                    } else if (national === National.USA) {
 						total_bonus += 4;
-                    } else if (national === 3) { // UK
+                    } else if (national === National.UK) {
 						total_bonus += 2;
 					}
 					break;
 				case 278: // SK
-                    if (national === 1) { // USA
+                    if (national === National.USA) {
 						if (!disable_ids.includes(equip.id)) {
 							total_bonus += 1;
 							disable_ids.push(equip.id);
@@ -216,12 +219,12 @@ export default class Ship {
 					}
 					break;
 				case 279: // SK+SG
-                    if (national === 1) { // USA
+                    if (national === National.USA) {
 						if (!disable_ids.includes(equip.id)) {
 							total_bonus += 2;
 							disable_ids.push(equip.id);
 						}
-                    } else if (national === 3) { // UK
+                    } else if (national === National.UK) {
 						if (!disable_ids.includes(equip.id)) {
 							total_bonus += 1;
 							disable_ids.push(equip.id);
@@ -239,7 +242,7 @@ export default class Ship {
 							total_bonus += 2;
 							disable_ids.push(equip.id);
 						}
-                    } else if (national === 0 && ship_type === ShipType.DD) {
+                    } else if (national === National.Japan && ship_type === ShipType.DD) {
 						if (!disable_ids.includes(equip.id)) {
 							total_bonus += 1;
 							disable_ids.push(equip.id);
@@ -269,7 +272,7 @@ export default class Ship {
 					break;
 				}
 				case 414: { // SOC seagull
-                    if (national === 1) { // USA
+                    if (national === National.USA) {
                         if ([ShipType.CL, ShipType.CA].includes(ship_type)) {
 							if (!disable_ids.includes(equip.id)) {
 								total_bonus += 2;
@@ -342,7 +345,7 @@ export default class Ship {
 					break;
 				}
 				case 415: // SO3C Seamew改
-                    if (national === 1) { // USA
+                    if (national === National.USA) {
                         if ([ShipType.CL, ShipType.CA].includes(ship_type)) {
 							if (!disable_ids.includes(equip.id)) {
 								total_bonus += 2;
@@ -412,7 +415,7 @@ export default class Ship {
 					}
 					break;
 				case 412: // 水雷見張員
-                    if (national === 0) {
+                    if (national === National.Japan) {
                         if (ship_type === ShipType.DD) {
 							total_bonus += 1;
                         } else if ([ShipType.CL, ShipType.CT, ShipType.CLT].includes(ship_type)) {
@@ -423,7 +426,7 @@ export default class Ship {
 					}
 					break;
 				case 129: // 見張員
-                    if (national === 0) {
+                    if (national === National.Japan) {
                         if (ship_type === ShipType.DD) {
 							total_bonus += 1;
                         } else if ([ShipType.CL, ShipType.CT, ShipType.CLT].includes(ship_type)) {
@@ -459,7 +462,7 @@ export default class Ship {
 					}
 					break;
 				case 527: // Type281 レーダー
-                    if (national === 3) { // UK(大型)組
+                    if (national === National.UK) {
 						total_bonus += 2;
 					}
 					break;
@@ -502,7 +505,7 @@ export default class Ship {
 
 		let speed: SpeedId;
 		switch (speed_group) {
-			case 0: // 高速A
+			case SpeedGroup.HighA:
 				speed = 1;
 				if (turbine && new_kan || power_kan > 1) {
 					speed = 3;
@@ -510,7 +513,7 @@ export default class Ship {
 					speed = 2;
 				}
 				break;
-			case 1: // 高速B1
+			case SpeedGroup.HighB1:
 				speed = 1;
 				if (turbine && new_kan && kan_total > 1) {
 					speed = 3;
@@ -518,7 +521,7 @@ export default class Ship {
 					speed = 2;
 				}
 				break;
-			case 2:// 高速B2
+			case SpeedGroup.HighB2:
 				speed = 1;
 				if (turbine && (new_kan > 1 || kan_total > 2)) {
 					speed = 3;
@@ -526,13 +529,13 @@ export default class Ship {
 					speed = 2;
 				}
 				break;
-			case 3: // 高速C
+			case SpeedGroup.HighC:
 				speed = 1;
 				if (turbine && kan_total) {
 					speed = 2;
 				}
 				break;
-			case 4: // 低速A群
+			case SpeedGroup.LowA:
 				speed = 0;
 				if (turbine && new_kan && kan_total > 2) {
 					speed = 3;
@@ -546,7 +549,7 @@ export default class Ship {
 					speed = 1;
 				}
 				break;
-			case 5: // 低速B
+			case SpeedGroup.LowB:
 				speed = 0;
 				if (turbine && (new_kan > 1 || kan_total > 2)) {
 					speed = 2;
@@ -554,13 +557,13 @@ export default class Ship {
 					speed = 1;
 				}
 				break;
-			case 6: // 低速C
+			case SpeedGroup.LowC:
 				speed = 0;
 				if (turbine && kan_total) {
 					speed = 1;
 				}
 				break;
-			case 7: // 低速D
+			case SpeedGroup.LowD:
 				speed = 0;
 				if (turbine && new_kan) {
 					speed = 2;
@@ -568,7 +571,7 @@ export default class Ship {
 					speed = 1;
 				}
 				break;
-			case 8: // 低速E
+			case SpeedGroup.LowE:
 				speed = 0;
 				if (turbine && new_kan && kan_total > 1) {
 					speed = 3;
@@ -580,7 +583,7 @@ export default class Ship {
 					speed = 1;
 				}
 				break;
-			case 9: // サミュ/改&夕張改二特
+			case SpeedGroup.LowB2:
 				speed = 0;
 				if (turbine && (new_kan > 1 || kan_total > 2)) {
 					speed = 2;
