@@ -6218,7 +6218,104 @@ export default class SimController {
                         break;
                 }
                 break;
-            // case '60-4':
+            case '60-4':
+                switch (node) {
+                    case null:
+                        return '1';
+                    case 'B':
+                        if (Number(option.phase) < 3) {
+                            return 'C';
+                        } else if (fleet.isFaster()) {
+                            return 'C';
+                        } else if (Ds > 2) {
+                            return 'T';
+                        } else {
+                            return 'S';
+                        }
+                        break;
+                    case 'C':
+                        if (fleet.isFaster() && DD > 4 && fleet.countYamatoClass() < 2) {
+                            return 'W';
+                        } else if (speed !== '低速艦隊' && DD > 5 && fleet.countYamatoClass() < 2) {
+                            return 'W';
+                        } else {
+                            return 'U';
+                        }
+                        break;
+                    case 'D':
+                        if (!fleet.isUnion()) {
+                            if (speed === '低速艦隊') {
+                                return 'E';
+                            } else if (BBs + CV + CVB > 2) {
+                                return 'E';
+                            } else if (Ds < 2) {
+                                return 'E';
+                            } else {
+                                return 'F';
+                            }
+                        } else { // fleet.isUnion()
+                            return 'S';
+                        }
+                        break;
+                    case 'G1':
+                        if (Number(option.phase) > 1 && CL > 0 && Ds > 1 && BBs + CV + CVB < 3 && speed !== '低速艦隊') {
+                            return 'I';
+                        } else {
+                            return 'G2';
+                        }
+                        break;
+                    case 'I':
+                        if (Ds > 1 && CV + CVB < 2 && fleet.countYamatoClass() === 0) {
+                            return 'L';
+                        } else {
+                            return 'J';
+                        }
+                        break;
+                    case 'M':
+                        if (CL > 0 && Ds > 1 && fleet.countYamatoClass() === 0) {
+                            return 'O';
+                        } else {
+                            return 'N';
+                        }
+                        break;
+                    case 'P':
+                        if (true) {
+                            return 'R';
+                        }
+                        break;
+                    case 'T':
+                        if (true) {
+                            return 'C';
+                        }
+                        break;
+                    case 'U':
+                        if (true) {
+                            return 'W';
+                        }
+                        break;
+                    case 'A':
+                        if (option.A === 'B') {
+                            return 'B';
+                        } else {
+                            return 'D';
+                        }
+                        break;
+                    case 'F':
+                        if (option.F === 'F1') {
+                            return 'F1';
+                        } else {
+                            return 'G';
+                        }
+                        break;
+                    case 'G':
+                        if (option.G === 'G1') {
+                            return 'G1';
+                        } else {
+                            return 'H';
+                        }
+                        break;
+                }
+                break;
             // case '69-5':
             // case '60-6':
             break; // @expansion

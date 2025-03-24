@@ -29,7 +29,7 @@ export default class Const {
         '60-1': { 'phase': '1', 'is_third': '0', 'A': 'B' },
         '60-2': { 'phase': '1', 'B': 'C', 'E': 'F', 'N': 'O' },
         '60-3': { 'phase': '1', 'difficulty': '4', 'A': 'B', 'C': 'D', 'H': 'H1', 'M': 'M1', 'S': 'S1' },
-        // '60-4': {},
+        '60-4': { 'phase': '1', 'A': 'B', 'F': 'F1', 'G': 'G1' },
         // '60-5': {},
         // '60-6': {},
     } as OptionsType;

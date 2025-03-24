@@ -10,31 +10,10 @@ import type { AreaId, FleetTypeId } from "@/classes/types";
 import ship_datas from "@/data/ship";
 import equip_datas from "@/data/equip";
 
-
-
-/**
- * テストする艦隊    
- * 制空シミュのデッキビルダー or 羅針盤シミュエクスポート をそのまま貼っ付ける
- */
-const ac_export = `
-https://x-20a.github.io/compass/?pdz=N4IgbgpgTgzglgewHYgFwBYA0IAWBHAGzDQEYAmABmwDMS1QkBDAWwjREBpvEwMyDAotJGwAXNFRAw6qUHAAmaAGwBOOdiJoFAdmwQAHozSCoAVwjY4giMxj0QcCVNmoAzHLLYo1EQF9TZazLTOriDuXqaOfg6OFJrBHqgUnt64AA5o6CTYjDAA7gEZIASGAMYA1qQAHEkwvpI2DnLlCirEqEpauvpGJjbmln52dWhkcvkh8UlwNfZpjk2xoTbhtf5O6jFjCUk4qU5YIFm5qCTpKsVlGAnYMEvTqC5zqq3l7XqoBsamvVbLAyvHc2M5BMpoNUOo9hsJjdQY51M95uMtjtHPCDqRHEFCqU0uoqugIgEFHtHgpRDpXu9umYLN8pL8HMNRnFLjYQSt0OV4WMAKxQgkYdRBSFIvKZHKkMgPM5obm8q7c-myxzNNRzcmdD49Gn9fmOEhcuLoYH8sjqZQIyphfkkbnrOIkUTMLJoXGmfHLBzoUluZnYJ3fV02BUe0gkc08ibaE3gn2kRLYbYu1Hiu6nbEXKpyRUUc0ktUdN5dT7an7Z2N3Y0h1Dc0SAvlVjFC30gf0uibu27OCHMyPR7txkV3fJo1MFaVOIFJahTKc3KcdxJAA
-`;
-
 const ship_ids = Object.keys(ship_datas).map(key => Number.parseInt(key));
 const item_ids = Object.keys(equip_datas).map(key => Number.parseInt(key));
 
 export const getSimSet = () => {
-    // めんどいので決めつけていく
-    /*
-    if (ac_export.includes('https://x-20a.github.io/compass/?pdz=')) {
-        const compressed = ac_export.split('https://x-20a.github.io/compass/?pdz=')[1];
-        ac_export = LZString.decompressFromEncodedURIComponent(compressed);
-    }
-    const deck = JSON.parse(ac_export) as DeckBuilder;
-    const cache_fleets = createCacheFleetsFromDeckBuilder(deck);
-    const fleet_type_id = deck!.f1!.t as FleetTypeId;
-    const adoptFleet = new AdoptFleet(cache_fleets, fleet_type_id);*/
-
     const deck = generateRandomDeck();
     const cache_fleets = createCacheFleetsFromDeckBuilder(deck);
     const fleet_type_id = deck?.f1?.t as FleetTypeId;
@@ -51,7 +30,7 @@ export const getSimSet = () => {
         '57-7',
         '58-1', /*'58-2',*/ '58-3', '58-4', // 58-2はトライアングルがあるので除外
         '59-1', '59-2', '59-3', '59-4', '59-5',
-        '60-1', '60-2', '60-3', // '60-4', '60-5', '60-6',
+        '60-1', '60-2', '60-3', '60-4', // '60-5', '60-6',
     ]; // @expansion
 
     type MapKey = `${number}-${number}`; // '4-5' などのキー
@@ -80,6 +59,7 @@ export const getSimSet = () => {
         '60-1': { 'phase': ['1', '2', '3'], 'is_third': ['0', '1'], 'A': ['B', 'D'] },
         '60-2': { 'phase': ['1', '2', '3'], 'B': ['C', 'D'], 'E': ['F', 'F1'], 'N': ['O', 'P'] },
         '60-3': { 'phase': ['1', '2', '3', '4', '5'], 'difficulty': ['1', '2', '3', '4'], 'A': ['B', 'C'], 'C': ['D', 'E'], 'H': ['H1', 'I'], 'M': ['M1', 'M2'], 'S': ['S1', 'S2'] },
+        '60-4': { 'phase': ['1', '2', '3'], 'A': ['B', 'D'], 'F': ['F1', 'G'], 'G': ['G1', 'H'] },
     }; // @expansion
 
     return {

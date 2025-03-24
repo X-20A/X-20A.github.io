@@ -8,7 +8,7 @@
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
     "rand-test": "vitest --run -t 'rand-test'",
-    "mock-test": "vitest --run -t 'mock-test'",
+    "route-test": "vitest --run -t 'route-test'",
     "data-test": "vitest --run -t 'data-test'",
 	"tests": "vitest run",
     "postinstall": "patch-package",

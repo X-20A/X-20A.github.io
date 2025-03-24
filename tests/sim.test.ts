@@ -102,7 +102,7 @@ describe('Simテスト', () => {
         }
     }, 30000);
 
-    it('mock-test: モック艦隊をSimにかけて、正しいルートを返すことを確認', async () => {
+    it('route-test: モック艦隊をSimにかけて、正しいルートを返すことを確認', async () => {
         const mock_datas = nomal_mock_datas.concat(astray_mock_datas);
 
         for (const mock_data of mock_datas) {

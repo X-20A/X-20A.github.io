@@ -848,7 +848,7 @@ const ship_datas: Record<number, ShipData> = {
 ,1003:{"name":"しまね丸",type:ShipType.AO,seek:0,seek2:0,"na":0,"sg":5}
 ,1008:{"name":"しまね丸改",type:ShipType.AO,seek:0,seek2:0,"na":0,"sg":5}
 ,1005:{"name":"Minneapolis",type:ShipType.CA,seek:0,seek2:0,"na":1,"sg":2}
-,1010:{"name":"Minneapolisa改",type:ShipType.CA,seek:0,seek2:0,"na":1,"sg":2}
+,1010:{"name":"Minneapolis改",type:ShipType.CA,seek:0,seek2:0,"na":1,"sg":2}
 }; // @expansion
 
 export default ship_datas;
