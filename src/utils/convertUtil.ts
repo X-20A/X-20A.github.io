@@ -89,7 +89,10 @@ export async function generateResourceHtml(
     composition: Composition,
     fleet_total_drum: number,
     fleet_total_craft: number,
-    icons: Record<ItemIconKey, string>
+    icons: Record<ItemIconKey, string>,
+    // 静的importから取得
+    drum_icon: string,
+    craft_icon: string,
 ) {
     let html = '';
     const resource_status = {
@@ -383,7 +386,7 @@ export async function generateResourceHtml(
                 html += `<p><img src="${icons.fuel}" class="item-icon"></p>`;
                 html += "<p>base: 40</p>";
                 html += "<p>max: 200</p>";
-                html += `<p>add: <span style="font-weight:600;color:#1e00ff;">${fuel}</span> = <img src="${icons.drum}" class="item-icon drum-icon">${fleet_total_drum} * 8 + <img src="${icons.craft}" class="item-icon craft-icon">${fleet_total_craft} * 7</p>`;
+                html += `<p>add: <span style="font-weight:600;color:#1e00ff;">${fuel}</span> = <img src="${drum_icon}" class="item-icon drum-icon">${fleet_total_drum} * 8 + <img src="${craft_icon}" class="item-icon craft-icon">${fleet_total_craft} * 7</p>`;
                 html += `<p>+ 航空戦艦 ${composition.BBV} * 10</p>`;
                 html += `<p>+ 軽空母 ${composition.CVL} * 7</p>`;
                 html += `<p>+ 水上機母艦 ${composition.AV} * 6</p>`;
@@ -393,7 +396,7 @@ export async function generateResourceHtml(
                 html += `<p><img src="${icons.imo}" class="item-icon"></p>`;
                 html += "<p>base: 20</p>";
                 html += "<p>max: 120</p>";
-                html += `<p>add: <span style="font-weight:600;color:#1e00ff;">${imo}</span> = <img src="${icons.drum}" class="item-icon drum-icon">${fleet_total_drum} * 6 + <img src="${icons.craft}" class="item-icon craft-icon">${fleet_total_craft} * 10</p>`;
+                html += `<p>add: <span style="font-weight:600;color:#1e00ff;">${imo}</span> = <img src="${drum_icon}" class="item-icon drum-icon">${fleet_total_drum} * 6 + <img src="${craft_icon}" class="item-icon craft-icon">${fleet_total_craft} * 10</p>`;
                 html += `<p>+ 航空戦艦 ${composition.BBV} * 10</p>`;
                 html += `<p>+ 軽空母 ${composition.CVL} * 4</p>`;
                 html += `<p>+ 水上機母艦 ${composition.AV} * 5</p>`;
@@ -442,7 +445,7 @@ export async function generateResourceHtml(
         if (key === 'imo') {
             html += `<p>add: <span style="font-weight:600;color:#1e00ff;">${resource_total[key]}</span> = Math.trunc(${fleet_total_drum} * ${d_mag}) + ${fleet_total_craft} * ${c_mag}</p>`;
         } else {
-            html += `<p>add: <span style="font-weight:600;color:#1e00ff;">${resource_total[key]}</span> = <img src="${icons.drum}" class="item-icon drum-icon">${fleet_total_drum} * ${d_mag} + <img src="${icons.craft}" class="item-icon craft-icon">${fleet_total_craft} * ${c_mag}</p>`;
+            html += `<p>add: <span style="font-weight:600;color:#1e00ff;">${resource_total[key]}</span> = <img src="${drum_icon}" class="item-icon drum-icon">${fleet_total_drum} * ${d_mag} + <img src="${craft_icon}" class="item-icon craft-icon">${fleet_total_craft} * ${c_mag}</p>`;
         }
         html += `<p>max: ${resource_status[`max_${key}`] ? resource_status[`max_${key}`] : 'unknown'}</p>`;
     }

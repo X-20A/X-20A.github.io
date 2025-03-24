@@ -527,6 +527,8 @@ watch([adoptFleet, selectedArea, options], async () => {
 						adoptFleet.value?.getTotalDrumCount()!,
 						adoptFleet.value?.getTotalValidCraftCount()!,
 						icons.value,
+						Drum,
+						Craft,
 					);
 					if (!html) return;
 					popupHtml.value = html;

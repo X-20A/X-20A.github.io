@@ -129,8 +129,6 @@ export const useStore = defineStore('compass', {
                 ammo: await import('@/icons/items/ammo.png'),
                 steel: await import('@/icons/items/steel.png'),
                 imo: await import('@/icons/items/imo.png'),
-                drum: await import('@/icons/items/drum.png'),
-                craft: await import('@/icons/items/craft.png'),
             };
             const icons = Object.fromEntries(
                 Object.entries(prepare_icons).map(([key, value]) => [key, value.default])
