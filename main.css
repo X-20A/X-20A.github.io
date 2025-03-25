@@ -48,7 +48,30 @@ details {
 li {
     padding: 1px;
 }
-
+.tooltip-container {
+	position: relative;
+	display: inline-block;
+}
+.tooltip-text {
+	position: absolute;
+	/* 上に表示 */
+	bottom: 70%;
+	left: 50%;
+	transform: translateX(-50%) translateY(-5px);
+	background-color: rgba(0, 0, 0, 0.75);
+	color: white;
+	padding: 5px 10px;
+	border-radius: 4px;
+	white-space: nowrap;
+	font-size: 12px;
+	opacity: 0;
+	transition: opacity 0.2s, transform 0.02s;
+	pointer-events: none;
+}
+.tooltip-container:hover .tooltip-text {
+	opacity: 1;
+	transform: translateX(-50%) translateY(-10px);
+}
 #cy-ct-no {
     width: 200px;
     text-align: left;

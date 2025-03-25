@@ -1,9 +1,12 @@
 import type { OptionsType } from '@/classes/types'
 
-/**
- * 定数系
- */
+/** 定数系 */
 export default class Const {
+    /**
+     * CacheFleet の仕様を更新したら送る
+     */
+    public static readonly FLEET_VERSION: number = 2; // @expansion
+
     /**
      * ルート分岐に関わる大発群    
      * 68 : 大発動艇,    
@@ -36,6 +39,56 @@ export default class Const {
      */
     public static readonly RESOURCE_CRAFTS: Readonly<number[]> =
         [68, 166, 167, 193, 408, 409, 436, 449, 525, 526];
+
+    /**
+     * 大和型ID配列    
+     * 大和    
+     * 武蔵
+     */
+    public static readonly YAMATO_CLASS_IDS: Readonly<number[]> =
+        [
+            131, 136, 911, 916,
+            143, 148, 546,
+        ];
+
+    /**
+     * 泊地修理艦ID配列
+     * 明石改, 朝日改, 秋津洲改
+     */
+    public static readonly HAKUCHI_IDS: Readonly<number[]> = [187, 958, 450];
+
+    /**
+     * 第五艦隊ID配列    
+     * 潮    
+     * 那智    
+     * 足柄    
+     * 阿武隈    
+     * 多摩    
+     * 木曾    
+     * 霞    
+     * 不知火    
+     * 薄雲    
+     * 曙    
+     * 初霜    
+     * 初春    
+     * 若葉
+     */
+    public static readonly DAIGO_IDS: Readonly<number[]> =
+        [
+            16,  233, 407,
+            63,  192, 266,
+            64,  193, 267,
+            114, 290, 200,
+            100, 216, 547,
+            101, 146, 217,
+            49,  253, 464, 470,
+            18,  226, 567,
+            631, 700,
+            15,  231, 665,
+            41,  241, 419,
+            38,  238, 326,
+            40,  240,
+        ];
 
     /**
      * getterからコピーを取得できる

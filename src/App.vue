@@ -43,9 +43,9 @@
 
 				<span class="tooltip-container"> <!-- この辺はイベント後にAdditional Stat的なのにしまうかも -->
 					<span style="color: #4800ff;cursor: default;">第五艦隊</span>
-					<span>: {{ adoptFleet.countDaigo() }}&nbsp;</span>
+					<span>: {{ adoptFleet.daigo_count }}&nbsp;</span>
 					<span class="tooltip-text">
-						那智,足柄,阿武隈,多摩,木曾,霞,不知火,薄雲,曙,潮,初霜,初春,若葉
+						那智 | 足柄 | 阿武隈 | 多摩 | 木曾 | 霞 | 不知火 | 薄雲 | 曙 | 潮 | 初霜 | 初春 | 若葉
 					</span>
 				</span>
 
@@ -70,7 +70,9 @@
 				<span class="tooltip-container">
 					<img :src="Craft" alt="大発系" style="height: 21px;vertical-align: -4px;">
 					<span>: {{ adoptFleet.craft_carrier_count }}&nbsp;</span>
-					<span class="tooltip-text">大発系</span>
+					<span class="tooltip-text">
+						大発動艇 | 大発動艇(八九式中戦車&陸戦隊) | 特二式内火艇 | 特大発動艇 | 武装大発<br> | 大発動艇(II号戦車/北アフリカ仕様) | 特大発動艇+一式砲戦車 | 特四式内火艇 | 特四式内火艇改
+					</span>
 				</span>
 
 				<span class="tooltip-container">
@@ -303,6 +305,7 @@ import NotSpanner from '@/icons/items/not-spanner.png';
 import Drum from '@/icons/items/drum.png';
 import Craft from '@/icons/items/craft.png';
 import Radar from '@/icons/items/radar.png';
+import Const from './classes/const';
 
 const store = useStore();
 const modalStore = useModalStore();
@@ -748,30 +751,6 @@ onMounted(async () => {
 }
 .import-display {
 	padding-left: 230px;
-}
-.tooltip-container {
-	position: relative;
-	display: inline-block;
-}
-.tooltip-text {
-	position: absolute;
-	/* 上に表示 */
-	bottom: 70%;
-	left: 50%;
-	transform: translateX(-50%) translateY(-5px);
-	background-color: rgba(0, 0, 0, 0.75);
-	color: white;
-	padding: 5px 10px;
-	border-radius: 4px;
-	white-space: nowrap;
-	font-size: 12px;
-	opacity: 0;
-	transition: opacity 0.2s, transform 0.02s;
-	pointer-events: none;
-}
-.tooltip-container:hover .tooltip-text {
-	opacity: 1;
-	transform: translateX(-50%) translateY(-10px);
 }
 .alert {
 	width: 20px;

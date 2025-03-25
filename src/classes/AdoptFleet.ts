@@ -1,4 +1,4 @@
-import type CacheFleet from "./CacheFleet";
+import CacheFleet from "./CacheFleet";
 import {
     type SpeedId,
     type FleetSpeedName,
@@ -13,11 +13,12 @@ import {
     convertFleetSpeedIdToName,
     convertFleetTypeIdToName,
 } from "@/utils/convertUtil";
-import Big from 'big.js';
+import Const from "./const";
 
 /**
  * 実際に表示やシミュレートで使う艦隊    
- * フィールド or メソッド で持つ判断は今のところ、頻繁に使うかどうかくらい
+ * 艦隊情報は取込時にしか操作されない(索敵無視機能以外、完全に静的)
+ * 参照海域が少ない & 今後も使わなそうなのはメソッドでもつ
  */
 export default class AdoptFleet implements Fleet {
     /**
@@ -38,11 +39,17 @@ export default class AdoptFleet implements Fleet {
     /** 艦隊種別(文字列) */
     public readonly fleet_type: FleetTypeName;
 
+    /** 連合艦隊であるか */
+    public readonly isUnion: boolean;
+
     /** 総艦数 */
     public readonly fleet_length: number;
 
     /** 艦隊速度ID */
     public readonly speed_id: SpeedId;
+
+    /** 高速+以上の艦隊であるか */
+    public readonly isFaster: boolean;
 
     /** 艦隊速度(文字列) */
     public readonly speed: FleetSpeedName;
@@ -65,28 +72,54 @@ export default class AdoptFleet implements Fleet {
     /** 北方迷彩(＋北方装備)装備艦数 */
     public readonly arBulge_carrier_count: number;
 
+    /** 低速戦艦(素速度)艦数 */
+    public readonly SBB_count: number;
+
+    /** 大和型艦数 */
+    public readonly yamato_class_count: number;
+
+    /** 泊地修理艦数 */
+    public readonly hakuchi_count: number;
+
+    /** 第五艦隊所属艦数 */
+    public readonly daigo_count: number;
+
     constructor(fleets: CacheFleet[], fleet_type_id: FleetTypeId) {
+        // CacheFleetのバージョンが古い場合は再生成
+        if (!fleets[0].version || fleets[0].version < Const.FLEET_VERSION) {
+            // console.log('rebuild');
+            fleets = fleets.map(fleet => new CacheFleet(fleet.ships));
+        }
+
         this.fleets = fleets;
         this.fleet_type_id = fleet_type_id;
         this.fleet_type = convertFleetTypeIdToName(fleet_type_id);
+        this.isUnion = fleets.length === 2;
 
         if (fleet_type_id > 0) { // 連合艦隊
+            /** 主力艦隊 */
+            const main = fleets[0];
+            /** 随伴艦隊 */
+            const escort = fleets[1];
+
             this.composition = new Composition(fleets);
-            this.ship_names = fleets[0].ship_names.concat(fleets[1].ship_names);
-            this.fleet_length = fleets[0].ships.length + fleets[1].ships.length;
-            if (fleets[0].speed_id === 3 && fleets[1].speed_id === 3) {
+            this.ship_names = main.ship_names.concat(escort.ship_names);
+            this.fleet_length = main.ships.length + escort.ships.length;
+            if (main.speed_id === 3 && escort.speed_id === 3) {
                 this.speed_id = 3;
                 this.speed = "最速艦隊";
-            } else if (fleets[0].speed_id === 2 && fleets[1].speed_id === 2) {
+            } else if (main.speed_id >= 2 && escort.speed_id >= 2) {
                 this.speed_id = 2;
                 this.speed = "高速+艦隊";
-            } else if (fleets[0].speed_id === 1 && fleets[1].speed_id === 1) {
+            } else if (main.speed_id >= 1 && escort.speed_id >= 1) {
                 this.speed_id = 1;
                 this.speed = "高速艦隊";
             } else {
                 this.speed_id = 0;
                 this.speed = "低速艦隊";
             }
+
+            this.isFaster = this.speed_id >= 2
 
             switch (fleet_type_id) {
                 case 1:
@@ -101,19 +134,30 @@ export default class AdoptFleet implements Fleet {
             }
 
             // mapを使うと as が必要になる
-            const is_minus = new Big(fleets[0].seek[0]).plus(fleets[1].seek[0]).lt(0);
-            this.seek = [
-                new Big(fleets[0].seek[0]).plus(fleets[1].seek[0]).round(2, is_minus ? Big.roundUp : Big.roundDown).toNumber(),
-                new Big(fleets[0].seek[1]).plus(fleets[1].seek[1]).round(2, is_minus ? Big.roundUp : Big.roundDown).toNumber(),
-                new Big(fleets[0].seek[2]).plus(fleets[1].seek[2]).round(2, is_minus ? Big.roundUp : Big.roundDown).toNumber(),
-                new Big(fleets[0].seek[3]).plus(fleets[1].seek[3]).round(2, is_minus ? Big.roundUp : Big.roundDown).toNumber(),
+            const total_seek = [
+                main.seek[0] + escort.seek[0],
+                main.seek[1] + escort.seek[1],
+                main.seek[2] + escort.seek[2],
+                main.seek[3] + escort.seek[3],
             ];
+
+            this.seek = [
+                Math.floor(total_seek[0] * 100) / 100,
+                Math.floor(total_seek[1] * 100) / 100,
+                Math.floor(total_seek[2] * 100) / 100,
+                Math.floor(total_seek[3] * 100) / 100,
+            ];
+
             this.save_seek = this.seek;
 
-            this.drum_carrier_count = fleets[0].drum_carrier_count + fleets[1].drum_carrier_count;
-            this.radar_carrier_count = fleets[0].radar_carrier_count + fleets[1].radar_carrier_count;
-            this.craft_carrier_count = fleets[0].craft_carrier_count + fleets[1].craft_carrier_count;
-            this.arBulge_carrier_count = fleets[0].arBulge_carrier_count + fleets[1].arBulge_carrier_count;
+            this.drum_carrier_count = main.drum_carrier_count + escort.drum_carrier_count;
+            this.radar_carrier_count = main.radar_carrier_count + escort.radar_carrier_count;
+            this.craft_carrier_count = main.craft_carrier_count + escort.craft_carrier_count;
+            this.arBulge_carrier_count = main.arBulge_carrier_count + escort.arBulge_carrier_count;
+            this.SBB_count = main.SBB_count + escort.SBB_count;
+            this.yamato_class_count = main.yamato_class_count + escort.yamato_class_count;
+            this.hakuchi_count = main.hakuchi_count + escort.hakuchi_count;
+            this.daigo_count = main.daigo_count + escort.daigo_count;
         } else {
             const fleet = fleets[0];
 
@@ -122,18 +166,24 @@ export default class AdoptFleet implements Fleet {
             this.fleet_length = fleet.ships.length;
             this.speed_id = fleet.speed_id;
             this.speed = convertFleetSpeedIdToName(this.speed_id);
-            const is_minus = new Big(fleet.seek[0]).lt(0);
+            this.isFaster = this.speed_id >= 2;
+
             this.seek = [
-                new Big(fleet.seek[0]).round(2, is_minus ? Big.roundUp : Big.roundDown).toNumber(),
-                new Big(fleet.seek[1]).round(2, is_minus ? Big.roundUp : Big.roundDown).toNumber(),
-                new Big(fleet.seek[2]).round(2, is_minus ? Big.roundUp : Big.roundDown).toNumber(),
-                new Big(fleet.seek[3]).round(2, is_minus ? Big.roundUp : Big.roundDown).toNumber(),
+                Math.floor(fleet.seek[0] * 100) / 100,
+                Math.floor(fleet.seek[1] * 100) / 100,
+                Math.floor(fleet.seek[2] * 100) / 100,
+                Math.floor(fleet.seek[3] * 100) / 100,
             ];
+
             this.save_seek = this.seek;
             this.drum_carrier_count = fleet.drum_carrier_count;
             this.radar_carrier_count = fleet.radar_carrier_count;
             this.craft_carrier_count = fleet.craft_carrier_count;
             this.arBulge_carrier_count = fleet.arBulge_carrier_count;
+            this.SBB_count = fleet.SBB_count;
+            this.yamato_class_count = fleet.yamato_class_count;
+            this.hakuchi_count = fleet.hakuchi_count;
+            this.daigo_count = fleet.daigo_count;
         }
     }
 
@@ -149,29 +199,6 @@ export default class AdoptFleet implements Fleet {
     }
     public getEscortFleetLength(): number {
         return this.fleets[1].ships.length;
-    }
-    /**
-     * 高速+以上の艦隊ならtrueを返す
-     * @returns 
-     */
-    public isFaster(): boolean {
-        return this.speed_id >= 2;
-    }
-    /**
-     * 低速戦艦の数を返す。実際の速度とは無関係にステータスが低速な戦艦
-     * @returns 低速戦艦の数
-     */
-    public countSBB(): number {
-        let count = 0;
-        count += this.fleets[0].ships
-            .filter(ship => ship.type === ShipType.BB && ship.speed_group >= 4)
-            .length;
-        if (this.fleets[1]) {
-            count += this.fleets[1].ships
-                .filter(item => item.type === ShipType.BB && item.speed_group >= 4)
-                .length;
-        }
-        return count;
     }
     /**
      * 艦隊構成艦にtarget_nameが含まれるか判定(部分一致)して返す(配列もいいぞ)    
@@ -195,13 +222,6 @@ export default class AdoptFleet implements Fleet {
      */
     public isFCL(): boolean {
         return this.fleets[0].ships[0].type === ShipType.CL;
-    }
-    /**
-     * 連合艦隊ならtrueを返す
-     * @returns 
-     */
-    public isUnion(): boolean {
-        return this.fleets.length === 2;
     }
     /**
      * 艦隊構成艦に含まれる艦名がtarget_name(部分一致)の艦をカウントして返す(配列もいいぞ)    
@@ -261,13 +281,6 @@ export default class AdoptFleet implements Fleet {
         return count;
     }
     /**
-     * 大和型をカウントして返す
-     * @returns 
-     */
-    public countYamatoClass() {
-        return this.countShip('大和') + this.countShip('武蔵');
-    }
-    /**
      * 索敵無視の為に索敵値を退避フィールドと切替
      */
     public switchSeek(): void {
@@ -301,23 +314,6 @@ export default class AdoptFleet implements Fleet {
         } else {
             return this.fleets[0].total_valid_craft_count;
         }
-    }
-    /**
-     * 艦隊内の第五艦隊所属艦をカウント
-     * @returns 
-     */
-    public countDaigo(): number {
-        const exactMatch = new Set(['潮', '潮改', '潮改二']);
-        return this.countShip([ // 潮は衝突するので完全一致でカウント
-            '那智', '足柄', '阿武隈', '多摩', '木曾',
-            '霞', '不知火', '薄雲', '曙', '初霜', '初春', '若葉'
-        ]) + this.ship_names.filter(ship_name => exactMatch.has(ship_name)).length;
-    }
-    /**
-     * 泊地修理艦の数を返す
-     */
-    public countHakuchi(): number {
-        return this.countShip(['明石改', '朝日改', '秋津洲改']);
     }
 
     /**

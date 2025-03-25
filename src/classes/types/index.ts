@@ -47,20 +47,16 @@ export type FleetTypeId = 0|1|2|3
 export type FleetTypeName = '通常艦隊' | '空母機動部隊' | '水上打撃部隊' | '輸送護衛部隊'
 
 export interface Fleet {
-  /** 艦隊速度 */
-  readonly speed_id: SpeedId;
-
-  /** 艦隊索敵値 */
-  readonly seek: Seek;
-
-  /** ドラム缶 装備艦数 */
-  readonly drum_carrier_count: number;
-
-  /** 電探系 装備艦数 */
-  readonly radar_carrier_count: number;
-
-  /** 大発系 装備艦数 */
-  readonly craft_carrier_count: number;
+    /** 艦隊速度 */
+    readonly speed_id: SpeedId
+    /** 艦隊索敵値 */
+    readonly seek: Seek
+    /** ドラム缶 装備艦数 */
+    readonly drum_carrier_count: number
+    /** 電探系 装備艦数 */
+    readonly radar_carrier_count: number
+    /** 大発系 装備艦数 */
+    readonly craft_carrier_count: number
 }
 
 export type AreaId = // @expansion

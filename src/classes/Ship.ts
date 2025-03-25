@@ -5,7 +5,6 @@ import
     ship_datas,
     { NA as National, SG as SpeedGroup, ST as ShipType }
 from '@/data/ship';
-import Big from 'big.js';
 import Const from './const';
 import { EquipType} from '@/data/equip';
 
@@ -18,8 +17,8 @@ export default class Ship {
 	public readonly name: string;
     public readonly lv: number;
 	public readonly type: ShipType;
-    public readonly status_seek: Big;
-    public readonly equip_seek: Big;
+    public readonly status_seek: number;
+    public readonly equip_seek: number;
 	public readonly national: National;
 	public readonly speed_group: SpeedGroup;
 	public readonly speed: SpeedId;
@@ -81,54 +80,64 @@ export default class Ship {
             this.getSeekBonus(this.name, this.type, this.national, equips);
 		this.status_seek = this.calcStatusSeek(data, bonus_seek, lv);
 		this.equip_seek = this.calcEquipSeek(equips);
-		this.drum_count = equips.filter(item => item.id === 75).length;
-		this.has_radar = equips.some(item => [EquipType.RadarS,EquipType.RadarL].includes(item.type));
-        this.has_radar5 = equips.some(item => ([EquipType.RadarS, EquipType.RadarL].includes(item.type) && item.seek >= 5));
-		this.has_craft = equips.some(item => Const.ROUTING_CRAFTS.includes(item.id));
-        this.has_arBulge = equips.some(item => item.id === 268);
-        this.valid_craft_count = equips.filter(item => Const.RESOURCE_CRAFTS.includes(item.id)).length;
-		this.has_arctic_gear = equips.some(item => item.id === 402);
+
+        let drum_count = 0;
+        let has_radar = false;
+        let has_radar5 = false;
+        let has_craft = false;
+        let has_arBulge = false;
+        let valid_craft_count = 0;
+        let has_arctic_gear = false;
+
+        equips.forEach(item => {
+            if (item.id === 75) drum_count++;
+            if (item.id === 268) has_arBulge = true;
+            if (item.id === 402) has_arctic_gear = true;
+            if (Const.ROUTING_CRAFTS.includes(item.id)) has_craft = true;
+            if (Const.RESOURCE_CRAFTS.includes(item.id)) valid_craft_count++;
+            if ([EquipType.RadarS, EquipType.RadarL].includes(item.type)) {
+                has_radar = true;
+                if (item.seek >= 5) has_radar5 = true;
+            }
+        });
+
+        this.drum_count = drum_count;
+        this.has_radar = has_radar;
+        this.has_radar5 = has_radar5;
+        this.has_craft = has_craft;
+        this.has_arBulge = has_arBulge;
+        this.valid_craft_count = valid_craft_count;
+        this.has_arctic_gear = has_arctic_gear;
 	}
 
     private calcStatusSeek(
         ship_data: ShipData,
         bonus_seek: EquipBonusSeek,
         lv: number
-    ): Big {
+    ): number {
         // 現在のレベルにおける素索敵値を計算
-        const max_seek = new Big(ship_data.seek2);
-        const min_seek = new Big(ship_data.seek);
-        const level = new Big(lv);
-        const status_seek = max_seek.minus(min_seek)
-            .times(level)
-            .div(99)
-            .plus(min_seek)
-            .round(0, 0); // 四捨五入
+        const max_seek = ship_data.seek2;
+        const min_seek = ship_data.seek;
+        const status_seek = Math.floor(((max_seek - min_seek) * (lv / 99)) + min_seek);
 
         // 素索敵値 + ボーナス値の平方根を計算
-        return status_seek.plus(bonus_seek).sqrt();
+        return Math.sqrt(status_seek + bonus_seek);
     }
 
-	private calcEquipSeek(equips: Equip[]) {
-        let total = new Big(0);
-		for (let i = 0;i < equips.length;i++) {
-			const equip = equips[i];
-			if (equip.seek === 0) continue;
+    private calcEquipSeek(equips: Equip[]): number {
+        let total = 0;
+        for (let i = 0; i < equips.length; i++) {
+            const equip = equips[i];
+            if (equip.seek === 0) continue;
 
-			const coefficients = this.getSeekCoefficients(equip);
-			const equip_conefficient = coefficients[0];
-			const implovment_coefficient = coefficients[1];
+            const coefficients = this.getSeekCoefficients(equip);
+            const equip_coefficient = coefficients[0];
+            const improvement_coefficient = coefficients[1];
 
-            total = new Big(equip.implovement)
-				.sqrt()
-				.times(implovment_coefficient)
-				.plus(equip.seek)
-				.times(equip_conefficient)
-                .plus(total);
-
-		}
-		return total;
-	}
+            total += (Math.sqrt(equip.implovement) * improvement_coefficient + equip.seek) * equip_coefficient;
+        }
+        return total;
+    }
 
 	private getSeekCoefficients(equip: Equip): number[] {
 		const coefficients = [] as number[];
@@ -496,12 +505,21 @@ export default class Ship {
 	}
 
 	private calcSpeed(equips: Equip[], speed_group: SpeedGroup): SpeedId {
-		const turbine = equips.filter(item => item.id === 33).length; // タービン
-		const kan = equips.filter(item => item.id === 34).length; // 強化缶
-		const new_kan = equips.filter(item => item.id === 87).length; // 新型缶
-		const power_kan = equips.filter(item => item.id === 87 && item.implovement >= 7).length; // 新型缶☆7↑
+		let turbine = 0; // タービン
+        let kan = 0; // 強化缶
+        let new_kan = 0; // 新型缶
+        let power_kan = 0; // 新型缶☆7↑
 
-		const kan_total = kan + new_kan;
+        equips.forEach(item => {
+            if (item.id === 33) turbine++;
+            if (item.id === 34) kan++;
+            if (item.id === 87) {
+                new_kan++;
+                if (item.implovement >= 7) power_kan++;
+            }
+        });
+
+        const kan_total = kan + new_kan;
 
 		let speed: SpeedId;
 		switch (speed_group) {
