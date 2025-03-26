@@ -84,6 +84,9 @@ export default class AdoptFleet implements Fleet {
     /** 第五艦隊所属艦数 */
     public readonly daigo_count: number;
 
+    /** 礼号作戦参加艦数 */
+    public readonly reigo_count: number;
+
     constructor(fleets: CacheFleet[], fleet_type_id: FleetTypeId) {
         // CacheFleetのバージョンが古い場合は再生成
         if (!fleets[0].version || fleets[0].version < Const.FLEET_VERSION) {
@@ -95,6 +98,36 @@ export default class AdoptFleet implements Fleet {
         this.fleet_type_id = fleet_type_id;
         this.fleet_type = convertFleetTypeIdToName(fleet_type_id);
         this.isUnion = fleets.length === 2;
+
+        const ships = fleets[1] ? fleets[0].ships.concat(fleets[1].ships) : fleets[0].ships;
+
+        let daigo_count = 0;
+        let reigo_count = 0;
+
+        // 同じ艦は1回だけカウント 連合艦隊時の判定のためにこのタイミングでやらざるを得ない
+        const daigo_dup = [] as number[];
+        const reigo_dup = [] as number[];
+
+        ships.forEach(ship => {
+            for (const daigo_ship_ids of Const.DAIGO_IDS) {
+                if (!daigo_dup.includes(ship.id) && daigo_ship_ids.includes(ship.id)) {
+                    daigo_dup.push(...daigo_ship_ids);
+                    daigo_count++;
+                    break;
+                }
+            }
+            for (const reigo_ship_ids of Const.REIGO_IDS) {
+                if (!reigo_dup.includes(ship.id) && reigo_ship_ids.includes(ship.id)) {
+                    reigo_dup.push(...reigo_ship_ids);
+                    reigo_count++;
+                    break;
+                }
+            }
+        });
+
+        this.daigo_count = daigo_count;
+        this.reigo_count = reigo_count;
+        
 
         if (fleet_type_id > 0) { // 連合艦隊
             /** 主力艦隊 */
@@ -157,7 +190,6 @@ export default class AdoptFleet implements Fleet {
             this.SBB_count = main.SBB_count + escort.SBB_count;
             this.yamato_class_count = main.yamato_class_count + escort.yamato_class_count;
             this.hakuchi_count = main.hakuchi_count + escort.hakuchi_count;
-            this.daigo_count = main.daigo_count + escort.daigo_count;
         } else {
             const fleet = fleets[0];
 
@@ -183,7 +215,6 @@ export default class AdoptFleet implements Fleet {
             this.SBB_count = fleet.SBB_count;
             this.yamato_class_count = fleet.yamato_class_count;
             this.hakuchi_count = fleet.hakuchi_count;
-            this.daigo_count = fleet.daigo_count;
         }
     }
 

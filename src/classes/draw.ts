@@ -1,5 +1,5 @@
 import cytoscape from 'cytoscape';
-import { node_datas, edge_datas, NT as NodeType } from '@/data/map';
+import { node_datas, edge_datas, NT as NodeType, warning_node_datas } from '@/data/map';
 import styles from '@/styles';
 import type { AreaId, SimResult } from './types';
 import Big from 'big.js';
@@ -27,11 +27,13 @@ export default function drawMap(
         }
     };
 
+    type TempNodeType = NodeType | 'alert'
+
     interface Node {
         data: {
             id: string;
             name: string;
-            label: NodeType;
+            label: TempNodeType;
         };
         position: {
             x: number;
@@ -53,16 +55,32 @@ export default function drawMap(
     };
     // nodes流し込み
     const local_nodes = node_datas[selectedArea];
+    const warning_nodes = warning_node_datas[selectedArea] ?? [];
     for (const key in local_nodes) {
         if (Object.hasOwn(local_nodes, key)) {
             // 座標,マスの種類
             const [x, y, label] = local_nodes[key];
             elements.nodes.push({
-                data: { id: key, name: key, label: label },
+                data: {
+                    id: key,
+                    name: key,
+                    label: label,
+                },
                 position: { x, y }
             });
+            if (warning_nodes.includes(key)) {
+                elements.nodes.push({
+                    data: {
+                        id: key + 'alert',
+                        name: key + 'alert',
+                        label: 'alert',
+                    },
+                    position: { x: x + 14, y: y - 14 }
+                });
+            }
         }
     }
+
     // edges流し込み
     const local_edges = edge_datas[selectedArea];
     for (const key in local_edges) {

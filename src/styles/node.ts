@@ -33,7 +33,19 @@ const nodes: CyStyle[] = [
             'background-clip': 'none',// z-indexでedgesの下に潜り込ませるのは上手くいかなかった
             'background-opacity': 0,
         }
-    }, // マスの分類ごとに表示分岐
+    },
+    {
+        selector: 'node[label = "alert"]',
+        style: {
+            'color': 'white',
+            'text-outline-color': 'rgba(255,0,0)',
+            'text-outline-opacity': '1',
+            'content': '!',
+            'font-size': '18px',
+            'events': 'no' // クリック不可
+        }
+    },
+    // マスの分類ごとに表示分岐
     {
         selector: `node[label = ${NodeType.st}]`, // 出撃
         style: {

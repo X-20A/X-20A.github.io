@@ -125,6 +125,7 @@ export default class SimController {
         const yamato = fleet.yamato_class_count;
         const hakuchi = fleet.hakuchi_count;
         const daigo = fleet.daigo_count;
+        const reigo = fleet.reigo_count;
 
         const track = scanner.route;
 
@@ -6322,7 +6323,139 @@ export default class SimController {
                         break;
                 }
                 break;
-            // case '69-5':
+            case '60-5':
+                switch (node) {
+                    case null:
+                        if (option.phase === '1') {
+                            return '1';
+                        } else if (!isUnion) {
+                            return '1';
+                        } else { // isUnion
+                            return '2';
+                        }
+                        break;
+                    case '1':
+                        if (AO + LHA + AV + AS > 2) {
+                            return 'A';
+                        } else if (AO + LHA > 1) {
+                            return 'A';
+                        } else if (CV + CVB === 0 && BBs + CVL > 2 && speed === '低速艦隊') {
+                            return 'A';
+                        } else {
+                            return 'C';
+                        }
+                        break;
+                    case 'D1':
+                        if (true) {
+                            return 'D2';
+                        }
+                        break;
+                    case 'E':
+                        if (BBCVs > 3) {
+                            return 'E1';
+                        } else {
+                            return 'E2';
+                        }
+                        break;
+                    case 'F':
+                        if (true) {
+                            return 'F2';
+                        }
+                        break;
+                    case 'I':
+                        if (speed !== '低速艦隊' && CV + CVB === 0) {
+                            return 'J';
+                        } else {
+                            return 'J1';
+                        }
+                        break;
+                    case 'J':
+                        if (true) {
+                            return 'K';
+                        }
+                        break;
+                    case 'M':
+                        if (Number(option.phase) < 3) {
+                            return 'N';
+                        } else if (speed === '低速艦隊') {
+                            return 'U1';
+                        } else {
+                            return 'U';
+                        }
+                        break;
+                    case 'N':
+                        if (yamato > 0) {
+                            return 'O';
+                        } else if (Number(option.difficulty) > 2 && reigo > 4) {
+                            return 'P';
+                        } else if (option.difficulty === '2' && reigo > 3) {
+                            return 'P';
+                        } else if (option.difficulty === '1' && reigo > 2) {
+                            return 'P';
+                        } else {
+                            return 'O';
+                        }
+                        break;
+                    case 'P':
+                        if (BBs > 2) {
+                            return 'P1';
+                        } else {
+                            return 'P2';
+                        }
+                        break;
+                    case 'P2':
+                        if (yamato > 0) {
+                            return 'Q';
+                        } else if (Ds < 4) {
+                            return 'Q';
+                        } else if (track.includes('N')) {
+                            return 'R';
+                        } else if (CL < 2) {
+                            return 'Y';
+                        } else if (Ds === 5) {
+                            return 'Y';
+                        } else {
+                            return 'R';
+                        }
+                        break;
+                    case 'R':
+                        if (track.includes('N')) {
+                            return 'T';
+                        } else {
+                            return 'Z';
+                        }
+                        break;
+                    case 'U1':
+                        if (true) {
+                            return 'U2';
+                        }
+                        break;
+                    case 'U2':
+                        if (true) {
+                            return 'U3';
+                        }
+                        break;
+                    case 'V':
+                        if (true) {
+                            return 'U3';
+                        }
+                        break;
+                    case 'B':
+                        if (option.B === 'B1') {
+                            return 'B1';
+                        } else {
+                            return 'B2';
+                        }
+                        break;
+                    case 'D':
+                        if (option.D === 'D1') {
+                            return 'D1';
+                        } else {
+                            return 'E';
+                        }
+                        break;
+                }
+                break;
             // case '60-6':
             break; // @expansion
         }

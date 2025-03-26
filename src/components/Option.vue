@@ -257,6 +257,25 @@ const option_data: OptionSelector = {
 			]
 		},
 	},
+	'60-5': {
+		'phase': {
+			label: 'Phase',
+			options: [
+				{ value: '1', label: '開始時点' },
+				{ value: '2', label: 'Tボス出現後' },
+				{ value: '3', label: 'Zボス出現後' },
+			]
+		},
+		'difficulty': {
+			label: '難易度',
+			options: [
+				{ value: '4', label: '甲' },
+				{ value: '3', label: '乙' },
+				{ value: '2', label: '丙' },
+				{ value: '1', label: '丁' },
+			],
+		},
+	},
 }; // @expansion
 
 // 海域絞り込み

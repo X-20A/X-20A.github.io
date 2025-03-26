@@ -51,9 +51,6 @@ export default class CacheFleet implements Fleet {
     /** 泊地修理艦数 */
     public readonly hakuchi_count: number;
 
-    /** 第五艦隊所属艦数 */
-    public readonly daigo_count: number;
-
 	constructor(
 		ships: Ship[],
 		command_lv?: number,
@@ -74,7 +71,6 @@ export default class CacheFleet implements Fleet {
         let SBB_count = 0;
         let yamato_class_count = 0;
         let hakuchi_count = 0;
-        let daigo_count = 0;
 
         this.ships.forEach(ship => {
             if (ship.drum_count > 0) drum_carrier_count++;
@@ -85,8 +81,6 @@ export default class CacheFleet implements Fleet {
             if (ship.type === ShipType.BB && ship.speed_group >= 5) SBB_count++;
             if (Const.YAMATO_CLASS_IDS.includes(ship.id)) yamato_class_count++;
             if (Const.HAKUCHI_IDS.includes(ship.id)) hakuchi_count++;
-            if (Const.DAIGO_IDS.includes(ship.id)) daigo_count++;
-
             total_drum_count += ship.drum_count;
             total_valid_craft_count += ship.valid_craft_count;
         });
@@ -101,7 +95,6 @@ export default class CacheFleet implements Fleet {
         this.SBB_count = SBB_count;
         this.yamato_class_count = yamato_class_count;
         this.hakuchi_count = hakuchi_count;
-        this.daigo_count = daigo_count;
 	}
 
     private calcSeek(ships: Ship[], command_lv = 120): Seek {

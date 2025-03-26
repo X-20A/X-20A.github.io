@@ -42,10 +42,18 @@
 				<span>搭載艦数[ </span>
 
 				<span class="tooltip-container"> <!-- この辺はイベント後にAdditional Stat的なのにしまうかも -->
-					<span style="color: #4800ff;cursor: default;">第五艦隊</span>
+					<span style="color: #4800ff;cursor: default;">第五</span>
 					<span>: {{ adoptFleet.daigo_count }}&nbsp;</span>
 					<span class="tooltip-text">
 						那智 | 足柄 | 阿武隈 | 多摩 | 木曾 | 霞 | 不知火 | 薄雲 | 曙 | 潮 | 初霜 | 初春 | 若葉
+					</span>
+				</span>
+
+				<span class="tooltip-container">
+					<span style="color: #e57600;cursor: default;">礼号</span>
+					<span>: {{ adoptFleet.reigo_count }}&nbsp;</span>
+					<span class="tooltip-text">
+						足柄 | 大淀 | 霞 | 清霜 | 朝霜 | 榧 | 杉
 					</span>
 				</span>
 

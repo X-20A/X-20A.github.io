@@ -5,7 +5,7 @@ export default class Const {
     /**
      * CacheFleet の仕様を更新したら送る
      */
-    public static readonly FLEET_VERSION: number = 2; // @expansion
+    public static readonly FLEET_VERSION: number = 3; // @expansion
 
     /**
      * ルート分岐に関わる大発群    
@@ -73,21 +73,43 @@ export default class Const {
      * 初春    
      * 若葉
      */
-    public static readonly DAIGO_IDS: Readonly<number[]> =
+    public static readonly DAIGO_IDS: ReadonlyArray<ReadonlyArray<number>> =
         [
-            16,  233, 407,
-            63,  192, 266,
-            64,  193, 267,
-            114, 290, 200,
-            100, 216, 547,
-            101, 146, 217,
-            49,  253, 464, 470,
-            18,  226, 567,
-            631, 700,
-            15,  231, 665,
-            41,  241, 419,
-            38,  238, 326,
-            40,  240,
+            [16,  233, 407,],
+            [63,  192, 266,],
+            [64,  193, 267,],
+            [114, 290, 200,],
+            [100, 216, 547,],
+            [101, 146, 217,],
+            [49,  253, 464, 470,],
+            [18,  226, 567,],
+            [631, 700,],
+            [15,  231, 665,],
+            [41,  241, 419,],
+            [38,  238, 326,],
+            [40,  240,],
+        ];
+
+    /**
+     * 礼号作戦ID配列    
+     * 足柄    
+     * 大淀    
+     * 霞    
+     * 清霜    
+     * 朝霜    
+     * 榧    
+     * 杉    
+     * 未実装 ー 樫
+     */
+    public static readonly REIGO_IDS: ReadonlyArray<ReadonlyArray<number>> =
+        [
+            [64 , 267, 193,],
+            [183, 321,],
+            [49,  253, 464, 470,],
+            [410, 325, 955, 960,],
+            [425, 344, 578,],
+            [994, 736,],
+            [992, 997,],
         ];
 
     /**
@@ -115,7 +137,7 @@ export default class Const {
         '60-2': { 'phase': '1', 'B': 'C', 'E': 'F', 'N': 'O' },
         '60-3': { 'phase': '1', 'difficulty': '4', 'A': 'B', 'C': 'D', 'H': 'H1', 'M': 'M1', 'S': 'S1' },
         '60-4': { 'phase': '1', 'A': 'B', 'F': 'F1', 'G': 'G1' },
-        // '60-5': {},
+        '60-5': { 'phase': '1', 'difficulty': '4', 'B': 'B1', 'D': 'D1' },
         // '60-6': {},
     } as OptionsType;  // @expansion
 
