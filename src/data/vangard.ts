@@ -27,6 +27,14 @@ const vangards: Ttemplate[] = [
         "memo": "道中警戒陣$eボスマス気球有効"
     },
     {
+        "title": "5-3_IP",
+        "world": 5,
+        "area": 3,
+        "route": "1-D-G-I-O-P",
+        "url": "29bc8yyl+",
+        "memo": "道中警戒陣"
+    },
+    {
         "title": "5-3_IKQ",
         "world": 5,
         "area": 3,

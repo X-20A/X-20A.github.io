@@ -6,17 +6,6 @@ import { Ttemplate } from "@/classes/types";
     e: 改行
 */
 const templates: Ttemplate[] = [
-    /*
-    {
-        "title": "",
-        "world": ,
-        "area": ,
-        "route": "",
-        "url": "",
-        "memo": ""
-    },
-    
-    */
     // @1
     {
         "title": "1-3_CFJ",
@@ -690,5 +679,16 @@ const templates: Ttemplate[] = [
         "memo": "陣形: 長門陸奥想定$e煙幕: L$e基地: 2部隊ボス集中"
     },
 ]; // @expansion
+/*
+{
+    "title": "",
+    "world": ,
+    "area": ,
+    "route": "",
+    "url": "",
+    "memo": ""
+},
+
+*/
 
 export default templates;
