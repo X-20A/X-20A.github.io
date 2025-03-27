@@ -69,6 +69,7 @@ export function convertBranchDataToHTML(data: string, topic: string): string {
     converted_data = converted_data.replaceAll('$bo', '<span style="font-weight:bold;">');
     converted_data = converted_data.replaceAll('$ob', '</span>');
     converted_data = converted_data.replaceAll('$da', '<span style="color:#4800ff;">第五艦隊</span>');
+    converted_data = converted_data.replaceAll('$re', '<span style="color:#e65100;">礼号作戦</span>');
     converted_data = converted_data.replaceAll(
         '$or',
         `<a

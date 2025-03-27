@@ -66,7 +66,8 @@ export const branch_info: BranchLastUpdate = {
  * $ro:リンク終わり
  * $sw:能動分岐切り替えスイッチ
  * $i:インデント
- * $da: $da
+ * $da: 第五艦隊
+ * $re: 礼号作戦
  */
 const branch_data: BranchType = {
     "1-1": {
@@ -614,7 +615,7 @@ const branch_data: BranchType = {
         "I": "高速艦隊 かつ 空母0はJ$eそれ以外はJ1",
         "J": "要求索敵値不明につき、全てK",
         "M": "M-U, M-U1 未開通はN$e低速艦隊はU1$eそれ以外はU",
-        "N": "大和+武蔵1以上はO$e甲乙: 礼号5以上はP$e丙: 礼号4以上はP$e丁: 礼号3以上はP$eそれ以外はO",
+        "N": "大和+武蔵1以上はO$e甲乙: $re5以上はP$e丙: $re4以上はP$e丁: $re3以上はP$eそれ以外はO",
         "P": "戦艦級3以上はP1$eそれ以外はP2",
         "P2": "大和+武蔵1以上はQ$e駆逐+海防3以下はQ$eNを経由した艦隊はR$e軽巡1以下はY$e駆逐+海防5はY$eそれ以外はR",
         "R": "索敵不足はS 無視$eNを経由した艦隊はT$eそれ以外はZ",

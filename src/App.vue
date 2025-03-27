@@ -50,7 +50,7 @@
 				</span>
 
 				<span class="tooltip-container">
-					<span style="color: #e57600;cursor: default;">礼号</span>
+					<span style="color: #e65100;cursor: default;">礼号</span>
 					<span>: {{ adoptFleet.reigo_count }}&nbsp;</span>
 					<span class="tooltip-text">
 						足柄 | 大淀 | 霞 | 清霜 | 朝霜 | 榧 | 杉
@@ -58,15 +58,15 @@
 				</span>
 
 				<span class="tooltip-container">
-					<img :src="NotSpanner" alt="寒冷地装備＆甲板要員を装備していない空母系+あきつ丸" style="height: 17px;vertical-align: -3px;">
-					<span>: {{ adoptFleet.countNotEquipArctic() }}&nbsp;</span>
-					<span class="tooltip-text">寒冷地装備＆甲板要員を装備していない(空母系+あきつ丸)</span>
-				</span>
-
-				<span class="tooltip-container">
 					<img :src="Bulge" alt="北方迷彩(＋北方装備)" style="height: 20px;vertical-align: -4px;">
 					<span>: {{ adoptFleet.arBulge_carrier_count }}&nbsp;</span>
 					<span class="tooltip-text">北方迷彩(＋北方装備)</span>
+				</span>
+
+				<span class="tooltip-container">
+					<img :src="NotSpanner" alt="寒冷地装備＆甲板要員を装備していない空母系+あきつ丸" style="height: 17px;vertical-align: -3px;">
+					<span>: {{ adoptFleet.countNotEquipArctic() }}&nbsp;</span>
+					<span class="tooltip-text">寒冷地装備＆甲板要員を装備していない(空母系+あきつ丸)</span>
 				</span>
 
 				<span class="tooltip-container">
@@ -309,11 +309,9 @@ import {
 } from './utils/convertUtil';
 import Bulge from '@/icons/items/bulge.png';
 import NotSpanner from '@/icons/items/not-spanner.png';
-// import Spanner from '@/icons/items/spanner.png';
 import Drum from '@/icons/items/drum.png';
 import Craft from '@/icons/items/craft.png';
 import Radar from '@/icons/items/radar.png';
-import Const from './classes/const';
 
 const store = useStore();
 const modalStore = useModalStore();
@@ -732,7 +730,6 @@ onMounted(async () => {
   margin-top: 40px;
 	padding-bottom: 8px;
   width:960px;
-	background-color: #fff;
 }
 .input-container {
 	text-align: center;
