@@ -658,9 +658,9 @@ const templates: Ttemplate[] = [
         "title": "60-3_KLM2VX_X削り",
         "world": 60,
         "area": 3,
-        "route": "25qpqeo4+",
-        "url": "25qpqeo4+",
-        "memo": "陣形: 長門陸奥想定$e煙幕: L$e基地: 2部隊ボス集中"
+        "route": "3-K-L-M-M2-S-S2-V-X",
+        "url": "23bdvmgv+",
+        "memo": "陣形: 長門陸奥想定$e基地: 2部隊ボス集中"
     },
     {
         "title": "60-3_KLM2VX_X破壊_破砕無",
