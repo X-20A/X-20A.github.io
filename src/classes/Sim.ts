@@ -151,9 +151,11 @@ export default class SimController {
         // const AR = composition.AR; // 工作艦
 
         const BBs = BB + BBV; // 戦艦級
+        const CVH = CV + CVB;
         const CVs = CV + CVL + CVB; // 空母系
         const BBCVs = BBs + CVs; // 戦艦級+空母系
         const CAs = CA + CAV; // 重巡級
+        const CLE = CL + CT;
         const Ds = DD + DE; // 駆逐艦 + 海防艦
         const Ss = SS + SSV; // 潜水艦 + 潜水空母
 
@@ -236,7 +238,7 @@ export default class SimController {
                             return 'D';
                         } else if (Ds === 6) {
                             return 'E';
-                        } else if (CL + CT === 1 && Ds === 5) {
+                        } else if (CLE === 1 && Ds === 5) {
                             return 'E';
                         } else if (CL === 1 && Ds > 3) {
                             return 'E';
@@ -285,7 +287,7 @@ export default class SimController {
                         }
                         break;
                     case 'F':
-                        if (CV + CVB > 0) {
+                        if (CVH > 0) {
                             return 'H';
                         } else if (SBB_count > 0) {
                             return 'H';
@@ -293,7 +295,7 @@ export default class SimController {
                             return 'J';
                         } else if (DD > 3) {
                             return 'J';
-                        } else if (CL + CT > 0 && Ds > 3) {
+                        } else if (CLE > 0 && Ds > 3) {
                             return 'J';
                         } else if (speed !== '低速艦隊') {
                             return [
@@ -312,7 +314,7 @@ export default class SimController {
                             return 'G';
                         } else if (AV + CAV > 0) {
                             return 'J';
-                        } else if (CL + CT > 0 && DD > 1) {
+                        } else if (CLE > 0 && DD > 1) {
                             return 'J';
                         } else if (DD > 1) {
                             return [
@@ -458,7 +460,7 @@ export default class SimController {
                         }
                         break;
                     case 'F':
-                        if (BB + CV + CVB + Ss > 0) {
+                        if (BB + CVH + Ss > 0) {
                             return 'I';
                         } else if (CVL > 1) {
                             return 'I';
@@ -866,20 +868,20 @@ export default class SimController {
                     case 'B':
                         if (DD === 6) {
                             return 'G';
-                        } else if (CL + CT === 1 && DD > 3 && (CAs === 1 || DD === 5 || DE === 1)) {
+                        } else if (CLE === 1 && DD > 3 && (CAs === 1 || DD === 5 || DE === 1)) {
                             // 条件式への変換が難しい。合ってると思うけど
                             return 'G';
                         } else if (Ds < 3) {
                             if (CVs > 2) {
                                 return 'C';
-                            } else if (BBs + CV + CVB > 2) {
+                            } else if (BBs + CVH > 2) {
                                 return 'C';
-                            } else if (BBs + CV + CVB === 2) {
+                            } else if (BBs + CVH === 2) {
                                 return [
                                     { node: 'C', rate: 0.8 },
                                     { node: 'G', rate: 0.2 },
                                 ];
-                            } else if (CV + CVB > 0) {
+                            } else if (CVH > 0) {
                                 return [
                                     { node: 'C', rate: 0.6 },
                                     { node: 'G', rate: 0.4 },
@@ -933,7 +935,7 @@ export default class SimController {
                         } // DDより例外なし
                         break;
                     case 'H':
-                        if (CL + CT > 0 && DD > 3 && (CAs === 1 || CL + CT === 2 || DD === 5)) {
+                        if (CLE > 0 && DD > 3 && (CAs === 1 || CLE === 2 || DD === 5)) {
                             // 条件式変換が難しい
                             return 'L';
                         } else {
@@ -966,9 +968,9 @@ export default class SimController {
                     case 'J':
                         if (BBCVs > 3) {
                             return 'L';
-                        } else if (BBCVs === 3 || CV + CVB === 2) {
+                        } else if (BBCVs === 3 || CVH === 2) {
                             return 'M';
-                        } else if (CV + CVB === 0) {
+                        } else if (CVH === 0) {
                             return 'L';
                         } else {
                             return [
@@ -1040,7 +1042,7 @@ export default class SimController {
                             return 'M';
                         } else if (CL > 0 && DD > 1) {
                             return 'P';
-                        } else if (BBs + CV + CVB < 3) {
+                        } else if (BBs + CVH < 3) {
                             return 'P';
                         } else {
                             return [
@@ -1115,7 +1117,7 @@ export default class SimController {
                             return 'I';
                         } else if (speed === '低速艦隊') {
                             return 'G';
-                        } else if (CV + CVB + CAs > 1) {
+                        } else if (CVH + CAs > 1) {
                             return 'G';
                         } else if (CL > 0 && DD > 2) {
                             return 'I';
@@ -1269,7 +1271,7 @@ export default class SimController {
                         }
                         break;
                     case 'C':
-                        if (DD < 4 || BBs + CV + CVB > 1) {
+                        if (DD < 4 || BBs + CVH > 1) {
                             return 'A';
                         } else if (Ss > 0) {
                             return [
@@ -1300,7 +1302,7 @@ export default class SimController {
                         }
                         break;
                     case 'G':
-                        if (Ss > 0 || CV + CVB > 0 || BBs + CVL === 2) {
+                        if (Ss > 0 || CVH > 0 || BBs + CVL === 2) {
                             return 'J';
                         } else if (speed === '低速艦隊' || radar === 0 || CL + DD + AO < 6) {
                             return 'H';
@@ -1332,7 +1334,7 @@ export default class SimController {
                     case null:
                         return '1';
                     case 'A':
-                        if (CV + CVB > 0 || BBs + CVL > 3) {
+                        if (CVH > 0 || BBs + CVL > 3) {
                             return 'C';
                         } else if (BBs + CVL === 1 && CL === 1 && DD === 4) {
                             return 'C';
@@ -1358,7 +1360,7 @@ export default class SimController {
                         }
                         break;
                     case 'C':
-                        if (Ds < 2 || CV + CVB > 1 || BBCVs > 2) {
+                        if (Ds < 2 || CVH > 1 || BBCVs > 2) {
                             return 'E';
                         } else if (BBCVs === 2) {
                             return 'G';
@@ -1467,7 +1469,7 @@ export default class SimController {
                         } // 航戦より例外なし
                         break;
                     case 'C':
-                        if (CV + CVB > 2 || CL + Ds === 0 || BBCVs > 4) {
+                        if (CVH > 2 || CL + Ds === 0 || BBCVs > 4) {
                             return 'B';
                         } else if (BBCVs === 2) {
                             return 'F';
@@ -1485,7 +1487,7 @@ export default class SimController {
                     case 'F':
                         if (BBCVs + CAs > 4) {
                             return 'G';
-                        } else if (BBs + CV + CVB < 3 && CL > 0 && Ds > 1) {
+                        } else if (BBs + CVH < 3 && CL > 0 && Ds > 1) {
                             if (isFaster) {
                                 return 'J';
                             } else {
@@ -1503,7 +1505,7 @@ export default class SimController {
                         }
                         break;
                     case 'H':
-                        if (DD < 3 || CL + DD < 4 || CV + CVB > 0 || BBs + CVL > 1) {
+                        if (DD < 3 || CL + DD < 4 || CVH > 0 || BBs + CVL > 1) {
                             return 'G';
                         } else if (CL + DD > 4) {
                             return 'L';
@@ -1661,7 +1663,7 @@ export default class SimController {
                             return 'H';
                         } else if (Ds === 3 || CL === 0) {
                             return 'G';
-                        } else if (CAs > 0 && CAs + CL + CT === 3) {
+                        } else if (CAs > 0 && CAs + CLE === 3) {
                             return 'H';
                         } else {
                             return [
@@ -1673,7 +1675,7 @@ export default class SimController {
                     case 'F':
                         if (BBCVs > 0 || Ds < 4) {
                             return 'D';
-                        } else if (CL + CT > 0 || CAs === 0) {
+                        } else if (CLE > 0 || CAs === 0) {
                             return 'H';
                         } else {
                             return 'D';
@@ -1717,7 +1719,7 @@ export default class SimController {
                                     { node: 'B', rate: 0.8 },
                                 ];
                             case 2:
-                                if (CV + CVB > 1) {
+                                if (CVH > 1) {
                                     return [
                                         { node: 'A', rate: 0.55 },
                                         { node: 'B', rate: 0.45 },
@@ -1910,7 +1912,7 @@ export default class SimController {
                     case null:
                         return '1';
                     case '1': // nullがヤな感じ 多分こういうことだろうという
-                        if (CV + CVB > 0) {
+                        if (CVH > 0) {
                             return 'C';
                         } else if (Ds > 3 && (speed !== '低速艦隊' || BBs + CVL === 0)) {
                             return 'D';
@@ -2006,7 +2008,7 @@ export default class SimController {
                     case 'K':
                         if (Ss > 0 || (CVs > 2 || CVs === 0) || Ds < 2) {
                             return 'L';
-                        } else if (CV + CVB === 1 && AV + CVL === 1) {
+                        } else if (CVH === 1 && AV + CVL === 1) {
                             return [
                                 { node: 'L', rate: 0.55 },
                                 { node: 'N', rate: 0.45 },
@@ -2071,7 +2073,7 @@ export default class SimController {
                         }
                         break;
                     case 'E':
-                        if (BBs + CV + CVB > 3) {
+                        if (BBs + CVH > 3) {
                             return 'G';
                         } else if (CAs + CL > 0 && Ds > 1) {
                             return 'I';
@@ -2117,7 +2119,7 @@ export default class SimController {
                     }
                     case 'I':
                         if (Ds > 1) {
-                            if (CV + CVB === 2 || CAs === 2 || (CV + CVB === 0 && CL > 0)) {
+                            if (CVH === 2 || CAs === 2 || (CVH === 0 && CL > 0)) {
                                 return 'K';
                             } else {
                                 return [
@@ -2198,7 +2200,7 @@ export default class SimController {
                     case 'K':
                         if (track.includes('E')) {
                             return 'M';
-                        } else if (BBs + CV + CVB > 3) {
+                        } else if (BBs + CVH > 3) {
                             return 'M';
                         } else if (BBCVs > 4) {
                             return 'M';
@@ -2237,7 +2239,7 @@ export default class SimController {
                             return 'N';
                         } else if (speed === '低速艦隊') {
                             return 'R';
-                        } else if (BBs + CV + CVB < 2) {
+                        } else if (BBs + CVH < 2) {
                             return 'N';
                         } else {
                             return 'R';
@@ -2316,7 +2318,7 @@ export default class SimController {
                         }
                         break;
                     case 'B':
-                        if (CV + CVB > 0 || CVL > 1) {
+                        if (CVH > 0 || CVL > 1) {
                             return 'E';
                         } else if (BBs < 3) {
                             return 'C';
@@ -2388,7 +2390,7 @@ export default class SimController {
                                     { node: 'J', rate: 0.7 },
                                 ];
                             }
-                        } else if (CV + CVB > 0) {
+                        } else if (CVH > 0) {
                             return [
                                 { node: 'I', rate: 0.7 },
                                 { node: 'J', rate: 0.3 },
@@ -2418,7 +2420,7 @@ export default class SimController {
                     case null:
                         return '1';
                     case '1':
-                        if (BBCVs > 4 || BBs > 3 || CV + CVB > 2 || Ss > 0) {
+                        if (BBCVs > 4 || BBs > 3 || CVH > 2 || Ss > 0) {
                             return [
                                 { node: 'A', rate: 0.5 },
                                 { node: 'B', rate: 0.5 },
@@ -2432,13 +2434,13 @@ export default class SimController {
                             return 'D';
                         } else if (fleet.isInclude('夕張') && CVL + CAs + DD + AO === 5) {
                             return 'D';
-                        } else if (fleet.isInclude('祥鳳') && CAs + CL + CT + DD + AO === 5) {
+                        } else if (fleet.isInclude('祥鳳') && CAs + CLE + DD + AO === 5) {
                             return 'D';
                         } else if (speed === '低速艦隊') {
                             return 'E';
                         } else if (fleet.isInclude('翔鶴') && fleet.isInclude('瑞鶴') && DD > 1) {
                             return 'D';
-                        } else if (BBs + CV + CVB > 0) {
+                        } else if (BBs + CVH > 0) {
                             return 'E';
                         } else if (CVL === 2 && DD > 1) {
                             return 'D';
@@ -2473,7 +2475,7 @@ export default class SimController {
                         if (seek[1] < 63) {
                             return 'H';
                         } else if (seek[1] < 70 && seek[1] >= 63) {
-                            if (BBs + CV + CVB > 4) {
+                            if (BBs + CVH > 4) {
                                 return [
                                     { node: 'H', rate: 0.5 },
                                     { node: 'I', rate: 0.5 },
@@ -2490,7 +2492,7 @@ export default class SimController {
                                     { node: 'O', rate: 0.5 },
                                 ];
                             }
-                        } else if (BBs + CV + CVB > 4) {
+                        } else if (BBs + CVH > 4) {
                             return 'I';
                         } else if (BBs > 2 || CVs > 2) {
                             return [
@@ -2593,7 +2595,7 @@ export default class SimController {
                         }
                         break;
                     case 'G':
-                        if (BBV + CV + CVB + Ss > 0) {
+                        if (BBV + CVH + Ss > 0) {
                             return 'J';
                         } else if (DD === 0 || CVL > 1) {
                             return 'I';
@@ -2632,7 +2634,7 @@ export default class SimController {
                                 { node: 'M', rate: 0.333 },
                                 { node: 'N', rate: 0.334 },
                             ];
-                        } else if (BBCVs > 3 || CV + CVB > 0 || CVL > 1) {
+                        } else if (BBCVs > 3 || CVH > 0 || CVL > 1) {
                             return 'M';
                         } else if (CVL === 1) {
                             if (SBB_count > 1) {
@@ -2734,7 +2736,7 @@ export default class SimController {
                     case 'G':
                         if (Ss > 0 || BBs > 3) {
                             return 'K';
-                        } else if (CV + CVB < 3) {
+                        } else if (CVH < 3) {
                             return 'L';
                         } else {
                             return [
@@ -2748,7 +2750,7 @@ export default class SimController {
                             return 'P';
                         } else if (seek[1] < 56) {
                             return 'N';
-                        } else if ((seek[1] < 60 && seek[1] >= 56) || BBs + CV + CVB > 4) {
+                        } else if ((seek[1] < 60 && seek[1] >= 56) || BBs + CVH > 4) {
                             return [
                                 { node: 'N', rate: 0.5 },
                                 { node: 'P', rate: 0.5 },
@@ -2795,7 +2797,7 @@ export default class SimController {
                             return 'B';
                         }
                     case 'B':
-                        if (CV + CVB > 2) {
+                        if (CVH > 2) {
                             return 'K';
                         } else if (BBs + CLT > 3) {
                             return 'K';
@@ -2853,7 +2855,7 @@ export default class SimController {
                             return 'O';
                         } else if (AO > 0) {
                             return 'O';
-                        } else if (CV + CVB > 0) {
+                        } else if (CVH > 0) {
                             return 'M';
                         } else if (BBs + CVL > 2) {
                             return 'M';
@@ -3267,7 +3269,7 @@ export default class SimController {
                         } // f_lengthより例外なし
                         break;
                     case 'B':
-                        if (BBs + CV + CVB > 0 || CVL > 1 || CAs > 2) {
+                        if (BBs + CVH > 0 || CVL > 1 || CAs > 2) {
                             return 'A';
                         } else if (DD + DE > 1) {
                             return 'C';
@@ -3344,21 +3346,21 @@ export default class SimController {
                         if (Ds < 2 || Ss > 0) {
                             return 'A';
                         } else if (f_length > 5) {
-                            if (CV + CVB > 1 || BBs + CV + CVB > 3 || CL + CT > 2) {
+                            if (CVH > 1 || BBs + CVH > 3 || CLE > 2) {
                                 return 'A';
                             } else {
                                 return 'B';
                             }
                         } else if (f_length === 5) {
-                            if (CV + CVB > 2) {
+                            if (CVH > 2) {
                                 return 'A';
-                            } else if (BBs + CV + CVB > 0 || CL + CT > 1 || DE < 3) {
+                            } else if (BBs + CVH > 0 || CLE > 1 || DE < 3) {
                                 return 'B';
                             } else {
                                 return 'C';
                             }
                         } else if (f_length < 5) {
-                            if (BBs + CV + CVB > 0 || Ds < 3) {
+                            if (BBs + CVH > 0 || Ds < 3) {
                                 return 'B';
                             } else {
                                 return 'C';
@@ -3369,7 +3371,7 @@ export default class SimController {
                         if (AO + Ss > 0) {
                             return 'D';
                         } else if (f_length > 5) {
-                            if (BBs + CV + CVB > 0) {
+                            if (BBs + CVH > 0) {
                                 return 'D';
                             } else if (Ds > 3) {
                                 return 'E';
@@ -3377,7 +3379,7 @@ export default class SimController {
                                 return 'D';
                             }
                         } else if (f_length === 5) {
-                            if (BBs + CV + CVB > 1) {
+                            if (BBs + CVH > 1) {
                                 return 'D';
                             } else if (Ds > 3 || DE > 2) {
                                 return 'E';
@@ -3385,7 +3387,7 @@ export default class SimController {
                                 return 'D';
                             }
                         } else if (f_length < 5) {
-                            if (BBs + CV + CVB > 1) {
+                            if (BBs + CVH > 1) {
                                 return 'D';
                             } else if (Ds > 2 || DE > 1) {
                                 return 'E';
@@ -3682,7 +3684,7 @@ export default class SimController {
                             }
                             break;
                         case 'M':
-                            if (CV + CVB > 0 || BBCVs > 1 || Ss > 3) {
+                            if (CVH > 0 || BBCVs > 1 || Ss > 3) {
                                 return 'N';
                             } else if (SBB_count > 0 || AO > 0 || AV > 1) {
                                 return 'O';
@@ -3698,7 +3700,7 @@ export default class SimController {
                     case null:
                         return '1';
                     case '1':
-                        if (BB + CV + CVB + Ss > 0 || CAs > 1 || CL + CT + CLT > 1) {
+                        if (BB + CVH + Ss > 0 || CAs > 1 || CLE + CLT > 1) {
                             return 'C';
                         } else if (fleet.isInclude('あきつ丸') && DE >= 2 && (DD > 0 || DE > 3)) {
                             return 'A';
@@ -3711,7 +3713,7 @@ export default class SimController {
                         }
                         break;
                     case 'C':
-                        if (BB + CV + CVB + Ss > 0 || CVL + fleet.countShip('あきつ丸') > 2) {
+                        if (BB + CVH + Ss > 0 || CVL + fleet.countShip('あきつ丸') > 2) {
                             return 'D';
                         } else if (Ds > 3 || (CT > 0 && Ds > 2) || DE > 2 || (isFaster && DD > 1)) {
                             return 'E';
@@ -3767,7 +3769,7 @@ export default class SimController {
                         return 'M';
                     case 'M': { // 🤮
                         const flag =
-                            (SBB_count > 0 && CV + CVB > 0)
+                            (SBB_count > 0 && CVH > 0)
                             || (BBs - SBB_count > 1)
                             || (BBV > 1)
                             || (CVL + fleet.countShip('あきつ丸') > 1)
@@ -3796,11 +3798,11 @@ export default class SimController {
                     case 'B':
                         if (isFaster) {
                             return 'D';
-                        } else if (CV + CVB > 1 || SBB_count > 1 || Ss > 0 || CL === 0 || Ds < 2) {
+                        } else if (CVH > 1 || SBB_count > 1 || Ss > 0 || CL === 0 || Ds < 2) {
                             return 'C';
                         } else if (Ds > 2) {
                             return 'D';
-                        } else if (CV + CVB > 0 || CVL > 1 || BBs > 2 || CAs > 2) {
+                        } else if (CVH > 0 || CVL > 1 || BBs > 2 || CAs > 2) {
                             return 'C';
                         } else {
                             return 'D';
@@ -3809,11 +3811,11 @@ export default class SimController {
                     case 'D':
                         if (speed === '最速艦隊') {
                             return 'F';
-                        } else if (CV + CVB > 1) {
+                        } else if (CVH > 1) {
                             return 'E';
                         } else if (CVL > 2) {
                             return 'E';
-                        } else if (BBs + CV + CVB + CAs > 2) {
+                        } else if (BBs + CVH + CAs > 2) {
                             return 'E';
                         } else if (CL + DD === 0) {
                             return 'E';
@@ -3860,7 +3862,7 @@ export default class SimController {
                     case 'J':
                         if ((CVL === 1 && CAs === 2 && CL === 1 && Ds === 2) || isFaster) {
                             return 'O';
-                        } else if (CV + CVB > 0 || CVL > 2 || SBB_count > 1 || BBs + CAs > 2 || Ds < 2) {
+                        } else if (CVH > 0 || CVL > 2 || SBB_count > 1 || BBs + CAs > 2 || Ds < 2) {
                             return 'N';
                         } else if (Ds > 2 || speed !== '低速艦隊') {
                             return 'O';
@@ -3943,7 +3945,7 @@ export default class SimController {
                         }
                         break;
                     case 'A':
-                        if (CV + CVB > 0) {
+                        if (CVH > 0) {
                             return 'A1';
                         } else if (CL === 0) {
                             return 'A1';
@@ -3984,7 +3986,7 @@ export default class SimController {
                             && speed !== '低速艦隊'
                         ) {
                             return 'L';
-                        } else if (Number(option.phase) >= 5 && CV + CVB < 3) {
+                        } else if (Number(option.phase) >= 5 && CVH < 3) {
                             return 'D';
                         } else {
                             return 'C3';
@@ -3993,7 +3995,7 @@ export default class SimController {
                     case 'D':
                         if (speed !== '低速艦隊') {
                             return 'F';
-                        } else if (BBs + CV + CVB > 5) {
+                        } else if (BBs + CVH > 5) {
                             return 'E';
                         } else if (DD > 3) {
                             return 'F';
@@ -4035,8 +4037,8 @@ export default class SimController {
                                 && isFaster) {
                                 return 'V';
                             } else if (yamato < 2
-                                && BBs + CV + CVB < 5
-                                && CV + CVB < 3
+                                && BBs + CVH < 5
+                                && CVH < 3
                                 && CL + DD > 4
                                 && speed !== '低速艦隊'
                             ) {
@@ -4144,7 +4146,7 @@ export default class SimController {
                             return '2';
                         } else if (AS > 1) {
                             return '2';
-                        } else if (option.phase === '3' && CA > 1 && Ds > 1 && CL + CT > 0) {
+                        } else if (option.phase === '3' && CA > 1 && Ds > 1 && CLE > 0) {
                             return '3';
                         } else if (fleet.countAktmrPlusCVs() > 0 && Ds > 2) {
                             return '2';
@@ -4224,7 +4226,7 @@ export default class SimController {
                             return 'R2';
                         } else if (speed === '低速艦隊') {
                             return 'R';
-                        } else if (BBs > 0 && CV + CVB > 1 && CL === 0) {
+                        } else if (BBs > 0 && CVH > 1 && CL === 0) {
                             return 'R';
                         } else if (DD > 2) {
                             return 'R2';
@@ -4232,9 +4234,9 @@ export default class SimController {
                             return 'R';
                         } else if (CL === 0) {
                             return 'R';
-                        } else if (CV + CVB > 2) {
+                        } else if (CVH > 2) {
                             return 'R2';
-                        } else if (CV + CVB < 2) {
+                        } else if (CVH < 2) {
                             return 'R2';
                         } else if (BBs === 0) {
                             return 'R2';
@@ -4301,7 +4303,7 @@ export default class SimController {
                         if (track.includes('1')) {
                             if (speed === '低速艦隊') {
                                 return 'F';
-                            } else if (CV + CVB > 0) {
+                            } else if (CVH > 0) {
                                 return 'F';
                             } else {
                                 return 'D';
@@ -4322,7 +4324,7 @@ export default class SimController {
                         }
                         break;
                     case 'E':
-                        if (CV + CVB > 0) {
+                        if (CVH > 0) {
                             return 'F';
                         } else if (speed === '高速艦隊') {
                             return 'G';
@@ -4381,7 +4383,7 @@ export default class SimController {
                         }
                         break;
                     case 'N':
-                        if (CV + CVB > 0) {
+                        if (CVH > 0) {
                             return 'O';
                         } else if (CVL > 2) {
                             return 'O';
@@ -4503,7 +4505,7 @@ export default class SimController {
                             return 'E';
                         } else if (BBs > 3) {
                             return 'E';
-                        } else if (CV + CVB > 2) {
+                        } else if (CVH > 2) {
                             return 'E';
                         } else {
                             return 'F';
@@ -4588,7 +4590,7 @@ export default class SimController {
                         }
                         break;
                     case 'Y':
-                        if (CAs + CL + CT + CLT + AV + LHA > 2) {
+                        if (CAs + CLE + CLT + AV + LHA > 2) {
                             return 'Y1';
                         } else if (CAs + AV === 2) {
                             return 'Y1';
@@ -4596,7 +4598,7 @@ export default class SimController {
                             return 'Y2';
                         } else if (Ss > 4) {
                             return 'Y2';
-                        } else if (CAs + CL + CT + CLT + AV + LHA === 2) {
+                        } else if (CAs + CLE + CLT + AV + LHA === 2) {
                             return 'Y1';
                         } else if (Ss < 4) {
                             return 'Y1';
@@ -4626,7 +4628,7 @@ export default class SimController {
                             } else if (f_type === '水上打撃部隊') {
                                 if (BBV + CAV === 2 && CL === 1 && BBV + CL + Ds + AO + AS + LHA === 12) {
                                     return '2';
-                                } else if (((BBV + CAV === 1) || (BBV + CAV === 2)) && CL + CT === 2 && BBV + CAV + CL + CT + Ds + AO + AS + LHA === 12) {
+                                } else if (((BBV + CAV === 1) || (BBV + CAV === 2)) && CLE === 2 && BBV + CAV + CLE + Ds + AO + AS + LHA === 12) {
                                     return '2';
                                 } else if (Number(option.phase) < 3) {
                                     return '1';
@@ -4641,7 +4643,7 @@ export default class SimController {
                     case '1':
                         if (Number(option.phase) < 2 && Ss > 0) {
                             return 'A1';
-                        } else if (CV + CVB > 3) {
+                        } else if (CVH > 3) {
                             return 'A';
                         } else if (yamato > 1 && speed === '低速艦隊') {
                             return 'A';
@@ -4673,7 +4675,7 @@ export default class SimController {
                     case 'A':
                         if (!isUnion) {
                             return 'A1';
-                        } else if (CV + CVB > 3) {
+                        } else if (CVH > 3) {
                             return 'A1';
                         } else if (Ds > 3) {
                             return 'B';
@@ -4704,13 +4706,13 @@ export default class SimController {
                     case 'D':
                         if (BB > 0) {
                             return 'D2';
-                        } else if (CL + CT > 2) {
+                        } else if (CLE > 2) {
                             return 'D1';
                         } else if (CVL > 0 && Ds > 3) {
                             return 'D1';
-                        } else if (CVL === 0 && BBV === 0 && CL + CT > 1 && speed === '低速艦隊') {
+                        } else if (CVL === 0 && BBV === 0 && CLE > 1 && speed === '低速艦隊') {
                             return 'D1';
-                        } else if (CVL === 0 && CL + CT === 2 && Ds > 3) {
+                        } else if (CVL === 0 && CLE === 2 && Ds > 3) {
                             return 'D1';
                         } else {
                             return 'D2';
@@ -4790,7 +4792,7 @@ export default class SimController {
                             return 'R';
                         } else if (AS === 0) {
                             return 'Q';
-                        } else if (CAs + CL + CT + CLT > 0) {
+                        } else if (CAs + CLE + CLT > 0) {
                             return 'Q';
                         } else if (AV > 1) {
                             return 'Q';
@@ -4829,9 +4831,9 @@ export default class SimController {
                         }
                         break;
                     case 'U':
-                        if (BBs < 4 && CV + CVB === 0 && CVL < 2 && CL > 1 && Ds > 3) {
+                        if (BBs < 4 && CVH === 0 && CVL < 2 && CL > 1 && Ds > 3) {
                             return 'V';
-                        } else if (yamato < 2 && CV + CVB < 2 && DD > 3 && speed !== '低速艦隊') {
+                        } else if (yamato < 2 && CVH < 2 && DD > 3 && speed !== '低速艦隊') {
                             return 'V';
                         } else if (yamato < 2 && CL > 1 && speed !== '低速艦隊') {
                             return 'V';
@@ -4867,7 +4869,7 @@ export default class SimController {
                     case null:
                         if (option.phase === '1') {
                             return '1';
-                        } else if (CV + CVB > 0) {
+                        } else if (CVH > 0) {
                             return '1';
                         } else if (BBs + CVL > 3) {
                             return '1';
@@ -4900,7 +4902,7 @@ export default class SimController {
                             return 'J';
                         } else if (BBs > 1) {
                             return 'I';
-                        } else if (CL + CT === 0) {
+                        } else if (CLE === 0) {
                             return 'I';
                         } else {
                             return 'J';
@@ -4922,15 +4924,15 @@ export default class SimController {
                         } else if (Ds > 1) {
                             if (Ss > 0 && speed === '低速艦隊') {
                                 return 'C1';
-                            } else if (CVs > 2 && CL + CT === 0) {
+                            } else if (CVs > 2 && CLE === 0) {
                                 return 'B';
                             } else if (BBCVs === 4) {
                                 return 'B';
                             } else if (BBCVs === 3) {
                                 return 'D';
-                            } else if (BBCVs === 2 && CL + CT + AV === 0) {
+                            } else if (BBCVs === 2 && CLE + AV === 0) {
                                 return 'D';
-                            } else if (BBCVs < 2 && CL + CT === 0) {
+                            } else if (BBCVs < 2 && CLE === 0) {
                                 return 'D';
                             } else {
                                 return 'B';
@@ -4938,7 +4940,7 @@ export default class SimController {
                         }
                         break;
                     case 'C1':
-                        if (BBs + CV + CVB + Ss > 1) {
+                        if (BBs + CVH + Ss > 1) {
                             return 'D';
                         } else if (CVs > 2) {
                             return 'D';
@@ -4951,7 +4953,7 @@ export default class SimController {
                         }
                         break;
                     case 'C2':
-                        if (BBs < 2 && CV + CVB === 0 && CVL < 2 && Ds > 1 && speed !== '低速艦隊') {
+                        if (BBs < 2 && CVH === 0 && CVL < 2 && Ds > 1 && speed !== '低速艦隊') {
                             return 'L';
                         } else {
                             return 'C1';
@@ -5026,7 +5028,7 @@ export default class SimController {
                             return 'H';
                         } else if (BBs > 3) {
                             return 'H';
-                        } else if (CV + CVB > 2) {
+                        } else if (CVH > 2) {
                             return 'H';
                         } else if (Ds < 3) {
                             return 'H';
@@ -5045,11 +5047,11 @@ export default class SimController {
                                 return 'I';
                             } else if (AV > 1) {
                                 return 'I';
-                            } else if (BBs === 3 && CVs === 1 && CL + CT === 2) {
+                            } else if (BBs === 3 && CVs === 1 && CLE === 2) {
                                 return 'I';
                             } else if (speed !== '低速艦隊') {
                                 return 'K';
-                            } else if (CV + CVB < 2 && CL + CT > 1) {
+                            } else if (CVH < 2 && CLE > 1) {
                                 return 'K';
                             } else {
                                 return 'H';
@@ -5059,11 +5061,11 @@ export default class SimController {
                         }
                         break;
                     case 'I':
-                        if (CV + CVB > 1) {
+                        if (CVH > 1) {
                             return 'J';
                         } else if (Ds < 4) {
                             return 'J';
-                        } else if (CL + CT < 2 && speed === '低速艦隊') {
+                        } else if (CLE < 2 && speed === '低速艦隊') {
                             return 'J';
                         } else if (Ds + LHA < 6 && speed === '低速艦隊') {
                             return 'J';
@@ -5135,7 +5137,7 @@ export default class SimController {
                         }
                         break;
                     case '2':
-                        if (CV + CVB < 3 && Ds > 2) {
+                        if (CVH < 3 && Ds > 2) {
                             return 'H';
                         } else {
                             return 'G';
@@ -5144,7 +5146,7 @@ export default class SimController {
                     case 'B':
                         if (CVs > 3) {
                             return 'B2';
-                        } else if (CV + CVB > 2) {
+                        } else if (CVH > 2) {
                             return 'B2';
                         } else if (AV > 1) {
                             return 'B2';
@@ -5166,7 +5168,7 @@ export default class SimController {
                         } else if (f_type === '空母機動部隊') {
                             if (fleet.countAktmrPlusCVs() > 3) {
                                 return 'N';
-                            } else if (CV + CVB > 1) {
+                            } else if (CVH > 1) {
                                 return 'N';
                             } else if (Ds < 2 && BBs > 3) {
                                 return 'N';
@@ -5180,7 +5182,7 @@ export default class SimController {
                     case 'C3':
                         if (seek[3] < 103) {
                             return 'E';
-                        } else if (BBs + CV + CVB > 3) {
+                        } else if (BBs + CVH > 3) {
                             return 'D';
                         } else if (Ds < 2) {
                             return 'D';
@@ -5191,7 +5193,7 @@ export default class SimController {
                     case 'H':
                         if (Ds > 3 && speed !== '低速艦隊') {
                             return 'H2';
-                        } else if (CV + CVB > 1) {
+                        } else if (CVH > 1) {
                             return 'B2';
                         } else {
                             return 'H1';
@@ -5223,7 +5225,7 @@ export default class SimController {
                         } else if (track.includes('3')) {
                             if (yamato > 1) {
                                 return 'T';
-                            } else if (CV + CVB > 2) {
+                            } else if (CVH > 2) {
                                 return 'T';
                             } else if (Ss > 0 && AS === 0) {
                                 return 'T';
@@ -5252,9 +5254,9 @@ export default class SimController {
                             return 'V1';
                         } else if (BBCVs > 5) {
                             return 'V2';
-                        } else if (BBs + CV + CVB > 4) {
+                        } else if (BBs + CVH > 4) {
                             return 'V2';
-                        } else if (CV + CVB > 2) {
+                        } else if (CVH > 2) {
                             return 'V2';
                         } else if (Ss > 0 && AS === 0) {
                             return 'V2';
@@ -5315,7 +5317,7 @@ export default class SimController {
                                 return 'A1';
                             } else if (BBs > 0) {
                                 return 'A1';
-                            } else if (CL + CT > 0 && Ds > 1) {
+                            } else if (CLE > 0 && Ds > 1) {
                                 return 'A';
                             } else if (f_length < 5) {
                                 return 'A';
@@ -5325,9 +5327,9 @@ export default class SimController {
                         }
                         break;
                     case 'C':
-                        if (BBs + CV + CVB > 2) {
+                        if (BBs + CVH > 2) {
                             return 'I';
-                        } else if (CV + CVB > 1) {
+                        } else if (CVH > 1) {
                             return 'I';
                         } else if (CVs > 2) {
                             return 'I';
@@ -5356,9 +5358,9 @@ export default class SimController {
                         }
                         break;
                     case 'I':
-                        if (CV + CVB > 1) {
+                        if (CVH > 1) {
                             return 'J';
-                        } else if (CL + CT === 0 && Ds < 3) {
+                        } else if (CLE === 0 && Ds < 3) {
                             return 'J';
                         } else if (true) {
                             return 'L';
@@ -5374,15 +5376,15 @@ export default class SimController {
                         }
                         break;
                     case 'M':
-                        if (CV + CVB > 0) {
+                        if (CVH > 0) {
                             return 'N';
                         } else if (CVL > 1) {
                             return 'N';
                         } else if (Ds > 3) {
                             return 'O';
-                        } else if (CL + CT > 0 && Ds === 3) {
+                        } else if (CLE > 0 && Ds === 3) {
                             return 'O';
-                        } else if (CL + CT > 0 && speed !== '低速艦隊') {
+                        } else if (CLE > 0 && speed !== '低速艦隊') {
                             return 'O';
                         } else {
                             return 'N';
@@ -5404,13 +5406,13 @@ export default class SimController {
                             return 'T1';
                         } else if (CVs > 3) {
                             return 'T1';
-                        } else if (CV + CVB > 2) {
+                        } else if (CVH > 2) {
                             return 'T1';
-                        } else if (CL + CT + Ds < 4) {
+                        } else if (CLE + Ds < 4) {
                             return 'T1';
                         } else if (speed !== '低速艦隊') {
                             return 'T2';
-                        } else if (BBs < 3 && CL + CT > 1 && Ds > 3) {
+                        } else if (BBs < 3 && CLE > 1 && Ds > 3) {
                             return 'T2';
                         } else {
                             return 'T1';
@@ -5468,9 +5470,9 @@ export default class SimController {
                         } else if (option.phase === '1' && isUnion) {
                             return '2';
                         } else if (Number(option.phase) > 1) {
-                            if (BBs + CV + CVB > 2) {
+                            if (BBs + CVH > 2) {
                                 return '3';
-                            } else if (CV + CVB > 1) {
+                            } else if (CVH > 1) {
                                 return '3';
                             } else {
                                 return '2';
@@ -5484,7 +5486,7 @@ export default class SimController {
                             return 'A1';
                         } else if (isFaster) {
                             return 'A';
-                        } else if (BBs + CV + CVB > 0) {
+                        } else if (BBs + CVH > 0) {
                             return 'A1';
                         } else if (speed !== '低速艦隊') {
                             return 'A';
@@ -5497,7 +5499,7 @@ export default class SimController {
                             return 'E';
                         } else if (Ss > 0 && AS === 0) {
                             return 'D';
-                        } else if (BBs + CV + CVB > 1) {
+                        } else if (BBs + CVH > 1) {
                             return 'D';
                         } else if (Ds < 4) {
                             return 'D';
@@ -5528,7 +5530,7 @@ export default class SimController {
                             return 'G';
                         } else if (Ds > 5) {
                             return 'G';
-                        } else if (Ds > 4 && CA > 1 && CV + CVB === 0 && CVL < 2 && speed !== '低速艦隊') {
+                        } else if (Ds > 4 && CA > 1 && CVH === 0 && CVL < 2 && speed !== '低速艦隊') {
                             return 'G';
                         } else {
                             return 'F';
@@ -5557,7 +5559,7 @@ export default class SimController {
                             return 'O1';
                         } else if (CVs > 3) {
                             return 'O1';
-                        } else if (CV + CVB > 2) {
+                        } else if (CVH > 2) {
                             return 'O1';
                         } else if (Ds < 4) {
                             return 'O1';
@@ -5594,7 +5596,7 @@ export default class SimController {
                     case 'S':
                         if (yamato > 1) {
                             return 'S2';
-                        } else if (CV + CVB > 0) {
+                        } else if (CVH > 0) {
                             return 'S2';
                         } else if (Ds < 3) {
                             return 'S2';
@@ -5605,7 +5607,7 @@ export default class SimController {
                                 return 'S1';
                             }
                         } else if (speed === '低速艦隊') {
-                            if (CL + CT > 2) {
+                            if (CLE > 2) {
                                 return 'S1';
                             } else {
                                 return 'S2';
@@ -5650,7 +5652,7 @@ export default class SimController {
                                 return 'Z1';
                             } else if (yamato === 0) {
                                 return 'ZZ';
-                            } else if (yamato === 1 && BBs < 3 && CAs > 1 && CL + CT > 1 && Ds > 3) {
+                            } else if (yamato === 1 && BBs < 3 && CAs > 1 && CLE > 1 && Ds > 3) {
                                 return 'ZZ';
                             } else {
                                 return 'Z1';
@@ -5698,7 +5700,7 @@ export default class SimController {
                             return '2';
                         } else if (BBV > 2) {
                             return '2';
-                        } else if (CV + CVB > 0) {
+                        } else if (CVH > 0) {
                             return '1';
                         } else if (CVL > 1) {
                             return '2';
@@ -5709,16 +5711,16 @@ export default class SimController {
                     case '2':
                         if (isFaster) {
                             return 'F';
-                        } else if (CL + CT > 0 && Ds > 2 && BBCVs < 3) {
+                        } else if (CLE > 0 && Ds > 2 && BBCVs < 3) {
                             return 'F';
                         } else {
                             return 'B1';
                         }
                         break;
                     case 'B':
-                        if (CL + CT > 0 && Ds > 1 && speed !== '低速艦隊') {
+                        if (CLE > 0 && Ds > 1 && speed !== '低速艦隊') {
                             return 'B2';
-                        } else if (CL + CT > 0 && Ds > 1 && BBCVs === 0) {
+                        } else if (CLE > 0 && Ds > 1 && BBCVs === 0) {
                             return 'B2';
                         } else {
                             return 'B1';
@@ -5860,7 +5862,7 @@ export default class SimController {
                             return 'A2';
                         } else if (BBs > 1) {
                             return 'A1';
-                        } else if (CV + CVB > 0) {
+                        } else if (CVH > 0) {
                             return 'A1';
                         } else if ( Ds < 2 && speed !== '低速艦隊') {
                             return 'A1';
@@ -5882,7 +5884,7 @@ export default class SimController {
                     case 'F':
                         if (track.includes('D')) {
                             return 'F2';
-                        } else if (CV + CVB > 0) {
+                        } else if (CVH > 0) {
                             return 'F2';
                         } else {
                             return 'R';
@@ -5913,9 +5915,9 @@ export default class SimController {
                             return 'D';
                         } else if (BB > 1 && speed === '低速艦隊') {
                             return 'D';
-                        } else if (CV + CVB > 0 && speed === '低速艦隊') {
+                        } else if (CVH > 0 && speed === '低速艦隊') {
                             return 'D';
-                        } else if (fleet.countShip('大泊') + CA > 1 && CL + CT > 1 && Ds > 2) {
+                        } else if (fleet.countShip('大泊') + CA > 1 && CLE > 1 && Ds > 2) {
                             return 'N';
                         } else {
                             return 'D';
@@ -5924,7 +5926,7 @@ export default class SimController {
                     case 'P':
                         if (f_type === '輸送護衛部隊') {
                             return 'R';
-                        } else if (BB + CV + CVB === 0 && BBV + CVL < 2 && speed !== '低速艦隊') {
+                        } else if (BB + CVH === 0 && BBV + CVL < 2 && speed !== '低速艦隊') {
                             return 'R';
                         } else {
                             return 'F';
@@ -5933,28 +5935,26 @@ export default class SimController {
                     case 'Q':
                         if (Number(option.phase) < 3) {
                             return 'S';
-                        } else if (fleet.countShip('大泊') > 0 && BBs === 0) {
-                            return 'V';
-                        } else if (fleet.countShip('大泊') > 0 && CV + CVB === 0) {
+                        } else if (BBs > 0 && CVH > 0) {
+                            return 'S';
+                        } else if (CVs > 1) {
+                            return 'S';
+                        } else if (fleet.countShip('大泊') > 0) {
                             return 'V';
                         } else if (daigo > 7) {
                             return 'V';
                         } else if (Ds < 6) {
                             return 'S';
-                        } else if (CL + CT > 2) {
+                        } else if (CLE > 2) {
                             return 'V';
                         } else if (speed === '低速艦隊') {
-                            return 'S';
-                        } else if (BBs > 0 && CV + CVB > 0) {
-                            return 'S';
-                        } else if (CVs > 1) {
                             return 'S';
                         } else {
                             return 'V';
                         }
                         break;
                     case 'V1':
-                        if (seek[1] >= 64) {
+                        if (seek[1] >= 68) {
                             return 'W';
                         } else {
                             return 'V2';
@@ -5999,7 +5999,9 @@ export default class SimController {
                         }
                         break;
                     case 'B':
-                        if (CVs > 0) {
+                        if (fleet.countShip('大泊') > 0) {
+                            return 'B2';
+                        } else if (CVs > 0) {
                             return 'B1';
                         } else if (BBs > 0 && speed === '低速艦隊') {
                             return 'B1';
@@ -6047,15 +6049,15 @@ export default class SimController {
                             return 'E1';
                         } else if (option.phase === '1') {
                             return 'E2';
-                        } else if (Ds < 3) {
-                            return 'E2';
-                        } else if (CV + CVB > 0) {
+                        } else if (CVH > 0) {
                             return 'E2';
                         } else if (BBs > 1 && speed === '低速艦隊') {
                             return 'B';
                         } else if (CL === 0) {
                             return 'E2';
-                        }else if (isFaster) {
+                        } else if (Ds < 3) {
+                            return 'E2';
+                        } else if (isFaster) {
                             return 'F';
                         } else if (option.difficulty === '4' && daigo > 4 && f_length - arBulge < 5) {
                             return 'F';
@@ -6071,6 +6073,8 @@ export default class SimController {
                         if (seek[3] < 80) {
                             return 'F2';
                         } else if (isFaster) {
+                            return 'G';
+                        } else if (fleet.countShip('大泊') > 0) {
                             return 'G';
                         } else if (BBs > 1) {
                             return 'F3';
@@ -6113,7 +6117,7 @@ export default class SimController {
                         break;
                     case 'K':
                         if (track.includes('2')) {
-                            if (seek[3] >= 74) {
+                            if (seek[3] >= 75) {
                                 return 'K2';
                             } else {
                                 return 'K1';
@@ -6138,7 +6142,7 @@ export default class SimController {
                             return 'P';
                         } else if (BBs > 3) {
                             return 'Q';
-                        } else if (CV + CVB > 2) {
+                        } else if (CVH > 2) {
                             return 'Q';
                         } else if (LHA > 0) {
                             return 'Q';
@@ -6153,7 +6157,7 @@ export default class SimController {
                             return 'O1';
                         } else if (BBs > 2) {
                             return 'Q';
-                        } else if (CV + CVB > 2) {
+                        } else if (CVH > 2) {
                             return 'Q';
                         } else {
                             return 'O1';
@@ -6164,9 +6168,9 @@ export default class SimController {
                            return 'O2';
                        } else if (BBs > 3) {
                            return 'S';
-                       } else if (CV + CVB > 2) {
+                       } else if (CVH > 2) {
                            return 'S';
-                       } else if (CV + CVB > 3 && speed !== '低速艦隊') {
+                       } else if (CVH > 3 && speed !== '低速艦隊') {
                            return 'S';
                        } else {
                            return 'O2';
@@ -6232,9 +6236,13 @@ export default class SimController {
                     case 'B':
                         if (Number(option.phase) < 3) {
                             return 'C';
+                        } else if (Ss > 0 && AS === 0) {
+                            return 'S';
+                        } else if (Ss > 0 && ['高速艦隊', '低速艦隊'].includes(speed)) {
+                            return 'S';
                         } else if (isFaster) {
                             return 'C';
-                        } else if (Ds > 2) {
+                        } else if (Ds > 2 && CVH < 3) {
                             return 'T';
                         } else {
                             return 'S';
@@ -6253,7 +6261,7 @@ export default class SimController {
                         if (!isUnion) {
                             if (speed === '低速艦隊') {
                                 return 'E';
-                            } else if (BBs + CV + CVB > 2) {
+                            } else if (BBs + CVH > 2) {
                                 return 'E';
                             } else if (Ds < 2) {
                                 return 'E';
@@ -6265,21 +6273,21 @@ export default class SimController {
                         }
                         break;
                     case 'G1':
-                        if (Number(option.phase) > 1 && CL > 0 && Ds > 1 && BBs + CV + CVB < 3 && speed !== '低速艦隊') {
+                        if (Number(option.phase) > 1 && CL > 0 && Ds > 1 && BBs + CVH < 3 && speed !== '低速艦隊') {
                             return 'I';
                         } else {
                             return 'G2';
                         }
                         break;
                     case 'I':
-                        if (Ds > 1 && CV + CVB < 2 && yamato === 0) {
+                        if (Ds > 1 && CVH < 2 && yamato === 0 && speed !== '低速艦隊') {
                             return 'L';
                         } else {
                             return 'J';
                         }
                         break;
                     case 'M':
-                        if (CL > 0 && Ds > 1 && yamato === 0) {
+                        if (CL > 0 && Ds > 1 && yamato === 0 && speed !== '低速艦隊') {
                             return 'O';
                         } else {
                             return 'N';
@@ -6291,7 +6299,9 @@ export default class SimController {
                         }
                         break;
                     case 'T':
-                        if (true) {
+                        if (Ds > 5 && CVH === 0) {
+                            return 'U';
+                        } else {
                             return 'C';
                         }
                         break;
@@ -6339,7 +6349,7 @@ export default class SimController {
                             return 'A';
                         } else if (AO + LHA > 1) {
                             return 'A';
-                        } else if (CV + CVB === 0 && BBs + CVL > 2 && speed === '低速艦隊') {
+                        } else if (CVH === 0 && BBs + CVL > 2 && speed === '低速艦隊') {
                             return 'A';
                         } else {
                             return 'C';
@@ -6353,6 +6363,12 @@ export default class SimController {
                     case 'E':
                         if (BBCVs > 3) {
                             return 'E1';
+                        } else if (BBs + CVH > 2 && speed === '低速艦隊') {
+                            return 'E1';
+                        } else if (Ds < 2) {
+                            return 'E1';
+                        } else if (Ss > 0) {
+                            return 'E1';
                         } else {
                             return 'E2';
                         }
@@ -6363,7 +6379,7 @@ export default class SimController {
                         }
                         break;
                     case 'I':
-                        if (speed !== '低速艦隊' && CV + CVB === 0) {
+                        if (Ss === 0 && Ds > 2 && speed !== '低速艦隊') {
                             return 'J';
                         } else {
                             return 'J1';
@@ -6377,6 +6393,10 @@ export default class SimController {
                     case 'M':
                         if (Number(option.phase) < 3) {
                             return 'N';
+                        } else if (AV + AS + AO + LHA === 0 && Ds > 5) {
+                            return 'N';
+                        } else if (CVH > 0) {
+                            return 'U1';
                         } else if (speed === '低速艦隊') {
                             return 'U1';
                         } else {
@@ -6384,9 +6404,19 @@ export default class SimController {
                         }
                         break;
                     case 'N':
-                        if (yamato > 0) {
+                        if (option.phase === '3' && Ds < 6) {
+                            return 'U2';
+                        } else if (yamato > 0) {
                             return 'O';
-                        } else if (Number(option.difficulty) > 2 && reigo > 4) {
+                        } else if (Ss > 0 && AS === 0) {
+                            return 'O';
+                        } else if (CVH > 0) {
+                            return 'O';
+                        } else if (Ds < 4) {
+                            return 'O';
+                        } else if (option.difficulty === '4' && reigo > 4 && Ds > 5) {
+                            return 'P';
+                        } else if (option.difficulty === '3' && reigo > 4) {
                             return 'P';
                         } else if (option.difficulty === '2' && reigo > 3) {
                             return 'P';
@@ -6406,16 +6436,28 @@ export default class SimController {
                     case 'P2':
                         if (yamato > 0) {
                             return 'Q';
-                        } else if (Ds < 4) {
+                        } else if (BBs > 3) {
                             return 'Q';
-                        } else if (track.includes('N')) {
-                            return 'R';
-                        } else if (CL < 2) {
-                            return 'Y';
-                        } else if (Ds === 5) {
-                            return 'Y';
+                        } else if (option.phase !== '3') {
+                            if (option.difficulty === '1') {
+                                return 'R';
+                            } else if (Ds < 4) {
+                                return 'Q';
+                            } else {
+                                return 'R';
+                            }
                         } else {
-                            return 'R';
+                            if (Ds < 4) {
+                                return 'Q';
+                            } else if (option.difficulty === '4' && reigo < 5) {
+                                return 'Q';
+                            } else if (reigo > 4) {
+                                return 'R';
+                            } else if (CL > 1 && Ds > 5 && BBs < 2) {
+                                return 'R';
+                            } else {
+                                return 'Y';
+                            }
                         }
                         break;
                     case 'R':
@@ -6426,13 +6468,25 @@ export default class SimController {
                         }
                         break;
                     case 'U1':
-                        if (true) {
+                        if (Number(option.difficulty) > 1 && reigo > 3) {
+                            return 'U2';
+                        } else if (reigo > 2) {
+                            return 'U2';
+                        } else if (yamato > 0) {
+                            return 'N';
+                        } else if (CVH > 0) {
+                            return 'N';
+                        } else {
                             return 'U2';
                         }
                         break;
                     case 'U2':
-                        if (true) {
+                        if (reigo > 3) {
                             return 'U3';
+                        } else if (yamato === 0) {
+                            return 'U3';
+                        } else {
+                            return 'Y';
                         }
                         break;
                     case 'V':

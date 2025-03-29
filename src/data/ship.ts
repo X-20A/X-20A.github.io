@@ -890,7 +890,7 @@ const ship_datas: Record<number, ShipData> = {
 ,984:{name:"Wahoo",type:ST.SS,seek:12,seek2:44,na:NA.USA,sg:SG.LowC}
 ,989:{name:"Wahoo改",type:ST.SS,seek:0,seek2:0,na:NA.USA,sg:SG.LowC}
 ,994:{name:"榧",type:ST.DD,seek:8,seek2:25,na:NA.Japan,sg:SG.HighB2}
-,736:{name:"榧改",type:ST.DD,seek:0,seek2:0,na:NA.Japan,sg:SG.HighB2}
+,736:{name:"榧改",type:ST.DD,seek:15,seek2:46,na:NA.Japan,sg:SG.HighB2}
 ,995:{name:"大泊",type:ST.AO,seek:0,seek2:14,na:NA.Japan,sg:SG.LowB}
 ,1000:{name:"大泊改",type:ST.AO,seek:0,seek2:0,na:NA.Japan,sg:SG.LowB}
 ,1001:{name:"Киров",type:ST.CL,seek:13,seek2:42,na:NA.USSR,sg:SG.HighB1}
