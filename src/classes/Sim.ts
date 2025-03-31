@@ -124,6 +124,7 @@ export default class SimController {
         const SBB_count = fleet.SBB_count;
         const yamato = fleet.yamato_class_count;
         const hakuchi = fleet.hakuchi_count;
+        const matsu = fleet.matsu_count;
         const daigo = fleet.daigo_count;
         const reigo = fleet.reigo_count;
 
@@ -6242,19 +6243,37 @@ export default class SimController {
                             return 'S';
                         } else if (isFaster) {
                             return 'C';
-                        } else if (Ds > 2 && CVH < 3) {
-                            return 'T';
-                        } else {
+                        } else if (BBs + CVH > 3 && speed === '低速艦隊') {
                             return 'S';
+                        } else if (CVH > 2) {
+                            return 'S';
+                        } else if (Ds < 3) {
+                            return 'S';
+                        } else {
+                            return 'T';
                         }
                         break;
                     case 'C':
-                        if (isFaster && DD > 4 && yamato < 2) {
-                            return 'W';
-                        } else if (speed !== '低速艦隊' && DD > 5 && yamato < 2) {
-                            return 'W';
-                        } else {
+                        if (speed === '低速艦隊') {
                             return 'U';
+                        } else if (speed === '高速艦隊') {
+                            if (yamato > 0) {
+                                return 'U';
+                            } else if (Ds > 5) {
+                                return 'W';
+                            } else {
+                                return 'U';
+                            }
+                        } else { // isFaster
+                            if (yamato > 1) {
+                                return 'U';
+                            } else if (Ds > 4) {
+                                return 'W';
+                            } else if (matsu > 0 && Ds === 4) {
+                                return 'W';
+                            } else {
+                                return 'U';
+                            }
                         }
                         break;
                     case 'D':
@@ -6262,6 +6281,10 @@ export default class SimController {
                             if (speed === '低速艦隊') {
                                 return 'E';
                             } else if (BBs + CVH > 2) {
+                                return 'E';
+                            } else if (CVH > 2) {
+                                return 'E';
+                            } else if (Ss > 0) {
                                 return 'E';
                             } else if (Ds < 2) {
                                 return 'E';
@@ -6280,26 +6303,40 @@ export default class SimController {
                         }
                         break;
                     case 'I':
-                        if (Ds > 1 && CVH < 2 && yamato === 0 && speed !== '低速艦隊') {
-                            return 'L';
-                        } else {
+                        if (yamato > 0) {
                             return 'J';
+                        } else if (CVH > 1) {
+                            return 'J';
+                        } else if (CVH === 1 && speed === '低速艦隊') {
+                            return 'J';
+                        } else if (Ds < 2) {
+                            return 'J';
+                        } else {
+                            return 'L';
                         }
                         break;
                     case 'M':
-                        if (CL > 0 && Ds > 1 && yamato === 0 && speed !== '低速艦隊') {
+                        if (yamato > 0) {
+                            return 'N';
+                        } else if (CL > 0 && Ds > 1 && speed !== '低速艦隊') {
+                            return 'O';
+                        } else if (CL > 0 && Ds > 1 && BBs === 0) {
                             return 'O';
                         } else {
                             return 'N';
                         }
                         break;
                     case 'P':
-                        if (true) {
+                        if (seek[3] >= 83) {
                             return 'R';
+                        } else {
+                            return 'Q';
                         }
                         break;
                     case 'T':
-                        if (Ds > 5 && CVH === 0) {
+                        if (isFaster) {
+                            return 'U';
+                        } else if (Ds > 5 && BBs + CVH < 3 && speed !== '低速艦隊') {
                             return 'U';
                         } else {
                             return 'C';

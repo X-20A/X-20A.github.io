@@ -5,7 +5,7 @@ export default class Const {
     /**
      * CacheFleet の仕様を更新したら送る
      */
-    public static readonly FLEET_VERSION: number = 3; // @expansion
+    public static readonly FLEET_VERSION: number = 4; // @expansion
 
     /**
      * ルート分岐に関わる大発群    
@@ -56,6 +56,25 @@ export default class Const {
      * 明石改, 朝日改, 秋津洲改
      */
     public static readonly HAKUCHI_IDS: Readonly<number[]> = [187, 958, 450];
+
+    /**
+     * 松型駆逐艦ID配列    
+     * 松    
+     * 竹    
+     * 梅    
+     * 桃    
+     * 杉    
+     * 榧
+     */
+    public static readonly MATSU_CLASS_IDS: Readonly<number[]> =
+        [
+            641, 702,
+            642, 706,
+            643, 716,
+            644, 708,
+            992, 997,
+            994, 736,
+        ];
 
     /**
      * 第五艦隊ID配列    

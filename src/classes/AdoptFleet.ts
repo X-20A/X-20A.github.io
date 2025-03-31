@@ -81,6 +81,9 @@ export default class AdoptFleet implements Fleet {
     /** 泊地修理艦数 */
     public readonly hakuchi_count: number;
 
+    /** 松型駆逐艦数 */
+    public readonly matsu_count: number;
+
     /** 第五艦隊所属艦数 */
     public readonly daigo_count: number;
 
@@ -190,6 +193,7 @@ export default class AdoptFleet implements Fleet {
             this.SBB_count = main.SBB_count + escort.SBB_count;
             this.yamato_class_count = main.yamato_class_count + escort.yamato_class_count;
             this.hakuchi_count = main.hakuchi_count + escort.hakuchi_count;
+            this.matsu_count = main.matsu_count + escort.matsu_count;
         } else {
             const fleet = fleets[0];
 
@@ -215,6 +219,7 @@ export default class AdoptFleet implements Fleet {
             this.SBB_count = fleet.SBB_count;
             this.yamato_class_count = fleet.yamato_class_count;
             this.hakuchi_count = fleet.hakuchi_count;
+            this.matsu_count = fleet.matsu_count;
         }
     }
 
