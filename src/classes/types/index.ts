@@ -1,3 +1,5 @@
+import { NT as NodeType } from "@/data/map";
+
 export type Mode = // @expansion
     | 'nomal'
     | 59
@@ -25,9 +27,6 @@ export type AreaId = // @expansion
     | '58-1' | '58-2' | '58-3' | '58-4'
     | '59-1' | '59-2' | '59-3' | '59-4' | '59-5'
     | '60-1' | '60-2' | '60-3' | '60-4' | '60-5' | '60-6' 
-
-export type NodeType =
-    "st" | "po" | "bo" | "ab" | "ad" | "ac" | "en" | "su" | "ca" | "wh" | "re" | "ni" | "sc" | "as" | "tl" | "un"
 
 export type NodeData = [
     number,

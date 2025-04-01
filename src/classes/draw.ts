@@ -1,5 +1,5 @@
 import cytoscape from 'cytoscape';
-import { nodes, edges } from '@/data/map';
+import { node_datas, edge_datas, NT as NodeType } from '@/data/map';
 import styles from '@/styles';
 import type { AreaId } from './types';
 
@@ -11,11 +11,13 @@ export default function drawMap(
     console.log('area: ', area);
     console.log('route: ', route);
 
+    type TempNodeType = NodeType | 'alert'
+
     interface Node {
         data: {
             id: string;
             name: string;
-            label: string;
+            label: TempNodeType;
         };
         position: {
             x: number;
@@ -36,7 +38,7 @@ export default function drawMap(
         edges: [] as Edge[]
     };
     // nodes流し込み
-    const local_nodes = nodes[area];
+    const local_nodes = node_datas[area];
     for (const key in local_nodes) {
         if (Object.hasOwn(local_nodes, key)) {
             // 座標,マスの種類
@@ -48,7 +50,7 @@ export default function drawMap(
         }
     }
     // edges流し込み
-    const local_edges = edges[area];
+    const local_edges = edge_datas[area];
     const parts = route.split('-');
     const pairs = parts.slice(0, -1).map((item, index) => [item, parts[index + 1]]);
     for (const key in local_edges) {

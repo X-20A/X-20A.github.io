@@ -14,6 +14,7 @@ import scout from '@/icons/nodes/scout.png';
 import unknown from '@/icons/nodes/unknown.png';
 import airstrikeSupported from '@/icons/nodes/airstrike_supported.png';
 import transportLoadout from '@/icons/nodes/transport_loadout.png';
+import { NT as NodeType } from "@/data/map";
 
 const nodes: CyStyle[] = [
     {
@@ -30,10 +31,23 @@ const nodes: CyStyle[] = [
             'padding': '0pt',
             'font-size': '15px',
             'background-clip': 'none',// z-indexでedgesの下に潜り込ませるのは上手くいかなかった
+            'background-opacity': 0,
         }
-    }, // マスの分類ごとに表示分岐
+    },
     {
-        selector: 'node[label = "st"]', // 出撃
+        selector: 'node[label = "alert"]',
+        style: {
+            'color': 'white',
+            'text-outline-color': 'rgba(255,0,0)',
+            'text-outline-opacity': '1',
+            'content': '!',
+            'font-size': '18px',
+            'events': 'no' // クリック不可
+        }
+    },
+    // マスの分類ごとに表示分岐
+    {
+        selector: `node[label = ${NodeType.st}]`, // 出撃
         style: {
             'background-image': start,
             'font-weight': '600',
@@ -41,54 +55,49 @@ const nodes: CyStyle[] = [
             'font-size': '20px',
             'width': '48px',
             'height': '48px',
-            'background-opacity': 0,
             'background-position-x': '1px', // 位置微調整
             'background-position-y': '-1px'
         }
     },
     {
-        selector: 'node[label = "po"]',  // 港湾
+        selector: `node[label = ${NodeType.po}]`,  // 港湾
         style: {
             'background-image': port,
             'width': '48px',
             'height': '48px',
-            'background-opacity': 0,
             'background-position-x': '5.7px',
             'background-position-y': '5px'
         }
     },
     {
-        selector: 'node[label = "bo"]', // ボス
+        selector: `node[label = ${NodeType.bo}]`, // ボス
         style: {
             'background-image': boss,
             'width': '48px',
             'height': '48px',
-            'background-opacity': 0,
             'background-position-x': '5px',
             'background-position-y': '1px'
         }
     },
     {
-        selector: 'node[label = "ab"]',  // 航空戦
+        selector: `node[label = ${NodeType.ab}]`,  // 航空戦
         style: {
             'background-image': airB,
             'width': '48px',
             'height': '27px',
-            'background-opacity': 0,
             'background-position-x': '1px' // 位置微調整
         }
     },
     {
-        selector: 'node[label = "ad"]',  // 空襲
+        selector: `node[label = ${NodeType.ad}]`,  // 空襲
         style: {
             'background-image': airD,
             'width': '44px',
             'height': '25px',
-            'background-opacity': 0,
         }
     },
     {
-        selector: 'node[label = "ac"]',  // 能動分岐
+        selector: `node[label = ${NodeType.ac}]`,  // 能動分岐
         style: {
             'background-image': calm,
             'border-width': 3, // ボーダーの太さ
@@ -100,111 +109,102 @@ const nodes: CyStyle[] = [
         }
     },
     {
-        selector: 'node[label = "en"]', // 通常戦 基本設定
+        selector: `node[label = ${NodeType.en}]`, // 通常戦 基本設定
         style: {
             'background-image': enemy,
             'width': '27px', // enemy系
             'height': '27px',
-            'background-opacity': 0,
             'background-position-x': '-0.5px',
             'background-position-y': '-1px'
         }
     },
     {
-        selector: 'node[label = "su"]', // 対潜
+        selector: `node[label = ${NodeType.su}]`, // 対潜
         style: {
             'background-image': enemy,
             'width': '27px', // enemy系
             'height': '27px',
-            'background-opacity': 0,
             'background-position-x': '-0.5px',
             'background-position-y': '-1px'
         }
     },
     {
-        selector: 'node[label = "ca"]', // 気のせい
+        selector: `node[label = ${NodeType.ca}]`, // 気のせい
         style: {
             'background-image': calm,
             'width': '27px', // enemy系
             'height': '27px',
-            'background-opacity': 0,
             'background-position-x': '-0.5px',
             'background-position-y': '-1px'
         }
     },
     {
-        selector: 'node[label = "wh"]',  // 渦潮
+        selector: `node[label = ${NodeType.wh}]`,  // 渦潮
         style: {
             'background-image': whirl,
             'width': '27px', // enemy系
             'height': '27px',
-            'background-opacity': 0,
             'background-position-x': '-0.5px',
             'background-position-y': '-1px'
         }
     },
     {
-        selector: 'node[label = "re"]',  // 資源
+        selector: `node[label = ${NodeType.re}]`,  // 資源
         style: {
             'background-image': resource,
             'width': '27px', // enemy系
             'height': '27px',
-            'background-opacity': 0,
             'background-position-x': '-0.5px',
             'background-position-y': '-1px'
         }
     },
     {
-        selector: 'node[label = "ni"]',  // 夜戦
+        selector: `node[label = ${NodeType.ni}]`,  // 夜戦
         style: {
             'background-image': night,
             'width': '27px', // enemy系
             'height': '27px',
-            'background-opacity': 0,
             'background-position-x': '-0.5px',
             'background-position-y': '-1px'
         }
     },
     {
-        selector: 'node[label = "sc"]',  // 航空偵察
+        selector: `node[label = ${NodeType.sc}]`,  // 航空偵察
         style: {
             'background-image': scout,
             'width': '27px', // enemy系
             'height': '27px',
-            'background-opacity': 0,
             'background-position-x': '-0.5px',
             'background-position-y': '-1px'
         }
     },
     {
-        selector: 'node[label = "un"]', // 不明
+        selector: `node[label = ${NodeType.un}]`, // 不明
         style: {
             'background-image': unknown,
             'width': '27px', // enemy系
             'height': '27px',
-            'background-opacity': 0,
             'background-position-x': '-0.5px',
             'background-position-y': '-1px'
         }
     },
     {
-        selector: 'node[label = "as"]', // 対潜空襲
+        selector: `node[label = ${NodeType.as}]`, // 対潜空襲
         style: {
             'background-image': airstrikeSupported,
             'width': '48px',
             'height': '27px',
-            'background-opacity': 0,
             'background-position-x': '-0.5px',
             'background-position-y': '-1px'
         }
     },
     {
-        selector: 'node[label = "tl"]', // 揚陸地点
+        selector: `node[label = ${NodeType.tl}]`, // 揚陸地点
         style: {
             'background-image': transportLoadout,
             'width': '48px',
             'height': '27px',
-            'background-opacity': 0,
+
             'background-position-x': '12px',
             'background-position-y': '1px'
         }

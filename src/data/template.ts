@@ -636,7 +636,7 @@ const templates: Ttemplate[] = [
         "area": 3,
         "route": "3-K-L-M-M2-P-O1-R",
         "url": "275oohtz+",
-        "memo": "陣形: 長門陸奥想定$e基地: 2部隊ボス集中$e阻塞気球: ボス"
+        "memo": "陣形: 長門陸奥系想定$e基地: 2部隊ボス集中$e阻塞気球: ボス"
     },
     {
         "title": "60-3_KLM2PR_R破壊",
@@ -644,7 +644,7 @@ const templates: Ttemplate[] = [
         "area": 3,
         "route": "3-K-L-M-M2-P-O1-R",
         "url": "2cyhopxd+",
-        "memo": "陣形: 長門陸奥想定$e基地: 2部隊ボス集中$e阻塞気球: ボス"
+        "memo": "陣形: 長門陸奥系想定$e基地: 2部隊ボス集中$e阻塞気球: ボス"
     },
     {
         "title": "60-3_KLM2TU_Uギミック",
@@ -652,7 +652,7 @@ const templates: Ttemplate[] = [
         "area": 3,
         "route": "3-K-L-M-M2-S-S1-T-U",
         "url": "2xtwa3lt+",
-        "memo": "陣形: 長門陸奥想定$e基地: 2部隊U集中$e阻塞気球: U"
+        "memo": "陣形: 長門陸奥系想定$e基地: 2部隊U集中$e阻塞気球: U"
     },
     {
         "title": "60-3_KLM2VX_X削り",
@@ -660,7 +660,7 @@ const templates: Ttemplate[] = [
         "area": 3,
         "route": "3-K-L-M-M2-S-S2-V-X",
         "url": "23bdvmgv+",
-        "memo": "陣形: 長門陸奥想定$e基地: 2部隊ボス集中"
+        "memo": "陣形: 長門陸奥系想定$e基地: 2部隊ボス集中"
     },
     {
         "title": "60-3_KLM2VX_X破壊_破砕無",
@@ -668,7 +668,7 @@ const templates: Ttemplate[] = [
         "area": 3,
         "route": "3-K-L-M-M2-S-S2-V-X",
         "url": "26yemdaq+",
-        "memo": "陣形: 長門陸奥想定$e煙幕: L$e基地: 2部隊ボス集中"
+        "memo": "陣形: 長門陸奥系想定$e煙幕: L$e基地: 2部隊ボス集中"
     },
     {
         "title": "60-3_KLM2VX_X破壊_破砕有",
@@ -676,7 +676,135 @@ const templates: Ttemplate[] = [
         "area": 3,
         "route": "3-K-L-M-M2-S-S2-V-X",
         "url": "2cktofxo+",
-        "memo": "陣形: 長門陸奥想定$e煙幕: L$e基地: 2部隊ボス集中"
+        "memo": "陣形: 長門陸奥系想定$e煙幕: L$e基地: 2部隊ボス集中"
+    },
+    {
+        "title": "60-4_DG1IL_L削り", // 4-1
+        "world": 60,
+        "area": 4,
+        "route": "1-A-D-F-G-G1-I-L",
+        "url": "24mwcgoh+",
+        "memo": "$e煙幕: M$e基地: 2部隊ボス集中$eゲージ: 3000"
+    },
+    {
+        "title": "60-4_DG1IL_L破壊",
+        "world": 60,
+        "area": 4,
+        "route": "1-A-D-F-G-G1-I-L",
+        "url": "28xvhagd+",
+        "memo": "$e煙幕: M$e基地: 2部隊ボス集中$eゲージ: 750TP"
+    },
+    {
+        "title": "60-4_DHMOR_R輸送", // 4-2
+        "world": 60,
+        "area": 4,
+        "route": "1-A-D-F-G-H-M-O-P-R",
+        "url": "24bjjnyz+",
+        "memo": "$e煙幕: M$e基地: 2部隊ボス集中$eゲージ: 750TP"
+    },
+    {
+        "title": "60-4_BTCW_W削り", // 4-3
+        "world": 60,
+        "area": 4,
+        "route": "1-A-B-T-C-W",
+        "url": "",
+        "memo": "陣形: 長門陸奥系想定$e煙幕: T$e基地: 2部隊ボス集中$eゲージ: 3450(暫定)"
+    },
+    {
+        "title": "60-4_BTCW_W破壊_破砕無",
+        "world": 60,
+        "area": 4,
+        "route": "1-A-B-T-C-W",
+        "url": "2cyn88ml+",
+        "memo": "陣形: 長門陸奥系想定$e煙幕: T$e基地: 2部隊ボス集中"
+    },
+    {
+        "title": "60-5_B1HIK_K輸送", // 5-1
+        "world": 60,
+        "area": 5,
+        "route": "1-A-B-B1-H-I-J1-J-K",
+        "url": "2y6p8kr8+",
+        "memo": "陣形: 大和武蔵想定$e煙幕: i$e基地: 1部隊ボス集中"
+    },
+    {
+        "title": "60-5_MNPRT_T削り", // 5-2
+        "world": 60,
+        "area": 5,
+        "route": "2-L-M-N-P-P2-R-T",
+        "url": "25b6solw+",
+        "memo": "陣形: 長門陸奥系想定$e煙幕: N$e基地: ボス集中"
+    },
+    {
+        "title": "60-5_MNPRT_T破壊",
+        "world": 60,
+        "area": 5,
+        "route": "2-L-M-N-P-P2-R-T",
+        "url": "2avl3jcv+",
+        "memo": "陣形: 長門陸奥系想定$e煙幕: N$e基地: ボス集中"
+    },
+    {
+        "title": "60-5_MU1U2U3XRZ_Z削り", // 5-3
+        "world": 60,
+        "area": 5,
+        "route": "2-L-M-U1-U2-U3-X-P2-R-Z",
+        "url": "282j9g72+",
+        "memo": "陣形: ネルソンタッチ想定$e煙幕: M$e基地: [R, X, U2]集中$e阻塞気球: ボス"
+    },
+    {
+        "title": "60-5_MU1U2U3XRZ_Z破壊_破砕無",
+        "world": 60,
+        "area": 5,
+        "route": "2-L-M-U1-U2-U3-X-P2-R-Z",
+        "url": "28m7hlg4+",
+        "memo": "陣形: ネルソンタッチ想定$e煙幕: M$e基地: [R, X, U2]集中$e阻塞気球: ボス"
+    },
+    {
+        "title": "60-6_JJ3MNO_O削り", // 6-1
+        "world": 60,
+        "area": 6,
+        "route": "2-G-J-J3-M-N-O",
+        "url": "26fwxqvh+",
+        "memo": "陣形: タッチなし想定$e煙幕: J$e基地: (ボス, ボス, J)集中"
+    },
+    {
+        "title": "60-6_JJ3MNO_O破壊",
+        "world": 60,
+        "area": 6,
+        "route": "2-G-J-J3-M-N-O",
+        "url": "2a6tgqgo+",
+        "memo": "陣形: タッチなし想定$e煙幕: J$e基地: 3部隊ボス集中"
+    },
+    {
+        "title": "60-6_JJ2PTV_V削り", // 6-2
+        "world": 60,
+        "area": 6,
+        "route": "3-G-J-J2-P-R-T-V",
+        "url": "2a9bvrqd+",
+        "memo": "陣形: タッチなし想定$e煙幕: J$e基地: ボス集中"
+    },
+    {
+        "title": "60-6_JJ2PTV_V破壊",
+        "world": 60,
+        "area": 6,
+        "route": "3-G-J-J2-P-R-T-V",
+        "url": "2adpx6mj+",
+        "memo": "陣形: タッチなし想定$e煙幕: J$e基地: ボス集中"
+    },
+    {
+        "title": "60-6_JJ1PRSXZ_Z削り", // 6-3
+        "world": 60,
+        "area": 6,
+        "route": "3-J-J1-P-R-S-X-Z",
+        "url": "2aetng7s+",
+        "memo": "陣形: ネルソンタッチ想定$e煙幕: J$e基地: ボス集中"
+    },
+    {
+        "title": "60-6_JJ1PRSXZ_Z破壊_破砕有",
+        "world": 60,
+        "area": 6,
+        "route": "3-J-J1-P-R-S-X-Z",
+        "url": "2ym6wo73+",
+        "memo": "陣形: ネルソンタッチ想定$e煙幕: J$e基地: ボス集中"
     },
 ]; // @expansion
 /*
