@@ -100,7 +100,7 @@ export default class AdoptFleet implements Fleet {
         this.fleets = fleets;
         this.fleet_type_id = fleet_type_id;
         this.fleet_type = convertFleetTypeIdToName(fleet_type_id);
-        this.isUnion = fleets.length === 2;
+        this.isUnion = fleet_type_id > 0;
 
         const ships = fleets[1] ? fleets[0].ships.concat(fleets[1].ships) : fleets[0].ships;
 

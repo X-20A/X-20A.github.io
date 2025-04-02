@@ -157,7 +157,7 @@ export default class Const {
         '60-3': { 'phase': '1', 'difficulty': '4', 'A': 'B', 'C': 'D', 'H': 'H1', 'M': 'M1', 'S': 'S1' },
         '60-4': { 'phase': '1', 'A': 'B', 'F': 'F1', 'G': 'G1' },
         '60-5': { 'phase': '1', 'difficulty': '4', 'B': 'B1', 'D': 'D1' },
-        // '60-6': {},
+        '60-6': { 'phase': '1', 'difficulty': '4', 'G': 'J', 'K': 'J3', 'R': 'S' },
     } as OptionsType;  // @expansion
 
     /**

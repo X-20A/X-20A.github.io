@@ -3,7 +3,6 @@ import CustomError from "./CustomError";
 import type AdoptFleet from "./AdoptFleet";
 import Scanner from "./Scanner";
 import type { SimResult, BranchResponse, AreaId, OptionsType } from "./types";
-import Composition from "./Composition";
 
 /**
  * シミュコントローラ    
@@ -6547,7 +6546,214 @@ export default class SimController {
                         break;
                 }
                 break;
-            // case '60-6':
+            case '60-6':
+                switch (node) {
+                    case null:
+                        if (!isUnion) {
+                            return '1';
+                        } else { // isUnion
+                            if (option.phase !== '1' && BBs > 2) {
+                                return '3';
+                            } else if (option.phase !== '1' && BBs + CVH > 3) {
+                                return '3';
+                            } else if (f_type === '輸送護衛部隊') {
+                                return '2';
+                            } else if (BBCVs > 2) {
+                                return '2';
+                            } else {
+                                return '1';
+                            }
+                        }
+                        break;
+                    case 'A':
+                        if (isUnion) {
+                            return 'C';
+                        } else if (isFaster) {
+                            return 'B';
+                        } else if (Ds > 2) {
+                            return 'B';
+                        } else {
+                            return 'C';
+                        }
+                        break;
+                    case 'D':
+                        if (isUnion) {
+                            if (track.includes('1')) {
+                                if (isFaster) {
+                                    return 'F';
+                                } else if (DD > 5 && BBs + CVH < 3 && reigo > 1) {
+                                    return 'F';
+                                } else {
+                                    return 'E';
+                                }
+                            } else { // track.includes('2')
+                                return 'C2'
+                            }
+                        } else { // !isUnion
+                            if (Ds > 2) {
+                                return 'F';
+                            } else {
+                                return 'E';
+                            }
+                        }
+                        break;
+                    case 'C2':
+                        if (track.includes('1')) {
+                            return 'D';
+                        } else { // track.includes('2')
+                            return 'I';
+                        }
+                        break;
+                    case 'E':
+                        if (track.includes('1')) {
+                            return 'F';
+                        } else { // track.includes('2')
+                            if (isFaster) {
+                                return 'C2';
+                            } else {
+                                return 'D';
+                            }
+                        }
+                        break;
+                    case 'H':
+                        if (isFaster) {
+                            return 'C2';
+                        } else {
+                            return 'E';
+                        }
+                        break;
+                    case 'J':
+                        if (f_type === '輸送護衛部隊') {
+                            return 'J3';
+                        } else if (yamato > 0) {
+                            return 'J1';
+                        } else if (Number(option.phase) < 3) {
+                            return 'J2';
+                        } else if (CVH > 0) {
+                            return 'J2';
+                        } else if (reigo > 5) {
+                            return 'J1';
+                        } else {
+                            return 'J2';
+                        }
+                        break;
+                    case 'J1':
+                        if (Number(option.phase) < 3) {
+                            return 'J2';
+                        } else if (isFaster) {
+                            return 'P';
+                        } else if (fleet.countShip('Minneapolis') > 0) {
+                            return 'P';
+                        } else if (speed === '低速艦隊') {
+                            return 'P';
+                        } else if (yamato > 0) {
+                            return 'J2';
+                        } else if (Ds < 4) {
+                            return 'J2';
+                        } else if (BBs > 2 && reigo < 5) {
+                            return 'J2';
+                        } else {
+                            return 'P';
+                        }
+                        break;
+                    case 'J2':
+                        if (LHA > 0) {
+                            return 'J3';
+                        } else if (option.phase === '1') {
+                            return 'K';
+                        } else if (BBs > 3) {
+                            return 'K';
+                        } else if (CVH > 3) {
+                            return 'K';
+                        } else if (isFaster) {
+                            return 'P';
+                        } else if (speed === '低速艦隊') {
+                            return 'K';
+                        } else if (Ds < 5) {
+                            return 'K';
+                        } else if (CAs === 0) {
+                            return 'K';
+                        } else if (CAs === 1) {
+                            if (CL > 1 && Ds > 5 && CVH === 0) {
+                                return 'P';
+                            } else {
+                                return 'K';
+                            }
+                        } else { // CAs > 1
+                            if (yamato > 0) {
+                                return 'K';
+                            } else {
+                                return 'P';
+                            }
+                        }
+                        break;
+                    case 'J3':
+                        if (yamato > 0) {
+                            return 'J4';
+                        } else if (f_type === '輸送護衛部隊') {
+                            return 'M';
+                        } else if (CL > 1 && BBs < 4) {
+                            return 'M';
+                        } else {
+                            return 'J4';
+                        }
+                        break;
+                    case 'N':
+                        if (hakuchi > 0) {
+                            return 'O1';
+                        } else {
+                            return 'O';
+                        }
+                        break;
+                    case 'O1':
+                        if (true) {
+                            return 'O';
+                        }
+                        break;
+                    case 'S':
+                        if (yamato > 0 && CL < 2) {
+                            return 'W';
+                        } else if (['4', '3', '2'].includes(option.difficulty) && reigo > 5 && Ds > 5) {
+                            return 'X';
+                        } else if (option.difficulty === '1' && reigo > 0) {
+                            return 'X';
+                        } else {
+                            return 'W';
+                        }
+                        break;
+                    case 'T':
+                        if (true) {
+                            return 'V';
+                        }
+                        break;
+                    case 'X':
+                        if (true) {
+                            return 'Z';
+                        }
+                        break;
+                    case 'G':
+                        if (option.G === 'H') {
+                            return 'H';
+                        } else {
+                            return 'J';
+                        }
+                        break;
+                    case 'K':
+                        if (option.K === 'J3') {
+                            return 'J3';
+                        } else {
+                            return 'L';
+                        }
+                        break;
+                    case 'R':
+                        if (option.R === 'S') {
+                            return 'S';
+                        } else {
+                            return 'T';
+                        }
+                        break;
+                }
+                break;
             break; // @expansion
         }
 
