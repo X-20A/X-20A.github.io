@@ -723,7 +723,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 5,
         "route": "1-A-B-B1-H-I-J1-J-K",
-        "url": "2y6p8kr8+",
+        "url": "24m7zg3p+",
         "memo": "陣形: 大和武蔵想定$e煙幕: i$e基地: 1部隊ボス集中"
     },
     {
@@ -763,7 +763,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 6,
         "route": "2-G-J-J3-M-N-O",
-        "url": "26fwxqvh+",
+        "url": "292srgpk+",
         "memo": "陣形: タッチなし想定$e煙幕: J$e基地: (ボス, ボス, J)集中"
     },
     {
@@ -771,7 +771,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 6,
         "route": "2-G-J-J3-M-N-O",
-        "url": "2a6tgqgo+",
+        "url": "29f8t2xx+",
         "memo": "陣形: タッチなし想定$e煙幕: J$e基地: 3部隊ボス集中"
     },
     {
