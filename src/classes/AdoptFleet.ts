@@ -1,19 +1,12 @@
 import CacheFleet from "./CacheFleet";
 import {
-    type SpeedId,
-    type FleetSpeedName,
-    type FleetTypeId,
-    type FleetTypeName,
     type Fleet,
     type Seek,
 } from "./types";
 import { ST as ShipType } from "@/data/ship";
 import Composition from "./Composition";
-import {
-    convertFleetSpeedIdToName,
-    convertFleetTypeIdToName,
-} from "@/utils/convertUtil";
 import Const from "./const";
+import { Ft as FleetType, Sp as Speed } from "./Sim";
 
 /**
  * 実際に表示やシミュレートで使う艦隊    
@@ -34,10 +27,7 @@ export default class AdoptFleet implements Fleet {
     public readonly ship_names: string[];
     
     /** 艦隊種別ID */
-    public readonly fleet_type_id: FleetTypeId;
-
-    /** 艦隊種別(文字列) */
-    public readonly fleet_type: FleetTypeName;
+    public readonly fleet_type: FleetType;
 
     /** 連合艦隊であるか */
     public readonly isUnion: boolean;
@@ -45,14 +35,11 @@ export default class AdoptFleet implements Fleet {
     /** 総艦数 */
     public readonly fleet_length: number;
 
-    /** 艦隊速度ID */
-    public readonly speed_id: SpeedId;
-
     /** 高速+以上の艦隊であるか */
     public readonly isFaster: boolean;
 
-    /** 艦隊速度(文字列) */
-    public readonly speed: FleetSpeedName;
+    /** 艦隊速度 */
+    public readonly speed: Speed;
 
     /** 艦隊索敵値 */
     public seek: Seek;
@@ -90,7 +77,7 @@ export default class AdoptFleet implements Fleet {
     /** 礼号作戦参加艦数 */
     public readonly reigo_count: number;
 
-    constructor(fleets: CacheFleet[], fleet_type_id: FleetTypeId) {
+    constructor(fleets: CacheFleet[], fleet_type_id: FleetType) {
         // CacheFleetのバージョンが古い場合は再生成
         if (!fleets[0].version || fleets[0].version < Const.FLEET_VERSION) {
             // console.log('rebuild');
@@ -98,8 +85,7 @@ export default class AdoptFleet implements Fleet {
         }
 
         this.fleets = fleets;
-        this.fleet_type_id = fleet_type_id;
-        this.fleet_type = convertFleetTypeIdToName(fleet_type_id);
+        this.fleet_type = fleet_type_id;
         this.isUnion = fleet_type_id > 0;
 
         const ships = fleets[1] ? fleets[0].ships.concat(fleets[1].ships) : fleets[0].ships;
@@ -141,33 +127,17 @@ export default class AdoptFleet implements Fleet {
             this.composition = new Composition(fleets);
             this.ship_names = main.ship_names.concat(escort.ship_names);
             this.fleet_length = main.ships.length + escort.ships.length;
-            if (main.speed_id === 3 && escort.speed_id === 3) {
-                this.speed_id = 3;
-                this.speed = "最速艦隊";
-            } else if (main.speed_id >= 2 && escort.speed_id >= 2) {
-                this.speed_id = 2;
-                this.speed = "高速+艦隊";
-            } else if (main.speed_id >= 1 && escort.speed_id >= 1) {
-                this.speed_id = 1;
-                this.speed = "高速艦隊";
+            if (main.speed === 4 && escort.speed === 4) {
+                this.speed = 4;
+            } else if (main.speed >= 3 && escort.speed >= 3) {
+                this.speed = 3;
+            } else if (main.speed >= 2 && escort.speed >= 2) {
+                this.speed = 2;
             } else {
-                this.speed_id = 0;
-                this.speed = "低速艦隊";
+                this.speed = 1;
             }
 
-            this.isFaster = this.speed_id >= 2
-
-            switch (fleet_type_id) {
-                case 1:
-                    this.fleet_type = "空母機動部隊";
-                    break;
-                case 2:
-                    this.fleet_type = "水上打撃部隊";
-                    break;
-                case 3:
-                    this.fleet_type = "輸送護衛部隊";
-                    break;
-            }
+            this.isFaster = this.speed >= 3;
 
             // mapを使うと as が必要になる
             const total_seek = [
@@ -200,9 +170,8 @@ export default class AdoptFleet implements Fleet {
             this.composition = new Composition([fleet]);
             this.ship_names = fleet.ship_names;
             this.fleet_length = fleet.ships.length;
-            this.speed_id = fleet.speed_id;
-            this.speed = convertFleetSpeedIdToName(this.speed_id);
-            this.isFaster = this.speed_id >= 2;
+            this.speed = fleet.speed;
+            this.isFaster = this.speed >= 3;
 
             this.seek = [
                 Math.floor(fleet.seek[0] * 100) / 100,

@@ -5,7 +5,7 @@ export default class Const {
     /**
      * CacheFleet の仕様を更新したら送る
      */
-    public static readonly FLEET_VERSION: number = 4; // @expansion
+    public static readonly FLEET_VERSION: number = 5; // @expansion
 
     /**
      * ルート分岐に関わる大発群    

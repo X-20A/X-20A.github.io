@@ -1,7 +1,8 @@
 import type Ship from '@/classes/Ship';
-import type { Fleet, SpeedId, Seek } from '@/classes/types';
+import type { Fleet, Seek } from '@/classes/types';
 import Const from './const';
 import { ST as ShipType } from '@/data/ship';
+import { Sp as Speed } from './Sim';
 
 /**
  * ストレージに保存する艦隊
@@ -16,7 +17,7 @@ export default class CacheFleet implements Fleet {
     public readonly ship_names: string[];
 
 	/** 艦隊速度 */
-	public readonly speed_id: SpeedId;
+	public readonly speed: Speed;
 
 	/** 艦隊索敵値 */
 	public readonly seek: Seek;
@@ -61,7 +62,7 @@ export default class CacheFleet implements Fleet {
         this.version = Const.FLEET_VERSION;
 		this.ships = ships;
         this.ship_names = ships.map(item => item.name);
-		this.speed_id = this.calcFleetSpeed(ships);
+		this.speed = this.calcFleetSpeed(ships);
 		this.seek = this.calcSeek(ships, command_lv);
 		
         let drum_carrier_count = 0;
@@ -129,14 +130,14 @@ export default class CacheFleet implements Fleet {
      * 艦隊速度を判定し、速度IDを返す
      * @returns 
      */
-	private calcFleetSpeed(ships: Ship[]): SpeedId {
-		let speed_id = 0 as SpeedId;
-		if (ships.every(ship => ship.speed === 3)) {
+	private calcFleetSpeed(ships: Ship[]): Speed {
+		let speed_id = 1 as Speed;
+		if (ships.every(ship => ship.speed === 4)) {
+			speed_id = 4;
+		} else if (ships.every(ship => ship.speed >= 3)) {
 			speed_id = 3;
 		} else if (ships.every(ship => ship.speed >= 2)) {
-			speed_id = 2
-		} else if (ships.every(ship => ship.speed >= 1)) {
-			speed_id = 1;
+			speed_id = 2;
 		}
 
 		return speed_id;

@@ -2,10 +2,10 @@ import { describe, it, expect } from 'vitest';
 import Big from 'big.js';
 import LZString from 'lz-string';
 import axios from 'axios';
-import Sim from '@/classes/Sim';
+import Sim, { Ft as FleetType } from '@/classes/Sim';
 import { getSimSet } from './setup';
 import Const from '@/classes/const';
-import { AreaId, FleetTypeId, OptionsType } from '@/classes/types';
+import { AreaId, OptionsType } from '@/classes/types';
 import { createCacheFleetsFromDeckBuilder } from '@/utils/deckBuilderUtil';
 import AdoptFleet from '@/classes/AdoptFleet';
 import { getParam } from '@/utils/util';
@@ -92,7 +92,7 @@ describe('Simテスト', () => {
                 console.log('area: ', debug_area_id);
                 console.log('option: ', debug_option);
                 console.log(adoptFleet.getMainFleetNames());
-                if (adoptFleet.fleet_type_id > 0) console.log(adoptFleet.getEscortFleetNames());
+                if (adoptFleet.fleet_type > 0) console.log(adoptFleet.getEscortFleetNames());
                 console.log(adoptFleet.fleet_type);
                 console.log(JSON.stringify(simSet.deck));
                 throw error;
@@ -114,7 +114,7 @@ describe('Simテスト', () => {
             const deck_string = LZString.decompressFromEncodedURIComponent(compressed_deck);
             const deck = JSON.parse(deck_string);
             const cache_fleets = createCacheFleetsFromDeckBuilder(deck);
-            const fleet_type_id = deck!.f1!.t as FleetTypeId;
+            const fleet_type_id = deck!.f1!.t as FleetType;
             const adoptFleet = new AdoptFleet(cache_fleets, fleet_type_id);
             adoptFleet.seek = [999, 999, 999, 999]; // 索敵パス
 

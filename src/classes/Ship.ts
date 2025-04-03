@@ -1,5 +1,4 @@
 import Equip from '@/classes/Equip';
-import type { SpeedId } from '@/classes/types';
 import { ShipData, EquipInDeck } from '@/classes/types';
 import
     ship_datas,
@@ -7,6 +6,7 @@ import
 from '@/data/ship';
 import Const from './const';
 import { EquipType} from '@/data/equip';
+import { Sp as Speed } from './Sim';
 
 type Brand<T, B> = T & { __brand: B };
 /** 装備ボーナスのブランド型 */
@@ -21,7 +21,7 @@ export default class Ship {
     public readonly equip_seek: number;
 	public readonly national: National;
 	public readonly speed_group: SpeedGroup;
-	public readonly speed: SpeedId;
+	public readonly speed: Speed;
 	public readonly hp: number;
 	public readonly asw: number;
     public readonly luck: number;
@@ -504,7 +504,7 @@ export default class Ship {
 		return total_bonus as EquipBonusSeek;
 	}
 
-	private calcSpeed(equips: Equip[], speed_group: SpeedGroup): SpeedId {
+	private calcSpeed(equips: Equip[], speed_group: SpeedGroup): Speed {
 		let turbine = 0; // タービン
         let kan = 0; // 強化缶
         let new_kan = 0; // 新型缶
@@ -521,92 +521,92 @@ export default class Ship {
 
         const kan_total = kan + new_kan;
 
-		let speed: SpeedId;
+		let speed: Speed;
 		switch (speed_group) {
 			case SpeedGroup.HighA:
-				speed = 1;
+				speed = 2;
 				if (turbine && new_kan || power_kan > 1) {
-					speed = 3;
+					speed = 4;
 				} else if (turbine && kan_total || power_kan) {
-					speed = 2;
+					speed = 3;
 				}
 				break;
 			case SpeedGroup.HighB1:
-				speed = 1;
+				speed = 2;
 				if (turbine && new_kan && kan_total > 1) {
-					speed = 3;
+					speed = 4;
 				} else if (turbine && kan_total) {
-					speed = 2;
+					speed = 3;
 				}
 				break;
 			case SpeedGroup.HighB2:
-				speed = 1;
+				speed = 2;
 				if (turbine && (new_kan > 1 || kan_total > 2)) {
-					speed = 3;
+					speed = 4;
 				} else if (turbine && kan_total) {
-					speed = 2;
+					speed = 3;
 				}
 				break;
 			case SpeedGroup.HighC:
+				speed = 2;
+				if (turbine && kan_total) {
+					speed = 3;
+				}
+				break;
+			case SpeedGroup.LowA:
+				speed = 1;
+				if (turbine && new_kan && kan_total > 2) {
+					speed = 4;
+				} else if (turbine && power_kan > 1) {
+					speed = 4;
+				} else if (turbine && new_kan && kan_total > 1) {
+					speed = 3;
+				} else if (turbine && power_kan) {
+					speed = 3;
+				} else if (turbine && kan_total) {
+					speed = 2;
+				}
+				break;
+			case SpeedGroup.LowB:
+				speed = 1;
+				if (turbine && (new_kan > 1 || kan_total > 2)) {
+					speed = 3;
+				} else if (turbine && kan_total) {
+					speed = 2;
+				}
+				break;
+			case SpeedGroup.LowC:
 				speed = 1;
 				if (turbine && kan_total) {
 					speed = 2;
 				}
 				break;
-			case SpeedGroup.LowA:
-				speed = 0;
-				if (turbine && new_kan && kan_total > 2) {
-					speed = 3;
-				} else if (turbine && power_kan > 1) {
-					speed = 3;
-				} else if (turbine && new_kan && kan_total > 1) {
-					speed = 2;
-				} else if (turbine && power_kan) {
-					speed = 2;
-				} else if (turbine && kan_total) {
-					speed = 1;
-				}
-				break;
-			case SpeedGroup.LowB:
-				speed = 0;
-				if (turbine && (new_kan > 1 || kan_total > 2)) {
-					speed = 2;
-				} else if (turbine && kan_total) {
-					speed = 1;
-				}
-				break;
-			case SpeedGroup.LowC:
-				speed = 0;
-				if (turbine && kan_total) {
-					speed = 1;
-				}
-				break;
 			case SpeedGroup.LowD:
-				speed = 0;
+				speed = 1;
 				if (turbine && new_kan) {
-					speed = 2;
+					speed = 3;
 				} else if (new_kan || turbine && kan_total) {
-					speed = 1;
+					speed = 2;
 				}
 				break;
 			case SpeedGroup.LowE:
-				speed = 0;
+				speed = 1;
 				if (turbine && new_kan && kan_total > 1) {
-					speed = 3;
+					speed = 4;
 				} else if (turbine && new_kan) {
-					speed = 2;
+					speed = 3;
 				} else if (turbine && kan_total) {
-					speed = 1;
+					speed = 2;
 				} else if (new_kan) {
-					speed = 1;
+					speed = 2;
 				}
 				break;
 			case SpeedGroup.LowB2:
-				speed = 0;
+				speed = 1;
 				if (turbine && (new_kan > 1 || kan_total > 2)) {
-					speed = 2;
+					speed = 3;
 				} else if (turbine) {
-					speed = 1;
+					speed = 2;
 				}
 				break;
 		}

@@ -6,9 +6,10 @@ import type {
     DeckBuilderItem,
     DeckBuilderShip
 } from '@/classes/types/DeckBuilder';
-import type { AreaId, FleetTypeId } from "@/classes/types";
+import type { AreaId } from "@/classes/types";
 import ship_datas from "@/data/ship";
 import equip_datas from "@/data/equip";
+import { Ft as FleetType } from "@/classes/Sim";
 
 const ship_ids = Object.keys(ship_datas).map(key => Number.parseInt(key));
 const item_ids = Object.keys(equip_datas).map(key => Number.parseInt(key));
@@ -16,7 +17,7 @@ const item_ids = Object.keys(equip_datas).map(key => Number.parseInt(key));
 export const getSimSet = () => {
     const deck = generateRandomDeck();
     const cache_fleets = createCacheFleetsFromDeckBuilder(deck);
-    const fleet_type_id = deck?.f1?.t as FleetTypeId;
+    const fleet_type_id = deck?.f1?.t as FleetType;
     const adoptFleet = new AdoptFleet(cache_fleets, fleet_type_id);
 
     const areaIds: AreaId[] = [

@@ -30,14 +30,14 @@
 			</div>
 		</div>
 		<div class="import-display" v-if="adoptFleet">
-			<template v-if="adoptFleet.fleet_type_id > 0">
-				<p>{{ adoptFleet.fleet_type }}</p>
+			<template v-if="adoptFleet.fleet_type > 0">
+				<p>{{ fleetTypeLabels[adoptFleet.fleet_type] }}</p>
 			</template>
-			<template v-if="adoptFleet.fleet_type_id === 0 && adoptFleet.fleet_length === 7">
+			<template v-if="adoptFleet.fleet_type === 0 && adoptFleet.fleet_length === 7">
 				<p>遊撃部隊</p>
 			</template>
 			<p>
-				<span>{{ adoptFleet.speed }}</span>
+				<span>{{ speedLabels[adoptFleet.speed] }}</span>
 				<span> | </span>
 				<span>搭載艦数[ </span>
 
@@ -91,7 +91,7 @@
 
 				<span> ]</span>
 			</p>
-			<template v-if="adoptFleet.fleet_type_id > 0"><!-- 連合艦隊 -->
+			<template v-if="adoptFleet.fleet_type > 0"><!-- 連合艦隊 -->
 				<div>
 					<strong>主力: </strong>
 					<template v-for="(name, index) in adoptFleet.getMainFleetNames()" :key="index">
@@ -277,10 +277,10 @@ import Area from './components/modals/Area.vue';
 import Refference from './components/modals/Refference.vue';
 import Error from './components/modals/Error.vue';
 import SvgIcon from './components/SvgIcon.vue';
-import type { SelectedType, FleetTypeId } from '@/classes/types';
+import type { SelectedType } from '@/classes/types';
 import CustomError from '@/classes/CustomError';
 import type CacheFleet from './classes/CacheFleet';
-import Sim from '@/classes/Sim';
+import Sim, { Ft as FleetType } from '@/classes/Sim';
 import {
 	createCacheFleetsFromDeckBuilder,
 	createDeckBuilderFromAdoptFleet
@@ -304,7 +304,6 @@ import {
 } from '@/utils/renderUtil';
 import {
 	convertBranchDataToHTML,
-	convertFleetSpeedNameToId,
 	generateResourceHtml
 } from './utils/convertUtil';
 import Bulge from '@/icons/items/bulge.png';
@@ -383,6 +382,20 @@ const branchData = computed(() => store.branchData);
 
 const icons = computed(() => store.icons);
 
+const speedLabels = {
+	1: '低速艦隊',
+	2: '高速艦隊',
+	3: '高速+艦隊',
+	4: '最速艦隊',
+};
+
+const fleetTypeLabels = {
+	0: '通常艦隊',
+	1: '空母機動部隊',
+	2: '水上打撃部隊',
+	3: '輸送護衛部隊',
+}
+
 // import
 watch(fleetInput, (text) => {
 	if (!text) return;
@@ -410,8 +423,8 @@ const loadFleet = (text: string) => {
 	let selected_type = 1 as SelectedType;
 	if (deck?.f1?.t) {
 		const fleet_type = isNumber(deck.f1.t) && [0, 1, 2, 3].includes(Number(deck.f1.t))
-			? Number(deck.f1.t) as FleetTypeId
-			: 0 as FleetTypeId
+			? Number(deck.f1.t) as FleetType
+			: 0 as FleetType
 		;
 		switch (fleet_type) {
 			case 1:
@@ -459,10 +472,10 @@ watch([cacheFleets, selectedType], () => {
 
 	try { // ここでも一応、変な値が保存されてるとエラーになり得る
 		let fleets = [] as CacheFleet[];
-		let fleet_type = 0 as FleetTypeId;
+		let fleet_type = 0 as FleetType;
 		if (selectedType.value >= 5) {
 			fleets = [cacheFleets.value[0], cacheFleets.value[1]];
-			fleet_type = selectedType.value - 4 as FleetTypeId;
+			fleet_type = selectedType.value - 4 as FleetType;
 		} else {
 			fleets = [cacheFleets.value[selectedType.value - 1]];
 		}
@@ -654,7 +667,7 @@ const screenShot = async () => {
 			theme: 'dark',
 		}) as GkcoiDeckBuilder;
 		const fleet_seek = adoptFleet.value.seek;
-		const speed = convertFleetSpeedNameToId(adoptFleet.value.speed);
+		const speed = adoptFleet.value.speed * 5;
 		const los = {
 			'1': fleet_seek[0],
 			'2': fleet_seek[1],
