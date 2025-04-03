@@ -707,7 +707,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 4,
         "route": "1-A-B-T-C-W",
-        "url": "",
+        "url": "2ajvv7o5+",
         "memo": "陣形: 長門陸奥系想定$e煙幕: T$e基地: 2部隊ボス集中$eゲージ: 3450(暫定)"
     },
     {
