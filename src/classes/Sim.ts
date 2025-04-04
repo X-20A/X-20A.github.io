@@ -6690,7 +6690,7 @@ export default class SimController {
                     case 'J':
                         if (f_type === Ft.transport) {
                             return 'J3';
-                        } else if (AV + AS + AO + LHA) {
+                        } else if (AV + AS + AO + LHA > 2) {
                             return 'J3';
                         } else if (yamato > 0) {
                             return 'J1';
