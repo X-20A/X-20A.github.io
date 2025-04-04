@@ -6273,14 +6273,18 @@ export default class SimController {
                             return 'S';
                         } else if (CVH > 2) {
                             return 'S';
-                        } else if (Ds < 3) {
-                            return 'S';
+                        } else if (Ds > 3) {
+                            return 'T';
+                        } else if (Ds > 2 && speed !== Sp.slow) {
+                            return 'T';
                         } else {
                             return 'T';
                         }
                         break;
                     case 'C':
-                        if (speed === Sp.slow) {
+                        if (CL === 0) {
+                            return 'U';
+                        }if (speed === Sp.slow) {
                             return 'U';
                         } else if (speed === Sp.fast) {
                             if (yamato > 0) {
@@ -6322,14 +6326,16 @@ export default class SimController {
                         }
                         break;
                     case 'G1':
-                        if (Number(option.phase) > 1 && CL > 0 && Ds > 1 && BBs + CVH < 3 && speed !== Sp.slow) {
+                        if (Number(option.phase) > 1 && CL + CT > 0 && Ds > 1 && BBs + CVH < 3 && speed !== Sp.slow) {
                             return 'I';
                         } else {
                             return 'G2';
                         }
                         break;
                     case 'I':
-                        if (yamato > 0) {
+                        if (seek[3] < 70) {
+                            return 'K';
+                        }if (yamato > 0) {
                             return 'J';
                         } else if (CVH > 1) {
                             return 'J';
@@ -6353,7 +6359,7 @@ export default class SimController {
                         }
                         break;
                     case 'P':
-                        if (seek[3] >= 83) {
+                        if (seek[3] >= 77) {
                             return 'R';
                         } else {
                             return 'Q';
