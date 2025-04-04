@@ -783,6 +783,14 @@ const templates: Ttemplate[] = [
         "memo": "基地: (I, I, E)集中"
     },
     {
+        "title": "60-6_JJ2L",
+        "world": 60,
+        "area": 6,
+        "route": "2-G-J-J2-K-L",
+        "url": "29wpsr6x+",
+        "memo": "基地: (L, J2, J)集中"
+    },
+    {
         "title": "60-6_JJ3MNO_O削り", // 6-1
         "world": 60,
         "area": 6,
