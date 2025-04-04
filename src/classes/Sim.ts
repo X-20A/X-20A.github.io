@@ -6437,8 +6437,10 @@ export default class SimController {
                         }
                         break;
                     case 'F':
-                        if (true) {
+                        if (seek[3] >= 100) {
                             return 'F2';
+                        } else {
+                            return 'F1';
                         }
                         break;
                     case 'I':
@@ -6449,13 +6451,17 @@ export default class SimController {
                         }
                         break;
                     case 'J':
-                        if (true) {
+                        if (seek[3] >= 91) {
                             return 'K';
+                        } else {
+                            return 'K2';
                         }
                         break;
                     case 'M':
                         if (Number(option.phase) < 3) {
                             return 'N';
+                        } else if (BBs > 2) {
+                            return 'U1';
                         } else if (AV + AS + AO + LHA === 0 && Ds > 5) {
                             return 'N';
                         } else if (CVH > 0) {
@@ -6468,6 +6474,8 @@ export default class SimController {
                         break;
                     case 'N':
                         if (option.phase === '3' && Ds < 6) {
+                            return 'U2';
+                        } else if (option.phase === '3' && LHA > 0) {
                             return 'U2';
                         } else if (yamato > 0) {
                             return 'O';
@@ -6502,21 +6510,25 @@ export default class SimController {
                         } else if (BBs > 3) {
                             return 'Q';
                         } else if (option.phase !== '3') {
-                            if (option.difficulty === '1') {
+                            if (Ds > 3) {
                                 return 'R';
-                            } else if (Ds < 4) {
-                                return 'Q';
+                            } else if (option.difficulty === '1') {
+                                return 'R';
                             } else {
-                                return 'R';
+                                return 'Q';
                             }
                         } else {
-                            if (Ds < 4) {
+                            if (BBs === 3) {
+                                return 'Q';
+                            } else if (Ds < 4) {
                                 return 'Q';
                             } else if (option.difficulty === '4' && reigo < 5) {
                                 return 'Q';
                             } else if (reigo > 4) {
                                 return 'R';
-                            } else if (CL > 1 && Ds > 5 && BBs < 2) {
+                            } else if (reigo > 1 && DD > 5) {
+                                return 'R';
+                            } else if (AV + AS + AO + LHA === 0 && DD > 5) {
                                 return 'R';
                             } else {
                                 return 'Y';
@@ -6524,16 +6536,36 @@ export default class SimController {
                         }
                         break;
                     case 'R':
-                        if (track.includes('N')) {
-                            return 'T';
+                        if (option.phase !== '3') {
+                            if (seek[1] >= 80) {
+                                return 'T';
+                            } else {
+                                return 'S';
+                            }
                         } else {
-                            return 'Z';
+                            if (track.includes('U') || track.includes('U1')) {
+                                if (seek[1] >= 74) {
+                                    return 'Z';
+                                } else {
+                                    return 'S';
+                                }
+                            } else {
+                                if (seek[1] >= 80) {
+                                    return 'T';
+                                } else {
+                                    return 'S';
+                                }
+                            }
                         }
                         break;
                     case 'U1':
-                        if (Number(option.difficulty) > 1 && reigo > 3) {
+                        if (Ss > 0) {
+                            return 'N';
+                        } else if (Number(option.difficulty) > 2 && reigo > 4) {
                             return 'U2';
-                        } else if (reigo > 2) {
+                        } else if (option.difficulty === '2' && reigo > 3) {
+
+                        } else if (option.difficulty === '1' && reigo > 2) {
                             return 'U2';
                         } else if (yamato > 0) {
                             return 'N';
@@ -6652,6 +6684,8 @@ export default class SimController {
                     case 'J':
                         if (f_type === Ft.transport) {
                             return 'J3';
+                        } else if (AV + AS + AO + LHA) {
+                            return 'J3';
                         } else if (yamato > 0) {
                             return 'J1';
                         } else if (Number(option.phase) < 3) {
@@ -6717,9 +6751,13 @@ export default class SimController {
                     case 'J3':
                         if (yamato > 0) {
                             return 'J4';
+                        } else if (BBs > 3) {
+                            return 'J4';
+                        } else if (CVH > 2) {
+                            return 'J4';
                         } else if (f_type === Ft.transport) {
                             return 'M';
-                        } else if (CL > 1 && BBs < 4) {
+                        } else if (CL > 1) {
                             return 'M';
                         } else {
                             return 'J4';
