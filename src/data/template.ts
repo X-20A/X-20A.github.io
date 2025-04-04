@@ -770,9 +770,17 @@ const templates: Ttemplate[] = [
         "title": "60-6_ACDF",
         "world": 60,
         "area": 6,
-        "route": "a-A-C-D-F",
+        "route": "1-A-C-D-F",
         "url": "25f5yufo+",
         "memo": "陣形: 長門陸奥想定$e煙幕: D$e基地: (F, F, C)集中"
+    },
+    {
+        "title": "60-6_HEDC2I",
+        "world": 60,
+        "area": 6,
+        "route": "2-G-H-E-D-C2-I",
+        "url": "28qwnvkj+",
+        "memo": "基地: (I, I, E)集中"
     },
     {
         "title": "60-6_JJ3MNO_O削り", // 6-1
