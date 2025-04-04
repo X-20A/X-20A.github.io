@@ -787,7 +787,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 6,
         "route": "2-G-J-J2-P-R-T-V",
-        "url": "2a9bvrqd+",
+        "url": "26r2z4qc+",
         "memo": "陣形: タッチなし想定$e煙幕: J$e基地: ボス集中"
     },
     {
@@ -795,7 +795,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 6,
         "route": "2-G-J-J2-P-R-T-V",
-        "url": "2adpx6mj+",
+        "url": "22c7p5zq+",
         "memo": "陣形: タッチなし想定$e煙幕: J$e基地: ボス集中"
     },
     {
