@@ -563,7 +563,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 1,
         "route": "2-F-C-G-M-O",
-        "url": "24kmrtbb+",
+        "url": "23pdfan6+",
         "memo": "煙幕: ボス前M$e阻塞気球: ボス$e基地: 1部隊ボス集中"
     },
     {
@@ -719,6 +719,14 @@ const templates: Ttemplate[] = [
         "memo": "陣形: 長門陸奥系想定$e煙幕: T$e基地: 2部隊ボス集中"
     },
     {
+        "title": "60-5_EE2FF2",
+        "world": 60,
+        "area": 5,
+        "route": "1-C-D-E-E2-F-F2",
+        "url": "2ykjthbu+",
+        "memo": "煙幕: E2$e基地: 1部隊F2集中"
+    },
+    {
         "title": "60-5_B1HIK_K輸送", // 5-1
         "world": 60,
         "area": 5,
@@ -778,7 +786,7 @@ const templates: Ttemplate[] = [
         "title": "60-6_JJ2PTV_V削り", // 6-2
         "world": 60,
         "area": 6,
-        "route": "3-G-J-J2-P-R-T-V",
+        "route": "2-G-J-J2-P-R-T-V",
         "url": "2a9bvrqd+",
         "memo": "陣形: タッチなし想定$e煙幕: J$e基地: ボス集中"
     },
@@ -786,7 +794,7 @@ const templates: Ttemplate[] = [
         "title": "60-6_JJ2PTV_V破壊",
         "world": 60,
         "area": 6,
-        "route": "3-G-J-J2-P-R-T-V",
+        "route": "2-G-J-J2-P-R-T-V",
         "url": "2adpx6mj+",
         "memo": "陣形: タッチなし想定$e煙幕: J$e基地: ボス集中"
     },
