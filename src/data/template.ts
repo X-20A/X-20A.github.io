@@ -615,6 +615,22 @@ const templates: Ttemplate[] = [
         "memo": "煙幕: ボス前V$e阻塞気球: ボス$e基地: 2部隊ボス集中"
     },
     {
+        "title": "60-3_BB2B4",
+        "world": 60,
+        "area": 3,
+        "route": "1-A-B-B2-B4",
+        "url": "24zz7s4g+",
+        "memo": "基地: (B4, B2)集中"
+    },
+    {
+        "title": "60-3_EE2",
+        "world": 60,
+        "area": 3,
+        "route": "1-A-C-E-E2",
+        "url": "25uhagkt+",
+        "memo": "基地: 2部隊ボス集中"
+    },
+    {
         "title": "60-3_EFF1G_G削り",
         "world": 60,
         "area": 3,
