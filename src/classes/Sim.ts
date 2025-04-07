@@ -6204,7 +6204,7 @@ export default class SimController {
                        }
                         break;
                     case 'T':
-                        if (CAs > 1 && CL > 1 && Ds > 3 && arBulge < 11) {
+                        if (CAs > 1 && CL > 1 && Ds > 3 && f_length - arBulge < 11) {
                             return 'U';
                         } else {
                             return 'F3';
