@@ -110,6 +110,10 @@ describe('Simテスト', () => {
             const area_id = mock_data.area;
 
             // 艦隊
+
+            const debug_deck =
+                mock_data.deck.replaceAll('https://x-20a.github.io', 'http://localhost:5173/compass/');
+
             const compressed_deck = getParam('pdz', mock_data.deck)!;
             const deck_string = LZString.decompressFromEncodedURIComponent(compressed_deck);
             const deck = JSON.parse(deck_string);
@@ -137,8 +141,12 @@ describe('Simテスト', () => {
 
                 if (expected_route !== actual_route) {
                     console.log(`海域: ${area_id}`);
-                    console.log(expected_route);
-                    console.log(actual_route);
+                    console.log(`期待: ${expected_route}`);
+                    console.log(`実際: ${actual_route}`);
+                    console.log(
+                        'deck: ',
+                        debug_deck,
+                    );
                 }
 
                 expect(expected_route).toBe(actual_route);

@@ -6350,9 +6350,9 @@ export default class SimController {
                     case 'M':
                         if (yamato > 0) {
                             return 'N';
-                        } else if (CL > 0 && Ds > 1 && speed !== Sp.slow) {
+                        } else if (CL + Ds > 4 && Ds > 1) {
                             return 'O';
-                        } else if (CL > 0 && Ds > 1 && BBs === 0) {
+                        } else if (CL > 0 && Ds > 1 && BBs + CVH < 4 && speed !== Sp.slow) {
                             return 'O';
                         } else {
                             return 'N';
