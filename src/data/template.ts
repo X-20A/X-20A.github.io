@@ -647,6 +647,14 @@ const templates: Ttemplate[] = [
         "memo": "基地: 2部隊ボス集中"
     },
     {
+        "title": "60-3_IJKK2",
+        "world": 60,
+        "area": 3,
+        "route": "2-H-I-J-K-K2",
+        "url": "255nrdj3+",
+        "memo": "基地: 2部隊ボス集中"
+    },
+    {
         "title": "60-3_KLM2PR_R削り",
         "world": 60,
         "area": 3,
@@ -699,16 +707,16 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 4,
         "route": "1-A-D-F-G-G1-I-L",
-        "url": "24mwcgoh+",
-        "memo": "$e煙幕: M$e基地: 2部隊ボス集中$eゲージ: 3000"
+        "url": "227ajpxx+",
+        "memo": "$e煙幕: I$e基地: 2部隊ボス集中$eゲージ: 2400"
     },
     {
         "title": "60-4_DG1IL_L破壊",
         "world": 60,
         "area": 4,
         "route": "1-A-D-F-G-G1-I-L",
-        "url": "28xvhagd+",
-        "memo": "$e煙幕: M$e基地: 2部隊ボス集中$eゲージ: 750TP"
+        "url": "25mtz35d+",
+        "memo": "$e煙幕: I$e基地: 2部隊ボス集中"
     },
     {
         "title": "60-4_DHMOR_R輸送", // 4-2
