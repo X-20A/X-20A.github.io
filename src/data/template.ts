@@ -683,7 +683,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 3,
         "route": "3-K-L-M-M2-S-S2-V-X",
-        "url": "23bdvmgv+",
+        "url": "26wlg4gw+",
         "memo": "陣形: 長門陸奥系想定$e基地: 2部隊ボス集中"
     },
     {
@@ -691,7 +691,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 3,
         "route": "3-K-L-M-M2-S-S2-V-X",
-        "url": "26yemdaq+",
+        "url": "284ddrcz+",
         "memo": "陣形: 長門陸奥系想定$e煙幕: L$e基地: 2部隊ボス集中"
     },
     {
@@ -699,7 +699,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 3,
         "route": "3-K-L-M-M2-S-S2-V-X",
-        "url": "2cktofxo+",
+        "url": "2yg6xxkk+",
         "memo": "陣形: 長門陸奥系想定$e煙幕: L$e基地: 2部隊ボス集中"
     },
     {
