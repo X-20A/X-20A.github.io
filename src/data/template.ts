@@ -727,6 +727,22 @@ const templates: Ttemplate[] = [
         "memo": "$e煙幕: M$e基地: 2部隊ボス集中$eゲージ: 750TP"
     },
     {
+        "title": "60-4_BCW_W削り_高速+", // 4-3
+        "world": 60,
+        "area": 4,
+        "route": "1-A-B-C-W",
+        "url": "2ygfsc3k+",
+        "memo": "陣形: 長門陸奥系想定$e煙幕: C$e基地: 2部隊ボス集中$eゲージ: 3450(暫定)"
+    },
+    {
+        "title": "60-4_BCW_W破壊_破砕無_高速+", // 4-3
+        "world": 60,
+        "area": 4,
+        "route": "1-A-B-C-W",
+        "url": "264r2ymy+",
+        "memo": "陣形: 長門陸奥系想定$e煙幕: C$e基地: 2部隊ボス集中$eゲージ: 3450(暫定)"
+    },
+    {
         "title": "60-4_BTCW_W削り", // 4-3
         "world": 60,
         "area": 4,
