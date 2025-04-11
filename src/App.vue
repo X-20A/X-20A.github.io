@@ -131,7 +131,7 @@
 					更新履歴
 				</a>
 			</p>
-			<p style="color: #D90000;">新艦組の素索敵値は0で計算されています。</p>
+			<!-- <p style="color: #D90000;">新艦組の素索敵値は0で計算されています。</p> -->
 		</div>
 		<div class="result-container">
 			<template v-if="simResult.length > 0">
