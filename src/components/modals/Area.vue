@@ -1,7 +1,7 @@
 <template>
   <div
 		v-if="isAreaVisible"
-		@mousedown.stop
+		@pointerdown.stop
 		class="area-container"
 	>
     <div class="box">
@@ -17,7 +17,7 @@
 							:key="area.value"
 							class="areas"
 							:value="area.value"
-							@mousedown="selectArea(area.value)"
+							@pointerdown="selectArea(area.value)"
 						>
 							{{ area.label }}
 						</button>
@@ -37,7 +37,7 @@
               :key="area.value"
               class="areas"
               :value="area.value"
-              @mousedown="selectArea(area.value)"
+              @pointerdown="selectArea(area.value)"
             >
               {{ area.label }}
             </button>
@@ -196,10 +196,11 @@ const events: Area[] = [ // @expansion
 <style scoped>
 .area-container {
   justify-content: center;
-	width: 543px;
+	max-width: 543px;
+	width: 100%;
 	z-index: 999999999;
 	position: fixed;
-	top: 120px;
+	top: 110px;
 }
 .box {
 	border-radius: 4px;

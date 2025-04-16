@@ -15,7 +15,7 @@
 					</span>
 					<SvgIcon
 						name="content-copy"
-						@mousedown="copyRoutes"
+						@pointerdown="copyRoutes"
 						color="#959594"
 						class="copy-icon"
 					></SvgIcon>

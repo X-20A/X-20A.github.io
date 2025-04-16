@@ -7,7 +7,7 @@
     >
       <template v-for="(group, key) in matched_data" :key="key">
         <div class="inner">
-          <p class="title" @mousedown="startDrag">
+          <p class="title" @pointerdown="startDrag">
 						{{ group.label ? group.label : key }}:
 					</p>
           <div class="value-box">

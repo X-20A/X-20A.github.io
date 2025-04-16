@@ -2,7 +2,7 @@
   <div>
     <!-- サイドバー -->
     <div class="side-bar-container" ref="sideBarRef">
-      <span class="header-side-close" @mousedown="closeSidebar">
+      <span class="header-side-close" @pointerdown="closeSidebar">
         <SvgIcon
 					name="menu"
 					color="#ffffff"
@@ -19,10 +19,10 @@
         <a href="/suzu"><p class="side-menu-content">涼月タイマー</p></a>
       </div>
     </div>
-    <div class="header-mask" ref="maskRef" @mousedown="closeSidebar"></div>
+    <div class="header-mask" ref="maskRef" @pointerdown="closeSidebar"></div>
     <div class="header-container">
       <div class="header-inner-container">
-        <span class="header-side-open" @mousedown="openSidebar">
+        <span class="header-side-open" @pointerdown="openSidebar">
           <SvgIcon
 						name="menu"
 						color="#ffffff"

@@ -3,7 +3,7 @@
 	<div
 		class="modal-content"
 		v-if="isErrorVisible"
-		@mousedown.stop
+		@pointerdown.stop
 	>
 		<p>{{ errorMessage }}</p>
 	</div>

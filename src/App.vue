@@ -12,17 +12,17 @@
 						<p class="type-select" v-if="isVisibleTypeSelect" @mouseover="showFleetOptions">艦隊種別</p>
 						<div v-if="isFleetOptionsVisible" class="fleet-option-box" @mouseover="showFleetOptions"
 							@mouseleave="hideFleetOptions">
-							<span class="fleet-type" @mousedown=updateSelectedType(1)>第一艦隊</span>
-							<span class="fleet-type" @mousedown=updateSelectedType(2)>第二艦隊</span>
-							<span class="fleet-type" @mousedown=updateSelectedType(3)>第三艦隊</span>
-							<span class="fleet-type" @mousedown=updateSelectedType(4)>第四艦隊</span>
-							<span class="fleet-type" @mousedown=updateSelectedType(5)>空母機動部隊</span>
-							<span class="fleet-type" @mousedown=updateSelectedType(6)>水上打撃部隊</span>
-							<span class="fleet-type" @mousedown=updateSelectedType(7)>輸送護衛部隊</span>
+							<span class="fleet-type" @pointerdown=updateSelectedType(1)>第一艦隊</span>
+							<span class="fleet-type" @pointerdown=updateSelectedType(2)>第二艦隊</span>
+							<span class="fleet-type" @pointerdown=updateSelectedType(3)>第三艦隊</span>
+							<span class="fleet-type" @pointerdown=updateSelectedType(4)>第四艦隊</span>
+							<span class="fleet-type" @pointerdown=updateSelectedType(5)>空母機動部隊</span>
+							<span class="fleet-type" @pointerdown=updateSelectedType(6)>水上打撃部隊</span>
+							<span class="fleet-type" @pointerdown=updateSelectedType(7)>輸送護衛部隊</span>
 						</div>
 					</div>
 					<div style="flex: 1;">
-						<button class="design-button" @mousedown="showArea">{{ selectedArea ? '海域: ' + selectedArea : '海域'
+						<button class="design-button" @pointerdown="showArea">{{ selectedArea ? '海域: ' + selectedArea : '海域'
 							}}</button>
 					</div>
 					<Option />
@@ -135,16 +135,16 @@
 		</div>
 		<div class="result-container">
 			<template v-if="simResult.length > 0">
-				<SvgIcon @mousedown="switchSeek" name="radar-8" :color="adoptFleet?.seek[0] === 999 ? '#f6a306' : '#fff'"
+				<SvgIcon @pointerdown="switchSeek" name="radar-8" :color="adoptFleet?.seek[0] === 999 ? '#f6a306' : '#fff'"
 					class="ignore-seek icon-on-map"></SvgIcon>
-				<SvgIcon @mousedown="showRefference" name="layers" color="#fff" class="reference icon-on-map"></SvgIcon>
+				<SvgIcon @pointerdown="showRefference" name="layers" color="#fff" class="reference icon-on-map"></SvgIcon>
 				<SvgIcon @click="screenShot" name="camera-outline" color="#fff" class="screen-shot icon-on-map"></SvgIcon>
 			</template>
 			<div id="cy" class="cy">
 			</div>
 		</div>
 	</div>
-	<div v-if="isAreaVisible || isRefferenceVisible || isErrorVisible" class="modal-overlay" @mousedown="closeModals">
+	<div v-if="isAreaVisible || isRefferenceVisible || isErrorVisible" class="modal-overlay" @pointerdown="closeModals">
 		<Area />
 		<Refference />
 		<Error />
@@ -153,7 +153,7 @@
 		<div class="popup" id="popup-info" :style="popupStyle">
 			<p>
 				<span>能動分岐</span>
-				<button class="design-button remote-active" :value="`${node}`" @mousedown="switchActive">
+				<button class="design-button remote-active" :value="`${node}`" @pointerdown="switchActive">
 					切替
 				</button>
 			</p>
@@ -525,7 +525,7 @@ watch([adoptFleet, selectedArea, options], async () => {
 			popupHtml.value = null;
 			store.UPDATE_DREW_AREA(selectedArea.value);
 
-			cy.on('mousedown', (event) => { // cytoscape周りはどうしてもDOM操作が必要になる
+			cy.on('mousedown tapstart', (event) => { // cytoscape周りはどうしてもDOM操作が必要になる
 				if (cy) {
 					const target = event.target;
 					if (event.target.data('name')) { // node
@@ -539,7 +539,7 @@ watch([adoptFleet, selectedArea, options], async () => {
 				}
 			});
 
-			cy.on('cxttapstart', 'node', async (event) => {
+			cy.on('cxttapstart taphold', 'node', async (event) => {
 				if (!cy) return;
 				if (event.target.data('name')) {
 					const html = await generateResourceHtml(
@@ -687,18 +687,21 @@ const screenShot = async () => {
 
 // スクロールバウンス回避
 watch([isAreaVisible, isRefferenceVisible, isErrorVisible], () => {
+	const style = document.body.style;
 	if (
 		isAreaVisible.value
 		|| isRefferenceVisible.value
 		|| isErrorVisible.value
 	) { // DOMはあんまし触りたくないけどしゃあないかな
-		document.body.style.position = "fixed";
-  	document.body.style.top = `-${window.scrollY}px`;
-		document.body.style.left = `${window.scrollX}px`;
+		style.position = "fixed";
+  	style.top = `-${window.scrollY}px`;
+		style.left = `${window.scrollX}px`;
+		style.minWidth = '100%';
 	} else {
-		document.body.style.position = "";
-  	document.body.style.top = "";
-		document.body.style.left = "";
+		style.position = "";
+  	style.top = "";
+		style.left = "";
+		style.minWidth = '960px';
 	}
 });
 

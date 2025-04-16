@@ -1,7 +1,7 @@
 <template>
 	<div
 		v-if="isRefferenceVisible"
-		@mousedown.stop
+		@pointerdown.stop
 		class="refference-container"
 	>
 		<v-tabs
@@ -12,8 +12,8 @@
     color="#1976d2"
     bg-color="primary"
   >
-    <v-tab class="custom-tab" :value="route" @mousedown="tab = route">経路</v-tab>
-    <v-tab class="custom-tab" :value="branch" @mousedown="tab = branch">分岐条件</v-tab>
+    <v-tab class="custom-tab" :value="route" @pointerdown="tab = route">経路</v-tab>
+    <v-tab class="custom-tab" :value="branch" @pointerdown="tab = branch">分岐条件</v-tab>
   </v-tabs>
 		<v-tabs-window v-model="tab">
 			<v-tabs-window-item :value="Route">
