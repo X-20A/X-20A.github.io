@@ -685,6 +685,7 @@ const screenShot = async () => {
 	}
 };
 
+let save_y = 0;
 // スクロールバウンス回避
 watch([isAreaVisible, isRefferenceVisible, isErrorVisible], () => {
 	const style = document.body.style;
@@ -693,15 +694,17 @@ watch([isAreaVisible, isRefferenceVisible, isErrorVisible], () => {
 		|| isRefferenceVisible.value
 		|| isErrorVisible.value
 	) { // DOMはあんまし触りたくないけどしゃあないかな
-		style.position = "fixed";
+		save_y = window.scrollY;
   	style.top = `-${window.scrollY}px`;
 		style.left = `${window.scrollX}px`;
+		style.position = "fixed";
 		style.minWidth = '100%';
 	} else {
-		style.position = "";
   	style.top = "";
 		style.left = "";
+		style.position = "";
 		style.minWidth = '960px';
+		window.scrollTo({ top: save_y });
 	}
 });
 
