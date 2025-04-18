@@ -660,7 +660,6 @@ const screenShot = async () => {
 		const time = generateFormatedTime();
 		const fileName = `${drewArea.value}_${time}`;
 
-		
 		const deck = createDeckBuilderFromAdoptFleet(adoptFleet.value as AdoptFleet);
 		const gkcoiBuilder = Object.assign(deck, {
 			lang: 'jp',
@@ -676,6 +675,7 @@ const screenShot = async () => {
 		};
 		const canvas = await gkcoi.generate(
 			gkcoiBuilder,
+			undefined,
 			los,
 			speed as 0|5|10|15|20,
 		);
