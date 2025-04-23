@@ -6425,8 +6425,10 @@ export default class SimController {
                         }
                         break;
                     case 'D1':
-                        if (true) {
+                        if (seek[3] >= 92) {
                             return 'D2';
+                        } else {
+                            return 'E';
                         }
                         break;
                     case 'E':
@@ -6443,7 +6445,7 @@ export default class SimController {
                         }
                         break;
                     case 'F':
-                        if (seek[3] >= 100) {
+                        if (seek[3] >= 102) {
                             return 'F2';
                         } else {
                             return 'F1';
@@ -6466,9 +6468,11 @@ export default class SimController {
                     case 'M':
                         if (Number(option.phase) < 3) {
                             return 'N';
-                        } else if (BBs > 2) {
+                        } else if (BBs > 3) {
                             return 'U1';
-                        } else if (AV + AS + AO + LHA === 0 && Ds > 5) {
+                        } else if (BBs === 3 && speed === Sp.slow) {
+                            return 'U1';
+                        } else if (AV + AO + LHA === 0 && Ds > 5) {
                             return 'N';
                         } else if (CVH > 0) {
                             return 'U1';
@@ -6481,7 +6485,7 @@ export default class SimController {
                     case 'N':
                         if (option.phase === '3' && Ds < 6) {
                             return 'U2';
-                        } else if (option.phase === '3' && LHA > 0) {
+                        } else if (option.phase === '3' && LHA + AV + AO > 0) {
                             return 'U2';
                         } else if (yamato > 0) {
                             return 'O';
@@ -6493,18 +6497,28 @@ export default class SimController {
                             return 'O';
                         } else if (option.difficulty === '4' && reigo > 4 && Ds > 5) {
                             return 'P';
-                        } else if (option.difficulty === '3' && reigo > 4) {
+                        } else if (option.difficulty === '3' && reigo > 4 && Ds > 3) {
                             return 'P';
-                        } else if (option.difficulty === '2' && reigo > 3) {
+                        } else if (option.difficulty === '2' && reigo > 3 && Ds > 3) {
                             return 'P';
-                        } else if (option.difficulty === '1' && reigo > 2) {
+                        } else if (option.difficulty === '1' && reigo > 2 && Ds > 3) {
                             return 'P';
                         } else {
                             return 'O';
                         }
                         break;
                     case 'P':
-                        if (BBs > 2) {
+                        if (isFaster) {
+                            return 'P2';
+                        } else if(BBs > 2) {
+                            return 'P1';
+                        } else if (CVH > 0) {
+                            return 'P1';
+                        } else if (CVL > 2) {
+                            return 'P1';
+                        } else if (Ds < 4) {
+                            return 'P1';
+                        } else if (Ss > 0 && AS === 0) {
                             return 'P1';
                         } else {
                             return 'P2';
@@ -6515,30 +6529,26 @@ export default class SimController {
                             return 'Q';
                         } else if (BBs > 3) {
                             return 'Q';
+                        } else if(CVH > 1) {
+                            return 'Q';
                         } else if (option.phase !== '3') {
-                            if (Ds > 3) {
-                                return 'R';
-                            } else if (option.difficulty === '1') {
-                                return 'R';
-                            } else {
-                                return 'Q';
-                            }
+                            return 'R';
+                        } else if (BBs === 3) {
+                            return 'Q';
+                        } else if (LHA + AV + AO > 2) {
+                            return 'Q';
+                        } else if (Ds < 4 && fleet.countShip(['杉', '榧']) === 0) {
+                            return 'Q';
+                        } else if (option.difficulty === '4' && reigo < 5) {
+                            return 'Q';
+                        } else if (reigo > 4 && Ds > 3) {
+                            return 'R';
+                        } else if (reigo > 1 && Ds > 5) {
+                            return 'R';
+                        } else if (AV + AO + LHA === 0 && Ds > 5) {
+                            return 'R';
                         } else {
-                            if (BBs === 3) {
-                                return 'Q';
-                            } else if (Ds < 4) {
-                                return 'Q';
-                            } else if (option.difficulty === '4' && reigo < 5) {
-                                return 'Q';
-                            } else if (reigo > 4) {
-                                return 'R';
-                            } else if (reigo > 1 && DD > 5) {
-                                return 'R';
-                            } else if (AV + AS + AO + LHA === 0 && DD > 5) {
-                                return 'R';
-                            } else {
-                                return 'Y';
-                            }
+                            return 'Y';
                         }
                         break;
                     case 'R':
@@ -6582,7 +6592,9 @@ export default class SimController {
                         }
                         break;
                     case 'U2':
-                        if (reigo > 3) {
+                        if (CVH > 1) {
+                            return 'V';
+                        } else if (reigo > 3) {
                             return 'U3';
                         } else if (yamato === 0) {
                             return 'U3';
