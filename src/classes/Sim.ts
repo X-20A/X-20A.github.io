@@ -5780,6 +5780,8 @@ export default class SimController {
                                 return 'C1';
                             } else if (Ds === 2 && f_length < 6) {
                                 return 'C1';
+                            } else if (CL + Ds > 2 && f_length === 5) {
+                                return 'C1';
                             } else if (f_length < 5) {
                                 return 'C1';
                             } else {
@@ -5790,7 +5792,7 @@ export default class SimController {
                     case 'C':
                         if (Number(option.phase) < 3) {
                             return 'G';
-                        } else if (BBs === 0 && CVs < 2 && CL > 0 && Ds > 2 && speed !== Sp.slow) {
+                        } else if (BBs === 0 && CVs < 2 && CLE > 0 && Ds > 2 && speed !== Sp.slow) {
                             return 'I';
                         } else {
                             return 'G';
@@ -5818,7 +5820,7 @@ export default class SimController {
                             return 'D1';
                         } else if (DE > 2) {
                             return 'D3';
-                        } else if (CL === 1 && Ds === 3 && f_length === 4) {
+                        } else if (CL + CVL === 1 && Ds === 3 && f_length === 4) {
                             return 'D3';
                         } else if (CL === 1 && Ds === 4 && speed !== Sp.slow) {
                             return 'D3';
@@ -5885,7 +5887,9 @@ export default class SimController {
                         }
                         break;
                     case 'A':
-                        if (CL > 0 && Ds > 1) {
+                        if (BBCVs > 3) {
+                            return 'A1';
+                        } else if (CL > 0 && Ds > 1) {
                             return 'A2';
                         } else if (BBs > 1) {
                             return 'A1';
@@ -5968,16 +5972,16 @@ export default class SimController {
                             return 'S';
                         } else if (fleet.countShip('大泊') > 0) {
                             return 'V';
-                        } else if (daigo > 7) {
-                            return 'V';
-                        } else if (Ds < 6) {
+                        } else if (option.difficulty === '4' && daigo < 8 && Ds < 6) {
+                            return 'S';
+                        } else if (['1','2','3'].includes(option.difficulty) && daigo < 6 && Ds < 6) {
                             return 'S';
                         } else if (CLE > 2) {
                             return 'V';
-                        } else if (speed === Sp.slow) {
-                            return 'S';
-                        } else {
+                        } else if (speed !== Sp.slow) {
                             return 'V';
+                        } else {
+                            return 'S';
                         }
                         break;
                     case 'V1':
@@ -6039,7 +6043,7 @@ export default class SimController {
                         }
                         break;
                     case 'B2':
-                        if (seek[3] >= 71) {
+                        if (seek[3] >= 72) {
                             return 'B4';
                         } else {
                             return 'B3';
@@ -6078,6 +6082,10 @@ export default class SimController {
                             return 'E2';
                         } else if (CVH > 0) {
                             return 'E2';
+                        } else if (fleet.isInclude('大泊') && BBs + CVL < 3 && Ds > 1) {
+                            return 'F';
+                        } else if (BBs > 2) {
+                            return 'B';
                         } else if (BBs > 1 && speed === Sp.slow) {
                             return 'B';
                         } else if (CL === 0) {
@@ -6097,15 +6105,13 @@ export default class SimController {
                         }
                         break;
                     case 'F1':
-                        if (seek[3] < 80) {
+                        if (seek[3] < 79) {
                             return 'F2';
                         } else if (isFaster) {
                             return 'G';
-                        } else if (fleet.countShip('大泊') > 0) {
-                            return 'G';
-                        } else if (BBs > 1) {
+                        } else if (BBs > 1 && !fleet.isInclude('大泊')) {
                             return 'F3';
-                        } else if(BBs === 1 && speed === Sp.slow) {
+                        } else if (BBs === 1 && !fleet.isInclude('大泊') && speed === Sp.slow) {
                             return 'F3';
                         } else if (option.difficulty === '4' && daigo > 5 && Ds > 3) {
                             return 'G';
@@ -6134,7 +6140,9 @@ export default class SimController {
                         }
                         break;
                     case 'I':
-                        if (speed === Sp.slow) {
+                        if (Ss === f_length) {
+                            return 'I2';
+                        } if (speed === Sp.slow) {
                             return 'I1';
                         } else if (f_length - arBulge > 5) {
                             return 'I2';
@@ -6191,7 +6199,7 @@ export default class SimController {
                         }
                         break;
                     case 'Q':
-                       if (track.includes('M1')) {
+                       if (track.includes('P')) {
                            return 'O2';
                        } else if (BBs > 3) {
                            return 'S';
@@ -6211,9 +6219,9 @@ export default class SimController {
                         }
                         break;
                     case 'V':
-                        if (seek[1] < 75) {
+                        if (seek[1] < 76) {
                             return 'W';
-                        } else if (option.phase === '5' && hakuchi > 0) {
+                        } else if (option.phase === '5' && fleet.countShip(['明石改','朝日改','秋津洲改','速吸改','山汐丸改','神威改母','宗谷','しまね丸改']) > 0) {
                             return 'S3';
                         } else {
                             return 'X';
@@ -6265,10 +6273,10 @@ export default class SimController {
                             return 'C';
                         } else if (Ss > 0 && AS === 0) {
                             return 'S';
-                        } else if (Ss > 0 && [Sp.fast, Sp.slow].includes(speed)) {
-                            return 'S';
                         } else if (isFaster) {
                             return 'C';
+                        } else if (Ss > 0 && Ds < 6) {
+                            return 'S';
                         } else if (BBs + CVH > 3 && speed === Sp.slow) {
                             return 'S';
                         } else if (CVH > 2) {
@@ -6278,7 +6286,7 @@ export default class SimController {
                         } else if (Ds > 2 && speed !== Sp.slow) {
                             return 'T';
                         } else {
-                            return 'T';
+                            return 'S';
                         }
                         break;
                     case 'C':
@@ -6656,10 +6664,14 @@ export default class SimController {
                     case 'D':
                         if (isUnion) {
                             if (track.includes('1')) {
-                                if (isFaster) {
-                                    return 'F';
-                                } else if (DD > 5 && BBs + CVH < 3 && reigo > 1) {
-                                    return 'F';
+                                if (option.difficulty === '4' && reigo < 5) {
+                                    return 'E';
+                                } else if (option.difficulty === '3' && reigo < 4) {
+                                    return 'E';
+                                } else if (option.difficulty === '2' && reigo < 3) {
+                                    return 'E';
+                                } else if (Ds > 5 && BBs + CVH < 3) {
+                                    return 'F'; 
                                 } else {
                                     return 'E';
                                 }
@@ -6693,7 +6705,9 @@ export default class SimController {
                         }
                         break;
                     case 'H':
-                        if (isFaster) {
+                        if (seek[1] < 65) {
+                            return 'E';
+                        } else if (isFaster) {
                             return 'C2';
                         } else {
                             return 'E';
@@ -6702,15 +6716,13 @@ export default class SimController {
                     case 'J':
                         if (f_type === Ft.transport) {
                             return 'J3';
-                        } else if (AV + AS + AO + LHA > 2) {
-                            return 'J3';
                         } else if (yamato > 0) {
                             return 'J1';
+                        } else if (AV + AO + LHA > 2) {
+                            return 'J3';
                         } else if (Number(option.phase) < 3) {
                             return 'J2';
-                        } else if (CVH > 0) {
-                            return 'J2';
-                        } else if (reigo > 5) {
+                        } else if (reigo > 3 && Ds > 3 && BBs + CVH < 4) {
                             return 'J1';
                         } else {
                             return 'J2';
@@ -6719,51 +6731,43 @@ export default class SimController {
                     case 'J1':
                         if (Number(option.phase) < 3) {
                             return 'J2';
+                        } else if (speed === Sp.fastest) {
+                            return 'R';
                         } else if (isFaster) {
                             return 'P';
-                        } else if (fleet.countShip('Minneapolis') > 0) {
-                            return 'P';
                         } else if (speed === Sp.slow) {
-                            return 'P';
+                            return 'J2';
                         } else if (yamato > 0) {
                             return 'J2';
-                        } else if (Ds < 4) {
-                            return 'J2';
-                        } else if (BBs > 2 && reigo < 5) {
-                            return 'J2';
-                        } else {
+                        } else if (fleet.countShip(['榧','杉']) > 0) {
                             return 'P';
+                        } else if (fleet.countShip(['足柄','大淀','霞','朝霜','清霜']) > 4) {
+                            return 'P';
+                        } else if (Ds > 3 && BBs + CVH < 3) {
+                            return 'P';
+                        } else {
+                            return 'J2';
                         }
                         break;
                     case 'J2':
-                        if (LHA > 0) {
+                        if (option.phase !== '1' && isFaster) {
+                            return 'P';
+                        } else if (LHA > 0) {
+                            return 'J3';
+                        } else if (AV > 1) {
                             return 'J3';
                         } else if (option.phase === '1') {
                             return 'K';
-                        } else if (BBs > 3) {
-                            return 'K';
-                        } else if (CVH > 3) {
-                            return 'K';
-                        } else if (isFaster) {
-                            return 'P';
                         } else if (speed === Sp.slow) {
                             return 'K';
-                        } else if (Ds < 5) {
+                        } else if (BBs > 3) {
                             return 'K';
-                        } else if (CAs === 0) {
+                        } else if (CAs === 1 && CL > 1 && Ds > 5 && CVH === 0) {
+                            return 'P';
+                        } else if (CAs > 1 && Ds > 4 && CVH < 3 && yamato === 0) {
+                            return 'P';
+                        } else {
                             return 'K';
-                        } else if (CAs === 1) {
-                            if (CL > 1 && Ds > 5 && CVH === 0) {
-                                return 'P';
-                            } else {
-                                return 'K';
-                            }
-                        } else { // CAs > 1
-                            if (yamato > 0) {
-                                return 'K';
-                            } else {
-                                return 'P';
-                            }
                         }
                         break;
                     case 'J3':
@@ -6782,7 +6786,7 @@ export default class SimController {
                         }
                         break;
                     case 'N':
-                        if (hakuchi > 0) {
+                        if (fleet.countShip(['明石改','朝日改','秋津洲改','速吸改','山汐丸改','神威改母','宗谷','しまね丸改']) > 0) {
                             return 'O1';
                         } else {
                             return 'O';
@@ -6794,9 +6798,15 @@ export default class SimController {
                         }
                         break;
                     case 'S':
-                        if (yamato > 0 && CL < 2) {
+                        if (speed === Sp.fastest) {
+                            return 'X';
+                        } else if (BBs + CVH > 3) {
                             return 'W';
-                        } else if (['4', '3', '2'].includes(option.difficulty) && reigo > 5 && Ds > 5) {
+                        } else if (Ss > 0 && AS === 0) {
+                            return 'W';
+                        } else if (yamato > 0 && CL < 2) {
+                            return 'W';
+                        } else if (['4','3','2'].includes(option.difficulty) && reigo > 5 && Ds > 5) {
                             return 'X';
                         } else if (option.difficulty === '1' && reigo > 0) {
                             return 'X';

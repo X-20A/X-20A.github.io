@@ -141,6 +141,7 @@ describe('Simテスト', () => {
 
                 if (expected_route !== actual_route) {
                     console.log(`海域: ${area_id}`);
+                    console.log('option: ', options);
                     console.log(`期待: ${expected_route}`);
                     console.log(`実際: ${actual_route}`);
                     console.log(
