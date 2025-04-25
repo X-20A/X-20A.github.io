@@ -6501,8 +6501,6 @@ export default class SimController {
                             return 'O';
                         } else if (CVH > 0) {
                             return 'O';
-                        } else if (Ds < 4) {
-                            return 'O';
                         } else if (option.difficulty === '4' && reigo > 4 && Ds > 5) {
                             return 'P';
                         } else if (option.difficulty === '3' && reigo > 4 && Ds > 3) {
@@ -6561,29 +6559,25 @@ export default class SimController {
                         break;
                     case 'R':
                         if (option.phase !== '3') {
-                            if (seek[1] >= 80) {
+                            if (seek[1] >= 74) {
                                 return 'T';
                             } else {
                                 return 'S';
                             }
                         } else {
-                            if (track.includes('U') || track.includes('U1')) {
-                                if (seek[1] >= 74) {
-                                    return 'Z';
-                                } else {
-                                    return 'S';
-                                }
+                            if (seek[1] >= 74) {
+                                return 'Z';
+                            } else if (track.includes('U') || track.includes('U1')) {
+                                return 'Z';
+                            } else if (Ds < 6) {
+                                return 'Z';
                             } else {
-                                if (seek[1] >= 80) {
-                                    return 'T';
-                                } else {
-                                    return 'S';
-                                }
+                                return 'T';
                             }
                         }
                         break;
                     case 'U1':
-                        if (Ss > 0) {
+                        if (Ss > 0 && AS === 0) {
                             return 'N';
                         } else if (Number(option.difficulty) > 2 && reigo > 4) {
                             return 'U2';
