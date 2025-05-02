@@ -6565,8 +6565,8 @@ export default class SimController {
                                 return 'S';
                             }
                         } else {
-                            if (seek[1] >= 74) {
-                                return 'Z';
+                            if (seek[1] < 74) {
+                                return 'S';
                             } else if (track.includes('U') || track.includes('U1')) {
                                 return 'Z';
                             } else if (Ds < 6) {
