@@ -10,7 +10,7 @@ test('data: templateのデータに不備がないか確認', () => {
     const urlSet = new Set<string>();
 
     for (const data of datas) {
-        const { title, url } = data;
+        const { title, token: url } = data;
 
         // title の空文字チェック
         if (title === '') throw new Error(`titleが空文字: ${url}`);

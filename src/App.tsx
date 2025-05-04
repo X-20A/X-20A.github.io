@@ -22,17 +22,14 @@ const App: React.FC = () => {
     if (!template) return;
 
     const area_id = `${template.world}-${template.area}` as AreaId;
-    const route = template.route;
-    drawMap(area_id, route);
-  }, [template]);
+    drawMap(area_id, template.route);
 
-  useEffect(() => {
-    if (template?.memo === null) {
+    if (template.memo === null) {
       setMemoText('');
-    } else if (template?.memo) {
+    } else if (template.memo) {
       setMemoText(template.memo);
     }
-  }, [template?.memo]);
+  }, [template]);
 
   return (
     <>
@@ -48,22 +45,27 @@ const App: React.FC = () => {
               )}
             </div>
             <div className="info">
-              <p className="title">{template ? template.title : ''}</p>
-              <p>
-                <a
-                  className="url"
-                  href={template ? `https://tinyurl.com/${template.url}` : ''}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {template ? `tinyurl.com/${template.url}` : ''}
-                </a>
-              </p>
-              <div className="memo">
-                {memoText
-                  ? memoText.split('$e').map((text, index) => <p key={index}>{text}</p>)
-                  : null}
-              </div>
+              {template && (
+                <>
+                  <p className="title">{template.title}</p>
+                  <p>
+                    <a
+                      className="url"
+                      href={`https://kc3kai.github.io/kancolle-replay/?s=${template.token}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {`https://kc3kai.github.io/kancolle-replay/?s=${template.token}`}
+                    </a>
+                  </p>
+                  <div className="memo">
+                    {memoText &&
+                      memoText.split('$e').map((text, index) => (
+                        <p key={index}>{text}</p>
+                      ))}
+                  </div>
+                </>
+              )}
             </div>
           </div>
           <div className="middle">

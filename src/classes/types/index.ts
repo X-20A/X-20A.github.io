@@ -11,7 +11,7 @@ export interface Ttemplate {
     world: number;
     area: number;
     route: string;
-    url: string;
+    token: string;
     memo: string | null;
 }
 

@@ -41,8 +41,11 @@ const Areas: React.FC = () => {
       break;
   }
 
-  const openUrl = (item: Ttemplate) => {
-    window.open(`https://tinyurl.com/${item.url}`, "_blank")
+  const openUrl = (template: Ttemplate) => {
+    window.open(
+      `https://kc3kai.github.io/kancolle-replay/?s=${template.token}`
+      , "_blank"
+    );
   };
 
   return (

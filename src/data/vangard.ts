@@ -7,7 +7,7 @@ const vangards: Ttemplate[] = [
         "world": 2,
         "area": 5,
         "route": "1-B-F-E-I-O",
-        "url": "2akw5xfa+",
+        "token": "SsoCD_UhT5e",
         "memo": "道中警戒陣$e「水上反撃部隊」想定",
     },
     {
@@ -15,7 +15,7 @@ const vangards: Ttemplate[] = [
         "world": 4,
         "area": 5,
         "route": "1-C-D-H-T",
-        "url": "2c7age4t+",
+        "token": "iodR72c1t9H",
         "memo": "道中警戒陣$eボスマス気球有効"
     },
     {
@@ -23,7 +23,7 @@ const vangards: Ttemplate[] = [
         "world": 4,
         "area": 5,
         "route": "1-C-D-H-T",
-        "url": "282287s5+",
+        "token": "eh4hPopoSAe",
         "memo": "道中警戒陣$eボスマス気球有効"
     },
     {
@@ -31,7 +31,7 @@ const vangards: Ttemplate[] = [
         "world": 5,
         "area": 3,
         "route": "1-D-G-I-O-P",
-        "url": "29bc8yyl+",
+        "token": "kPAafgOY0Qh",
         "memo": "道中警戒陣"
     },
     {
@@ -39,7 +39,7 @@ const vangards: Ttemplate[] = [
         "world": 5,
         "area": 3,
         "route": "1-D-G-I-O-K-E-Q",
-        "url": "26tgtrvz+",
+        "token": "oEpDJkIsBQW",
         "memo": "道中警戒陣"
     },
     {
@@ -47,7 +47,7 @@ const vangards: Ttemplate[] = [
         "world": 5,
         "area": 3,
         "route": "1-D-G-I-O-P-K-E-Q",
-        "url": "26nhgr2y+",
+        "token": "qJxlRfDg1Sw",
         "memo": "1,3戦目警戒陣"
     },
     {
@@ -55,7 +55,7 @@ const vangards: Ttemplate[] = [
         "world": 5,
         "area": 4,
         "route": "1-A-D-E-H-I-J-M-P",
-        "url": "23nacygr+",
+        "token": "DvR41eICC9_",
         "memo": "渦潮による喪失は未入力$eHマス警戒陣"
     },
     {
@@ -63,7 +63,7 @@ const vangards: Ttemplate[] = [
         "world": 5,
         "area": 5,
         "route": "1-B-F-D-H-N-O-S",
-        "url": "2bhoq3nk+",
+        "token": "-66ANjagdAa",
         "memo": "1戦目警戒陣$e渦潮による喪失は未入力$e旗艦健在なら夜戦$eタッチ使用時陣形注意"
     },
     {
@@ -71,7 +71,7 @@ const vangards: Ttemplate[] = [
         "world": 5,
         "area": 5,
         "route": "1-B-F-D-H-N-O-S",
-        "url": "23v8hcba+",
+        "token": "v0eLvp42oJ0",
         "memo": "1戦目警戒陣$e渦潮による喪失は未入力$eタッチ使用時陣形注意"
     },
     {
@@ -79,7 +79,7 @@ const vangards: Ttemplate[] = [
         "world": 5,
         "area": 5,
         "route": "1-B-K-P-S",
-        "url": "2dplnfxr+",
+        "token": "y7agQmYJBWN",
         "memo": "1戦目警戒陣$e旗艦健在なら夜戦$eタッチ使用時陣形注意"
     },
     {
@@ -87,7 +87,7 @@ const vangards: Ttemplate[] = [
         "world": 5,
         "area": 5,
         "route": "1-B-K-P-S",
-        "url": "26wwh27s+",
+        "token": "4KInQN36mAt",
         "memo": "1戦目警戒陣$e旗艦健在なら夜戦$eタッチ使用時陣形注意"
     },
     {
@@ -95,7 +95,7 @@ const vangards: Ttemplate[] = [
         "world": 6,
         "area": 2,
         "route": "1-C-E-J-K",
-        "url": "2342dfh6+",
+        "token": "U12U_pWZU4A",
         "memo": "道中警戒陣"
     },
     {
@@ -103,7 +103,7 @@ const vangards: Ttemplate[] = [
         "world": 6,
         "area": 3,
         "route": "1-A-C-E-G-H-J",
-        "url": "234wmr4w+",
+        "token": "6gR_vAd4Cwt",
         "memo": "全戦警戒陣$eB未満夜戦"
     },
     {
@@ -111,7 +111,7 @@ const vangards: Ttemplate[] = [
         "world": 6,
         "area": 3,
         "route": "1-A-C-E-F-H-J",
-        "url": "2a6xa6vt+",
+        "token": "qIMmhDjYJYb",
         "memo": "1戦目警戒陣$eB未満夜戦"
     },
 ]; // @expansion

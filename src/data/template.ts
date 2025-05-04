@@ -12,7 +12,7 @@ const templates: Ttemplate[] = [
         "world": 1,
         "area": 3,
         "route": "1-C-F-J",
-        "url": "27ffz8ba+",
+        "token": "ef1AQ5IYDpi",
         "memo": null
     },
     {
@@ -20,7 +20,7 @@ const templates: Ttemplate[] = [
         "world": 1,
         "area": 4,
         "route": "1-B-C-F-E-H-L",
-        "url": "2d3n34oe+",
+        "token": "jvG3ZIHYFUE",
         "memo": null
     },
     {
@@ -28,7 +28,7 @@ const templates: Ttemplate[] = [
         "world": 1,
         "area": 5,
         "route": "1-A-D-F-G-J",
-        "url": "2b3dphsj+",
+        "token": "BwBUirzIyWt",
         "memo": "ボスマス通常消費"
     },
     {
@@ -36,7 +36,7 @@ const templates: Ttemplate[] = [
         "world": 1,
         "area": 6,
         "route": "1-A-E-G-F-B-N",
-        "url": "255m4npx+",
+        "token": "_B8WLx5nRht",
         "memo": null
     },
     {
@@ -44,7 +44,7 @@ const templates: Ttemplate[] = [
         "world": 1,
         "area": 6,
         "route": "1-A-E-G-K-M-J-D-N",
-        "url": "2xurzrzs+",
+        "token": "oTp62HtqhAZ",
         "memo": null
     },
     // @2
@@ -53,7 +53,7 @@ const templates: Ttemplate[] = [
         "world": 2,
         "area": 1,
         "route": "1-C-E-H",
-        "url": "2cwk4rbz+",
+        "token": "mQitTy3zCmo",
         "memo": null
     },
     {
@@ -61,7 +61,7 @@ const templates: Ttemplate[] = [
         "world": 2,
         "area": 1,
         "route": "1-C-D-H",
-        "url": "2akvpfvo+",
+        "token": "MMVguRwfrCI",
         "memo": null
     },
     {
@@ -69,7 +69,7 @@ const templates: Ttemplate[] = [
         "world": 2,
         "area": 3,
         "route": "1-B-E-F-J-N",
-        "url": "23292uy5+",
+        "token": "UU6X1HkE_7p",
         "memo": null
     },
     {
@@ -77,7 +77,7 @@ const templates: Ttemplate[] = [
         "world": 2,
         "area": 4,
         "route": "1-B-G-H-L-P",
-        "url": "2d94xpje+",
+        "token": "83maZZ81AF4",
         "memo": "道中単縦陣"
     },
     {
@@ -85,7 +85,7 @@ const templates: Ttemplate[] = [
         "world": 2,
         "area": 5,
         "route": "1-B-F-J-O",
-        "url": "24j2q4dg+",
+        "token": "RF05sxMlR-E",
         "memo": null
     },
     {
@@ -93,7 +93,7 @@ const templates: Ttemplate[] = [
         "world": 2,
         "area": 5,
         "route": "1-B-F-E-I-O",
-        "url": "23e35zje+",
+        "token": "0AE89SUQPG0",
         "memo": null
     },
     {
@@ -101,7 +101,7 @@ const templates: Ttemplate[] = [
         "world": 2,
         "area": 5,
         "route": "1-C-E-I-O",
-        "url": "2xrxba6u+",
+        "token": "40Wb9zqgCVs",
         "memo": null
     },
     // @3
@@ -110,7 +110,7 @@ const templates: Ttemplate[] = [
         "world": 3,
         "area": 1,
         "route": "1-C-F-G",
-        "url": "29ffx6lz+",
+        "token": "7BN7CddW4iV",
         "memo": null
     },
     {
@@ -118,7 +118,7 @@ const templates: Ttemplate[] = [
         "world": 3,
         "area": 2,
         "route": "1-C-E-F-L",
-        "url": "25jx7qrw+",
+        "token": "eX2MuzDqoRW",
         "memo": "渦潮による喪失は未入力$eB未満夜戦"
     },
     {
@@ -126,7 +126,7 @@ const templates: Ttemplate[] = [
         "world": 3,
         "area": 2,
         "route": "1-C-G-J-K",
-        "url": "2yedf8be+",
+        "token": "qJaYDF9_EPh",
         "memo": "渦潮による喪失は未入力"
     },
     {
@@ -134,7 +134,7 @@ const templates: Ttemplate[] = [
         "world": 3,
         "area": 3,
         "route": "1-A-C-G-M",
-        "url": "2yavuen7+",
+        "token": "j_j2h-z26s9",
         "memo": "渦潮による喪失は未入力"
     },
     {
@@ -142,7 +142,7 @@ const templates: Ttemplate[] = [
         "world": 3,
         "area": 3,
         "route": "1-A-B-F-J-M",
-        "url": "24faxgjk+",
+        "token": "bKjvA7x8iUm",
         "memo": "渦潮による喪失は未入力"
     },
     {
@@ -150,7 +150,7 @@ const templates: Ttemplate[] = [
         "world": 3,
         "area": 4,
         "route": "1-A-C-E-G-J-P",
-        "url": "228gew48+",
+        "token": "dB43TGLTBxW",
         "memo": "B未満夜戦"
     },
     {
@@ -158,7 +158,7 @@ const templates: Ttemplate[] = [
         "world": 3,
         "area": 4,
         "route": "1-D-H-L-J-P",
-        "url": "23xmc5aw+",
+        "token": "aiXh6R_JRXp",
         "memo": "B未満夜戦"
     },
     {
@@ -166,7 +166,7 @@ const templates: Ttemplate[] = [
         "world": 3,
         "area": 5,
         "route": "1-B-D-H-K",
-        "url": "2boy94t6+",
+        "token": "R4TPO6dCSi9",
         "memo": "ほっぽマス気球有効$e旗艦健在なら夜戦"
     },
     {
@@ -174,7 +174,7 @@ const templates: Ttemplate[] = [
         "world": 3,
         "area": 5,
         "route": "1-B-D-H-K",
-        "url": "27sb7w6p+",
+        "token": "L5W5qKHXxlX",
         "memo": "ほっぽマス気球有効$e旗艦健在なら夜戦"
     },
     {
@@ -182,7 +182,7 @@ const templates: Ttemplate[] = [
         "world": 3,
         "area": 5,
         "route": "1-B-C-F-G-K",
-        "url": "29vfg9zz+",
+        "token": "FIrQrAtGve5",
         "memo": "旗艦健在なら夜戦"
     },
     {
@@ -190,7 +190,7 @@ const templates: Ttemplate[] = [
         "world": 3,
         "area": 5,
         "route": "1-B-C-F-G-K",
-        "url": "28bfzsgk+",
+        "token": "W0fdmxzIu0Z",
         "memo": "旗艦健在なら夜戦"
     },
     {
@@ -198,7 +198,7 @@ const templates: Ttemplate[] = [
         "world": 3,
         "area": 5,
         "route": "1-F-G-K",
-        "url": "2djmroqh+",
+        "token": "WaUCBmPg4OT",
         "memo": "旗艦健在なら夜戦"
     },
     {
@@ -206,7 +206,7 @@ const templates: Ttemplate[] = [
         "world": 3,
         "area": 5,
         "route": "1-F-G-K",
-        "url": "29acpoem+",
+        "token": "jErD4T9Npbm",
         "memo": "旗艦健在なら夜戦"
     },
     // @4
@@ -215,7 +215,7 @@ const templates: Ttemplate[] = [
         "world": 4,
         "area": 1,
         "route": "1-C-F-D-G-J",
-        "url": "2b7dn4zx+",
+        "token": "Du4PSHs59R3",
         "memo": "Dマス通常消費"
     },
     {
@@ -223,7 +223,7 @@ const templates: Ttemplate[] = [
         "world": 4,
         "area": 2,
         "route": "1-A-C-L",
-        "url": "25avnd4u+",
+        "token": "_JUHuGIzWEQ",
         "memo": null
     },
     {
@@ -231,7 +231,7 @@ const templates: Ttemplate[] = [
         "world": 4,
         "area": 2,
         "route": "1-B-D-C-L",
-        "url": "27umx2k3+",
+        "token": "tNSdSDIWSWu",
         "memo": null
     },
     {
@@ -239,7 +239,7 @@ const templates: Ttemplate[] = [
         "world": 4,
         "area": 3,
         "route": "1-D-H-N",
-        "url": "22oy9yb4+",
+        "token": "YU2H2-qO272",
         "memo": "ボスマス気球有効$eボス前10%逸れ"
     },
     {
@@ -247,7 +247,7 @@ const templates: Ttemplate[] = [
         "world": 4,
         "area": 4,
         "route": "1-A-E-I-K",
-        "url": "2c8qwg9d+",
+        "token": "p5sOex0n_tX",
         "memo": "B未満夜戦"
     },
     {
@@ -255,7 +255,7 @@ const templates: Ttemplate[] = [
         "world": 4,
         "area": 5,
         "route": "1-C-D-H-T",
-        "url": "24xoweax+",
+        "token": "cKPoW0bOAKf",
         "memo": "ボスマス気球有効"
     },
     {
@@ -263,7 +263,7 @@ const templates: Ttemplate[] = [
         "world": 4,
         "area": 5,
         "route": "1-C-D-H-T",
-        "url": "25u97n37+",
+        "token": "TEQwf5SgVMD",
         "memo": "ボスマス気球有効"
     },
     {
@@ -271,7 +271,7 @@ const templates: Ttemplate[] = [
         "world": 4,
         "area": 5,
         "route": "1-C-D-H-K-T",
-        "url": "23t9p8rf+",
+        "token": "UUzFcl6MnyX",
         "memo": "ボスマス気球有効"
     },
     {
@@ -279,7 +279,7 @@ const templates: Ttemplate[] = [
         "world": 4,
         "area": 5,
         "route": "1-C-D-H-K-T",
-        "url": "25kc2pkx+",
+        "token": "o2c72R4lKvf",
         "memo": "ボスマス気球有効"
     },
     // @5
@@ -288,7 +288,7 @@ const templates: Ttemplate[] = [
         "world": 5,
         "area": 1,
         "route": "1-B-C-F-J",
-        "url": "25fp2uw7+",
+        "token": "uu0xItysBtq",
         "memo": null
     },
     {
@@ -296,7 +296,7 @@ const templates: Ttemplate[] = [
         "world": 5,
         "area": 1,
         "route": "1-B-E-G-J",
-        "url": "2xkewumu+",
+        "token": "70N9xIjDEIM",
         "memo": null
     },
     {
@@ -304,7 +304,15 @@ const templates: Ttemplate[] = [
         "world": 5,
         "area": 2,
         "route": "1-B-C-D-F-O",
-        "url": "2c7sg9zq+",
+        "token": "lIRtzTb7-WM",
+        "memo": null
+    },
+    {
+        "title": "5-2_CEFO",
+        "world": 5,
+        "area": 2,
+        "route": "1-B-C-E-F-O",
+        "token": "OAwk-FSvHLg",
         "memo": null
     },
     {
@@ -312,7 +320,7 @@ const templates: Ttemplate[] = [
         "world": 5,
         "area": 3,
         "route": "1-D-G-I-O-P",
-        "url": "2yx66s92+",
+        "token": "h9WzHPfMg93",
         "memo": "1戦目梯形陣"
     },
     {
@@ -320,7 +328,7 @@ const templates: Ttemplate[] = [
         "world": 5,
         "area": 3,
         "route": "1-D-G-I-O-P-K-E-Q",
-        "url": "2xhm7knr+",
+        "token": "tecoW0yXbv_",
         "memo": "1,3戦目梯形陣"
     },
     {
@@ -328,7 +336,7 @@ const templates: Ttemplate[] = [
         "world": 5,
         "area": 3,
         "route": "1-D-G-I-O-K-E-Q",
-        "url": "26bnamwc+",
+        "token": "6zJug-0Eu96",
         "memo": "道中梯形陣"
     },
     {
@@ -336,7 +344,7 @@ const templates: Ttemplate[] = [
         "world": 5,
         "area": 4,
         "route": "1-A-D-E-H-I-J-M-P",
-        "url": "27rppvgh+",
+        "token": "wsbFek-Nhv0",
         "memo": "渦潮による喪失は未入力$eHマス梯形陣"
     },
     {
@@ -344,7 +352,7 @@ const templates: Ttemplate[] = [
         "world": 5,
         "area": 5,
         "route": "1-B-F-D-H-N-O-S",
-        "url": "25g7st9m+",
+        "token": "VsxugL7qqoX",
         "memo": "渦潮による喪失は未入力$e旗艦健在なら夜戦$eタッチ使用時陣形注意"
     },
     {
@@ -352,7 +360,7 @@ const templates: Ttemplate[] = [
         "world": 5,
         "area": 5,
         "route": "1-B-F-D-H-N-O-S",
-        "url": "23mn6wjb+",
+        "token": "R-DfkdpwTgo",
         "memo": "渦潮による喪失は未入力$eタッチ使用時陣形注意"
     },
     {
@@ -360,7 +368,7 @@ const templates: Ttemplate[] = [
         "world": 5,
         "area": 5,
         "route": "1-B-K-P-S",
-        "url": "2ymnlwhw+",
+        "token": "et3L9FZDpDP",
         "memo": "旗艦健在なら夜戦$eタッチ使用時陣形注意"
     },
     {
@@ -368,7 +376,7 @@ const templates: Ttemplate[] = [
         "world": 5,
         "area": 5,
         "route": "1-B-K-P-S",
-        "url": "28ldj5zx+",
+        "token": "WTjxP0WjUrp",
         "memo": "旗艦健在なら夜戦$eタッチ使用時陣形注意"
     },
     // @6
@@ -377,7 +385,7 @@ const templates: Ttemplate[] = [
         "world": 6,
         "area": 1,
         "route": "1-A-F-G-H-K",
-        "url": "2dcshnpu+",
+        "token": "SwqXczDyEUK",
         "memo": null
     },
     {
@@ -385,7 +393,7 @@ const templates: Ttemplate[] = [
         "world": 6,
         "area": 1,
         "route": "1-C-F-G-H-K",
-        "url": "2avaerm2+",
+        "token": "TnodTcDpPmM",
         "memo": null
     },
     {
@@ -393,7 +401,7 @@ const templates: Ttemplate[] = [
         "world": 6,
         "area": 2,
         "route": "1-C-E-J-K",
-        "url": "25pprd5g+",
+        "token": "jv90yr2twUs",
         "memo": null
     },
     {
@@ -401,7 +409,7 @@ const templates: Ttemplate[] = [
         "world": 6,
         "area": 3,
         "route": "1-A-C-E-G-H-J",
-        "url": "2y7jvodl+",
+        "token": "hn4R0tGHvG5",
         "memo": "B未満夜戦"
     },
     {
@@ -409,7 +417,7 @@ const templates: Ttemplate[] = [
         "world": 6,
         "area": 3,
         "route": "1-A-C-E-F-H-J",
-        "url": "2bralm5k+",
+        "token": "uReHki_KrAg",
         "memo": "B未満夜戦"
     },
     {
@@ -417,7 +425,7 @@ const templates: Ttemplate[] = [
         "world": 6,
         "area": 4,
         "route": "1-A-D-C-F-N",
-        "url": "24kqq9p6+",
+        "token": "HZNUnIFXpHR",
         "memo": "ボスマス気球有効"
     },
     {
@@ -425,7 +433,7 @@ const templates: Ttemplate[] = [
         "world": 6,
         "area": 4,
         "route": "2-M-K-J-I-N",
-        "url": "22gktc32+",
+        "token": "00qZqL81Yoh",
         "memo": "ボスマス気球有効"
     },
     {
@@ -433,7 +441,7 @@ const templates: Ttemplate[] = [
         "world": 6,
         "area": 5,
         "route": "1-A-C-D-G-M",
-        "url": "2atft4dg+",
+        "token": "k7YK2P3kMhs",
         "memo": "基地2中隊ボス集中"
     },
     {
@@ -441,7 +449,7 @@ const templates: Ttemplate[] = [
         "world": 6,
         "area": 5,
         "route": "1-A-C-D-G-M",
-        "url": "28b9pac9+",
+        "token": "oXkAk6NvR7q",
         "memo": "基地2中隊ボス集中"
     },
     {
@@ -449,7 +457,7 @@ const templates: Ttemplate[] = [
         "world": 6,
         "area": 5,
         "route": "2-B-F-I-J-M",
-        "url": "2dke38j7+",
+        "token": "yq1de3ucOs4",
         "memo": "夜戦マス梯形陣$e基地2中隊ボス集中"
     },
     {
@@ -457,7 +465,7 @@ const templates: Ttemplate[] = [
         "world": 6,
         "area": 5,
         "route": "2-B-F-I-J-M",
-        "url": "24shsusd+",
+        "token": "90h8VuajPhh",
         "memo": "夜戦マス梯形陣$e基地2中隊ボス集中"
     },
     {
@@ -465,7 +473,7 @@ const templates: Ttemplate[] = [
         "world": 7,
         "area": 1,
         "route": "1-D-E-G-H-K",
-        "url": "2b35n9je+",
+        "token": "DGFjVMMGmH6",
         "memo": "ボスマス通常消費"
     },
     {
@@ -473,7 +481,7 @@ const templates: Ttemplate[] = [
         "world": 7,
         "area": 2,
         "route": "1-C-E-G",
-        "url": "22sjf6zs+",
+        "token": "4Sl7jre0cPA",
         "memo": "ゲージ指定無し$eボス梯形陣"
     },
     {
@@ -481,7 +489,7 @@ const templates: Ttemplate[] = [
         "world": 7,
         "area": 2,
         "route": "1-B-C-D-I-M",
-        "url": "22ukw2bj+",
+        "token": "RH_ys1-5NMa",
         "memo": "ゲージ指定無し"
     },
     {
@@ -489,7 +497,7 @@ const templates: Ttemplate[] = [
         "world": 7,
         "area": 3,
         "route": "1-A-C-E",
-        "url": "2bn4k7jx+",
+        "token": "zs9YUYQhKly",
         "memo": "ゲージ指定無し"
     },
     {
@@ -497,7 +505,7 @@ const templates: Ttemplate[] = [
         "world": 7,
         "area": 3,
         "route": "1-A-C-D-G-P",
-        "url": "24d6ffkb+",
+        "token": "AN9zdLp7E3e",
         "memo": "ゲージ指定無し"
     },
     {
@@ -505,7 +513,7 @@ const templates: Ttemplate[] = [
         "world": 7,
         "area": 4,
         "route": "1-C-E-J-L-P",
-        "url": "2948hmow+",
+        "token": "A273SwNtckT",
         "memo": "ボスマス梯形陣"
     },
     {
@@ -513,7 +521,7 @@ const templates: Ttemplate[] = [
         "world": 7,
         "area": 4,
         "route": "1-C-E-J-L-P",
-        "url": "29qnfwvc+",
+        "token": "34P06vWunta",
         "memo": "ボスマス梯形陣"
     },
     {
@@ -521,7 +529,7 @@ const templates: Ttemplate[] = [
         "world": 7,
         "area": 4,
         "route": "1-C-D-F-J-K-M-O",
-        "url": "ytjvbb79+",
+        "token": "vsG8xXTTTrF",
         "memo": "潜水マスに基地分散$eゲージ破壊時は3戦目駆逐入り編成確定"
     },
     {
@@ -529,7 +537,7 @@ const templates: Ttemplate[] = [
         "world": 7,
         "area": 5,
         "route": "1-A-B-D-F-G-H-K",
-        "url": "2xvkvo9y+",
+        "token": "foReJuHjLt5",
         "memo": "旗艦健在なら夜戦"
     },
     {
@@ -537,7 +545,7 @@ const templates: Ttemplate[] = [
         "world": 7,
         "area": 5,
         "route": "1-A-B-D-F-J-O-Q",
-        "url": "228td59z+",
+        "token": "KUeVqXUTGkv",
         "memo": "旗艦健在なら夜戦"
     },
     {
@@ -545,7 +553,7 @@ const templates: Ttemplate[] = [
         "world": 7,
         "area": 5,
         "route": "1-A-B-D-F-J-O-P-T",
-        "url": "26ygrj2d+",
+        "token": "rbdgbNCC0c2",
         "memo": "旗艦健在なら夜戦"
     },
     {
@@ -553,7 +561,7 @@ const templates: Ttemplate[] = [
         "world": 59,
         "area": 4,
         "route": "2-T-T2-U-U1-U2-V-W-X-Y-Z",
-        "url": "2dls5y6z+",
+        "token": "UOjl9rPC62l",
         "memo": "基地未設定"
     },
 
@@ -563,7 +571,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 1,
         "route": "2-F-C-G-M-O",
-        "url": "23pdfan6+",
+        "token": "iczU09IHroG",
         "memo": "煙幕: ボス前M$e阻塞気球: ボス$e基地: 1部隊ボス集中"
     },
     {
@@ -571,7 +579,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 1,
         "route": "2-F-C-G-M-O",
-        "url": "2ypwabjq+",
+        "token": "2085t02wiC7",
         "memo": "煙幕: ボス前M$e阻塞気球: ボス$e基地: 1部隊ボス集中"
     },
     {
@@ -579,7 +587,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 2,
         "route": "1-A-A2-B-C-H-I-K",
-        "url": "29hawldm+",
+        "token": "F2gfhV-9Lei",
         "memo": "ギミック2想定$e基地: K, H それぞれ集中"
     },
     {
@@ -587,7 +595,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 2,
         "route": "2-L-M-N-P-R-T-U",
-        "url": "2ddjt972+",
+        "token": "oWd-j2zp9Cf",
         "memo": "煙幕: P潜水$e基地: ボス、R それぞれ集中"
     },
     {
@@ -595,7 +603,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 2,
         "route": "2-L-M-N-O-Q-V-V1-W",
-        "url": "243hv7lc+",
+        "token": "pWydOx2Y6p9",
         "memo": "煙幕: ボス前V$e阻塞気球: ボス$e基地: 2部隊ボス集中"
     },
     {
@@ -603,7 +611,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 2,
         "route": "2-L-M-N-O-Q-V-V1-W",
-        "url": "289tctrd+",
+        "token": "4Ja5C4g3PV2",
         "memo": "煙幕: ボス前V$e阻塞気球: ボス$e基地: 2部隊ボス集中"
     },
     {
@@ -611,7 +619,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 2,
         "route": "2-L-M-N-O-Q-V-V1-W",
-        "url": "28skeeoj+",
+        "token": "0YVxiMBmDxT",
         "memo": "煙幕: ボス前V$e阻塞気球: ボス$e基地: 2部隊ボス集中"
     },
     {
@@ -619,7 +627,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 3,
         "route": "1-A-B-B2-B4",
-        "url": "24zz7s4g+",
+        "token": "JGNiZYPpZsZ",
         "memo": "基地: (B4, B2)集中"
     },
     {
@@ -627,7 +635,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 3,
         "route": "1-A-C-E-E2",
-        "url": "25uhagkt+",
+        "token": "6ZJzGOOpFd4",
         "memo": "基地: 2部隊ボス集中"
     },
     {
@@ -635,7 +643,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 3,
         "route": "1-A-C-E-F-F1-G",
-        "url": "26lmv5u9+",
+        "token": "OGCmbcYq3CY",
         "memo": "基地: 2部隊ボス集中"
     },
     {
@@ -643,7 +651,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 3,
         "route": "1-A-C-E-F-F1-G",
-        "url": "28fwuays+",
+        "token": "xPld0rhclbo",
         "memo": "基地: 2部隊ボス集中"
     },
     {
@@ -651,7 +659,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 3,
         "route": "2-H-I-J-K-K2",
-        "url": "255nrdj3+",
+        "token": "zmteGsB1wgr",
         "memo": "基地: 2部隊ボス集中"
     },
     {
@@ -659,7 +667,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 3,
         "route": "3-K-L-M-M2-P-O1-R",
-        "url": "275oohtz+",
+        "token": "GWxOoRTAhqX",
         "memo": "陣形: 長門陸奥系想定$e基地: 2部隊ボス集中$e阻塞気球: ボス"
     },
     {
@@ -667,7 +675,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 3,
         "route": "3-K-L-M-M2-P-O1-R",
-        "url": "2cyhopxd+",
+        "token": "IMQgVEHwXkQ",
         "memo": "陣形: 長門陸奥系想定$e基地: 2部隊ボス集中$e阻塞気球: ボス"
     },
     {
@@ -675,7 +683,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 3,
         "route": "3-K-L-M-M2-S-S1-T-U",
-        "url": "2xtwa3lt+",
+        "token": "s0hbtLAvODk",
         "memo": "陣形: 長門陸奥系想定$e基地: 2部隊U集中$e阻塞気球: U"
     },
     {
@@ -683,7 +691,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 3,
         "route": "3-K-L-M-M2-S-S2-V-X",
-        "url": "26wlg4gw+",
+        "token": "tsf17ZvjWCo",
         "memo": "陣形: 長門陸奥系想定$e基地: 2部隊ボス集中"
     },
     {
@@ -691,7 +699,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 3,
         "route": "3-K-L-M-M2-S-S2-V-X",
-        "url": "284ddrcz+",
+        "token": "MHBQULypXer",
         "memo": "陣形: 長門陸奥系想定$e煙幕: L$e基地: 2部隊ボス集中"
     },
     {
@@ -699,7 +707,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 3,
         "route": "3-K-L-M-M2-S-S2-V-X",
-        "url": "2yg6xxkk+",
+        "token": "JWXTU7Y61h3",
         "memo": "陣形: 長門陸奥系想定$e煙幕: L$e基地: 2部隊ボス集中"
     },
     {
@@ -707,7 +715,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 4,
         "route": "1-A-D-F-G-G1-I-L",
-        "url": "227ajpxx+",
+        "token": "vd9a78Zezfe",
         "memo": "$e煙幕: I$e基地: 2部隊ボス集中$eゲージ: 2400"
     },
     {
@@ -715,7 +723,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 4,
         "route": "1-A-D-F-G-G1-I-L",
-        "url": "25mtz35d+",
+        "token": "yrirVleDaBD",
         "memo": "$e煙幕: I$e基地: 2部隊ボス集中"
     },
     {
@@ -723,7 +731,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 4,
         "route": "1-A-D-F-G-H-M-O-P-R",
-        "url": "24bjjnyz+",
+        "token": "cK87AVs-EyW",
         "memo": "$e煙幕: M$e基地: 2部隊ボス集中$eゲージ: 750TP"
     },
     {
@@ -731,7 +739,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 4,
         "route": "1-A-B-C-W",
-        "url": "2ygfsc3k+",
+        "token": "qKNi9s9VsYW",
         "memo": "陣形: 長門陸奥系想定$e煙幕: C$e基地: 2部隊ボス集中$eゲージ: 3450(暫定)"
     },
     {
@@ -739,7 +747,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 4,
         "route": "1-A-B-C-W",
-        "url": "264r2ymy+",
+        "token": "kMxzF_epKQw",
         "memo": "陣形: 長門陸奥系想定$e煙幕: C$e基地: 2部隊ボス集中$eゲージ: 3450(暫定)"
     },
     {
@@ -747,7 +755,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 4,
         "route": "1-A-B-T-C-W",
-        "url": "2ajvv7o5+",
+        "token": "W7kwP3RHrbf",
         "memo": "陣形: 長門陸奥系想定$e煙幕: T$e基地: 2部隊ボス集中$eゲージ: 3450(暫定)"
     },
     {
@@ -755,7 +763,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 4,
         "route": "1-A-B-T-C-W",
-        "url": "2cyn88ml+",
+        "token": "6PIBDrXXAdg",
         "memo": "陣形: 長門陸奥系想定$e煙幕: T$e基地: 2部隊ボス集中"
     },
     {
@@ -763,7 +771,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 5,
         "route": "1-C-D-E-E2-F-F2",
-        "url": "2ykjthbu+",
+        "token": "iv7P7jIl-6h",
         "memo": "煙幕: E2$e基地: 1部隊F2集中"
     },
     {
@@ -771,7 +779,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 5,
         "route": "1-A-B-B1-H-I-J1-J-K",
-        "url": "24m7zg3p+",
+        "token": "Nwg1HC1NcLZ",
         "memo": "陣形: 大和武蔵想定$e煙幕: i$e基地: 1部隊ボス集中"
     },
     {
@@ -779,7 +787,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 5,
         "route": "2-L-M-N-P-P2-R-T",
-        "url": "25b6solw+",
+        "token": "DElPsM9Cu63",
         "memo": "陣形: 長門陸奥系想定$e煙幕: N$e基地: ボス集中"
     },
     {
@@ -787,7 +795,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 5,
         "route": "2-L-M-N-P-P2-R-T",
-        "url": "2avl3jcv+",
+        "token": "qTWLquIM_gt",
         "memo": "陣形: 長門陸奥系想定$e煙幕: N$e基地: ボス集中"
     },
     {
@@ -795,7 +803,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 5,
         "route": "2-L-M-U1-U2-U3-X-P2-R-Z",
-        "url": "282j9g72+",
+        "token": "c7TJZ6-mwpr",
         "memo": "陣形: ネルソンタッチ想定$e煙幕: M$e基地: [R, X, U2]集中$e阻塞気球: ボス"
     },
     {
@@ -803,7 +811,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 5,
         "route": "2-L-M-U1-U2-U3-X-P2-R-Z",
-        "url": "28m7hlg4+",
+        "token": "3zjmwibW4Sg",
         "memo": "陣形: ネルソンタッチ想定$e煙幕: M$e基地: [R, X, U2]集中$e阻塞気球: ボス"
     },
     {
@@ -811,7 +819,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 6,
         "route": "1-A-C-D-F",
-        "url": "25f5yufo+",
+        "token": "am25Vd8Z0s5",
         "memo": "陣形: 長門陸奥想定$e煙幕: D$e基地: (F, F, C)集中"
     },
     {
@@ -819,7 +827,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 6,
         "route": "2-G-H-E-D-C2-I",
-        "url": "28qwnvkj+",
+        "token": "JLBptclmXAY",
         "memo": "基地: (I, I, E)集中"
     },
     {
@@ -827,7 +835,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 6,
         "route": "2-G-J-J2-K-L",
-        "url": "29wpsr6x+",
+        "token": "u3J1VuHETOV",
         "memo": "基地: (L, J2, J)集中"
     },
     {
@@ -835,7 +843,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 6,
         "route": "2-G-J-J3-M-N-O",
-        "url": "292srgpk+",
+        "token": "797KOB6cyaO",
         "memo": "陣形: タッチなし想定$e煙幕: J$e基地: (ボス, ボス, J)集中"
     },
     {
@@ -843,7 +851,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 6,
         "route": "2-G-J-J3-M-N-O",
-        "url": "29f8t2xx+",
+        "token": "Y4cDcMGar6P",
         "memo": "陣形: タッチなし想定$e煙幕: J$e基地: 3部隊ボス集中"
     },
     {
@@ -851,7 +859,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 6,
         "route": "2-G-J-J2-P-R-T-V",
-        "url": "26r2z4qc+",
+        "token": "upoc9Zg5Ea9",
         "memo": "陣形: タッチなし想定$e煙幕: J$e基地: ボス集中"
     },
     {
@@ -859,7 +867,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 6,
         "route": "2-G-J-J2-P-R-T-V",
-        "url": "22c7p5zq+",
+        "token": "3XHtZUJnPfv",
         "memo": "陣形: タッチなし想定$e煙幕: J$e基地: ボス集中"
     },
     {
@@ -867,7 +875,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 6,
         "route": "3-J-J1-P-R-S-X-Z",
-        "url": "2aetng7s+",
+        "token": "u7Udxf8ckzL",
         "memo": "陣形: ネルソンタッチ想定$e煙幕: J$e基地: ボス集中"
     },
     {
@@ -875,7 +883,7 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 6,
         "route": "3-J-J1-P-R-S-X-Z",
-        "url": "2ym6wo73+",
+        "token": "DJ5mTyVAGJa",
         "memo": "陣形: ネルソンタッチ想定$e煙幕: J$e基地: ボス集中"
     },
 ]; // @expansion
