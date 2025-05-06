@@ -6,6 +6,7 @@ import boss from '@/icons/nodes/boss.png';
 import airB from '@/icons/nodes/air-b.png';
 import airD from '@/icons/nodes/air-d.png';
 import calm from '@/icons/nodes/calm.png';
+import shadow from '@/icons/nodes/shadow.png';
 import enemy from '@/icons/nodes/enemy.png';
 import whirl from '@/icons/nodes/whirl.png';
 import resource from '@/icons/nodes/resource.png';
@@ -43,6 +44,18 @@ const nodes: CyStyle[] = [
             'content': '!',
             'font-size': '18px',
             'events': 'no' // クリック不可
+        }
+    },
+    {
+        selector: 'node[label = "shadow"]',
+        style: {
+            'background-image': shadow,
+            'width': '70px',
+            'height': '70px',
+            'background-position-x': '-1.5px',
+            'background-position-y': '-1px',
+            'label': '',
+            'events': 'no'
         }
     },
     // マスの分類ごとに表示分岐
@@ -100,12 +113,10 @@ const nodes: CyStyle[] = [
         selector: `node[label = ${NodeType.ac}]`,  // 能動分岐
         style: {
             'background-image': calm,
-            'border-width': 3, // ボーダーの太さ
-            'border-color': '#2c4dff',  // #ff3f87
-            'width': '27px',
+            'width': '27px', // enemy系
             'height': '27px',
-            'background-position-x': '0px',
-            'background-position-y': '-1px',
+            'border-width': 3, // ボーダーの太さ
+            'border-color': 'rgb(60, 73, 255)',
         }
     },
     {

@@ -27,7 +27,7 @@ export default function drawMap(
         }
     };
 
-    type TempNodeType = NodeType | 'alert'
+    type TempNodeType = NodeType | 'alert' | 'shadow'
 
     interface Node {
         data: {
@@ -58,8 +58,19 @@ export default function drawMap(
     const warning_nodes = warning_node_datas[selectedArea] ?? [];
     for (const key in local_nodes) {
         if (Object.hasOwn(local_nodes, key)) {
-            // 座標,マスの種類
             const [x, y, label] = local_nodes[key];
+            // 能動分岐マスに影付
+            if (label === NodeType.ac) {
+                elements.nodes.push({
+                    data: {
+                        id: key + 'shadow',
+                        name: key + 'shadow',
+                        label: 'shadow',
+                    },
+                    position: { x: x, y: y }
+                });
+            }
+            // 座標, Nodeの種類
             elements.nodes.push({
                 data: {
                     id: key,
@@ -68,6 +79,7 @@ export default function drawMap(
                 },
                 position: { x, y }
             });
+            // 暫定度が高いNodeには「!」表示
             if (warning_nodes.includes(key)) {
                 elements.nodes.push({
                     data: {
