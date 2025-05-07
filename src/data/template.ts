@@ -571,8 +571,8 @@ const templates: Ttemplate[] = [
         "world": 60,
         "area": 1,
         "route": "2-F-C-G-M-O",
-        "token": "iczU09IHroG",
-        "memo": "煙幕: ボス前M$e阻塞気球: ボス$e基地: 1部隊ボス集中"
+        "token": "q1P2pvPffFH",
+        "memo": "煙幕: ボス前M$e阻塞気球: ボス$e基地: M集中"
     },
     {
         "title": "60-1_CGMO_O破壊",
@@ -581,6 +581,14 @@ const templates: Ttemplate[] = [
         "route": "2-F-C-G-M-O",
         "token": "2085t02wiC7",
         "memo": "煙幕: ボス前M$e阻塞気球: ボス$e基地: 1部隊ボス集中"
+    },
+    {
+        "title": "60-1_CJLMO_O掘り",
+        "world": 60,
+        "area": 1,
+        "route": "2-F-C-I-J-L-M-O",
+        "token": "WUTOkH8bQcO",
+        "memo": "煙幕: ボス前M$e阻塞気球: ボス$e基地: M集中"
     },
     {
         "title": "60-2_A2CHIK",
