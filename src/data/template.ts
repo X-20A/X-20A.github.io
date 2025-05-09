@@ -114,6 +114,14 @@ const templates: Ttemplate[] = [
         "memo": null
     },
     {
+        "title": "3-2_A",
+        "world": 3,
+        "area": 2,
+        "route": "1-A-B",
+        "token": "ycla9vsHhWZ",
+        "memo": "B未満夜戦"
+    },
+    {
         "title": "3-2_CL",
         "world": 3,
         "area": 2,
