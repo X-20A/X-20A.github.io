@@ -30,6 +30,19 @@ export function convertBranchDataToHTML(data: string, topic: string): string {
     return converted_data;
 }
 
+/**
+ * 獲得資源用のhtmlを生成して返す    
+ * TODO: この関数は特に汚いのでなんとか
+ * @param drew_area 
+ * @param node 
+ * @param composition 
+ * @param fleet_total_drum 
+ * @param fleet_total_craft 
+ * @param icons 
+ * @param drum_icon 
+ * @param craft_icon 
+ * @returns 
+ */
 export async function generateResourceHtml(
     drew_area: AreaId,
     node: string,

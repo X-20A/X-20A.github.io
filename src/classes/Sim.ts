@@ -6660,9 +6660,9 @@ export default class SimController {
                             if (track.includes('1')) {
                                 if (option.difficulty === '4' && reigo < 5) {
                                     return 'E';
-                                } else if (option.difficulty === '3' && reigo < 4) {
+                                } else if (option.difficulty === '3' && reigo < 3) {
                                     return 'E';
-                                } else if (option.difficulty === '2' && reigo < 3) {
+                                } else if (option.difficulty === '2' && reigo < 2) {
                                     return 'E';
                                 } else if (Ds > 5 && BBs + CVH < 3) {
                                     return 'F'; 
@@ -6800,9 +6800,11 @@ export default class SimController {
                             return 'W';
                         } else if (yamato > 0 && CL < 2) {
                             return 'W';
-                        } else if (['4','3','2'].includes(option.difficulty) && reigo > 5 && Ds > 5) {
+                        } else if (option.difficulty === '4' && reigo > 5 && Ds > 5) {
                             return 'X';
-                        } else if (option.difficulty === '1' && reigo > 0) {
+                        } else if (['3','2'].includes(option.difficulty) && reigo > 3 && Ds > 3) {
+                            return 'X';
+                        } else if (option.difficulty === '1' && reigo > 0 && Ds > 2) {
                             return 'X';
                         } else {
                             return 'W';
