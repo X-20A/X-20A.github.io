@@ -5930,6 +5930,8 @@ export default class SimController {
                             return 'L';
                         } else if (option.difficulty === '2' && daigo > 1) {
                             return 'L';
+                        } else if (option.difficulty === '1') {
+                            return 'L';
                         } else {
                             return 'M';
                         }
@@ -5972,13 +5974,22 @@ export default class SimController {
                             return 'S';
                         } else if (fleet.countShip('大泊') > 0) {
                             return 'V';
-                        } else if (option.difficulty === '4' && daigo < 8 && Ds < 6) {
+                        } else if (CL < 3 && speed === Sp.slow) {
                             return 'S';
-                        } else if (['1','2','3'].includes(option.difficulty) && daigo < 6 && Ds < 6) {
-                            return 'S';
-                        } else if (CLE > 2) {
+                        } else if (Ds > 5) {
                             return 'V';
-                        } else if (speed !== Sp.slow) {
+                        } else if (daigo > 7) {
+                            return 'V';
+                        } else if (fleet.countShip(['那智','足柄']) + CLE === 5) {
+                            return 'V';
+                        } else if (
+                            fleet.countShip(['那智','足柄']) === 2
+                            && fleet.countShip(['阿武隈','多摩','木曾']) === 2
+                            && fleet.countShip(['霞','不知火','薄雲','曙','初霜','初春','若葉'])
+                                + (fleet.ship_names.find(ship_name => ['潮', '潮改', '潮改二'].includes(ship_name)) ? 1 : 0)
+                                > 1
+                            && DD === 5
+                        ) {
                             return 'V';
                         } else {
                             return 'S';
