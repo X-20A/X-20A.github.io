@@ -7,10 +7,7 @@ from '@/data/ship';
 import Const from './const';
 import { EquipType} from '@/data/equip';
 import { Sp as Speed } from './Sim';
-
-type Brand<T, B> = T & { __brand: B };
-/** 装備ボーナスのブランド型 */
-type EquipBonusSeek = Brand<number, "EquipBonusSeek">;
+import { EquipBonusSeek } from './types/brand';
 
 export default class Ship {
 	public readonly id: number;

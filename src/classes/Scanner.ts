@@ -1,15 +1,16 @@
 import Big from 'big.js';
 import CustomError from './CustomError';
+import { PreSailNull } from './types/brand';
 
 /**
  * シミュに使用する走査子
  */
 export default class Scanner {
     /** 経由したnode */
-    public route: (string | null)[] = [];
+    public route: (string | PreSailNull)[] = [];
 
     /** 現在のnode */
-    public currentNode: string | null;
+    public currentNode: string | PreSailNull;
 
     /** this.routeの割合 0 - 1.0 */
     public rate: Big;
@@ -23,9 +24,9 @@ export default class Scanner {
     /** Scannerあたりの許容する進行の回数(無限ループ防止) */
     private readonly MAX_PROGRESS_COUNT: number = 30; 
 
-    constructor(
-        route: (string | null)[],
-        startNode: string | null,
+    private constructor(
+        route: (string | PreSailNull)[],
+        startNode: string | PreSailNull,
         rate: number | Big
     ) {
         this.route = route;
@@ -33,6 +34,15 @@ export default class Scanner {
         this.rate = typeof rate === 'number' // ここから表示までBigで一貫する
             ? new Big(rate)
             : rate;
+    }
+
+    /** 新規のScannerを返す */
+    static createDefault(): Scanner {
+        return new Scanner(
+            [null as PreSailNull],
+            null as PreSailNull,
+            1,
+        );
     }
 
     /**

@@ -2,27 +2,47 @@ import { ST as ShipType } from "@/data/ship";
 import type CacheFleet from "./CacheFleet";
 
 export default class Composition {
-    public BB = 0; // 戦艦
-    public BBV = 0; // 航空戦艦&改装航空戦艦
-    public CV = 0; // 正規空母
-    public CVB = 0; // 装甲空母
-    public CVL = 0; // 軽空母
-    public CA = 0; // 重巡
-    public CAV = 0; // 航巡
-    public CL = 0; // 軽巡
-    public CLT = 0; // 雷巡
-    public CT = 0; // 練習巡洋艦
-    public DD = 0; // 駆逐艦
-    public DE = 0; // 海防艦
-    public SS = 0; // 潜水艦
-    public SSV = 0; // 潜水空母
-    public AV = 0; // 水母
-    public AO = 0; // 補給艦
-    public LHA = 0; // 揚陸艦
-    public AS = 0; // 潜水母艦
-    public AR = 0; // 工作艦
+    public readonly BB: number;
+    public readonly BBV: number;
+    public readonly CV: number;
+    public readonly CVB: number;
+    public readonly CVL: number;
+    public readonly CA: number;
+    public readonly CAV: number;
+    public readonly CL: number;
+    public readonly CLT: number;
+    public readonly CT: number;
+    public readonly DD: number;
+    public readonly DE: number;
+    public readonly SS: number;
+    public readonly SSV: number;
+    public readonly AV: number;
+    public readonly AO: number;
+    public readonly LHA: number;
+    public readonly AS: number;
+    public readonly AR: number;
 
     constructor(fleets: CacheFleet[]) {
+        this.BB = 0;
+        this.BBV = 0;
+        this.CV = 0;
+        this.CVB = 0;
+        this.CVL = 0;
+        this.CA = 0;
+        this.CAV = 0;
+        this.CL = 0;
+        this.CLT = 0;
+        this.CT = 0;
+        this.DD = 0;
+        this.DE = 0;
+        this.SS = 0;
+        this.SSV = 0;
+        this.AV = 0;
+        this.AO = 0;
+        this.LHA = 0;
+        this.AS = 0;
+        this.AR = 0;
+
         for (const fleet of fleets) {
             for (const ship of fleet.ships) {
                 switch (ship.type) {

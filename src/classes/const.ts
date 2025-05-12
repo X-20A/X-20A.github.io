@@ -1,11 +1,14 @@
 import type { OptionsType } from '@/classes/types'
 
-/** 定数系 */
+/**
+ * 定数系    
+ * TODO: それぞれ使い道が違うので、クラスにすべきではない？
+ */
 export default class Const {
     /**
      * CacheFleet の仕様を更新したら送る
      */
-    public static readonly FLEET_VERSION: number = 5; // @expansion
+    static readonly FLEET_VERSION: number = 5; // @expansion
 
     /**
      * ルート分岐に関わる大発群    
@@ -20,7 +23,7 @@ export default class Const {
      * 526: 特四式内火艇改    
      * https://x.gd/AjX5F > ルート分岐での大発動艇について
      */
-    public static readonly ROUTING_CRAFTS: Readonly<number[]> =
+    static readonly ROUTING_CRAFTS: Readonly<number[]> =
         [68, 166, 167, 193, 409, 436, 449, 525, 526];
 
     /**
@@ -37,7 +40,7 @@ export default class Const {
      * 526: 特四式内火艇改    
      * https://x.gd/0CJOt > 燃料稼ぎ
      */
-    public static readonly RESOURCE_CRAFTS: Readonly<number[]> =
+    static readonly RESOURCE_CRAFTS: Readonly<number[]> =
         [68, 166, 167, 193, 408, 409, 436, 449, 525, 526];
 
     /**
@@ -45,7 +48,7 @@ export default class Const {
      * 大和    
      * 武蔵
      */
-    public static readonly YAMATO_CLASS_IDS: Readonly<number[]> =
+    static readonly YAMATO_CLASS_IDS: Readonly<number[]> =
         [
             131, 136, 911, 916,
             143, 148, 546,
@@ -55,7 +58,7 @@ export default class Const {
      * 泊地修理艦ID配列
      * 明石改, 朝日改, 秋津洲改
      */
-    public static readonly HAKUCHI_IDS: Readonly<number[]> = [187, 958, 450];
+    static readonly HAKUCHI_IDS: Readonly<number[]> = [187, 958, 450];
 
     /**
      * 松型駆逐艦ID配列    
@@ -66,7 +69,7 @@ export default class Const {
      * 杉    
      * 榧
      */
-    public static readonly MATSU_CLASS_IDS: Readonly<number[]> =
+    static readonly MATSU_CLASS_IDS: Readonly<number[]> =
         [
             641, 702,
             642, 706,
@@ -92,7 +95,7 @@ export default class Const {
      * 初春    
      * 若葉
      */
-    public static readonly DAIGO_IDS: ReadonlyArray<ReadonlyArray<number>> =
+    static readonly DAIGO_IDS: ReadonlyArray<ReadonlyArray<number>> =
         [
             [16,  233, 407],
             [63,  192, 266],
@@ -120,7 +123,7 @@ export default class Const {
      * 杉    
      * 未実装 ー 樫
      */
-    public static readonly REIGO_IDS: ReadonlyArray<ReadonlyArray<number>> =
+    static readonly REIGO_IDS: ReadonlyArray<ReadonlyArray<number>> =
         [
             [64 , 267, 193],
             [183, 321],

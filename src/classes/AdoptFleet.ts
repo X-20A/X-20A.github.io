@@ -193,6 +193,7 @@ export default class AdoptFleet implements Fleet {
     }
 
     // components > template 部で使ってるので消さないように
+    // TODO: コンポーネント側でcomputedをかましてやると解消されるかも
     public getMainFleetNames(): string[] {
         return this.fleets[0].ship_names;
     }

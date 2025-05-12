@@ -41,15 +41,15 @@ export default class SimController {
     /**
      * シミュる艦隊
      */
-    private fleet: AdoptFleet;
+    private readonly fleet: AdoptFleet;
     /**
      * シミュる海域
      */
-    private area_id: AreaId;
+    private readonly area_id: AreaId;
     /**
      * 能動分岐、Phase、難易度
      */
-    private option: Record<string, string>;
+    private readonly option: Record<string, string>;
     /**
      * Scannerが分裂した回数
      */
@@ -75,7 +75,7 @@ export default class SimController {
         // NOTE: 一本道と終点について、予めMapとSetを用意するのを試したが、遅くなったので没
         // NOTE: 非同期処理で、 0.6ms - 60ms
         // NOTE: 同期処理で 24ms - 28ms 😢
-        const scanners: Scanner[] = [new Scanner([null], null, 1)];
+        const scanners: Scanner[] = [Scanner.createDefault()];
         const results: SimResult[] = [];
         const area_routes = edge_datas[this.area_id];
         let i = 0;
