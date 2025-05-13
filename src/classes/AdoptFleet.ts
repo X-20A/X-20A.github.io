@@ -1,8 +1,5 @@
 import CacheFleet from "./CacheFleet";
-import {
-    type Fleet,
-    type Seek,
-} from "./types";
+import { type Seek } from "./types";
 import { ST as ShipType } from "@/data/ship";
 import Composition from "./Composition";
 import Const from "./const";
@@ -13,7 +10,7 @@ import { Ft as FleetType, Sp as Speed } from "./Sim";
  * 艦隊情報は取込時にしか操作されない(索敵無視機能以外、完全に静的)
  * 参照海域が少ない & 今後も使わなそうなのはメソッドでもつ
  */
-export default class AdoptFleet implements Fleet {
+export default class AdoptFleet {
     /**
      * branchでは原則として使わない    
      * 必要ならフィールドなりメソッドなりで対応する
@@ -65,9 +62,6 @@ export default class AdoptFleet implements Fleet {
     /** 大和型艦数 */
     public readonly yamato_class_count: number;
 
-    /** 泊地修理艦数 */
-    public readonly hakuchi_count: number;
-
     /** 松型駆逐艦数 */
     public readonly matsu_count: number;
 
@@ -76,6 +70,61 @@ export default class AdoptFleet implements Fleet {
 
     /** 礼号作戦参加艦数 */
     public readonly reigo_count: number;
+
+    /**
+     * 第五艦隊ID配列    
+     * 潮    
+     * 那智    
+     * 足柄    
+     * 阿武隈    
+     * 多摩    
+     * 木曾    
+     * 霞    
+     * 不知火    
+     * 薄雲    
+     * 曙    
+     * 初霜    
+     * 初春    
+     * 若葉
+     */
+    private readonly DAIGO_IDS: ReadonlyArray<ReadonlyArray<number>> =
+        [
+            [16, 233, 407],
+            [63, 192, 266],
+            [64, 193, 267],
+            [114, 290, 200],
+            [100, 216, 547],
+            [101, 146, 217],
+            [49, 253, 464, 470],
+            [18, 226, 567],
+            [631, 700],
+            [15, 231, 665],
+            [41, 241, 419],
+            [38, 238, 326],
+            [40, 240],
+        ];
+
+    /**
+     * 礼号作戦ID配列    
+     * 足柄    
+     * 大淀    
+     * 霞    
+     * 清霜    
+     * 朝霜    
+     * 榧    
+     * 杉    
+     * 未実装 ー 樫
+     */
+    private readonly REIGO_IDS: ReadonlyArray<ReadonlyArray<number>> =
+        [
+            [64, 267, 193],
+            [183, 321],
+            [49, 253, 464, 470],
+            [410, 325, 955, 960],
+            [425, 344, 578],
+            [994, 736],
+            [992, 997],
+        ];
 
     constructor(fleets: CacheFleet[], fleet_type_id: FleetType) {
         // CacheFleetのバージョンが古い場合は再生成
@@ -98,14 +147,14 @@ export default class AdoptFleet implements Fleet {
         const reigo_dup = [] as number[];
 
         ships.forEach(ship => {
-            for (const daigo_ship_ids of Const.DAIGO_IDS) {
+            for (const daigo_ship_ids of this.DAIGO_IDS) {
                 if (!daigo_dup.includes(ship.id) && daigo_ship_ids.includes(ship.id)) {
                     daigo_dup.push(...daigo_ship_ids);
                     daigo_count++;
                     break;
                 }
             }
-            for (const reigo_ship_ids of Const.REIGO_IDS) {
+            for (const reigo_ship_ids of this.REIGO_IDS) {
                 if (!reigo_dup.includes(ship.id) && reigo_ship_ids.includes(ship.id)) {
                     reigo_dup.push(...reigo_ship_ids);
                     reigo_count++;
@@ -162,7 +211,6 @@ export default class AdoptFleet implements Fleet {
             this.arBulge_carrier_count = main.arBulge_carrier_count + escort.arBulge_carrier_count;
             this.SBB_count = main.SBB_count + escort.SBB_count;
             this.yamato_class_count = main.yamato_class_count + escort.yamato_class_count;
-            this.hakuchi_count = main.hakuchi_count + escort.hakuchi_count;
             this.matsu_count = main.matsu_count + escort.matsu_count;
         } else {
             const fleet = fleets[0];
@@ -187,7 +235,6 @@ export default class AdoptFleet implements Fleet {
             this.arBulge_carrier_count = fleet.arBulge_carrier_count;
             this.SBB_count = fleet.SBB_count;
             this.yamato_class_count = fleet.yamato_class_count;
-            this.hakuchi_count = fleet.hakuchi_count;
             this.matsu_count = fleet.matsu_count;
         }
     }

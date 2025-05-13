@@ -2,7 +2,6 @@ import type Big from "big.js";
 import type CacheFleet from "../CacheFleet";
 import { NA as National, SG as SpeedGroup, ST as ShipType } from "@/data/ship";
 import { NT as NodeType } from "@/data/map";
-import { Sp as Speed } from "../Sim";
 
 export type Seek = [number, number, number, number]
 
@@ -33,19 +32,6 @@ export type EquipInDeck = {
 }
 
 export type SelectedType = 1|2|3|4|5|6|7
-
-export interface Fleet {
-    /** 艦隊速度 */
-    readonly speed: Speed
-    /** 艦隊索敵値 */
-    readonly seek: Seek
-    /** ドラム缶 装備艦数 */
-    readonly drum_carrier_count: number
-    /** 電探系 装備艦数 */
-    readonly radar_carrier_count: number
-    /** 大発系 装備艦数 */
-    readonly craft_carrier_count: number
-}
 
 export type AreaId = // @expansion
     | '1-1' | '1-2' | '1-3' | '1-4' | '1-5' | '1-6'

@@ -149,7 +149,6 @@ export default class SimController {
         const arBulge = fleet.arBulge_carrier_count;
         const SBB_count = fleet.SBB_count;
         const yamato = fleet.yamato_class_count;
-        const hakuchi = fleet.hakuchi_count;
         const matsu = fleet.matsu_count;
         const daigo = fleet.daigo_count;
         const reigo = fleet.reigo_count;

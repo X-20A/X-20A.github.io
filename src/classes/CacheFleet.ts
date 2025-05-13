@@ -1,14 +1,16 @@
 import type Ship from '@/classes/Ship';
-import type { Fleet, Seek } from '@/classes/types';
+import type { Seek } from '@/classes/types';
 import Const from './const';
 import { ST as ShipType } from '@/data/ship';
 import { Sp as Speed } from './Sim';
+import { calcFleetSpeed } from './speed/fleet';
+import { calcFleetSeek } from './seek/fleet';
 
 /**
  * ストレージに保存する艦隊
  * こちらで処理する場合、再読み込み時に新しいフィールドが計算されないので注意
  */
-export default class CacheFleet implements Fleet {
+export default class CacheFleet {
     /** 艦隊フィールドのバージョン */
     public readonly version: number;
 	/** 構成艦 */
@@ -49,11 +51,44 @@ export default class CacheFleet implements Fleet {
     /** 大和型艦数 */
     public readonly yamato_class_count: number;
 
-    /** 泊地修理艦数 */
-    public readonly hakuchi_count: number;
-
     /** 松型駆逐艦数 */
     public readonly matsu_count: number;
+
+    /**
+     * 大和型ID配列    
+     * 大和    
+     * 武蔵
+     */
+    private readonly YAMATO_CLASS_IDS: Readonly<number[]> =
+        [
+            131, 136, 911, 916,
+            143, 148, 546,
+        ];
+
+    /**
+     * 泊地修理艦ID配列
+     * 明石改, 朝日改, 秋津洲改
+     */
+    private readonly HAKUCHI_IDS: Readonly<number[]> = [187, 958, 450];
+
+    /**
+     * 松型駆逐艦ID配列    
+     * 松    
+     * 竹    
+     * 梅    
+     * 桃    
+     * 杉    
+     * 榧
+     */
+    private readonly MATSU_CLASS_IDS: Readonly<number[]> =
+        [
+            641, 702,
+            642, 706,
+            643, 716,
+            644, 708,
+            992, 997,
+            994, 736,
+        ];
 
 	constructor(
 		ships: Ship[],
@@ -62,8 +97,8 @@ export default class CacheFleet implements Fleet {
         this.version = Const.FLEET_VERSION;
 		this.ships = ships;
         this.ship_names = ships.map(item => item.name);
-		this.speed = this.calcFleetSpeed(ships);
-		this.seek = this.calcSeek(ships, command_lv);
+		this.speed = calcFleetSpeed(ships);
+		this.seek = calcFleetSeek(ships, command_lv);
 		
         let drum_carrier_count = 0;
         let radar_carrier_count = 0;
@@ -84,9 +119,9 @@ export default class CacheFleet implements Fleet {
             if (ship.has_craft) craft_carrier_count++;
             if (ship.has_arBulge) arBulge_carrier_count++;
             if (ship.type === ShipType.BB && ship.speed_group >= 5) SBB_count++;
-            if (Const.YAMATO_CLASS_IDS.includes(ship.id)) yamato_class_count++;
-            if (Const.HAKUCHI_IDS.includes(ship.id)) hakuchi_count++;
-            if (Const.MATSU_CLASS_IDS.includes(ship.id)) matsu_count++;
+            if (this.YAMATO_CLASS_IDS.includes(ship.id)) yamato_class_count++;
+            if (this.HAKUCHI_IDS.includes(ship.id)) hakuchi_count++;
+            if (this.MATSU_CLASS_IDS.includes(ship.id)) matsu_count++;
             total_drum_count += ship.drum_count;
             total_valid_craft_count += ship.valid_craft_count;
         });
@@ -100,46 +135,6 @@ export default class CacheFleet implements Fleet {
         this.total_valid_craft_count = total_valid_craft_count;
         this.SBB_count = SBB_count;
         this.yamato_class_count = yamato_class_count;
-        this.hakuchi_count = hakuchi_count;
         this.matsu_count = matsu_count;
-	}
-
-    private calcSeek(ships: Ship[], command_lv = 120): Seek {
-        const fleet_length_mod = 2 * (6 - ships.length);
-        const command_mod = Math.ceil(command_lv * 0.4);
-        
-        let total_status_seek = 0;
-        let total_equip_seek = 0;
-
-        for (const ship of ships) {
-            total_status_seek += ship.status_seek;
-            total_equip_seek += ship.equip_seek;
-        }
-
-        const base_seek = total_status_seek + fleet_length_mod - command_mod;
-        const fleet_seek: number[] = [];
-
-        for (let i = 1; i < 5; i++) {
-            fleet_seek[i - 1] = base_seek + total_equip_seek * i;
-        }
-
-        return fleet_seek as Seek;
-    }
-
-    /**
-     * 艦隊速度を判定し、速度IDを返す
-     * @returns 
-     */
-	private calcFleetSpeed(ships: Ship[]): Speed {
-		let speed_id = 1 as Speed;
-		if (ships.every(ship => ship.speed === 4)) {
-			speed_id = 4;
-		} else if (ships.every(ship => ship.speed >= 3)) {
-			speed_id = 3;
-		} else if (ships.every(ship => ship.speed >= 2)) {
-			speed_id = 2;
-		}
-
-		return speed_id;
 	}
 }
