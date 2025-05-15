@@ -1,5 +1,5 @@
-import Ship from "../Ship";
-import { Sp as Speed } from "../Sim";
+import Ship from "../../models/Ship";
+import { Sp as Speed } from "@/core/Sim";
 
 /**
  * 艦隊速度を判定し、速度IDを返す

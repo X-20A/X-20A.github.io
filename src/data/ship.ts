@@ -88,7 +88,7 @@ export const enum SG {
 }
 
 
-import { type ShipData } from '@/classes/types';
+import { type ShipData } from '@/models/types';
 
 // NOTE: 配列にしてもgzip後は1kBしか変わらない あとなぜかrand-testがこける
 const ship_datas: Record<number, ShipData> = {

@@ -1,10 +1,10 @@
-import type Ship from '@/classes/Ship';
-import type { Seek } from '@/classes/types';
-import Const from './const';
+import type Ship from '@/models/Ship';
+import type { Seek } from '@/models/types';
+import Const from '../constants/const';
 import { ST as ShipType } from '@/data/ship';
-import { Sp as Speed } from './Sim';
-import { calcFleetSpeed } from './speed/fleet';
-import { calcFleetSeek } from './seek/fleet';
+import { Sp as Speed } from '@/core/Sim';
+import { calcFleetSpeed } from '../logic/speed/fleet';
+import { calcFleetSeek } from '../logic/seek/fleet';
 
 /**
  * ストレージに保存する艦隊

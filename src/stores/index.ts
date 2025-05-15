@@ -1,9 +1,9 @@
 import { defineStore } from 'pinia';
 
-import type CacheFleet from '@/classes/CacheFleet';
-import CustomError from "@/classes/CustomError";
-import type AdoptFleet from '@/classes/AdoptFleet';
-import Const from '@/classes/const';
+import type CacheFleet from '@/core/CacheFleet';
+import CustomError from "@/errors/CustomError";
+import type AdoptFleet from '@/core/AdoptFleet';
+import Const from '@/constants/const';
 import type {
     SelectedType,
     AreaId,
@@ -13,7 +13,7 @@ import type {
     BranchLastUpdate,
     BranchType,
     ItemIconKey
-} from '@/classes/types';
+} from '@/models/types';
 
 export const useStore = defineStore('compass', {
 	state: () => ({
@@ -76,7 +76,7 @@ export const useStore = defineStore('compass', {
             }
         },
         SWITCH_SEEK(): void {
-            this.adoptFleet?.switchSeek();
+            this.UPDATE_ADOPT_FLEET(this.adoptFleet?.switchSeek() as AdoptFleet);
         },
         LOAD_DATA(): void {
             const data = localStorage.getItem('compass-v2');

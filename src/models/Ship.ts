@@ -1,15 +1,15 @@
-import Equip from '@/classes/Equip';
-import { EquipInDeck } from '@/classes/types';
+import Equip from '@/models/Equip';
+import { EquipInDeck } from '@/models/types';
 import
     ship_datas,
     { NA as National, SG as SpeedGroup, ST as ShipType }
 from '@/data/ship';
 import { EquipType} from '@/data/equip';
-import { Sp as Speed } from './Sim';
-import { calcShipSeek } from './seek/ship';
-import { calcBonus } from './seek/equipBonus';
-import { calcShipSpeed } from './speed/ship';
-import { calcEquipSeek } from './seek/equip';
+import { Sp as Speed } from '@/core/Sim';
+import { calcShipSeek } from '../logic/seek/ship';
+import { calcBonus } from '../logic/seek/equipBonus';
+import { calcShipSpeed } from '../logic/speed/ship';
+import { calcEquipSeek } from '../logic/seek/equip';
 
 export default class Ship {
 	public readonly id: number;
@@ -103,9 +103,9 @@ export default class Ship {
         // 制空シミュからのデッキビルダーには実 HP, 対潜値も載ってる
         // なければ0 スクショくらいでしか使わないし、
         // ちゃんと出そうとすると装備から計算しないといけないのでサボる
-		this.hp = hp ? hp : 0;
-		this.asw = asw ? asw : 0;
-        this.luck = luck ? luck : 0;
+		this.hp = hp ?? 0;
+		this.asw = asw ?? 0;
+        this.luck = luck ?? 0;
         this.equip_in_decks = equip_in_decks;
 
         const bonus_seek = calcBonus(data.name, data.type, data.na, equips);

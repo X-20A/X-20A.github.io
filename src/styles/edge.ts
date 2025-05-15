@@ -1,4 +1,4 @@
-import type { CyStyle } from "@/classes/types";
+import type { CyStyle } from "@/models/types";
 
 const edges: CyStyle[] = [
     {

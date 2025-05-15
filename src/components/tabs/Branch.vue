@@ -30,8 +30,8 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue';
 import { useStore } from '@/stores';
-import { convertBranchDataToHTML } from '@/utils/convertUtil';
-import { sanitizeText } from '@/utils/util';
+import { convertBranchDataToHTML } from '@/logic/convert';
+import { sanitizeText } from '@/logic/util';
 
 // 分岐条件一覧
 

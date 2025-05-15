@@ -1,8 +1,8 @@
 import { edge_datas } from "@/data/map";
-import CustomError from "./CustomError";
-import type AdoptFleet from "./AdoptFleet";
+import CustomError from "@/errors/CustomError";
+import type AdoptFleet from "../core/AdoptFleet";
 import Scanner from "./Scanner";
-import type { SimResult, BranchResponse, AreaId, OptionsType } from "./types";
+import type { SimResult, BranchResponse, AreaId, OptionsType } from "@/models/types";
 
 /**
  * 艦隊種別ID    

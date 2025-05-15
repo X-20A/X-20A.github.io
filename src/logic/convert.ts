@@ -1,5 +1,5 @@
-import type Composition from '@/classes/Composition';
-import type { AreaId, ItemIconKey } from '@/classes/types';
+import type Composition from '@/models/Composition';
+import type { AreaId, ItemIconKey } from '@/models/types';
 
 /**
  * branch_dataをhtml文字列に変換して返す。サニタイズはしませんよ
@@ -43,7 +43,7 @@ export function convertBranchDataToHTML(data: string, topic: string): string {
  * @param craft_icon 
  * @returns 
  */
-export async function generateResourceHtml(
+export function generateResourceHtml(
     drew_area: AreaId,
     node: string,
     composition: Composition,
@@ -53,7 +53,7 @@ export async function generateResourceHtml(
     // 静的importから取得
     drum_icon: string,
     craft_icon: string,
-) {
+): string {
     let html = '';
     const craft_names =
         '大発動艇 | 大発動艇(八九式中戦車&陸戦隊) | 特二式内火艇 | 特大発動艇 | 装甲艇(AB艇) | 武装大発<br> | 大発動艇(II号戦車/北アフリカ仕様) | 特大発動艇+一式砲戦車 | 特四式内火艇 | 特四式内火艇改';
@@ -87,7 +87,7 @@ export async function generateResourceHtml(
             if (node === 'B') {
                 resource_status.ammo = [10, 20];
             } else {
-                return;
+                return '';
             }
             break;
         case '1-3':
@@ -96,7 +96,7 @@ export async function generateResourceHtml(
             } else if (node === 'G') {
                 resource_status.fuel = [10, 30];
             } else {
-                return;
+                return '';
             }
             break;
         case '1-4':
@@ -107,7 +107,7 @@ export async function generateResourceHtml(
             } else if (node === 'G') {
                 resource_status.imo = [10, 20];
             } else {
-                return;
+                return '';
             }
             break;
         case '1-6':
@@ -115,14 +115,14 @@ export async function generateResourceHtml(
                 resource_status.ammo = 20;
                 resource_status.max_ammo = 40;
                 resource_status.is_nomal = false;
-                mold('ammo', 0, 5);
+                html = mold(html, 'ammo', 0, 5);
             } else if (node === 'M') {
                 resource_status.fuel = 40;
                 resource_status.max_fuel = 80;
                 resource_status.is_nomal = false;
-                mold('fuel', 0, 10);
+                html = mold(html, 'fuel', 0, 10);
             } else {
-                return;
+                return '';
             }
             break;
         case '2-1':
@@ -131,7 +131,7 @@ export async function generateResourceHtml(
             } else if (node === 'E') {
                 resource_status.memo = '高速建造材:1';
             } else {
-                return;
+                return '';
             }
             break;
         case '2-2':
@@ -142,7 +142,7 @@ export async function generateResourceHtml(
             } else if (node === 'J') {
                 resource_status.memo = '高速建造材:1';
             } else {
-                return;
+                return '';
             }
             break;
         case '2-3':
@@ -155,7 +155,7 @@ export async function generateResourceHtml(
             } else if (node === 'I') {
                 resource_status.fuel = [15, 45];
             } else {
-                return;
+                return '';
             }
             break;
         case '2-4':
@@ -168,27 +168,27 @@ export async function generateResourceHtml(
             } else if (node === 'N') {
                 resource_status.ammo = [20, 60];
             } else {
-                return;
+                return '';
             }
             break;
         case '2-5':
             if (node === 'M') {
                 resource_status.fuel = 70;
                 resource_status.is_nomal = false;
-                mold('fuel', 0, 0);
+                html = mold(html, 'fuel', 0, 0);
             } else if (node === 'N') {
                 resource_status.steel = [50, 60];
                 resource_status.is_nomal = false;
-                mold('steel', 0, 0);
+                html = mold(html, 'steel', 0, 0);
             } else {
-                return;
+                return '';
             }
             break;
         case '3-1':
             if (node === 'A') {
                 resource_status.ammo = [35, 140];
             } else {
-                return;
+                return '';
             }
             break;
         case '3-2':
@@ -197,7 +197,7 @@ export async function generateResourceHtml(
             } else if (node === 'I') {
                 resource_status.memo = '家具箱(小):1';
             } else {
-                return;
+                return '';
             }
             break;
         case '3-3':
@@ -206,7 +206,7 @@ export async function generateResourceHtml(
             } else if (node === 'H') {
                 resource_status.memo = '家具箱(大):1';
             } else {
-                return;
+                return '';
             }
             break;
         case '3-4':
@@ -217,23 +217,23 @@ export async function generateResourceHtml(
             } else if (node === 'O') {
                 resource_status.memo = '家具箱(中):1';
             } else {
-                return;
+                return '';
             }
             break;
         case '3-5':
             if (node === 'J') {
                 resource_status.ammo = 50;
                 resource_status.is_nomal = false;
-                mold('ammo', 10, 0);
+                html = mold(html, 'ammo', 10, 0);
             } else {
-                return;
+                return '';
             }
             break;
         case '4-1':
             if (node === 'B') {
                 resource_status.fuel = [40, 120];
             } else {
-                return;
+                return '';
             }
             break;
         case '4-2':
@@ -242,7 +242,7 @@ export async function generateResourceHtml(
             } else if (node === 'K') {
                 resource_status.steel = [20, 80];
             } else {
-                return;
+                return '';
             }
             break;
         case '4-3':
@@ -251,7 +251,7 @@ export async function generateResourceHtml(
             } else if (node === 'J') {
                 resource_status.imo = [50, 100];
             } else {
-                return;
+                return '';
             }
             break;
         case '4-4':
@@ -260,7 +260,7 @@ export async function generateResourceHtml(
             } else if (node === 'J') {
                 resource_status.steel = [40, 70];
             } else {
-                return;
+                return '';
             }
             break;
         case '5-1':
@@ -269,9 +269,9 @@ export async function generateResourceHtml(
             } else if (node === 'H') {
                 resource_status.ammo = [45, 70];
                 resource_status.is_nomal = false;
-                mold('ammo', 0, 0);
+                html = mold(html, 'ammo', 0, 0);
             } else {
-                return;
+                return '';
             }
             break;
         case '5-2':
@@ -280,7 +280,7 @@ export async function generateResourceHtml(
             } else if (node === 'J') {
                 resource_status.imo = [40, 80];
             } else {
-                return;
+                return '';
             }
             break;
         case '5-3':
@@ -289,7 +289,7 @@ export async function generateResourceHtml(
             } else if (node === 'H') {
                 resource_status.steel = [50, 80];
             } else {
-                return;
+                return '';
             }
             break;
         case '5-4':
@@ -297,9 +297,9 @@ export async function generateResourceHtml(
                 resource_status.ammo = 60;
                 resource_status.max_ammo = 180;
                 resource_status.is_nomal = false;
-                mold('ammo', 10, 15);
+                html = mold(html, 'ammo', 10, 15);
             } else {
-                return;
+                return '';
             }
             break;
         case '5-5':
@@ -307,9 +307,9 @@ export async function generateResourceHtml(
                 resource_status.fuel = 40;
                 resource_status.max_fuel = 180;
                 resource_status.is_nomal = false;
-                mold('fuel', 15, 10);
+                html = mold(html, 'fuel', 15, 10);
             } else {
-                return;
+                return '';
             }
             break;
         case '7-1':
@@ -318,14 +318,14 @@ export async function generateResourceHtml(
             } else if (node === 'I') {
                 resource_status.fuel = [30, 50];
             } else {
-                return;
+                return '';
             }
             break;
         case '7-2':
             if (node === 'K') {
                 resource_status.fuel = [25, 40];
             } else {
-                return;
+                return '';
             }
             break;
         case '7-3':
@@ -334,9 +334,9 @@ export async function generateResourceHtml(
             } else if (node === 'O') {
                 resource_status.imo = [40, 50];
                 resource_status.is_nomal = false;
-                mold('imo', 2, 3);
+                html = mold(html, 'imo', 2, 3);
             } else {
-                return;
+                return '';
             }
             break;
         case '7-4':
@@ -387,24 +387,24 @@ export async function generateResourceHtml(
                 `;
                 resource_status.is_nomal = false;
             } else {
-                return;
+                return '';
             }
             break;
         default:
-            return;
+            return '';
     }
     if (resource_status.is_nomal) {
         if (resource_status.fuel) {
-            mold('fuel', 2, 3);
+            html = mold(html, 'fuel', 2, 3);
         }
         if (resource_status.ammo) {
-            mold('ammo', 2, 3);
+            html = mold(html, 'ammo', 2, 3);
         }
         if (resource_status.steel) {
-            mold('steel', 2, 3);
+            html = mold(html, 'steel', 2, 3);
         }
         if (resource_status.imo) {
-            mold('imo', 1.5, 2);
+            html = mold(html, 'imo', 1.5, 2);
         }
     }
     if (resource_status.memo) {
@@ -413,19 +413,21 @@ export async function generateResourceHtml(
     return html;
     
     function mold(
+        html: string,
         key: keyof Resources,
         drum_mag: number,
         craft_mag: number,
-    ) {
+    ): string {
+        let new_html = html;
         resource_total[key] = Math.trunc(fleet_total_drum * drum_mag) + fleet_total_craft * craft_mag;
-        html += `<p><img src="${icons[key]}" class="item-icon"></p>`;
+        new_html += `<p><img src="${icons[key]}" class="item-icon"></p>`;
         if (Array.isArray(resource_status[key])) {
-            html += `<p>base: ${resource_status[key][0]} ~ ${resource_status[key][1]}</p>`;
+            new_html += `<p>base: ${resource_status[key][0]} ~ ${resource_status[key][1]}</p>`;
         } else {
-            html += `<p>base: ${resource_status[key]}</p>`;
+            new_html += `<p>base: ${resource_status[key]}</p>`;
         }
         if (key === 'imo') {
-            html += `
+            new_html += `
                 <p>
                     add:
                     <span style="font-weight:600;color:#1e00ff;">
@@ -434,7 +436,7 @@ export async function generateResourceHtml(
                     = Math.trunc(${fleet_total_drum} * ${drum_mag}) + ${fleet_total_craft} * ${craft_mag}
                 </p>`;
         } else {
-            html += `
+            new_html += `
                 <p>
                     add: 
                     <span style="font-weight:600;color:#1e00ff;">
@@ -450,9 +452,10 @@ export async function generateResourceHtml(
                     ${fleet_total_craft} * ${craft_mag}
                 </p>`;
         }
-        html += `
+        new_html += `
             <p>
                 max: ${resource_status[`max_${key}`] ? resource_status[`max_${key}`] : 'unknown'}
             </p>`;
+        return new_html;
     }
 }

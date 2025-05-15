@@ -1,7 +1,13 @@
 import { SG as SpeedGroup } from '@/data/ship';
-import Equip from '../Equip';
-import { Sp as Speed } from '../Sim';
+import Equip from '@/models/Equip';
+import { Sp as Speed } from '@/core/Sim';
 
+/**
+ * 装備と速力グループから速度IDを判定して返す
+ * @param equips 
+ * @param speed_group 
+ * @returns 
+ */
 export function calcShipSpeed(equips: Equip[], speed_group: SpeedGroup): Speed {
     let turbine = 0; // タービン
     let kan = 0; // 強化缶

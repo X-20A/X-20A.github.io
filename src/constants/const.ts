@@ -1,4 +1,4 @@
-import type { OptionsType } from '@/classes/types'
+import type { OptionsType } from '@/models/types'
 
 /**
  * 定数系    

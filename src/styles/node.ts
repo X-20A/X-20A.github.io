@@ -1,4 +1,4 @@
-import type { CyStyle } from "@/classes/types";
+import type { CyStyle } from "@/models/types";
 // ぶっちゃけCDNと速さでは変わらない。ただ、埋め込みなら一斉にパッと点くので採用
 import start from '@/icons/nodes/start.png';
 import port from '@/icons/nodes/port.png';

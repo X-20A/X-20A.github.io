@@ -1,10 +1,17 @@
 import cytoscape from 'cytoscape';
 import { node_datas, edge_datas, NT as NodeType, warning_node_datas } from '@/data/map';
 import styles from '@/styles';
-import type { AreaId, SimResult } from './types';
+import type { AreaId, SimResult } from '../../models/types';
 import Big from 'big.js';
 
-export default function drawMap(
+/**
+ * シミュ結果からマップを描画
+ * @param selectedArea 
+ * @param sim_result 
+ * @returns 
+ * @subEffect -マップの描画
+ */
+export default function doDrawMap(
     selectedArea: AreaId,
     sim_result: SimResult[]
 ): cytoscape.Core {

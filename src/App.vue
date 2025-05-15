@@ -124,14 +124,6 @@
 				<strong> 4: </strong>
 				<span>{{ adoptFleet.seek[3] }}</span>
 			</p>
-			<p style="color: #D90000;">
-				イベント海域の分岐条件は未確定で、随時更新されます。
-				<a href="https://x.com/momemi_kc/status/1898667989525827682" target="_blank" rel="noopener noreferrer"
-					style="text-decoration: underline;">
-					更新履歴
-				</a>
-			</p>
-			<!-- <p style="color: #D90000;">新艦組の素索敵値は0で計算されています。</p> -->
 		</div>
 		<div class="result-container">
 			<template v-if="simResult.length > 0">
@@ -277,40 +269,39 @@ import Area from './components/modals/Area.vue';
 import Refference from './components/modals/Refference.vue';
 import Error from './components/modals/Error.vue';
 import SvgIcon from './components/SvgIcon.vue';
-import type { SelectedType } from '@/classes/types';
-import CustomError from '@/classes/CustomError';
-import type CacheFleet from './classes/CacheFleet';
-import Sim, { Ft as FleetType } from '@/classes/Sim';
+import type { SelectedType } from '@/models/types';
+import CustomError from '@/errors/CustomError';
+import type CacheFleet from './core/CacheFleet';
+import Sim, { Ft as FleetType } from '@/core/Sim';
 import {
 	createCacheFleetsFromDeckBuilder,
 	createDeckBuilderFromAdoptFleet
-} from './utils/deckBuilderUtil';
+} from './logic/deckBuilder';
 import {
-	deleteParam,
 	generateFormatedTime,
-	getParam,
 	isNumber,
 	sanitizeText
-} from '@/utils/util';
-import AdoptFleet from './classes/AdoptFleet';
-import type DeckBuilder from '@/classes/types/DeckBuilder';
+} from '@/logic/util';
+import AdoptFleet from './core/AdoptFleet';
+import type DeckBuilder from '@/models/types/DeckBuilder';
 import type { DeckBuilder as GkcoiDeckBuilder } from 'gkcoi/dist/type';
-import drawMap from '@/classes/draw';
+import doDrawMap from '@/logic/efffects/draw';
 import { edge_datas } from './data/map';
 import {
 	getGkcoiBlob,
 	getCyBlob,
-	combineAndDownloadBlobs
-} from '@/utils/renderUtil';
+} from '@/logic/render';
 import {
 	convertBranchDataToHTML,
 	generateResourceHtml
-} from './utils/convertUtil';
+} from './logic/convert';
 import Bulge from '@/icons/items/bulge.png';
 import NotSpanner from '@/icons/items/not-spanner.png';
 import Drum from '@/icons/items/drum.png';
 import Craft from '@/icons/items/craft.png';
 import Radar from '@/icons/items/radar.png';
+import { deleteParam, getParam } from './logic/url';
+import { doCombineBlobs, doDownloadDataURL } from './logic/efffects/render';
 
 const store = useStore();
 const modalStore = useModalStore();
@@ -514,7 +505,7 @@ watch([adoptFleet, selectedArea, options], async () => {
 			// console.timeEnd('シミュ計測');
 			store.UPDATE_SIM_RESULT(result);
 
-			cy = drawMap(selectedArea.value, simResult.value); // ここまでになるべく余計なことをしない
+			cy = doDrawMap(selectedArea.value, simResult.value); // ここまでになるべく余計なことをしない
 			
 			if (is_first_run) {
 				console.timeEnd('読込 → マップ表示'); // debug
@@ -542,7 +533,7 @@ watch([adoptFleet, selectedArea, options], async () => {
 			cy.on('cxttapstart taphold', 'node', async (event) => {
 				if (!cy) return;
 				if (event.target.data('name')) {
-					const html = await generateResourceHtml(
+					const html = generateResourceHtml(
 						drewArea.value!,
 						event.target.data('name'),
 						adoptFleet.value?.composition!,
@@ -681,7 +672,14 @@ const screenShot = async () => {
 		);
 		const g_blob = getGkcoiBlob(canvas);
 		const cy_blob = getCyBlob(cy);
-		combineAndDownloadBlobs(cy_blob, g_blob, fileName);
+		try {
+			const data_url = await doCombineBlobs(cy_blob, g_blob);
+			doDownloadDataURL(data_url, fileName);
+		} catch (error) {
+			modalStore.SHOW_ERROR('画像出力に失敗しました');
+			console.error(error);
+			return;
+		}
 	}
 };
 

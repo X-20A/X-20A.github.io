@@ -1,6 +1,6 @@
 import Big from 'big.js';
-import CustomError from './CustomError';
-import { PreSailNull } from './types/brand';
+import CustomError from '@/errors/CustomError';
+import { PreSailNull } from '@/models/types/brand';
 
 /**
  * シミュに使用する走査子

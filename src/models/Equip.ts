@@ -1,6 +1,6 @@
 import equip_datas, { EquipType } from "@/data/equip";
-import type { Improvement } from "./types";
-import CustomError from "@/classes/CustomError";
+import type { Improvement } from "../models/types";
+import CustomError from "@/errors/CustomError";
 
 export default class Equip {
     /** 装備ID */

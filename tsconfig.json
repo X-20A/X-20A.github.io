@@ -13,6 +13,7 @@
 		"removeComments": true,
 		"outDir": "./build",
 		"strictFunctionTypes": true,
+		"strictNullChecks": true,
 		"baseUrl": ".",
 		"paths": {
 			"@/*": [

@@ -1,7 +1,7 @@
 import type {
     NodeDatas,
     EdgeDatas,
-} from '@/classes/types';
+} from '@/models/types';
 
 /** Node種別ID */
 export const enum NT {

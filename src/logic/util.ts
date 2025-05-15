@@ -19,6 +19,11 @@ export function isNumber(value: unknown): boolean {
     return false;
 }
 
+/**
+ * 現在時刻を「HHmm」形式（例: 0930, 1745）の文字列で返す    
+ * 時・分が1桁の場合は先頭に0を付与する
+ * @returns フォーマット済み時刻文字列
+ */
 export function generateFormatedTime() {
     const now = new Date();
     let hours: number | string = now.getHours();
@@ -44,15 +49,4 @@ export function sanitizeText(input: string): string {
     };
 
     return input.replace(/[&<>"']/g, (char) => map[char]);
-}
-
-export function getParam(name: string, url = location.href): string | null {
-    const params = new URLSearchParams(new URL(url).search);
-    return params.get(name);
-}
-
-export function deleteParam(): void {
-    const url = new URL(window.location.href);
-    url.search = "";
-    history.replaceState(null, "", url.toString());
 }

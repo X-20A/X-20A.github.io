@@ -1,6 +1,12 @@
-import { Seek } from '@/classes/types';
-import Ship from '../Ship';
+import { Seek } from '@/models/types';
+import Ship from '../../models/Ship';
 
+/**
+ * 艦隊単位の索敵値を返す(連合艦隊は別)
+ * @param ships 
+ * @param command_lv 
+ * @returns 
+ */
 export function calcFleetSeek(ships: Ship[], command_lv = 120): Seek {
     const fleet_length_mod = 2 * (6 - ships.length);
     const command_mod = Math.ceil(command_lv * 0.4);

@@ -2,13 +2,13 @@ import { describe, it, expect } from 'vitest';
 import Big from 'big.js';
 import LZString from 'lz-string';
 import axios from 'axios';
-import Sim, { Ft as FleetType } from '@/classes/Sim';
+import Sim, { Ft as FleetType } from '@/core/Sim';
 import { getSimSet } from './setup';
-import Const from '@/classes/const';
-import { AreaId, OptionsType } from '@/classes/types';
-import { createCacheFleetsFromDeckBuilder } from '@/utils/deckBuilderUtil';
-import AdoptFleet from '@/classes/AdoptFleet';
-import { getParam } from '@/utils/util';
+import Const from '@/constants/const';
+import { AreaId, OptionsType } from '@/models/types';
+import { createCacheFleetsFromDeckBuilder } from '@/logic/deckBuilder';
+import AdoptFleet from '@/core/AdoptFleet';
+import { getParam } from '@/logic/url';
 import { nomal_mock_datas, astray_mock_datas } from './mock';
 import { node_datas, NT as NodeType } from '@/data/map';
 import ship_datas, { ST as ShipType } from '@/data/ship';
@@ -119,8 +119,11 @@ describe('Simテスト', () => {
             const deck = JSON.parse(deck_string);
             const cache_fleets = createCacheFleetsFromDeckBuilder(deck);
             const fleet_type_id = deck!.f1!.t as FleetType;
-            const adoptFleet = new AdoptFleet(cache_fleets, fleet_type_id);
-            adoptFleet.seek = [999, 999, 999, 999]; // 索敵パス
+            const adoptFleet = new AdoptFleet(
+                cache_fleets,
+                fleet_type_id,
+                [999, 999, 999, 999],
+            );
 
             const expected_routes = mock_data.routes;
             for (const expected_route of expected_routes) {

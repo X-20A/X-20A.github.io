@@ -1,9 +1,9 @@
 import CacheFleet from "./CacheFleet";
-import { type Seek } from "./types";
+import { type Seek } from "../models/types";
 import { ST as ShipType } from "@/data/ship";
-import Composition from "./Composition";
-import Const from "./const";
-import { Ft as FleetType, Sp as Speed } from "./Sim";
+import Composition from "../models/Composition";
+import Const from "../constants/const";
+import { Ft as FleetType, Sp as Speed } from "../core/Sim";
 
 /**
  * 実際に表示やシミュレートで使う艦隊    
@@ -39,10 +39,10 @@ export default class AdoptFleet {
     public readonly speed: Speed;
 
     /** 艦隊索敵値 */
-    public seek: Seek;
+    public readonly seek: Seek;
 
     /** 艦隊索敵値(退避) */
-    private save_seek: Seek;
+    private readonly save_seek: Seek;
 
     /** ドラム缶 装備艦数 */
     public readonly drum_carrier_count: number;
@@ -126,7 +126,7 @@ export default class AdoptFleet {
             [992, 997],
         ];
 
-    constructor(fleets: CacheFleet[], fleet_type_id: FleetType) {
+    constructor(fleets: CacheFleet[], fleet_type_id: FleetType, seek?: Seek, save_seek?: Seek) {
         // CacheFleetのバージョンが古い場合は再生成
         if (!fleets[0].version || fleets[0].version < Const.FLEET_VERSION) {
             // console.log('rebuild');
@@ -196,14 +196,13 @@ export default class AdoptFleet {
                 main.seek[3] + escort.seek[3],
             ];
 
-            this.seek = [
+            this.seek = seek ?? [
                 Math.floor(total_seek[0] * 100) / 100,
                 Math.floor(total_seek[1] * 100) / 100,
                 Math.floor(total_seek[2] * 100) / 100,
                 Math.floor(total_seek[3] * 100) / 100,
             ];
-
-            this.save_seek = this.seek;
+            this.save_seek = save_seek ?? this.seek;
 
             this.drum_carrier_count = main.drum_carrier_count + escort.drum_carrier_count;
             this.radar_carrier_count = main.radar_carrier_count + escort.radar_carrier_count;
@@ -221,14 +220,14 @@ export default class AdoptFleet {
             this.speed = fleet.speed;
             this.isFaster = this.speed >= 3;
 
-            this.seek = [
+            this.seek = seek ?? [
                 Math.floor(fleet.seek[0] * 100) / 100,
                 Math.floor(fleet.seek[1] * 100) / 100,
                 Math.floor(fleet.seek[2] * 100) / 100,
                 Math.floor(fleet.seek[3] * 100) / 100,
             ];
+            this.save_seek = save_seek ?? this.seek;
 
-            this.save_seek = this.seek;
             this.drum_carrier_count = fleet.drum_carrier_count;
             this.radar_carrier_count = fleet.radar_carrier_count;
             this.craft_carrier_count = fleet.craft_carrier_count;
@@ -336,12 +335,23 @@ export default class AdoptFleet {
     /**
      * 索敵無視の為に索敵値を退避フィールドと切替
      */
-    public switchSeek(): void {
+    public switchSeek(): AdoptFleet {
         if (this.seek.every(value => value === 999)) {
-            this.seek = this.save_seek;
+            // 元のsave_seekに戻す
+            return new AdoptFleet(
+                this.fleets,
+                this.fleet_type,
+                this.save_seek,
+                this.save_seek
+            );
         } else {
-            this.save_seek = this.seek;
-            this.seek = [999, 999, 999, 999];
+            // seekを[999,999,999,999]に
+            return new AdoptFleet(
+                this.fleets,
+                this.fleet_type,
+                [999, 999, 999, 999],
+                this.seek
+            );
         }
     }
     /**
@@ -368,19 +378,4 @@ export default class AdoptFleet {
             return this.fleets[0].total_valid_craft_count;
         }
     }
-
-    /**
-     * 索敵値5以上の電探を装備した艦の数を返す
-     * 57-7 から 25/02/06 現在使われてない
-     * @returns 
-     */
-    /*
-    public getRadar5CarrierCount(): number {
-        if (this.fleets.length === 2) {
-            return this.fleets[0].radar5_carrier_count
-                + this.fleets[1].radar5_carrier_count;
-        } else {
-            return this.fleets[0].radar5_carrier_count;
-        }
-    }*/
 }

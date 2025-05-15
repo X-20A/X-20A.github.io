@@ -1,5 +1,5 @@
 import { ST as ShipType } from "@/data/ship";
-import type CacheFleet from "./CacheFleet";
+import type CacheFleet from "../core/CacheFleet";
 
 export default class Composition {
     public readonly BB: number;

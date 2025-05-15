@@ -1,15 +1,15 @@
-import CacheFleet from '@/classes/CacheFleet';
-import Ship from '@/classes/Ship';
-import type { EquipInDeck, Improvement } from '@/classes/types';
-import type DeckBuilder from '@/classes/types/DeckBuilder';
+import CacheFleet from '@/core/CacheFleet';
+import Ship from '@/models/Ship';
+import type { EquipInDeck, Improvement } from '@/models/types';
+import type DeckBuilder from '@/models/types/DeckBuilder';
 import type {
     DeckBuilderFleet,
     DeckBuilderShip,
     DeckBuilderItem
-} from '@/classes/types/DeckBuilder';
-import CustomError from "@/classes/CustomError";
-import { isNumber } from '@/utils/util';
-import type AdoptFleet from '@/classes/AdoptFleet';
+} from '@/models/types/DeckBuilder';
+import CustomError from "@/errors/CustomError";
+import { isNumber } from '@/logic/util';
+import type AdoptFleet from '@/core/AdoptFleet';
 
 
 /**
