@@ -1,19 +1,35 @@
 import { ItemIconKey } from "../types";
 
-export default class ResourceIconSuite {
-    public readonly fuel: string;
-    public readonly ammo: string;
-    public readonly steel: string;
-    public readonly imo: string;
-    public readonly drum: string;
-    public readonly craft: string;
+/**
+ * リソースアイコンセットの型定義
+ */
+export type ResourceIconSuite = {
+    fuel: string;
+    ammo: string;
+    steel: string;
+    imo: string;
+    drum: string;
+    craft: string;
+};
 
-    constructor(icons: Record<ItemIconKey, string>, drum: string, craft: string) {
-        this.fuel = icons.fuel;
-        this.ammo = icons.ammo;
-        this.steel = icons.steel;
-        this.imo = icons.imo;
-        this.drum = drum;
-        this.craft = craft;
-    }
+/**
+ * アイコン情報からResourceIconSuiteを生成する
+ * @param icons fuel, ammo, steel, imoのアイコンセット
+ * @param drum ドラム缶アイコン
+ * @param craft 開発資材アイコン
+ * @returns ResourceIconSuite
+ */
+export function createResourceIconSuite(
+    icons: Record<ItemIconKey, string>,
+    drum: string,
+    craft: string
+): ResourceIconSuite {
+    return {
+        fuel: icons.fuel,
+        ammo: icons.ammo,
+        steel: icons.steel,
+        imo: icons.imo,
+        drum,
+        craft
+    };
 }

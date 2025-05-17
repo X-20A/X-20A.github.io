@@ -38,7 +38,8 @@
 	</div>
 </template>
 <script setup lang="ts">
-import SyonanResource from '@/models/resource/SyonanResource';
+import { SyonanResource } from '@/models/resource/SyonanResource';
+
 
 defineProps<{ data: SyonanResource | null }>();
 </script>

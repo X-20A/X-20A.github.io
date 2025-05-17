@@ -144,7 +144,7 @@
 	<NomalResourcePopup :data="nomalResource" :style="popupStyle" class="popup popup-info" />
 	<SyonanResourcePopup :data="syonanResource" :style="popupStyle" class="popup popup-info" />
 	<template v-if="branchHtml === '<p>$sw</p>'">
-		<div class="popup" id="popup-info" :style="popupStyle">
+		<div class="popup popup-info" :style="popupStyle">
 			<p>
 				<span>能動分岐</span>
 				<button class="design-button remote-active" :value="`${node}`" @pointerdown="switchActive">
@@ -302,12 +302,12 @@ import Craft from '@/icons/items/craft.png';
 import Radar from '@/icons/items/radar.png';
 import { deleteParam, getParam } from './logic/url';
 import { doCombineBlobs, doDownloadDataURL } from './logic/efffects/render';
-import NomalResource from './models/resource/NomalResource';
-import SyonanResource from './models/resource/SyonanResource';
 import { isSpecialResourceNode } from './logic/resource';
 import NomalResourcePopup from './components/resource/NomalResourcePopup.vue';
 import SyonanResourcePopup from './components/resource/SyonanResourcePopup.vue';
 import { CacheFleet } from './core/CacheFleet';
+import { createSyonanResource, SyonanResource } from './models/resource/SyonanResource';
+import { createNomalResource, NomalResource } from './models/resource/NomalResource';
 
 const store = useStore();
 const modalStore = useModalStore();
@@ -535,7 +535,7 @@ watch([adoptFleet, selectedArea, options], async () => {
 				if (node) {
 						if (!drewArea.value) return;
 						if (isSpecialResourceNode(drewArea.value, node)) {
-							syonanResource.value = SyonanResource.createSyonanResource(
+							syonanResource.value = createSyonanResource(
 								drewArea.value,
 								node,
 								adoptFleet.value as AdoptFleet,
@@ -544,7 +544,7 @@ watch([adoptFleet, selectedArea, options], async () => {
 								Craft,
 							);
 						} else {
-							nomalResource.value = NomalResource.createNomalResource(
+							nomalResource.value = createNomalResource(
 								drewArea.value,
 								node,
 								adoptFleet.value as AdoptFleet,

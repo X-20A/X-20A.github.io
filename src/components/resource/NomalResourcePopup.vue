@@ -27,16 +27,16 @@
 
 		<template v-if="data.memo">
 			<template v-if="Array.isArray(data.memo)">
-				<p v-for="(line, idx) in data.memo" :key="idx" v-html="line"></p>
+				<p v-for="(line, idx) in data.memo" :key="idx">{{ line }}</p>
 			</template>
 			<template v-else>
-				<p v-html="data.memo"></p>
+				<p>{{ data.memo }}</p>
 			</template>
 		</template>
 	</div>
 </template>
 <script setup lang="ts">
-import NomalResource, { ResourceType } from '@/models/resource/NomalResource';
+import { NomalResource, ResourceType } from '@/models/resource/NomalResource';
 
 defineProps<{ data: NomalResource | null }>();
 </script>
