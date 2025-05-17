@@ -3,6 +3,7 @@ import CustomError from "@/errors/CustomError";
 import type AdoptFleet from "../core/AdoptFleet";
 import Scanner from "./Scanner";
 import type { SimResult, BranchResponse, AreaId, OptionsType } from "@/models/types";
+import { PreSailNull } from "@/models/types/brand";
 
 /**
  * 艦隊種別ID    
@@ -86,7 +87,7 @@ export default class SimController {
                 const next_node = area_routes.filter(item => item[0] === scanner.currentNode);
                 if (next_node.length >= 2 || scanner.currentNode === null) {
                     // 分岐
-                    const branched_nodes = this.branch(scanner.currentNode, scanner);
+                    const branched_nodes = this.calcNextNode(scanner.currentNode, scanner);
                     if (!Array.isArray(branched_nodes)) {
                         scanner.progress(branched_nodes, 1);
                     } else {
@@ -131,7 +132,7 @@ export default class SimController {
      * @param node 
      * @returns 
      */
-    private branch(node: string | null, scanner: Scanner): BranchResponse[] | string {
+    private calcNextNode(node: string | PreSailNull, scanner: Scanner): BranchResponse[] | string {
         // AdoptFleet展開
         // コーディングを減らしたいだけ 処理コストは変わらないと思う
         const fleet = this.fleet;

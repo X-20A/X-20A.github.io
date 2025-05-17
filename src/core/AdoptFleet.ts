@@ -7,8 +7,9 @@ import { Ft as FleetType, Sp as Speed } from "../core/Sim";
 
 /**
  * 実際に表示やシミュレートで使う艦隊    
- * 艦隊情報は取込時にしか操作されない(索敵無視機能以外、完全に静的)
- * 参照海域が少ない & 今後も使わなそうなのはメソッドでもつ
+ * 参照海域が少ない & 今後も使わなそうなのはメソッドでもつ    
+ * TODO: AdoptFleetはシミュにかけることが主目的なので、表示にはまた別のクラスを    
+ * 作ってもいいかも
  */
 export default class AdoptFleet {
     /**

@@ -141,7 +141,9 @@
 		<Refference />
 		<Error />
 	</div>
-	<template v-if="popupHtml === '<p>$sw</p>'">
+	<NomalResourcePopup :data="nomalResource" :style="popupStyle" class="popup popup-info" />
+	<SyonanResourcePopup :data="syonanResource" :style="popupStyle" class="popup popup-info" />
+	<template v-if="branchHtml === '<p>$sw</p>'">
 		<div class="popup" id="popup-info" :style="popupStyle">
 			<p>
 				<span>能動分岐</span>
@@ -152,7 +154,7 @@
 		</div>
 	</template>
 	<template v-else>
-		<div class="popup" id="popup-info" :style="popupStyle" v-if="popupHtml" v-html="popupHtml">
+		<div class="popup popup-info" :style="popupStyle" v-if="branchHtml" v-html="branchHtml">
 		</div>
 	</template>
 	<div class="detail-box">
@@ -293,7 +295,6 @@ import {
 } from '@/logic/render';
 import {
 	convertBranchDataToHTML,
-	generateResourceHtml
 } from './logic/convert';
 import Bulge from '@/icons/items/bulge.png';
 import NotSpanner from '@/icons/items/not-spanner.png';
@@ -302,6 +303,11 @@ import Craft from '@/icons/items/craft.png';
 import Radar from '@/icons/items/radar.png';
 import { deleteParam, getParam } from './logic/url';
 import { doCombineBlobs, doDownloadDataURL } from './logic/efffects/render';
+import NomalResource from './models/resource/NomalResource';
+import SyonanResource from './models/resource/SyonanResource';
+import { isSpecialResourceNode } from './logic/resource';
+import NomalResourcePopup from './components/resource/NomalResourcePopup.vue';
+import SyonanResourcePopup from './components/resource/SyonanResourcePopup.vue';
 
 const store = useStore();
 const modalStore = useModalStore();
@@ -348,19 +354,6 @@ const closeModals = () => {
 }
 
 const openPanel = ref([0]);
-
-/* v-expantionをmousedownにしたかったが厳しそう
-const togglePanel = (event: MouseEvent, index: number) => {
-	event.preventDefault();
-	openPanel.value.includes(index)
-		? openPanel.value = openPanel.value.filter(item => item !== index)
-		: openPanel.value.push(index)
-	;
-};
-
-const stopEvent = (event: MouseEvent) => {
-	event.preventDefault();
-};*/
 
 /**
  * cytoscapeインスタンス    
@@ -486,6 +479,12 @@ watch([cacheFleets, selectedType], () => {
 		}
 });
 
+const hidePopup = () => {
+	nomalResource.value = null;
+	syonanResource.value = null;
+	branchHtml.value = null;
+}
+
 let is_first_run = true;
 // 艦隊 & 海域 & オプション が揃ったらシミュ開始
 watch([adoptFleet, selectedArea, options], async () => {
@@ -513,7 +512,7 @@ watch([adoptFleet, selectedArea, options], async () => {
 				is_first_run = false;
 			}
 			
-			popupHtml.value = null;
+			hidePopup();
 			store.UPDATE_DREW_AREA(selectedArea.value);
 
 			cy.on('mousedown tapstart', (event) => { // cytoscape周りはどうしてもDOM操作が必要になる
@@ -522,37 +521,43 @@ watch([adoptFleet, selectedArea, options], async () => {
 					if (event.target.data('name')) { // node
 						const html = generarteBranchHtml(target.data('name'));
 						if (!html) return;
-						popupHtml.value = html;
+						branchHtml.value = html;
 						adjustBranchStyle(cy, event);
 					} else { // 背景
-						popupHtml.value = null;
+						hidePopup();
 					}
 				}
 			});
 
 			cy.on('cxttapstart taphold', 'node', async (event) => {
 				if (!cy) return;
-				if (event.target.data('name')) {
-					const html = generateResourceHtml(
-						drewArea.value!,
-						event.target.data('name'),
-						adoptFleet.value?.composition!,
-						adoptFleet.value?.getTotalDrumCount()!,
-						adoptFleet.value?.getTotalValidCraftCount()!,
-						icons.value,
-						Drum,
-						Craft,
-					);
-					if (!html) return;
-					popupHtml.value = html;
+				const node = event.target.data('name');
+				if (node) {
+						if (!drewArea.value) return;
+						if (isSpecialResourceNode(drewArea.value, node)) {
+							syonanResource.value = SyonanResource.createSyonanResource(
+								drewArea.value,
+								node,
+								adoptFleet.value as AdoptFleet,
+								icons.value,
+								Drum,
+								Craft,
+							);
+						} else {
+							nomalResource.value = NomalResource.createNomalResource(
+								drewArea.value,
+								node,
+								adoptFleet.value as AdoptFleet,
+								icons.value,
+								Drum,
+								Craft,
+							);
+						}
 					adjustBranchStyle(cy, event);
-				} else { // 背景
-					popupHtml.value = null;
+				} else {
+					hidePopup();
 				}
-				
-
 			});
-
 		} catch (e: unknown) {
 			modalStore.SHOW_ERROR(e);
 			console.error(e);
@@ -561,7 +566,7 @@ watch([adoptFleet, selectedArea, options], async () => {
   }
 }, { deep: true });
 
-const popupHtml = ref<string | null>(null);
+const branchHtml = ref<string | null>(null);
 
 const popupStyle = ref({
   top: '0px',
@@ -569,6 +574,10 @@ const popupStyle = ref({
 });
 
 const node = ref<string | null>(null);
+
+const nomalResource = ref<NomalResource | null>(null);
+
+const syonanResource = ref<SyonanResource | null>(null);
 
 const generarteBranchHtml = (node_name: string): string | null => {
 	node.value = node_name;

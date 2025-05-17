@@ -97,4 +97,4 @@ export type BranchType = {
     }
 };
 
-export type ItemIconKey = 'fuel'|'ammo'|'steel'|'imo'|'drum'|'craft'
+export type ItemIconKey = 'fuel'|'ammo'|'steel'|'imo'

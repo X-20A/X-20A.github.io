@@ -164,7 +164,7 @@ li {
 #screen-shot {
     right: 4px;
 }
-#popup-info {
+.popup-info {
     font-size: 13px;
     max-width: 450px;
     min-width: 210px;
@@ -175,6 +175,10 @@ li {
     border-radius: 4px;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
     z-index: 1000;
+}
+.add-font {
+	font-weight: 600;
+	color: #1e00ff;
 }
 .remote-active {
 	padding: 3px 15px !important;
