@@ -26,7 +26,12 @@
 		</template>
 
 		<template v-if="data.memo">
-			<p v-html="data.memo"></p>
+			<template v-if="Array.isArray(data.memo)">
+				<p v-for="(line, idx) in data.memo" :key="idx" v-html="line"></p>
+			</template>
+			<template v-else>
+				<p v-html="data.memo"></p>
+			</template>
 		</template>
 	</div>
 </template>
