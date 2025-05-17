@@ -1,4 +1,4 @@
-import CacheFleet from '@/core/CacheFleet';
+import { CacheFleet, createCacheFleet } from '@/core/CacheFleet';
 import Ship from '@/models/Ship';
 import type { EquipInDeck, Improvement } from '@/models/types';
 import type DeckBuilder from '@/models/types/DeckBuilder';
@@ -81,7 +81,7 @@ export function createCacheFleetsFromDeckBuilder(deck: DeckBuilder): CacheFleet[
 		}
 		if (ships.length === 0) continue;
 
-		const fleet = new CacheFleet(ships, command_lv);
+		const fleet = createCacheFleet(ships, command_lv);
 		fleets.push(fleet);
 	}
 	if (!fleets.length) {

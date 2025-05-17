@@ -1,9 +1,9 @@
-import CacheFleet from "./CacheFleet";
 import { type Seek } from "../models/types";
 import { ST as ShipType } from "@/data/ship";
 import Composition from "../models/Composition";
 import Const from "../constants/const";
 import { Ft as FleetType, Sp as Speed } from "../core/Sim";
+import { CacheFleet, createCacheFleet } from "./CacheFleet";
 
 /**
  * 実際に表示やシミュレートで使う艦隊    
@@ -131,7 +131,7 @@ export default class AdoptFleet {
         // CacheFleetのバージョンが古い場合は再生成
         if (!fleets[0].version || fleets[0].version < Const.FLEET_VERSION) {
             // console.log('rebuild');
-            fleets = fleets.map(fleet => new CacheFleet(fleet.ships));
+            fleets = fleets.map(fleet => createCacheFleet(fleet.ships));
         }
 
         this.fleets = fleets;

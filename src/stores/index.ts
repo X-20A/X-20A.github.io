@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
 
-import type CacheFleet from '@/core/CacheFleet';
 import CustomError from "@/errors/CustomError";
 import type AdoptFleet from '@/core/AdoptFleet';
 import Const from '@/constants/const';
@@ -14,6 +13,7 @@ import type {
     BranchType,
     ItemIconKey
 } from '@/models/types';
+import { CacheFleet } from '@/core/CacheFleet';
 
 export const useStore = defineStore('compass', {
 	state: () => ({

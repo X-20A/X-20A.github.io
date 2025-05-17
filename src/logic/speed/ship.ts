@@ -27,7 +27,7 @@ export function calcShipSpeed(equips: Equip[], speed_group: SpeedGroup): Speed {
 
     let speed: Speed;
     switch (speed_group) {
-        case SpeedGroup.HighA:
+        case SpeedGroup.FastA:
             speed = 2;
             if (turbine && new_kan || power_kan > 1) {
                 speed = 4;
@@ -35,7 +35,7 @@ export function calcShipSpeed(equips: Equip[], speed_group: SpeedGroup): Speed {
                 speed = 3;
             }
             break;
-        case SpeedGroup.HighB1:
+        case SpeedGroup.FastB1:
             speed = 2;
             if (turbine && new_kan && kan_total > 1) {
                 speed = 4;
@@ -43,7 +43,7 @@ export function calcShipSpeed(equips: Equip[], speed_group: SpeedGroup): Speed {
                 speed = 3;
             }
             break;
-        case SpeedGroup.HighB2:
+        case SpeedGroup.FastB2:
             speed = 2;
             if (turbine && (new_kan > 1 || kan_total > 2)) {
                 speed = 4;
@@ -51,13 +51,13 @@ export function calcShipSpeed(equips: Equip[], speed_group: SpeedGroup): Speed {
                 speed = 3;
             }
             break;
-        case SpeedGroup.HighC:
+        case SpeedGroup.FastC:
             speed = 2;
             if (turbine && kan_total) {
                 speed = 3;
             }
             break;
-        case SpeedGroup.LowA:
+        case SpeedGroup.SlowA:
             speed = 1;
             if (turbine && new_kan && kan_total > 2) {
                 speed = 4;
@@ -71,7 +71,7 @@ export function calcShipSpeed(equips: Equip[], speed_group: SpeedGroup): Speed {
                 speed = 2;
             }
             break;
-        case SpeedGroup.LowB:
+        case SpeedGroup.SlowB:
             speed = 1;
             if (turbine && (new_kan > 1 || kan_total > 2)) {
                 speed = 3;
@@ -79,13 +79,13 @@ export function calcShipSpeed(equips: Equip[], speed_group: SpeedGroup): Speed {
                 speed = 2;
             }
             break;
-        case SpeedGroup.LowC:
+        case SpeedGroup.SlowC:
             speed = 1;
             if (turbine && kan_total) {
                 speed = 2;
             }
             break;
-        case SpeedGroup.LowD:
+        case SpeedGroup.SlowD:
             speed = 1;
             if (turbine && new_kan) {
                 speed = 3;
@@ -93,7 +93,7 @@ export function calcShipSpeed(equips: Equip[], speed_group: SpeedGroup): Speed {
                 speed = 2;
             }
             break;
-        case SpeedGroup.LowE:
+        case SpeedGroup.SlowE:
             speed = 1;
             if (turbine && new_kan && kan_total > 1) {
                 speed = 4;
@@ -105,7 +105,7 @@ export function calcShipSpeed(equips: Equip[], speed_group: SpeedGroup): Speed {
                 speed = 2;
             }
             break;
-        case SpeedGroup.LowB2:
+        case SpeedGroup.SlowB2:
             speed = 1;
             if (turbine && (new_kan > 1 || kan_total > 2)) {
                 speed = 3;

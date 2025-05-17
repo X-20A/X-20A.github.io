@@ -1,7 +1,7 @@
 import type Big from "big.js";
-import type CacheFleet from "../../core/CacheFleet";
 import { NA as National, SG as SpeedGroup, ST as ShipType } from "@/data/ship";
 import { NT as NodeType } from "@/data/map";
+import { CacheFleet } from "@/core/CacheFleet";
 
 export type Seek = [number, number, number, number]
 

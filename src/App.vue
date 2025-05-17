@@ -273,7 +273,6 @@ import Error from './components/modals/Error.vue';
 import SvgIcon from './components/SvgIcon.vue';
 import type { SelectedType } from '@/models/types';
 import CustomError from '@/errors/CustomError';
-import type CacheFleet from './core/CacheFleet';
 import Sim, { Ft as FleetType } from '@/core/Sim';
 import {
 	createCacheFleetsFromDeckBuilder,
@@ -308,6 +307,7 @@ import SyonanResource from './models/resource/SyonanResource';
 import { isSpecialResourceNode } from './logic/resource';
 import NomalResourcePopup from './components/resource/NomalResourcePopup.vue';
 import SyonanResourcePopup from './components/resource/SyonanResourcePopup.vue';
+import { CacheFleet } from './core/CacheFleet';
 
 const store = useStore();
 const modalStore = useModalStore();
