@@ -172,7 +172,7 @@ import Error from './components/modals/Error.vue';
 import SvgIcon from './components/SvgIcon.vue';
 import type { SelectedType } from '@/models/types';
 import CustomError from '@/errors/CustomError';
-import Sim, { Ft as FleetType } from '@/core/Sim';
+import { Ft as FleetType } from '@/core/branch';
 import {
 	createCacheFleetsFromDeckBuilder,
 	createDeckBuilderFromAdoptFleet
@@ -209,6 +209,7 @@ import { createSyonanResource, SyonanResource } from './models/resource/SyonanRe
 import { createNomalResource, NomalResource } from './models/resource/NomalResource';
 import DetailBox from './components/DetailBox.vue';
 import Footer from './components/Footer.vue';
+import { createSimControllerState, startSim } from './core/SimController';
 
 const store = useStore();
 const modalStore = useModalStore();
@@ -393,13 +394,13 @@ watch([adoptFleet, selectedArea, options], async () => {
 		&& options.value
 	) {
     try {
-			const sim = new Sim(
+			const sim = createSimControllerState(
 				adoptFleet.value as AdoptFleet,
 				selectedArea.value,
 				options.value,
 			);
 			// console.time('シミュ計測');
-			const result = sim.start();
+			const result = startSim(sim);
 			// console.timeEnd('シミュ計測');
 			store.UPDATE_SIM_RESULT(result);
 
@@ -415,16 +416,16 @@ watch([adoptFleet, selectedArea, options], async () => {
 			store.UPDATE_DREW_AREA(selectedArea.value);
 
 			cy.on('mousedown tapstart', (event) => { // cytoscape周りはどうしてもDOM操作が必要になる
-				if (cy) {
-					const target = event.target;
-					if (event.target.data('name')) { // node
-						const html = generarteBranchHtml(target.data('name'));
-						if (!html) return;
-						branchHtml.value = html;
-						adjustBranchStyle(cy, event);
-					} else { // 背景
-						hidePopup();
-					}
+				if (!cy) return;
+
+				const target = event.target;
+				if (event.target.data('name')) { // node
+					const html = generarteBranchHtml(target.data('name'));
+					if (!html) return;
+					branchHtml.value = html;
+					adjustBranchStyle(cy, event);
+				} else { // 背景
+					hidePopup();
 				}
 			});
 
@@ -643,8 +644,9 @@ onMounted(async () => {
 	}
 	fleetInputRef.value?.focus();
 
-	console.log('Source: https://github.com/X-20A/X-20A.github.io/tree/compass_dev');
-	console.log('API guide: https://github.com/X-20A/X-20A.github.io/tree/main');
+	const github_domain = 'https://github.com/X-20A/X-20A.github.io/tree/';
+	console.log(`Source: ${github_domain}compass_dev`);
+	console.log(`API guide: ${github_domain}main`);
 });
 </script>
 

@@ -2,7 +2,7 @@ import type Ship from '@/models/Ship';
 import type { Seek } from '@/models/types';
 import Const from '../constants/const';
 import { SG, ST as ShipType } from '@/data/ship';
-import { Sp as Speed } from '@/core/Sim';
+import { Sp as Speed } from '@/core/branch';
 import { calcFleetSpeed } from '../logic/speed/fleet';
 import { calcFleetSeek } from '../logic/seek/fleet';
 

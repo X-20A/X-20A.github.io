@@ -1,7 +1,7 @@
 import { type Seek } from "../models/types";
 import { ST as ShipType } from "@/data/ship";
 import Const from "../constants/const";
-import { Ft as FleetType, Sp as Speed } from "../core/Sim";
+import { Ft as FleetType, Sp as Speed } from "../core/branch";
 import { CacheFleet, createCacheFleet } from "./CacheFleet";
 import { Composition, createComposition } from "@/models/Composition";
 

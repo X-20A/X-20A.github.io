@@ -2,7 +2,10 @@ import { describe, it, expect } from 'vitest';
 import Big from 'big.js';
 import LZString from 'lz-string';
 import axios from 'axios';
-import Sim, { Ft as FleetType } from '@/core/Sim';
+import {
+    createSimControllerState,
+    startSim,
+} from '@/core/SimController';
 import { getSimSet } from './setup';
 import Const from '@/constants/const';
 import { AreaId, OptionsType } from '@/models/types';
@@ -13,6 +16,7 @@ import { nomal_mock_datas, astray_mock_datas } from './mock';
 import { node_datas, NT as NodeType } from '@/data/map';
 import ship_datas, { ST as ShipType } from '@/data/ship';
 import equip_datas, { EquipType } from '@/data/equip';
+import { Ft } from '@/core/branch';
 
 describe('Simテスト', () => {
     it(`rand-test: ランダムに生成した艦隊をSimクラスに渡してクラス内でエラーが発生しないこと、
@@ -28,8 +32,8 @@ describe('Simテスト', () => {
 
             // 各シミュレーション実行用関数
             const runSim = async (areaId: AreaId, options: OptionsType) => {
-                const sim = new Sim(adoptFleet, areaId, options);
-                const result = await sim.start();
+                const simState = createSimControllerState(adoptFleet, areaId, options);
+                const result = await startSim(simState);
                 // console.log(result);
                 const totalRate = result.reduce(
                     (sum, item) => sum.plus(item.rate),
@@ -118,7 +122,7 @@ describe('Simテスト', () => {
             const deck_string = LZString.decompressFromEncodedURIComponent(compressed_deck);
             const deck = JSON.parse(deck_string);
             const cache_fleets = createCacheFleetsFromDeckBuilder(deck);
-            const fleet_type_id = deck!.f1!.t as FleetType;
+            const fleet_type_id = deck!.f1!.t as Ft;
             const adoptFleet = new AdoptFleet(
                 cache_fleets,
                 fleet_type_id,
@@ -138,8 +142,8 @@ describe('Simテスト', () => {
                 const options = Const.OPTIONS;
                 options[area_id] = { ...options[area_id], ...mock_option };
                 
-                const sim = new Sim(adoptFleet, area_id, options);
-                const result = sim.start();
+                const simState = createSimControllerState(adoptFleet, area_id, options);
+                const result = startSim(simState);
                 const actual_route = result[0].route.join('-');
 
                 if (expected_route !== actual_route) {

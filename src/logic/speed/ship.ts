@@ -1,5 +1,5 @@
 import { SG as SpeedGroup } from '@/data/ship';
-import { Sp as Speed } from '@/core/Sim';
+import { Sp as Speed } from '@/core/branch';
 import { Equip } from '@/models/Equip';
 
 /**

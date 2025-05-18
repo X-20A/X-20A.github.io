@@ -1,15 +1,15 @@
 import { EquipInDeck } from '@/models/types';
 import
     ship_datas,
-    { NA as National, SG as SpeedGroup, ST as ShipType }
+    { NA as National, SG as SpeedGroup, ST as ShipType, }
 from '@/data/ship';
 import { EquipType} from '@/data/equip';
-import { Sp as Speed } from '@/core/Sim';
 import { calcShipSeek } from '../logic/seek/ship';
 import { calcBonus } from '../logic/seek/equipBonus';
 import { calcShipSpeed } from '../logic/speed/ship';
 import { calcEquipSeek } from '../logic/seek/equip';
 import { createEquip } from './Equip';
+import { Sp as Speed } from '@/core/branch';
 
 export default class Ship {
 	public readonly id: number;

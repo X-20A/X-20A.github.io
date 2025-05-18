@@ -3,72 +3,73 @@ import CustomError from '@/errors/CustomError';
 import { PreSailNull } from '@/models/types/brand';
 
 /**
- * シミュに使用する走査子
+ * 走査子の状態を表す型
  */
-export default class Scanner {
-    /** 経由したnode */
-    public route: (string | PreSailNull)[] = [];
+export interface Scanner {
+  route: (string | PreSailNull)[];
+  currentNode: string | PreSailNull;
+  rate: Big;
+  is_fin: boolean;
+  progress_count: number;
+}
 
-    /** 現在のnode */
-    public currentNode: string | PreSailNull;
+/**
+ * Scannerあたりの許容する進行の回数(無限ループ防止)
+ */
+export const MAX_PROGRESS_COUNT = 30;
 
-    /** this.routeの割合 0 - 1.0 */
-    public rate: Big;
+/**
+ * 新規のScannerを返す
+ * @returns 新規Scanner
+ */
+export function createDefaultScanner(): Scanner {
+  return {
+    route: [null as PreSailNull],
+    currentNode: null as PreSailNull,
+    rate: new Big(1),
+    is_fin: false,
+    progress_count: 0,
+  };
+}
 
-    /** 走査か完了したか */
-    public is_fin = false;
+/**
+ * Scannerのコピーを返す
+ * @param scanner コピー元
+ * @returns Scannerのコピー
+ */
+export function cloneScanner(scanner: Scanner): Scanner {
+  return {
+    route: [...scanner.route],
+    currentNode: scanner.currentNode,
+    rate: new Big(scanner.rate),
+    is_fin: scanner.is_fin,
+    progress_count: scanner.progress_count,
+  };
+}
 
-    /** 進行した回数 */
-    public progress_count = 0;
-
-    /** Scannerあたりの許容する進行の回数(無限ループ防止) */
-    private readonly MAX_PROGRESS_COUNT: number = 30; 
-
-    private constructor(
-        route: (string | PreSailNull)[],
-        startNode: string | PreSailNull,
-        rate: number | Big
-    ) {
-        this.route = route;
-        this.currentNode = startNode;
-        this.rate = typeof rate === 'number' // ここから表示までBigで一貫する
-            ? new Big(rate)
-            : rate;
-    }
-
-    /** 新規のScannerを返す */
-    static createDefault(): Scanner {
-        return new Scanner(
-            [null as PreSailNull],
-            null as PreSailNull,
-            1,
-        );
-    }
-
-    /**
-     * Scannerのコピーを返す
-     * @returns - Scannerのコピー
-     */
-    public clone(): Scanner {
-        return new Scanner([...this.route], this.currentNode, this.rate);
-    }
-    /**
-     * nextNode に進む
-     * @param nextNode - 進行するnode
-     * @param rate - 乗算する確率
-     */
-    public progress(nextNode: string, rate: number): void {
-        this.route.push(nextNode);
-        this.currentNode = nextNode;
-
-        this.rate = this.rate.times(rate); // 不動点小数回避
-
-        this.progress_count++;
-        if (this.progress_count >= this.MAX_PROGRESS_COUNT) {
-            console.group('Debug');
-            console.log('経路: ', this.route);
-            console.groupEnd();
-            throw new CustomError('あー！無限ループ！');
-        }
-    }
+/**
+ * nextNode に進む
+ * @param scanner 進行元Scanner
+ * @param nextNode 進行するnode
+ * @param rate 乗算する確率
+ * @returns 進行後のScanner
+ * @throws CustomError 無限ループ検知時
+ */
+export function progressScanner(scanner: Scanner, nextNode: string, rate: number): Scanner {
+  const newRoute = [...scanner.route, nextNode];
+  const newRate = scanner.rate.times(rate);
+  const newProgressCount = scanner.progress_count + 1;
+  if (newProgressCount >= MAX_PROGRESS_COUNT) {
+    console.group('Debug');
+    console.log('経路: ', newRoute);
+    console.groupEnd();
+    throw new CustomError('あー！無限ループ！');
+  }
+  return {
+    ...scanner,
+    route: newRoute,
+    currentNode: nextNode,
+    rate: newRate,
+    progress_count: newProgressCount,
+  };
 }
