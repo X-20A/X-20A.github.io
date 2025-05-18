@@ -1,8 +1,8 @@
-import Equip from '@/models/Equip';
 import
 { NA as National, ST as ShipType }
     from '@/data/ship';
 import { EquipBonusSeek } from '../../models/types/brand';
+import { Equip } from '@/models/Equip';
 
 /** 装備ボーナスを計算して返す */
 export function calcBonus(

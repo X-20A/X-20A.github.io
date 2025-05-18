@@ -1,9 +1,9 @@
 import { type Seek } from "../models/types";
 import { ST as ShipType } from "@/data/ship";
-import Composition from "../models/Composition";
 import Const from "../constants/const";
 import { Ft as FleetType, Sp as Speed } from "../core/Sim";
 import { CacheFleet, createCacheFleet } from "./CacheFleet";
+import { Composition, createComposition } from "@/models/Composition";
 
 /**
  * 実際に表示やシミュレートで使う艦隊    
@@ -174,7 +174,7 @@ export default class AdoptFleet {
             /** 随伴艦隊 */
             const escort = fleets[1];
 
-            this.composition = new Composition(fleets);
+            this.composition = createComposition(fleets);
             this.ship_names = main.ship_names.concat(escort.ship_names);
             this.fleet_length = main.ships.length + escort.ships.length;
             if (main.speed === 4 && escort.speed === 4) {
@@ -215,7 +215,7 @@ export default class AdoptFleet {
         } else {
             const fleet = fleets[0];
 
-            this.composition = new Composition([fleet]);
+            this.composition = createComposition([fleet]);
             this.ship_names = fleet.ship_names;
             this.fleet_length = fleet.ships.length;
             this.speed = fleet.speed;

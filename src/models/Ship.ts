@@ -1,4 +1,3 @@
-import Equip from '@/models/Equip';
 import { EquipInDeck } from '@/models/types';
 import
     ship_datas,
@@ -10,6 +9,7 @@ import { calcShipSeek } from '../logic/seek/ship';
 import { calcBonus } from '../logic/seek/equipBonus';
 import { calcShipSpeed } from '../logic/speed/ship';
 import { calcEquipSeek } from '../logic/seek/equip';
+import { createEquip } from './Equip';
 
 export default class Ship {
 	public readonly id: number;
@@ -89,7 +89,7 @@ export default class Ship {
 		this.national = data.na;
 
 		const equips = equip_in_decks.map((equip_in_deck, index) =>
-            new Equip(
+            createEquip(
                 equip_in_deck.id,
                 equip_in_deck.improvement,
                 data.name,

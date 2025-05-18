@@ -1,6 +1,6 @@
 import { SG as SpeedGroup } from '@/data/ship';
-import Equip from '@/models/Equip';
 import { Sp as Speed } from '@/core/Sim';
+import { Equip } from '@/models/Equip';
 
 /**
  * 装備と速力グループから速度IDを判定して返す

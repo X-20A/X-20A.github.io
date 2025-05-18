@@ -1,7 +1,7 @@
 import AdoptFleet from "@/core/AdoptFleet";
 import { AreaId, ItemIconKey } from "../types";
-import Composition from "../Composition";
 import { createResourceIconSuite, ResourceIconSuite } from "./ResourceIconSuite";
+import { Composition } from "../Composition";
 
 /**
  * SyonanResourceのプロパティ定義

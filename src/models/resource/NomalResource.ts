@@ -7,11 +7,19 @@ import { createResourceIconSuite, ResourceIconSuite } from "./ResourceIconSuite"
  * 資源種別
  */
 export const enum ResourceType {
-    fuel = "fuel",
-    ammo = "ammo",
-    steel = "steel",
-    imo = "imo",
+    fuel,
+    ammo,
+    steel,
+    imo,
 }
+
+// ResourceTypeの数値→文字列変換用マップ
+const ResourceTypeString: Record<ResourceType, string> = {
+    [ResourceType.fuel]: "fuel",
+    [ResourceType.ammo]: "ammo",
+    [ResourceType.steel]: "steel",
+    [ResourceType.imo]: "imo",
+};
 
 /**
  * ドラム缶・大発系による獲得資源増加の係数のデフォルト値
@@ -26,7 +34,7 @@ const DEFAULT_ADD_COEFFICIENT = {
 /**
  * 資源マスデータ
  */
-export const RESOURCE_DATA: ResourceData = {
+const RESOURCE_DATA: ResourceData = {
     '1-2': {
         B: { type: ResourceType.ammo, base: [10, 20] }
     },
@@ -156,10 +164,10 @@ export type NomalResource = {
 };
 
 /**
- * NomalResourceオブジェクトを生成します。
+ * NomalResourceオブジェクトを生成
  * @param node_resource ノード資源データ
  * @param fleet 艦隊情報
- * @param icons アイコン情報
+ * @param respurce_icons 資源アイコン
  * @param drum ドラム缶アイコン
  * @param craft 大発系アイコン
  * @returns NomalResourceオブジェクト
@@ -167,19 +175,19 @@ export type NomalResource = {
 function createNomalResourceObj(
     node_resource: NodeResource,
     fleet: AdoptFleet,
-    icons: Record<ItemIconKey, string>,
+    respurce_icons: Record<ItemIconKey, string>,
     drum: string,
     craft: string,
 ): NomalResource {
     const fleet_total_drum = fleet.getTotalDrumCount();
     const fleet_total_craft = fleet.getTotalValidCraftCount();
-    const icon_suite = createResourceIconSuite(icons, drum, craft);
+    const icon_suite = createResourceIconSuite(respurce_icons, drum, craft);
 
     let actual_drum_coefficient: number | undefined = undefined;
     let actual_craft_coefficient: number | undefined = undefined;
     let add: number | undefined = undefined;
 
-    if (node_resource.base && node_resource.type) {
+    if (node_resource.base && node_resource.type !== undefined) {
         actual_drum_coefficient = node_resource.coefficient
             ? node_resource.coefficient.drum
             : DEFAULT_ADD_COEFFICIENT[node_resource.type].drum;
@@ -211,7 +219,7 @@ function createNomalResourceObj(
  * @param area_id 海域ID
  * @param node ノード名
  * @param fleet 艦隊情報
- * @param icons アイコン情報
+ * @param resource_icons アイコン情報
  * @param drum ドラム缶アイコン
  * @param craft 大発系アイコン
  * @returns NomalResourceオブジェクトまたはnull
@@ -220,7 +228,7 @@ export function createNomalResource(
     area_id: AreaId,
     node: string,
     fleet: AdoptFleet,
-    icons: Record<ItemIconKey, string>,
+    resource_icons: Record<ItemIconKey, string>,
     drum: string,
     craft: string,
 ): NomalResource | null {
@@ -230,7 +238,7 @@ export function createNomalResource(
     return createNomalResourceObj(
         RESOURCE_DATA[area_id][node],
         fleet,
-        icons,
+        resource_icons,
         drum,
         craft,
     );
