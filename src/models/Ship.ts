@@ -1,9 +1,8 @@
 import { EquipInDeck } from '@/models/types';
 import
-    ship_datas,
-    { NA as National, SG as SpeedGroup, ST as ShipType, }
+    { NA as National, SG as SpeedGroup, ST as ShipType, ShipDatas, }
 from '@/data/ship';
-import { EquipType} from '@/data/equip';
+import { EquipDatas, EquipType } from '@/data/equip';
 import { calcShipSeek } from '../logic/seek/ship';
 import { calcBonus } from '../logic/seek/equipBonus';
 import { calcShipSpeed } from '../logic/speed/ship';
@@ -11,133 +10,137 @@ import { calcEquipSeek } from '../logic/seek/equip';
 import { createEquip } from './Equip';
 import { Sp as Speed } from '@/core/branch';
 
-export default class Ship {
-	public readonly id: number;
-	public readonly name: string;
-    public readonly lv: number;
-	public readonly type: ShipType;
-    public readonly status_seek: number;
-    public readonly equip_seek: number;
-	public readonly national: National;
-	public readonly speed_group: SpeedGroup;
-	public readonly speed: Speed;
-	public readonly hp: number;
-	public readonly asw: number;
-    public readonly luck: number;
-    public readonly equip_in_decks: EquipInDeck[];
-	public readonly drum_count: number;
-	public readonly has_radar: boolean;
-	public readonly has_radar5: boolean;
-	public readonly has_craft: boolean;
-    public readonly has_arBulge: boolean;
-	public readonly valid_craft_count: number;
-	public readonly has_arctic_gear: boolean;
+/**
+ * Ship型: 艦船の情報を表現する型
+ */
+export type Ship = {
+    readonly id: number;
+    readonly name: string;
+    readonly lv: number;
+    readonly type: ShipType;
+    readonly status_seek: number;
+    readonly equip_seek: number;
+    readonly national: National;
+    readonly speed_group: SpeedGroup;
+    readonly speed: Speed;
+    readonly hp: number;
+    readonly asw: number;
+    readonly luck: number;
+    readonly equip_in_decks: EquipInDeck[];
+    readonly drum_count: number;
+    readonly has_radar: boolean;
+    readonly has_radar5: boolean;
+    readonly has_craft: boolean;
+    readonly has_arBulge: boolean;
+    readonly valid_craft_count: number;
+    readonly has_arctic_gear: boolean;
+};
 
-    /**
-     * ルート分岐に関わる大発群    
-     * 68 : 大発動艇,    
-     * 166: 大発動艇(八九式中戦車&陸戦隊),    
-     * 167: 特二式内火艇,     
-     * 193: 特大発動艇,    
-     * 409: 武装大発,    
-     * 436: 大発動艇(II号戦車/北アフリカ仕様),    
-     * 449: 特大発動艇+一式砲戦車,    
-     * 525: 特四式内火艇,    
-     * 526: 特四式内火艇改    
-     * https://x.gd/AjX5F > ルート分岐での大発動艇について
-     */
-    private readonly ROUTING_CRAFTS: Readonly<number[]> =
-        [68, 166, 167, 193, 409, 436, 449, 525, 526];
+/**
+ * ルート分岐に関わる大発群
+ */
+const ROUTING_CRAFTS: Readonly<number[]> =
+    [68, 166, 167, 193, 409, 436, 449, 525, 526];
 
-    /**
-     * 資源獲得量増加に寄与する大発群    
-     * 68 : 大発動艇,    
-     * 166: 大発動艇(八九式中戦車&陸戦隊),    
-     * 167: 特二式内火艇,     
-     * 193: 特大発動艇,    
-     * 408: 装甲艇(AB艇),    
-     * 409: 武装大発,    
-     * 436: 大発動艇(II号戦車/北アフリカ仕様),    
-     * 449: 特大発動艇+一式砲戦車,    
-     * 525: 特四式内火艇,    
-     * 526: 特四式内火艇改    
-     * https://x.gd/0CJOt > 燃料稼ぎ
-     */
-    private readonly RESOURCE_CRAFTS: Readonly<number[]> =
-        [68, 166, 167, 193, 408, 409, 436, 449, 525, 526];
-	
-	constructor(
-		fleet_index: number,
-		ship_index: number,
-		ship_id: number,
-		lv: number,
-		equip_in_decks: EquipInDeck[],
-		hp?: number,
-		asw?: number,
-        luck?: number,
-	) {
-		const data = ship_datas[ship_id];
+/**
+ * 資源獲得量増加に寄与する大発群
+ */
+const RESOURCE_CRAFTS: Readonly<number[]> =
+    [68, 166, 167, 193, 408, 409, 436, 449, 525, 526];
 
-		if (!data) {
-            throw new Error(`第${fleet_index}艦隊の${ship_index}番艦は未対応です`);
-		}
+/**
+ * Shipオブジェクトを生成するファクトリ関数
+ * @param fleet_index 艦隊番号
+ * @param ship_index 艦番号
+ * @param ship_id 艦船ID
+ * @param lv レベル
+ * @param equip_in_decks 装備情報
+ * @param hp HP(任意)
+ * @param asw 対潜値(任意)
+ * @param luck 運(任意)
+ * @returns Shipオブジェクト
+ * @throws 未対応艦の場合はエラー
+ */
+export function createShip(
+    fleet_index: number,
+    ship_index: number,
+    ship_id: number,
+    lv: number,
+    equip_in_decks: EquipInDeck[],
+    ship_datas: ShipDatas,
+    equip_datas: EquipDatas,
+    hp?: number,
+    asw?: number,
+    luck?: number,
+): Ship {
+    const data = ship_datas[ship_id];
 
-		this.id = ship_id;
-		this.name = data.name;
-        this.lv = lv;
-		this.type = data.type;
-		this.national = data.na;
+    if (!data) {
+        throw new Error(`第${fleet_index}艦隊の${ship_index}番艦は未対応です`);
+    }
 
-		const equips = equip_in_decks.map((equip_in_deck, index) =>
-            createEquip(
-                equip_in_deck.id,
-                equip_in_deck.improvement,
-                data.name,
-                index,
-                equip_in_deck.is_ex,
-            )
-        );
+    const equips = equip_in_decks.map((equip_in_deck, index) =>
+        createEquip(
+            equip_in_deck.id,
+            equip_in_deck.improvement,
+            data.name,
+            index,
+            equip_in_deck.is_ex,
+            equip_datas,
+        )
+    );
 
-		this.speed_group = data.sg;
-		this.speed = calcShipSpeed(equips, data.sg);
-        // 制空シミュからのデッキビルダーには実 HP, 対潜値も載ってる
-        // なければ0 スクショくらいでしか使わないし、
-        // ちゃんと出そうとすると装備から計算しないといけないのでサボる
-		this.hp = hp ?? 0;
-		this.asw = asw ?? 0;
-        this.luck = luck ?? 0;
-        this.equip_in_decks = equip_in_decks;
+    const speed_group = data.sg;
+    const speed = calcShipSpeed(equips, data.sg);
 
-        const bonus_seek = calcBonus(data.name, data.type, data.na, equips);
-		this.status_seek = calcShipSeek(data, bonus_seek, lv);
-        this.equip_seek = calcEquipSeek(equips);
+    const _hp = hp ?? 0;
+    const _asw = asw ?? 0;
+    const _luck = luck ?? 0;
 
-        let drum_count = 0;
-        let has_radar = false;
-        let has_radar5 = false;
-        let has_craft = false;
-        let has_arBulge = false;
-        let valid_craft_count = 0;
-        let has_arctic_gear = false;
+    const bonus_seek = calcBonus(data.name, data.type, data.na, equips);
+    const status_seek = calcShipSeek(data, bonus_seek, lv);
+    const equip_seek = calcEquipSeek(equips);
 
-        equips.forEach(equip => {
-            if (equip.id === 75) drum_count++;
-            if (equip.id === 268) has_arBulge = true;
-            if (equip.id === 402) has_arctic_gear = true;
-            if (this.ROUTING_CRAFTS.includes(equip.id)) has_craft = true;
-            if (this.RESOURCE_CRAFTS.includes(equip.id)) valid_craft_count++;
-            if ([EquipType.RadarS, EquipType.RadarL].includes(equip.type)) {
-                has_radar = true;
-                if (equip.seek >= 5) has_radar5 = true;
-            }
-        });
+    let drum_count = 0;
+    let has_radar = false;
+    let has_radar5 = false;
+    let has_craft = false;
+    let has_arBulge = false;
+    let valid_craft_count = 0;
+    let has_arctic_gear = false;
 
-        this.drum_count = drum_count;
-        this.has_radar = has_radar;
-        this.has_radar5 = has_radar5;
-        this.has_craft = has_craft;
-        this.has_arBulge = has_arBulge;
-        this.valid_craft_count = valid_craft_count;
-        this.has_arctic_gear = has_arctic_gear;
-	}
+    equips.forEach(equip => {
+        if (equip.id === 75) drum_count++;
+        if (equip.id === 268) has_arBulge = true;
+        if (equip.id === 402) has_arctic_gear = true;
+        if (ROUTING_CRAFTS.includes(equip.id)) has_craft = true;
+        if (RESOURCE_CRAFTS.includes(equip.id)) valid_craft_count++;
+        if ([EquipType.RadarS, EquipType.RadarL].includes(equip.type)) {
+            has_radar = true;
+            if (equip.seek >= 5) has_radar5 = true;
+        }
+    });
+
+    return {
+        id: ship_id,
+        name: data.name,
+        lv,
+        type: data.type,
+        national: data.na,
+        speed_group,
+        speed,
+        hp: _hp,
+        asw: _asw,
+        luck: _luck,
+        equip_in_decks,
+        status_seek,
+        equip_seek,
+        drum_count,
+        has_radar,
+        has_radar5,
+        has_craft,
+        has_arBulge,
+        valid_craft_count,
+        has_arctic_gear,
+    };
 }

@@ -16,7 +16,11 @@ const item_ids = Object.keys(equip_datas).map(key => Number.parseInt(key));
 
 export const getSimSet = () => {
     const deck = generateRandomDeck();
-    const cache_fleets = createCacheFleetsFromDeckBuilder(deck);
+    const cache_fleets = createCacheFleetsFromDeckBuilder(
+        deck,
+        ship_datas,
+        equip_datas,
+    );
     const fleet_type_id = deck?.f1?.t as Ft;
     const adoptFleet = new AdoptFleet(cache_fleets, fleet_type_id);
 

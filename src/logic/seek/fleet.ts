@@ -1,5 +1,5 @@
 import { Seek } from '@/models/types';
-import Ship from '../../models/Ship';
+import { Ship } from '../../models/Ship';
 
 /**
  * 艦隊単位の索敵値を返す(連合艦隊は別)

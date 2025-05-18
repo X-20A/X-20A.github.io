@@ -121,7 +121,11 @@ describe('Simテスト', () => {
             const compressed_deck = getParam('pdz', mock_data.deck)!;
             const deck_string = LZString.decompressFromEncodedURIComponent(compressed_deck);
             const deck = JSON.parse(deck_string);
-            const cache_fleets = createCacheFleetsFromDeckBuilder(deck);
+            const cache_fleets = createCacheFleetsFromDeckBuilder(
+                deck,
+                ship_datas,
+                equip_datas,
+            );
             const fleet_type_id = deck!.f1!.t as Ft;
             const adoptFleet = new AdoptFleet(
                 cache_fleets,

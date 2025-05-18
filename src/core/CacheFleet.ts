@@ -1,4 +1,4 @@
-import type Ship from '@/models/Ship';
+import type { Ship } from '@/models/Ship';
 import type { Seek } from '@/models/types';
 import Const from '../constants/const';
 import { SG, ST as ShipType } from '@/data/ship';

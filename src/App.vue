@@ -210,6 +210,8 @@ import { createNomalResource, NomalResource } from './models/resource/NomalResou
 import DetailBox from './components/DetailBox.vue';
 import Footer from './components/Footer.vue';
 import { createSimControllerState, startSim } from './core/SimController';
+import ship_datas from './data/ship';
+import equip_datas from './data/equip';
 
 const store = useStore();
 const modalStore = useModalStore();
@@ -300,7 +302,11 @@ const loadFleet = (text: string) => {
 	} catch (e) {
 		throw new CustomError('デッキビルダーのデータ形式に誤りがあります');
 	}
-	const cache_fleets = createCacheFleetsFromDeckBuilder(deck);
+	const cache_fleets = createCacheFleetsFromDeckBuilder(
+		deck,
+		ship_datas,
+		equip_datas,
+	);
 	store.UPDATE_CACHE_FLEETS(cache_fleets);
 	store.SAVE_DATA();
 

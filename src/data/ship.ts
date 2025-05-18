@@ -90,8 +90,10 @@ export const enum SG {
 
 import { type ShipData } from '@/models/types';
 
+export type ShipDatas = Record<number, ShipData>;
+
 // NOTE: 配列にしてもgzip後は1kBしか変わらない あとなぜかrand-testがこける
-const ship_datas: Record<number, ShipData> = {
+const ship_datas: ShipDatas = {
 1:{name:"睦月",type:ST.DD,seek:4,seek2:17,na:NA.Japan,sg:SG.FastB2}
 ,2:{name:"如月",type:ST.DD,seek:4,seek2:17,na:NA.Japan,sg:SG.FastB2}
 ,6:{name:"長月",type:ST.DD,seek:4,seek2:17,na:NA.Japan,sg:SG.FastB2}

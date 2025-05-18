@@ -1,4 +1,4 @@
-import equip_datas, { EquipType } from "@/data/equip";
+import { EquipDatas, EquipType } from "@/data/equip";
 import type { Improvement } from "../models/types";
 import CustomError from "@/errors/CustomError";
 
@@ -33,7 +33,8 @@ export function createEquip(
     implovement: Improvement,
     ship_name: string,
     slot_index: number,
-    is_ex: boolean
+    is_ex: boolean,
+    equip_datas: EquipDatas,
 ): Equip {
     const data = equip_datas[id];
 

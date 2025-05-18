@@ -1,4 +1,4 @@
-import Ship from "../../models/Ship";
+import { Ship } from "../../models/Ship";
 import { Sp as Speed } from "@/core/branch";
 
 /**

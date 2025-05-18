@@ -7,9 +7,10 @@
 			add: <span class="add-font">{{ data.add_fuel }}</span>
 			&nbsp;= <img :src="data.icon_suite.drum" class="item-icon drum-icon">
 			{{ data.fleet_total_drum }} * {{ data.FUEL_EQUIP_COEFFICIENT.drum }}
-			&nbsp;+ <span class="tooltip-container">
+			&nbsp;+
+			<span class="tooltip-container">
 				<img :src="data.icon_suite.craft" class="item-icon craft-icon">
-				<span class="tooltip-text">大発系</span>
+				<span class="tooltip-text" v-html="formattedCraftNames"></span>
 			</span>
 			{{ data.fleet_total_craft }} * {{ data.FUEL_EQUIP_COEFFICIENT.craft }}
 		</p>
@@ -26,7 +27,11 @@
 			add: <span class="add-font">{{ data.add_imo }}</span>
 			&nbsp;= <img :src="data.icon_suite.drum" class="item-icon drum-icon">
 			{{ data.fleet_total_drum }} * {{ data.IMO_EQUIP_COEFFICIENT.drum }}
-			&nbsp;+ <img :src="data.icon_suite.craft" class="item-icon craft-icon">
+			&nbsp;+
+			<span class="tooltip-container">
+				<img :src="data.icon_suite.craft" class="item-icon craft-icon">
+				<span class="tooltip-text" v-html="formattedCraftNames"></span>
+			</span>
 			{{ data.fleet_total_craft }} * {{ data.IMO_EQUIP_COEFFICIENT.craft }}
 		</p>
 		<p> + 航空戦艦 {{ data.composition.BBV }} * {{ data.IMO_COMPOSITION_COEFFICIENT.BBV }}</p>
@@ -38,8 +43,12 @@
 	</div>
 </template>
 <script setup lang="ts">
+import Const from '@/constants/const';
+import { formatCraftNames } from '@/logic/resource';
 import { SyonanResource } from '@/models/resource/SyonanResource';
 
+const formattedCraftNames =
+	formatCraftNames(Const.VALID_CRAFT_NAMES);
 
 defineProps<{ data: SyonanResource | null }>();
 </script>

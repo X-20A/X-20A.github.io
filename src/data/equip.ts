@@ -103,10 +103,12 @@ export const enum EquipType {
 }
 
 /** 索敵値, 装備種別ID */
-export type EquipData = [number, EquipType]
+export type EquipData = [number, EquipType];
+
+export type EquipDatas = Record<number, EquipData>;
 
 /** 基地系は除外 */
-const equip_datas: Record<number, EquipData> = {
+const equip_datas: EquipDatas = {
  1:[0,EquipType.MainGunS] // 12cm単装砲
 ,2:[0,EquipType.MainGunS] // 12.7cm連装砲
 ,3:[0,EquipType.MainGunS] // 10cm連装高角砲

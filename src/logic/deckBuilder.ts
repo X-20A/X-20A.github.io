@@ -1,5 +1,5 @@
 import { CacheFleet, createCacheFleet } from '@/core/CacheFleet';
-import Ship from '@/models/Ship';
+import { createShip, Ship } from '@/models/Ship';
 import type { EquipInDeck, Improvement } from '@/models/types';
 import type DeckBuilder from '@/models/types/DeckBuilder';
 import type {
@@ -10,6 +10,8 @@ import type {
 import CustomError from "@/errors/CustomError";
 import { isNumber } from '@/logic/util';
 import type AdoptFleet from '@/core/AdoptFleet';
+import { ShipDatas } from '@/data/ship';
+import { EquipDatas } from '@/data/equip';
 
 
 /**
@@ -19,7 +21,11 @@ import type AdoptFleet from '@/core/AdoptFleet';
  * @returns - デッキビルダーから読み取った艦隊インスタンス
  * @throws {Error} - デッキビルダーの形式がまずかったり、艦隊が空だったりするとエラーを投げるのでcatchすること
  */
-export function createCacheFleetsFromDeckBuilder(deck: DeckBuilder): CacheFleet[] {
+export function createCacheFleetsFromDeckBuilder(
+    deck: DeckBuilder,
+    ship_datas: ShipDatas,
+    equip_datas: EquipDatas,
+): CacheFleet[] {
 	const fleets = [] as CacheFleet[];
     
 	const command_lv = isNumber(deck.hqlv) ? Number(deck.hqlv): 120;
@@ -67,12 +73,14 @@ export function createCacheFleetsFromDeckBuilder(deck: DeckBuilder): CacheFleet[
 				throw new CustomError('デッキビルダーの形式に誤りがあります');
 			}
 
-			const ship = new Ship(
+			const ship = createShip(
 				i,
 				j,
 				Number(id),
 				Number(lv),
 				equips,
+                ship_datas,
+                equip_datas,
 				Number(hp),
 				Number(asw),
                 Number(luck),
