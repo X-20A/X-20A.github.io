@@ -1,4 +1,4 @@
-import AdoptFleet from "@/core/AdoptFleet";
+import { AdoptFleet, getTotalDrumCount, getTotalValidCraftCount } from "@/core/AdoptFleet";
 import { AreaId, ItemIconKey } from "../types";
 import { NodeResource, ResourceData } from "../types/resource";
 import { createResourceIconSuite, ResourceIconSuite } from "./ResourceIconSuite";
@@ -179,8 +179,8 @@ function createNomalResourceObj(
     drum: string,
     craft: string,
 ): NomalResource {
-    const fleet_total_drum = fleet.getTotalDrumCount();
-    const fleet_total_craft = fleet.getTotalValidCraftCount();
+    const fleet_total_drum = getTotalDrumCount(fleet);
+    const fleet_total_craft = getTotalValidCraftCount(fleet);
     const icon_suite = createResourceIconSuite(respurce_icons, drum, craft);
 
     let actual_drum_coefficient: number | undefined = undefined;

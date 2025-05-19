@@ -1,4 +1,4 @@
-import AdoptFleet from "@/core/AdoptFleet";
+import { AdoptFleet, getTotalDrumCount, getTotalValidCraftCount } from "@/core/AdoptFleet";
 import { AreaId, ItemIconKey } from "../types";
 import { createResourceIconSuite, ResourceIconSuite } from "./ResourceIconSuite";
 import { Composition } from "../Composition";
@@ -64,8 +64,8 @@ function createSyonanResourceObject(
     };
 
     const composition = fleet.composition;
-    const fleet_total_drum = fleet.getTotalDrumCount();
-    const fleet_total_craft = fleet.getTotalValidCraftCount();
+    const fleet_total_drum = getTotalDrumCount(fleet);
+    const fleet_total_craft = getTotalValidCraftCount(fleet);
     const icon_suite = createResourceIconSuite(icons, drum, craft);
 
     const add_fuel =
