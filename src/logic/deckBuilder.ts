@@ -9,7 +9,7 @@ import type {
 } from '@/models/types/DeckBuilder';
 import CustomError from "@/errors/CustomError";
 import { isNumber } from '@/logic/util';
-import type AdoptFleet from '@/core/AdoptFleet';
+import type { AdoptFleet } from '@/core/AdoptFleet';
 import { ShipDatas } from '@/data/ship';
 import { EquipDatas } from '@/data/equip';
 

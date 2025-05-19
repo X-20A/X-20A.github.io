@@ -65,7 +65,7 @@
 
 				<span class="tooltip-container">
 					<img :src="NotSpanner" alt="寒冷地装備＆甲板要員を装備していない空母系+あきつ丸" style="height: 17px;vertical-align: -3px;">
-					<span>: {{ adoptFleet.countNotEquipArctic() }}&nbsp;</span>
+					<span>: {{ countNotEquipArctic(adoptFleet) }}&nbsp;</span>
 					<span class="tooltip-text">寒冷地装備＆甲板要員を装備していない(空母系+あきつ丸)</span>
 				</span>
 
@@ -94,16 +94,16 @@
 			<template v-if="adoptFleet.fleet_type > 0"><!-- 連合艦隊 -->
 				<div>
 					<strong>主力: </strong>
-					<template v-for="(name, index) in adoptFleet.getMainFleetNames()" :key="index">
+					<template v-for="(name, index) in getMainFleetNames(adoptFleet)" :key="index">
 						<span>{{ name }}</span>
-						<span v-if="index < adoptFleet.getMainFleetLength() - 1"> | </span>
+						<span v-if="index < getMainFleetLength(adoptFleet) - 1"> | </span>
 					</template>
 				</div>
 				<div>
 					<strong>随伴: </strong>
-					<template v-for="(name, index) in adoptFleet.getEscortFleetNames()" :key="index">
+					<template v-for="(name, index) in getEscortFleetNames(adoptFleet)" :key="index">
 						<span>{{ name }}</span>
-						<span v-if="index < adoptFleet.getEscortFleetLength() - 1"> | </span>
+						<span v-if="index < getEscortFleetLength(adoptFleet) - 1"> | </span>
 					</template>
 				</div>
 			</template>
@@ -182,7 +182,7 @@ import {
 	isNumber,
 	sanitizeText
 } from '@/logic/util';
-import AdoptFleet from './core/AdoptFleet';
+import { AdoptFleet, countNotEquipArctic, createAdoptFleet, getEscortFleetLength, getEscortFleetNames, getMainFleetLength, getMainFleetNames } from './core/AdoptFleet';
 import type DeckBuilder from '@/models/types/DeckBuilder';
 import type { DeckBuilder as GkcoiDeckBuilder } from 'gkcoi/dist/type';
 import doDrawMap from '@/logic/efffects/draw';
@@ -372,7 +372,7 @@ watch([cacheFleets, selectedType], () => {
 
 		if (!fleets[0]) throw new CustomError('艦隊が空です');
 
-		const adopt_fleet = new AdoptFleet(
+		const adopt_fleet = createAdoptFleet(
 			fleets,
 			fleet_type,
 		);

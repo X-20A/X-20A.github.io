@@ -10,7 +10,7 @@ import { getSimSet } from './setup';
 import Const from '@/constants/const';
 import { AreaId, OptionsType } from '@/models/types';
 import { createCacheFleetsFromDeckBuilder } from '@/logic/deckBuilder';
-import AdoptFleet from '@/core/AdoptFleet';
+import { createAdoptFleet, getEscortFleetNames, getMainFleetNames } from '@/core/AdoptFleet';
 import { getParam } from '@/logic/url';
 import { nomal_mock_datas, astray_mock_datas } from './mock';
 import { node_datas, NT as NodeType } from '@/data/map';
@@ -95,8 +95,8 @@ describe('Simテスト', () => {
                 console.error('Error occurred:', error);
                 console.log('area: ', debug_area_id);
                 console.log('option: ', debug_option);
-                console.log(adoptFleet.getMainFleetNames());
-                if (adoptFleet.fleet_type > 0) console.log(adoptFleet.getEscortFleetNames());
+                console.log(getMainFleetNames(adoptFleet));
+                if (adoptFleet.fleet_type > 0) console.log(getEscortFleetNames(adoptFleet));
                 console.log(adoptFleet.fleet_type);
                 console.log(JSON.stringify(simSet.deck));
                 throw error;
@@ -127,7 +127,7 @@ describe('Simテスト', () => {
                 equip_datas,
             );
             const fleet_type_id = deck!.f1!.t as Ft;
-            const adoptFleet = new AdoptFleet(
+            const adoptFleet = createAdoptFleet(
                 cache_fleets,
                 fleet_type_id,
                 [999, 999, 999, 999],

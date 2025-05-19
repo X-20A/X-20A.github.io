@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 
 import CustomError from "@/errors/CustomError";
-import type AdoptFleet from '@/core/AdoptFleet';
+import { switchSeek, type AdoptFleet } from '@/core/AdoptFleet';
 import Const from '@/constants/const';
 import type {
     SelectedType,
@@ -76,7 +76,8 @@ export const useStore = defineStore('compass', {
             }
         },
         SWITCH_SEEK(): void {
-            this.UPDATE_ADOPT_FLEET(this.adoptFleet?.switchSeek() as AdoptFleet);
+            if (!this.adoptFleet) return;
+            this.UPDATE_ADOPT_FLEET(switchSeek(this.adoptFleet as AdoptFleet));
         },
         LOAD_DATA(): void {
             const data = localStorage.getItem('compass-v2');

@@ -1,6 +1,6 @@
 import { edge_datas } from "@/data/map";
 import CustomError from "@/errors/CustomError";
-import type AdoptFleet from "./AdoptFleet";
+import type { AdoptFleet } from "./AdoptFleet";
 import {
   Scanner,
   createDefaultScanner,

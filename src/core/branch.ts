@@ -1,5 +1,5 @@
 import { PreSailNull } from '@/models/types/brand';
-import AdoptFleet from './AdoptFleet';
+import { AdoptFleet, countAktmrPlusCVs, countNotEquipArctic, countShip, countTaiyo, isFCL, isInclude } from './AdoptFleet';
 import type { Scanner } from './Scanner';
 import { AreaId, BranchResponse } from '@/models/types';
 import CustomError from '@/errors/CustomError';
@@ -2370,13 +2370,13 @@ export function calcNextNode(
                 case 'C':
                     if (CVs === 2 && CAs === 2 && DD === 2) {
                         return 'D';
-                    } else if (fleet.isInclude('夕張') && CVL + CAs + DD + AO === 5) {
+                    } else if (isInclude(fleet, '夕張') && CVL + CAs + DD + AO === 5) {
                         return 'D';
-                    } else if (fleet.isInclude('祥鳳') && CAs + CLE + DD + AO === 5) {
+                    } else if (isInclude(fleet, '祥鳳') && CAs + CLE + DD + AO === 5) {
                         return 'D';
                     } else if (speed === Sp.slow) {
                         return 'E';
-                    } else if (fleet.isInclude('翔鶴') && fleet.isInclude('瑞鶴') && DD > 1) {
+                    } else if (isInclude(fleet, '翔鶴') && isInclude(fleet, '瑞鶴') && DD > 1) {
                         return 'D';
                     } else if (BBs + CVH > 0) {
                         return 'E';
@@ -2390,16 +2390,16 @@ export function calcNextNode(
                     break;
                 case 'D':
                     if (
-                        (fleet.isInclude('祥鳳') && DD === 3)
+                        (isInclude(fleet, '祥鳳') && DD === 3)
                         && (((CA === 1 && (CL === 1 || AO === 1))
                             || AO === 2))
                     ) {
                         return 'G';
-                    } else if (fleet.isInclude('夕張') && DD >= 2) {
+                    } else if (isInclude(fleet, '夕張') && DD >= 2) {
                         if (DD === 3
                             || (AO === 1 && (DD === 2 || CA === 2))
                             || (AO === 2 && (DD === 1 || CA === 2))
-                            || (fleet.isInclude('祥鳳') && (CA === 2 || AO === 2))
+                            || (isInclude(fleet, '祥鳳') && (CA === 2 || AO === 2))
                         ) {
                             return 'G';
                         } else {
@@ -2442,7 +2442,7 @@ export function calcNextNode(
                     } // LoSより例外なし
                     break;
                 case 'G':
-                    if (fleet.isInclude('祥鳳') && fleet.isInclude('夕張')) {
+                    if (isInclude(fleet, '祥鳳') && isInclude(fleet, '夕張')) {
                         return [
                             { node: 'J', rate: 0.55 },
                             { node: 'L', rate: 0.45 },
@@ -2455,7 +2455,7 @@ export function calcNextNode(
                     }
                     break;
                 case 'L':
-                    if (!fleet.isInclude('祥鳳') && !fleet.isInclude('夕張')) {
+                    if (!isInclude(fleet, '祥鳳') && !isInclude(fleet, '夕張')) {
                         if (isFaster) {
                             return [
                                 { node: 'K', rate: 0.5 },
@@ -3053,12 +3053,12 @@ export function calcNextNode(
                 case null:
                     if (LHA + CVs > 0) {
                         return '2';
-                    } else if (!fleet.isInclude('長門改二') && !fleet.isInclude('陸奥改二') && BBs === 2) {
+                    } else if (!isInclude(fleet, '長門改二') && !isInclude(fleet, '陸奥改二') && BBs === 2) {
                         return '2';
                     } else if (CAV > 2) {
                         return '2';
                     } else if (speed !== Sp.slow &&
-                        ((fleet.isFCL() && DD === 3)
+                        ((isFCL(fleet) && DD === 3)
                             || DD > 3)) {
                         return '1';
                     } else if (DD > 1) {
@@ -3069,7 +3069,7 @@ export function calcNextNode(
                     break;
                 case '1':
                     if (speed !== Sp.slow &&
-                        ((fleet.isFCL() && DD === 3)
+                        ((isFCL(fleet) && DD === 3)
                             || DD > 3)) {
                         return 'B';
                     } else if (DD > 1) {
@@ -3077,21 +3077,21 @@ export function calcNextNode(
                     } // これ以外は既に2へ行ってるので例外なし。でもちょっとヤだね
                     break;
                 case 'A':
-                    if (fleet.isInclude('秋津洲') &&
+                    if (isInclude(fleet, '秋津洲') &&
                         (CAV === 1
                             || CL > 0
                             || DD > 2)) {
                         return 'D';
                     } else if (BBs > 0 || speed === Sp.slow) {
                         return 'E';
-                    } else if (fleet.isFCL() || DD > 2) {
+                    } else if (isFCL(fleet) || DD > 2) {
                         return 'D';
                     } else {
                         return 'E';
                     }
                     break;
                 case 'E':
-                    if (fleet.isInclude('秋津洲') || fleet.isInclude('如月')) {
+                    if (isInclude(fleet, '秋津洲') || isInclude(fleet, '如月')) {
                         return 'D';
                     } else if (CAs < 2 && CL > 0 && speed !== Sp.slow) {
                         return 'D';
@@ -3388,7 +3388,7 @@ export function calcNextNode(
                             return 'C';
                         } else if (CA === 0 || CVs > 0 || Ds === 0 || f_length > 4) {
                             return 'B';
-                        } else if (fleet.isInclude('羽黒') && fleet.isInclude('神風')) {
+                        } else if (isInclude(fleet, '羽黒') && isInclude(fleet, '神風')) {
                             return 'C';
                         } else if (f_length === 4) {
                             if (CA > 1 || Ds < 2) {
@@ -3409,10 +3409,10 @@ export function calcNextNode(
                     case 'C':
                         if (BBCVs > 0 || Ds === 0 || f_length > 4) {
                             return 'D';
-                        } else if (fleet.isInclude('羽黒') && fleet.isInclude('神風')) {
+                        } else if (isInclude(fleet, '羽黒') && isInclude(fleet, '神風')) {
                             if (CAs > 2) {
                                 return 'D';
-                            } else if (fleet.isInclude('足柄') || fleet.isInclude('妙高')) {
+                            } else if (isInclude(fleet, '足柄') || isInclude(fleet, '妙高')) {
                                 return 'E';
                             } else if (Ds < 2) {
                                 return 'D';
@@ -3420,9 +3420,9 @@ export function calcNextNode(
                                 return 'E';
                             }
                         } else if (f_length === 4) {
-                            if (fleet.isInclude('羽黒') && Ds === 3) {
+                            if (isInclude(fleet, '羽黒') && Ds === 3) {
                                 return 'E';
-                            } else if (fleet.isInclude('神風') && Ds === 4) {
+                            } else if (isInclude(fleet, '神風') && Ds === 4) {
                                 return 'E';
                             } else {
                                 return 'D';
@@ -3458,12 +3458,12 @@ export function calcNextNode(
                             return 'B';
                         } else if (AO === 1 && Ds > 2) {
                             return 'C';
-                        } else if (CA === 0 || Ds === 0 || (BBs > 0 && !fleet.isInclude('羽黒'))) {
+                        } else if (CA === 0 || Ds === 0 || (BBs > 0 && !isInclude(fleet, '羽黒'))) {
                             return 'B';
-                        } else if (fleet.isInclude('羽黒') && fleet.isInclude('神風')) {
+                        } else if (isInclude(fleet, '羽黒') && isInclude(fleet, '神風')) {
                             return 'C';
                         } else if (f_length > 4) {
-                            if (!fleet.isInclude('羽黒') && speed === Sp.slow) {
+                            if (!isInclude(fleet, '羽黒') && speed === Sp.slow) {
                                 return 'B';
                             } else if (Ds < 3) {
                                 return 'B';
@@ -3496,10 +3496,10 @@ export function calcNextNode(
                                 return 'I';
                             } else if (f_length === 6) {
                                 return 'D';
-                            } else if (fleet.isInclude('羽黒') && fleet.isInclude('神風')) {
+                            } else if (isInclude(fleet, '羽黒') && isInclude(fleet, '神風')) {
                                 if (Ds < 2) {
                                     return 'D';
-                                } else if (CL > 0 || fleet.isInclude('足柄')) {
+                                } else if (CL > 0 || isInclude(fleet, '足柄')) {
                                     return 'I';
                                 } else {
                                     return 'D';
@@ -3510,19 +3510,19 @@ export function calcNextNode(
                                 return 'D';
                             }
                         } else if (f_length === 4) {
-                            if (fleet.isInclude('羽黒') && fleet.isInclude('神風')) {
+                            if (isInclude(fleet, '羽黒') && isInclude(fleet, '神風')) {
                                 if (CAs > 2) {
                                     return 'D';
-                                } else if (fleet.isInclude('足柄') || fleet.isInclude('妙高')) {
+                                } else if (isInclude(fleet, '足柄') || isInclude(fleet, '妙高')) {
                                     return 'E';
                                 } else if (Ds < 2) {
                                     return 'D';
                                 } else {
                                     return 'E';
                                 }
-                            } else if (fleet.isInclude('羽黒') && Ds === 3) {
+                            } else if (isInclude(fleet, '羽黒') && Ds === 3) {
                                 return 'E';
-                            } else if (fleet.isInclude('神風') && Ds === 4) {
+                            } else if (isInclude(fleet, '神風') && Ds === 4) {
                                 return 'E';
                             } else {
                                 return 'D';
@@ -3553,7 +3553,7 @@ export function calcNextNode(
                             return 'I';
                         } else if (BBCVs > 0) {
                             return 'J';
-                        } else if (fleet.isInclude('羽黒') && fleet.isInclude('神風')) {
+                        } else if (isInclude(fleet, '羽黒') && isInclude(fleet, '神風')) {
                             if (f_length < 5) {
                                 return 'P';
                             } else if (DD < 3) {
@@ -3562,7 +3562,7 @@ export function calcNextNode(
                                 return 'P';
                             } else if (CAs > 2 || speed === Sp.slow) {
                                 return 'J';
-                            } else if (fleet.isInclude('足柄')) {
+                            } else if (isInclude(fleet, '足柄')) {
                                 return 'P';
                             } else {
                                 return 'K';
@@ -3576,7 +3576,7 @@ export function calcNextNode(
                     case 'I':
                         if (BBCVs > 0 || CAs > 2 || Ds === 0) {
                             return 'J';
-                        } else if (fleet.isInclude('羽黒') && fleet.isInclude('神風')) {
+                        } else if (isInclude(fleet, '羽黒') && isInclude(fleet, '神風')) {
                             if (Ds > 2) {
                                 if (isFaster) {
                                     return 'J';
@@ -3594,7 +3594,7 @@ export function calcNextNode(
                             } // Dsより例外なし
                         } else if (speed === Sp.fastest && DD > 2) {
                             return 'J';
-                        } else if ((fleet.isInclude('羽黒') || fleet.isInclude('神風')) && fleet.isInclude('足柄') && Ds > 2) {
+                        } else if ((isInclude(fleet, '羽黒') || isInclude(fleet, '神風')) && isInclude(fleet, '足柄') && Ds > 2) {
                             return 'M';
                         } else {
                             return 'L';
@@ -3604,13 +3604,13 @@ export function calcNextNode(
                         if (BBCVs > 0 || speed === Sp.slow || CAs > 3) {
                             return 'M';
                         } else if (DD > 2) {
-                            if ((fleet.isInclude('羽黒') && fleet.isInclude('足柄')) || (fleet.isInclude('羽黒') && fleet.isInclude('神風'))) {
+                            if ((isInclude(fleet, '羽黒') && isInclude(fleet, '足柄')) || (isInclude(fleet, '羽黒') && isInclude(fleet, '神風'))) {
                                 return 'P';
                             } else {
                                 return 'M';
                             }
                         } else if (DD === 2) {
-                            if (fleet.isInclude('羽黒') && fleet.isInclude('神風') && fleet.isInclude('足柄')) {
+                            if (isInclude(fleet, '羽黒') && isInclude(fleet, '神風') && isInclude(fleet, '足柄')) {
                                 return 'P';
                             } else {
                                 return 'M';
@@ -3640,9 +3640,9 @@ export function calcNextNode(
                 case '1':
                     if (BB + CVH + Ss > 0 || CAs > 1 || CLE + CLT > 1) {
                         return 'C';
-                    } else if (fleet.isInclude('あきつ丸') && DE >= 2 && (DD > 0 || DE > 3)) {
+                    } else if (isInclude(fleet, 'あきつ丸') && DE >= 2 && (DD > 0 || DE > 3)) {
                         return 'A';
-                    } else if (BBV + CVL + fleet.countShip('あきつ丸') > 2) {
+                    } else if (BBV + CVL + countShip(fleet, 'あきつ丸') > 2) {
                         return 'C';
                     } else if (Ds > 2 || DE > 1) {
                         return 'A';
@@ -3651,7 +3651,7 @@ export function calcNextNode(
                     }
                     break;
                 case 'C':
-                    if (BB + CVH + Ss > 0 || CVL + fleet.countShip('あきつ丸') > 2) {
+                    if (BB + CVH + Ss > 0 || CVL + countShip(fleet, 'あきつ丸') > 2) {
                         return 'D';
                     } else if (Ds > 3 || (CT > 0 && Ds > 2) || DE > 2 || (isFaster && DD > 1)) {
                         return 'E';
@@ -3660,7 +3660,7 @@ export function calcNextNode(
                     }
                     break;
                 case 'E':
-                    if (AO + LHA > 0 && DE > 3 && fleet.countTaiyo() + AO + LHA + DD + DE === 6) {
+                    if (AO + LHA > 0 && DE > 3 && countTaiyo(fleet) + AO + LHA + DD + DE === 6) {
                         return 'G';
                     } else {
                         return 'J';
@@ -3682,7 +3682,7 @@ export function calcNextNode(
                         if (seek[3] < 33) {
                             return 'K';
                         } else if (seek[3] < 37 && seek[3] >= 33) {
-                            if (CT > 0 && DE > 2 && fleet.countTaiyo() + CT + Ds === 5 && f_length === 5) {
+                            if (CT > 0 && DE > 2 && countTaiyo(fleet) + CT + Ds === 5 && f_length === 5) {
                                 return [
                                     { node: 'K', rate: 0.5 },
                                     { node: 'P', rate: 0.5 },
@@ -3695,7 +3695,7 @@ export function calcNextNode(
                             }
 
                         } else if (seek[3] >= 37) {
-                            if (CT > 0 && DE > 2 && fleet.countTaiyo() + CT + Ds === 5 && f_length === 5) {
+                            if (CT > 0 && DE > 2 && countTaiyo(fleet) + CT + Ds === 5 && f_length === 5) {
                                 return 'P';
                             } else {
                                 return 'L';
@@ -3710,8 +3710,8 @@ export function calcNextNode(
                         (SBB_count > 0 && CVH > 0)
                         || (BBs - SBB_count > 1)
                         || (BBV > 1)
-                        || (CVL + fleet.countShip('あきつ丸') > 1)
-                        || (BBs - SBB_count + BBV + CVL + fleet.countShip('あきつ丸') > 2)
+                        || (CVL + countShip(fleet, 'あきつ丸') > 1)
+                        || (BBs - SBB_count + BBV + CVL + countShip(fleet, 'あきつ丸') > 2)
                         || (Ds < 2);
                     if (seek[3] < 45) {
                         return 'N';
@@ -3920,7 +3920,7 @@ export function calcNextNode(
                     break;
                 case 'C2':
                     if (Number(option.phase) >= 5
-                        && fleet.isInclude(['明石改', '秋津洲改', '速吸改', '神威改母', '山汐丸改', '宗谷'])
+                        && isInclude(fleet, ['明石改', '秋津洲改', '速吸改', '神威改母', '山汐丸改', '宗谷'])
                         && speed !== Sp.slow
                     ) {
                         return 'L';
@@ -4025,7 +4025,7 @@ export function calcNextNode(
                 case 'X':
                     if (Number(option.phase) < 6) {
                         return 'W';
-                    } else if (fleet.isInclude(['明石改', '秋津洲改', '速吸改', '神威改母', '山汐丸改', '宗谷'])) {
+                    } else if (isInclude(fleet, ['明石改', '秋津洲改', '速吸改', '神威改母', '山汐丸改', '宗谷'])) {
                         return 'Y';
                     } else {
                         return 'Z';
@@ -4066,17 +4066,17 @@ export function calcNextNode(
                 case null:
                     if (option.phase === 'A') {
                         return '1';
-                    } else if (fleet.countAktmrPlusCVs() === 0 && Ds > 3) {
+                    } else if (countAktmrPlusCVs(fleet) === 0 && Ds > 3) {
                         return '2';
-                    } else if (fleet.countAktmrPlusCVs() > 0 && fleet.countNotEquipArctic() > 0) {
+                    } else if (countAktmrPlusCVs(fleet) > 0 && countNotEquipArctic(fleet) > 0) {
                         return '2';
                     } else if (AO + LHA > 0 && Ds > 2) {
                         return '2';
                     } else if (AV > 1 && Ds > 2) {
                         return '2';
-                    } else if (option.phase === '3' && fleet.countAktmrPlusCVs() > 0) {
+                    } else if (option.phase === '3' && countAktmrPlusCVs(fleet) > 0) {
                         return '3';
-                    } else if (fleet.countAktmrPlusCVs() > 2) {
+                    } else if (countAktmrPlusCVs(fleet) > 2) {
                         return '1';
                     } else if (BBs > 0) {
                         return '1';
@@ -4086,7 +4086,7 @@ export function calcNextNode(
                         return '2';
                     } else if (option.phase === '3' && CA > 1 && Ds > 1 && CLE > 0) {
                         return '3';
-                    } else if (fleet.countAktmrPlusCVs() > 0 && Ds > 2) {
+                    } else if (countAktmrPlusCVs(fleet) > 0 && Ds > 2) {
                         return '2';
                     } else {
                         return '1';
@@ -4223,7 +4223,7 @@ export function calcNextNode(
                         } else {
                             if (BBs > 0) {
                                 return '1';
-                            } else if (fleet.countAktmrPlusCVs() > 0) {
+                            } else if (countAktmrPlusCVs(fleet) > 0) {
                                 return '1';
                             } else if (option.difficulty === '4' && Ss < 3) {
                                 return '1';
@@ -4282,7 +4282,7 @@ export function calcNextNode(
                             return 'J';
                         } else if (BBs > 1) {
                             return 'J';
-                        } else if (fleet.countShip('あきつ丸') + CVL > 1) {
+                        } else if (countShip(fleet, 'あきつ丸') + CVL > 1) {
                             return 'J';
                         } else {
                             return 'I';
@@ -4401,7 +4401,7 @@ export function calcNextNode(
                                 return '3';
                             } else if (CL > 0 && DD > 2 && speed !== Sp.slow) {
                                 return '3';
-                            } else if (fleet.countAktmrPlusCVs() > 0) {
+                            } else if (countAktmrPlusCVs(fleet) > 0) {
                                 return '2';
                             } else if (BBs > 0) {
                                 return '2';
@@ -4709,7 +4709,7 @@ export function calcNextNode(
                 case 'J':
                     if (option.phase === '1') {
                         return 'J1';
-                    } else if (BBs + fleet.countAktmrPlusCVs() > 0) {
+                    } else if (BBs + countAktmrPlusCVs(fleet) > 0) {
                         return 'F';
                     } else if (option.difficulty === '4' && Ss > 3 && CAs < 2) {
                         return 'J1';
@@ -4722,7 +4722,7 @@ export function calcNextNode(
                 case 'J1':
                     if (isUnion) {
                         return 'J2';
-                    } else if (BBs + fleet.countAktmrPlusCVs() > 0) {
+                    } else if (BBs + countAktmrPlusCVs(fleet) > 0) {
                         return 'Q';
                     } else if (CL === 1 && DD === 2 && AS === 1 && Ss === 3) {
                         return 'R';
@@ -4780,7 +4780,7 @@ export function calcNextNode(
                     }
                     break;
                 case 'V':
-                    if (fleet.isInclude(['明石改', '朝日改', '秋津洲改'])) {
+                    if (isInclude(fleet, ['明石改', '朝日改', '秋津洲改'])) {
                         return 'W';
                     } else {
                         return 'X';
@@ -4962,7 +4962,7 @@ export function calcNextNode(
                 case 'G':
                     if (f_type === Ft.transport) {
                         return 'I';
-                    } else if (fleet.countAktmrPlusCVs() > 4) {
+                    } else if (countAktmrPlusCVs(fleet) > 4) {
                         return 'H';
                     } else if (BBs > 3) {
                         return 'H';
@@ -5009,7 +5009,7 @@ export function calcNextNode(
                         return 'J';
                     } else if (BBs < 2) {
                         return 'L';
-                    } else if (fleet.countAktmrPlusCVs() < 2) {
+                    } else if (countAktmrPlusCVs(fleet) < 2) {
                         return 'L';
                     } else {
                         return 'J';
@@ -5104,7 +5104,7 @@ export function calcNextNode(
                     } else if (f_type === Ft.surface) {
                         return 'N';
                     } else if (f_type === Ft.carrier) {
-                        if (fleet.countAktmrPlusCVs() > 3) {
+                        if (countAktmrPlusCVs(fleet) > 3) {
                             return 'N';
                         } else if (CVH > 1) {
                             return 'N';
@@ -5523,7 +5523,7 @@ export function calcNextNode(
                 case 'R1':
                     if (speed !== Sp.slow) {
                         return 'R';
-                    } else if (yamato + fleet.countShip('Iowa') > 1) {
+                    } else if (yamato + countShip(fleet, 'Iowa') > 1) {
                         return 'R2';
                     } else if (BB > 1) {
                         return 'R2';
@@ -5569,7 +5569,7 @@ export function calcNextNode(
                 case 'Z':
                     if (seek[1] < 83) {
                         return 'Z1';
-                    } else if (fleet.countAktmrPlusCVs() > 2) {
+                    } else if (countAktmrPlusCVs(fleet) > 2) {
                         return 'Y';
                     } else if (CAs > 3) {
                         return 'Y';
@@ -5813,7 +5813,7 @@ export function calcNextNode(
                     }
                     break;
                 case 'C':
-                    if (fleet.countShip('大泊') > 0) {
+                    if (countShip(fleet, '大泊') > 0) {
                         return 'H';
                     } else if (CL > 0 && Ds > 1) {
                         return 'H';
@@ -5861,7 +5861,7 @@ export function calcNextNode(
                         return 'D';
                     } else if (CVH > 0 && speed === Sp.slow) {
                         return 'D';
-                    } else if (fleet.countShip('大泊') + CA > 1 && CLE > 1 && Ds > 2) {
+                    } else if (countShip(fleet, '大泊') + CA > 1 && CLE > 1 && Ds > 2) {
                         return 'N';
                     } else {
                         return 'D';
@@ -5883,7 +5883,7 @@ export function calcNextNode(
                         return 'S';
                     } else if (CVs > 1) {
                         return 'S';
-                    } else if (fleet.countShip('大泊') > 0) {
+                    } else if (countShip(fleet, '大泊') > 0) {
                         return 'V';
                     } else if (CL < 3 && speed === Sp.slow) {
                         return 'S';
@@ -5891,12 +5891,12 @@ export function calcNextNode(
                         return 'V';
                     } else if (daigo > 7) {
                         return 'V';
-                    } else if (fleet.countShip(['那智', '足柄']) + CLE === 5) {
+                    } else if (countShip(fleet, ['那智', '足柄']) + CLE === 5) {
                         return 'V';
                     } else if (
-                        fleet.countShip(['那智', '足柄']) === 2
-                        && fleet.countShip(['阿武隈', '多摩', '木曾']) === 2
-                        && fleet.countShip(['霞', '不知火', '薄雲', '曙', '初霜', '初春', '若葉'])
+                        countShip(fleet, ['那智', '足柄']) === 2
+                        && countShip(fleet, ['阿武隈', '多摩', '木曾']) === 2
+                        && countShip(fleet, ['霞', '不知火', '薄雲', '曙', '初霜', '初春', '若葉'])
                         + (fleet.ship_names.find(ship_name => ['潮', '潮改', '潮改二'].includes(ship_name)) ? 1 : 0)
                         > 1
                         && DD === 5
@@ -5952,7 +5952,7 @@ export function calcNextNode(
                     }
                     break;
                 case 'B':
-                    if (fleet.countShip('大泊') > 0) {
+                    if (countShip(fleet, '大泊') > 0) {
                         return 'B2';
                     } else if (CVs > 0) {
                         return 'B1';
@@ -6004,7 +6004,7 @@ export function calcNextNode(
                         return 'E2';
                     } else if (CVH > 0) {
                         return 'E2';
-                    } else if (fleet.isInclude('大泊') && BBs + CVL < 3 && Ds > 1) {
+                    } else if (isInclude(fleet, '大泊') && BBs + CVL < 3 && Ds > 1) {
                         return 'F';
                     } else if (BBs > 2) {
                         return 'B';
@@ -6031,9 +6031,9 @@ export function calcNextNode(
                         return 'F2';
                     } else if (isFaster) {
                         return 'G';
-                    } else if (BBs > 1 && !fleet.isInclude('大泊')) {
+                    } else if (BBs > 1 && !isInclude(fleet, '大泊')) {
                         return 'F3';
-                    } else if (BBs === 1 && !fleet.isInclude('大泊') && speed === Sp.slow) {
+                    } else if (BBs === 1 && !isInclude(fleet, '大泊') && speed === Sp.slow) {
                         return 'F3';
                     } else if (option.difficulty === '4' && daigo > 5 && Ds > 3) {
                         return 'G';
@@ -6143,7 +6143,7 @@ export function calcNextNode(
                 case 'V':
                     if (seek[1] < 76) {
                         return 'W';
-                    } else if (option.phase === '5' && fleet.countShip(['明石改', '朝日改', '秋津洲改', '速吸改', '山汐丸改', '神威改母', '宗谷', 'しまね丸改']) > 0) {
+                    } else if (option.phase === '5' && countShip(fleet, ['明石改', '朝日改', '秋津洲改', '速吸改', '山汐丸改', '神威改母', '宗谷', 'しまね丸改']) > 0) {
                         return 'S3';
                     } else {
                         return 'X';
@@ -6465,7 +6465,7 @@ export function calcNextNode(
                         return 'Q';
                     } else if (LHA + AV + AO > 2) {
                         return 'Q';
-                    } else if (Ds < 4 && fleet.countShip(['杉', '榧']) === 0) {
+                    } else if (Ds < 4 && countShip(fleet, ['杉', '榧']) === 0) {
                         return 'Q';
                     } else if (option.difficulty === '4' && reigo < 5) {
                         return 'Q';
@@ -6655,9 +6655,9 @@ export function calcNextNode(
                         return 'J2';
                     } else if (yamato > 0) {
                         return 'J2';
-                    } else if (fleet.countShip(['榧', '杉']) > 0) {
+                    } else if (countShip(fleet, ['榧', '杉']) > 0) {
                         return 'P';
-                    } else if (fleet.countShip(['足柄', '大淀', '霞', '朝霜', '清霜']) > 4) {
+                    } else if (countShip(fleet, ['足柄', '大淀', '霞', '朝霜', '清霜']) > 4) {
                         return 'P';
                     } else if (Ds > 3 && BBs + CVH < 3) {
                         return 'P';
@@ -6702,7 +6702,7 @@ export function calcNextNode(
                     }
                     break;
                 case 'N':
-                    if (fleet.countShip(['明石改', '朝日改', '秋津洲改', '速吸改', '山汐丸改', '神威改母', '宗谷', 'しまね丸改']) > 0) {
+                    if (countShip(fleet, ['明石改', '朝日改', '秋津洲改', '速吸改', '山汐丸改', '神威改母', '宗谷', 'しまね丸改']) > 0) {
                         return 'O1';
                     } else {
                         return 'O';

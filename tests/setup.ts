@@ -1,4 +1,4 @@
-import AdoptFleet from "@/core/AdoptFleet";
+import { AdoptFleet, createAdoptFleet } from "@/core/AdoptFleet";
 import { createCacheFleetsFromDeckBuilder } from "@/logic/deckBuilder";
 import type DeckBuilder from '@/models/types/DeckBuilder';
 import type {
@@ -22,7 +22,7 @@ export const getSimSet = () => {
         equip_datas,
     );
     const fleet_type_id = deck?.f1?.t as Ft;
-    const adoptFleet = new AdoptFleet(cache_fleets, fleet_type_id);
+    const adoptFleet = createAdoptFleet(cache_fleets, fleet_type_id);
 
     const areaIds: AreaId[] = [
         '1-1', '1-2', '1-3', '1-4', '1-5', '1-6',
