@@ -890,11 +890,11 @@ const ship_datas: ShipDatas = {
 ,984:{name:"Wahoo",type:ST.SS,seek:12,seek2:44,na:NA.USA,sg:SG.SlowC}
 ,989:{name:"Wahoo改",type:ST.SS,seek:14,seek2:46,na:NA.USA,sg:SG.SlowC}
 ,994:{name:"榧",type:ST.DD,seek:8,seek2:25,na:NA.Japan,sg:SG.FastB2}
-,736:{name:"榧改",type:ST.DD,seek:15,seek2:46,na:NA.Japan,sg:SG.FastB2}
+,736:{name:"榧改",type:ST.DD,seek:16,seek2:46,na:NA.Japan,sg:SG.FastB2}
 ,995:{name:"大泊",type:ST.AO,seek:7,seek2:14,na:NA.Japan,sg:SG.SlowB}
 ,1000:{name:"大泊改",type:ST.AO,seek:8,seek2:16,na:NA.Japan,sg:SG.SlowB}
 ,1001:{name:"Киров",type:ST.CL,seek:13,seek2:42,na:NA.USSR,sg:SG.FastB1}
-,1006:{name:"Киров改",type:ST.CL,seek:13,seek2:45,na:NA.USSR,sg:SG.FastB1}
+,1006:{name:"Киров改",type:ST.CL,seek:14,seek2:45,na:NA.USSR,sg:SG.FastB1}
 ,992:{name:"杉",type:ST.DD,seek:8,seek2:26,na:NA.Japan,sg:SG.FastB2}
 ,997:{name:"杉改",type:ST.DD,seek:16,seek2:47,na:NA.Japan,sg:SG.FastB2}
 ,1003:{name:"しまね丸",type:ST.AO,seek:13,seek2:57,na:NA.Japan,sg:SG.SlowB}
@@ -904,8 +904,8 @@ const ship_datas: ShipDatas = {
 
 ,983:{name:"浜波改二",type:ST.DD,seek:10,seek2:55,na:NA.Japan,sg:SG.FastB2}
 
-,942:{name:"Richard P.Leary",type:ST.DD,seek:0,seek2:0,na:NA.USA,sg:SG.FastB2}
-,737:{name:"Richard P.Leary改",type:ST.DD,seek:0,seek2:0,na:NA.USA,sg:SG.FastB2}
+,942:{name:"Richard P.Leary",type:ST.DD,seek:20,seek2:32,na:NA.USA,sg:SG.FastB2}
+,737:{name:"Richard P.Leary改",type:ST.DD,seek:21,seek2:61,na:NA.USA,sg:SG.FastB2}
 }; // @expansion
 
 export default ship_datas;
