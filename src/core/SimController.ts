@@ -78,8 +78,8 @@ function processScanner(
       const updatedScanner = progressScanner(scanner, branched_nodes, 1);
       return processScanner(updatedScanner, state, area_routes, clone_count, scanners, results);
     } else { // 確率分岐ならScanner分裂
-      for (let i = 1; i < branched_nodes.length; i++) {
-        const branchedScanner = progressScanner(cloneScanner(scanner), branched_nodes[i].node, branched_nodes[i].rate);
+      branched_nodes.slice(1).forEach(({ node, rate }) => {
+        const branchedScanner = progressScanner(cloneScanner(scanner), node, rate);
         scanners.push(branchedScanner);
         clone_count++;
         if (clone_count >= MAX_CLONE_COUNT) {
@@ -88,7 +88,7 @@ function processScanner(
           console.groupEnd();
           throw new CustomError('あー！無限ループ！');
         }
-      }
+      });
       const updatedScanner = progressScanner(scanner, branched_nodes[0].node, branched_nodes[0].rate);
       return processScanner(updatedScanner, state, area_routes, clone_count, scanners, results);
     }
