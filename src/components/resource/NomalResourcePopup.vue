@@ -19,10 +19,10 @@
 				add: <span class="add-font">{{ data.add }}</span>
 				= <img class="item-icon drum-icon" :src="data.icon_suite.drum"> {{ data.fleet_total_drum }} * {{
 				data.actual_drum_coefficient }}
-				+ 
+				+
 				<span class="tooltip-container">
 					<img :src="data.icon_suite.craft" class="item-icon craft-icon">
-					<span class="tooltip-text" v-html="formattedCraftNames"></span>
+					<span class="tooltip-text" v-html="data.formattedCraftNames"></span>
 				</span> {{ data.fleet_total_craft }} * {{
 				data.actual_craft_coefficient }}
 			</p>
@@ -41,11 +41,7 @@
 </template>
 <script setup lang="ts">
 import { NomalResource, ResourceType } from '@/models/resource/NomalResource';
-import Const from '@/constants/const';
-import { formatCraftNames } from '@/logic/resource';
 
-const formattedCraftNames =
-	formatCraftNames(Const.VALID_CRAFT_NAMES);
 defineProps<{ data: NomalResource | null }>();
 </script>
 <style scoped>

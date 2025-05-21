@@ -2,6 +2,7 @@ import { AdoptFleet, getTotalDrumCount, getTotalValidCraftCount } from "@/core/A
 import { AreaId, ItemIconKey } from "../types";
 import { NodeResource, ResourceData } from "../types/resource";
 import { createResourceIconSuite, ResourceIconSuite } from "./ResourceIconSuite";
+import { formatCraftNames } from "@/logic/resource";
 
 /**
  * 資源種別
@@ -161,6 +162,10 @@ export type NomalResource = {
     actual_drum_coefficient?: number;
     actual_craft_coefficient?: number;
     DEFAULT_ADD_COEFFICIENT: typeof DEFAULT_ADD_COEFFICIENT;
+    /**
+     * 整形済みクラフト名リスト（HTML）
+     */
+    formattedCraftNames: string;
 };
 
 /**
@@ -178,6 +183,7 @@ function createNomalResourceObj(
     respurce_icons: Record<ItemIconKey, string>,
     drum: string,
     craft: string,
+    craftNames: ReadonlyArray<string>,
 ): NomalResource {
     const fleet_total_drum = getTotalDrumCount(fleet);
     const fleet_total_craft = getTotalValidCraftCount(fleet);
@@ -199,6 +205,8 @@ function createNomalResourceObj(
         add = actual_drum_coefficient * fleet_total_drum + actual_craft_coefficient * fleet_total_craft;
     }
 
+    const formattedCraftNames = formatCraftNames(craftNames);
+
     return {
         fleet_total_drum,
         fleet_total_craft,
@@ -211,6 +219,7 @@ function createNomalResourceObj(
         actual_drum_coefficient,
         actual_craft_coefficient,
         DEFAULT_ADD_COEFFICIENT,
+        formattedCraftNames,
     };
 }
 
@@ -231,6 +240,7 @@ export function createNomalResource(
     resource_icons: Record<ItemIconKey, string>,
     drum: string,
     craft: string,
+    craftNames: ReadonlyArray<string>,
 ): NomalResource | null {
     if (!RESOURCE_DATA[area_id]) return null;
     if (!RESOURCE_DATA[area_id][node]) return null;
@@ -241,5 +251,6 @@ export function createNomalResource(
         resource_icons,
         drum,
         craft,
+        craftNames,
     );
 }

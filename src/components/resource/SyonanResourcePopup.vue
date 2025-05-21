@@ -10,7 +10,7 @@
 			&nbsp;+
 			<span class="tooltip-container">
 				<img :src="data.icon_suite.craft" class="item-icon craft-icon">
-				<span class="tooltip-text" v-html="formattedCraftNames"></span>
+				<span class="tooltip-text" v-html="data.formattedCraftNames"></span>
 			</span>
 			{{ data.fleet_total_craft }} * {{ data.FUEL_EQUIP_COEFFICIENT.craft }}
 		</p>
@@ -30,7 +30,7 @@
 			&nbsp;+
 			<span class="tooltip-container">
 				<img :src="data.icon_suite.craft" class="item-icon craft-icon">
-				<span class="tooltip-text" v-html="formattedCraftNames"></span>
+				<span class="tooltip-text" v-html="data.formattedCraftNames"></span>
 			</span>
 			{{ data.fleet_total_craft }} * {{ data.IMO_EQUIP_COEFFICIENT.craft }}
 		</p>
@@ -43,12 +43,7 @@
 	</div>
 </template>
 <script setup lang="ts">
-import Const from '@/constants/const';
-import { formatCraftNames } from '@/logic/resource';
 import { SyonanResource } from '@/models/resource/SyonanResource';
-
-const formattedCraftNames =
-	formatCraftNames(Const.VALID_CRAFT_NAMES);
 
 defineProps<{ data: SyonanResource | null }>();
 </script>

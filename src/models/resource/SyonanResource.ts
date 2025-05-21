@@ -2,6 +2,7 @@ import { AdoptFleet, getTotalDrumCount, getTotalValidCraftCount } from "@/core/A
 import { AreaId, ItemIconKey } from "../types";
 import { createResourceIconSuite, ResourceIconSuite } from "./ResourceIconSuite";
 import { Composition } from "../Composition";
+import { formatCraftNames } from "@/logic/resource";
 
 /**
  * SyonanResourceのプロパティ定義
@@ -21,7 +22,13 @@ export interface SyonanResource {
     IMO_EQUIP_COEFFICIENT: { drum: number; craft: number };
     FUEL_COMPOSITION_COEFFICIENT: Record<string, number>;
     IMO_COMPOSITION_COEFFICIENT: Record<string, number>;
+    /**
+     * 整形済みクラフト名リスト（HTML）
+     */
+    formattedCraftNames: string;
 }
+
+
 
 /**
  * SyonanResourceを生成する
@@ -29,13 +36,15 @@ export interface SyonanResource {
  * @param icons アイコンセット
  * @param drum ドラム缶アイコン
  * @param craft 大発アイコン
+ * @param craftNames クラフト名配列
  * @returns SyonanResourceオブジェクト
  */
 function createSyonanResourceObject(
     fleet: AdoptFleet,
     icons: Record<ItemIconKey, string>,
     drum: string,
-    craft: string
+    craft: string,
+    craftNames: ReadonlyArray<string> = [],
 ): SyonanResource {
     const BASE_FUEL = 40;
     const BASE_IMO = 20;
@@ -88,6 +97,8 @@ function createSyonanResourceObject(
         + composition.LHA * IMO_COMPOSITION_COEFFICIENT.LHA
         + composition.AO * IMO_COMPOSITION_COEFFICIENT.AO;
 
+    const formattedCraftNames = formatCraftNames(craftNames);
+
     return {
         composition,
         fleet_total_drum,
@@ -103,6 +114,7 @@ function createSyonanResourceObject(
         IMO_EQUIP_COEFFICIENT,
         FUEL_COMPOSITION_COEFFICIENT,
         IMO_COMPOSITION_COEFFICIENT,
+        formattedCraftNames,
     };
 }
 
@@ -122,9 +134,10 @@ export function createSyonanResource(
     fleet: AdoptFleet,
     icons: Record<ItemIconKey, string>,
     drum: string,
-    craft: string
+    craft: string,
+    craftNames: ReadonlyArray<string>,
 ): SyonanResource | null {
     if (area_id !== "7-4") return null;
     if (node !== "O") return null;
-    return createSyonanResourceObject(fleet, icons, drum, craft);
+    return createSyonanResourceObject(fleet, icons, drum, craft, craftNames);
 }

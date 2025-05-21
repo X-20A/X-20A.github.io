@@ -212,6 +212,7 @@ import Footer from './components/Footer.vue';
 import { createSimControllerState, startSim } from './core/SimController';
 import ship_datas from './data/ship';
 import equip_datas from './data/equip';
+import Const from './constants/const';
 
 const store = useStore();
 const modalStore = useModalStore();
@@ -450,6 +451,7 @@ watch([adoptFleet, selectedArea, options], async () => {
 						icons.value,
 						Drum,
 						Craft,
+						Const.VALID_CRAFT_NAMES,
 					);
 				} else {
 					nomalResource.value = createNomalResource(
@@ -459,6 +461,7 @@ watch([adoptFleet, selectedArea, options], async () => {
 						icons.value,
 						Drum,
 						Craft,
+						Const.VALID_CRAFT_NAMES,
 					);
 				}
 			adjustBranchStyle(cy, event);
