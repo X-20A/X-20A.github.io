@@ -47,35 +47,35 @@ const SLOW_THRESHOLD = SG.SlowA;
 export type CacheFleet = Readonly<{
     /** 艦隊フィールドのバージョン */
     version: number;
-	/** 構成艦 */
-	ships: Ship[];
+    /** 構成艦 */
+    ships: Ship[];
     ship_names: string[];
-	/** 艦隊速度 */
-	speed: Speed;
-	/** 艦隊索敵値 */
-	seek: Seek;
-	/** ドラム缶 装備艦数 */
-	drum_carrier_count: number;
-	/** 電探系 装備艦数 */
-	radar_carrier_count: number;
-	/** 索敵値5以上の電探 装備艦数 */
-	radar5_carrier_count: number;
-	/** 大発系 装備艦数 */
-	craft_carrier_count: number;
+    /** 艦隊速度 */
+    speed: Speed;
+    /** 艦隊索敵値 */
+    seek: Seek;
+    /** ドラム缶 装備艦数 */
+    drum_carrier_count: number;
+    /** 電探系 装備艦数 */
+    radar_carrier_count: number;
+    /** 索敵値5以上の電探 装備艦数 */
+    radar5_carrier_count: number;
+    /** 大発系 装備艦数 */
+    craft_carrier_count: number;
     /** 北方迷彩(＋北方装備)装備艦数 */
     arBulge_carrier_count: number;
     /** 低速戦艦(素速度)艦数 */
     SBB_count: number;
-	/** 総ドラム缶装備数 */
-	total_drum_count: number;
-	/** 総大発系装備数 */
-	total_valid_craft_count: number;
+    /** 総ドラム缶装備数 */
+    total_drum_count: number;
+    /** 総大発系装備数 */
+    total_valid_craft_count: number;
     /** 大和型艦数 */
     yamato_class_count: number;
     /** 松型駆逐艦数 */
     matsu_count: number;
 }>;
-    
+
 export function createCacheFleet(ships: Ship[], command_lv?: number): CacheFleet {
     const ship_names = ships.map(s => s.name);
     const speed = calcFleetSpeed(ships);

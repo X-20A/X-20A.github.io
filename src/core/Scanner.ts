@@ -6,11 +6,11 @@ import { PreSailNull } from '@/models/types/brand';
  * 走査子の状態を表す型
  */
 export interface Scanner {
-  route: (string | PreSailNull)[];
-  currentNode: string | PreSailNull;
-  rate: Big;
-  is_fin: boolean;
-  progress_count: number;
+    route: (string | PreSailNull)[];
+    currentNode: string | PreSailNull;
+    rate: Big;
+    is_fin: boolean;
+    progress_count: number;
 }
 
 /**
@@ -23,13 +23,13 @@ export const MAX_PROGRESS_COUNT = 30;
  * @returns 新規Scanner
  */
 export function createDefaultScanner(): Scanner {
-  return {
-    route: [null as PreSailNull],
-    currentNode: null as PreSailNull,
-    rate: new Big(1),
-    is_fin: false,
-    progress_count: 0,
-  };
+    return {
+        route: [null as PreSailNull],
+        currentNode: null as PreSailNull,
+        rate: new Big(1),
+        is_fin: false,
+        progress_count: 0,
+    };
 }
 
 /**
@@ -38,13 +38,13 @@ export function createDefaultScanner(): Scanner {
  * @returns Scannerのコピー
  */
 export function cloneScanner(scanner: Scanner): Scanner {
-  return {
-    route: [...scanner.route],
-    currentNode: scanner.currentNode,
-    rate: new Big(scanner.rate),
-    is_fin: scanner.is_fin,
-    progress_count: scanner.progress_count,
-  };
+    return {
+        route: [...scanner.route],
+        currentNode: scanner.currentNode,
+        rate: new Big(scanner.rate),
+        is_fin: scanner.is_fin,
+        progress_count: scanner.progress_count,
+    };
 }
 
 /**
@@ -56,20 +56,20 @@ export function cloneScanner(scanner: Scanner): Scanner {
  * @throws CustomError 無限ループ検知時
  */
 export function progressScanner(scanner: Scanner, nextNode: string, rate: number): Scanner {
-  const newRoute = [...scanner.route, nextNode];
-  const newRate = scanner.rate.times(rate);
-  const newProgressCount = scanner.progress_count + 1;
-  if (newProgressCount >= MAX_PROGRESS_COUNT) {
-    console.group('Debug');
-    console.log('経路: ', newRoute);
-    console.groupEnd();
-    throw new CustomError('あー！無限ループ！');
-  }
-  return {
-    ...scanner,
-    route: newRoute,
-    currentNode: nextNode,
-    rate: newRate,
-    progress_count: newProgressCount,
-  };
+    const newRoute = [...scanner.route, nextNode];
+    const newRate = scanner.rate.times(rate);
+    const newProgressCount = scanner.progress_count + 1;
+    if (newProgressCount >= MAX_PROGRESS_COUNT) {
+        console.group('Debug');
+        console.log('経路: ', newRoute);
+        console.groupEnd();
+        throw new CustomError('あー！無限ループ！');
+    }
+    return {
+        ...scanner,
+        route: newRoute,
+        currentNode: nextNode,
+        rate: newRate,
+        progress_count: newProgressCount,
+    };
 }
