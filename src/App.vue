@@ -514,7 +514,7 @@ watch([adoptFleet, selectedArea, options, commandEvacuations], async () => {
 
 			// 司令退避設定
 			store.UPDATE_CXT_TAPED_NODE(node);
-			modalStore.SHOW_COMMAND_EVACUATION(drewArea.value, node, node_datas);
+			modalStore.SHOW_COMMAND_EVACUATION(drewArea.value, node, node_datas, edge_datas);
 		});
 	} catch (e: unknown) {
 		modalStore.SHOW_ERROR(e);

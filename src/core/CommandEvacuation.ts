@@ -1,5 +1,5 @@
 import { NT } from "@/data/map";
-import { AreaId, NodeDatas } from "@/models/types";
+import { AreaId, EdgeDatas, NodeDatas } from "@/models/types";
 import { UniqueId } from "@/models/types/brand";
 /**
  * 艦隊退避コマンド
@@ -82,6 +82,14 @@ export function isBattleNode(
         NT.as,
     ];
     return BATTLE_NODE_TYPES.includes(node_datas[area][node][2]);
+}
+
+export function isLastStopNode(
+    area_id: AreaId,
+    node: string,
+    edge_datas: EdgeDatas,
+): boolean {
+    return edge_datas[area_id].some(edge_data => edge_data[0] === node);
 }
 
 /** 現在のNodeに司令退避が設定されているか判定して返す */

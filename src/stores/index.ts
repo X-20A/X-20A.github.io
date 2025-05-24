@@ -12,10 +12,11 @@ import type {
     BranchLastUpdate,
     BranchType,
     ItemIconKey,
-    NodeDatas
+    NodeDatas,
+    EdgeDatas
 } from '@/models/types';
 import { FleetComponent } from '@/core/FleetComponent';
-import { isBattleNode, type CommandEvacuation } from '@/core/CommandEvacuation';
+import { isBattleNode, isLastStopNode, type CommandEvacuation } from '@/core/CommandEvacuation';
 import { Node } from '@/models/types/brand';
 import { parseOptionsType } from '@/models/shemas';
 import { node_datas } from '@/data/map';
@@ -204,8 +205,14 @@ export const useModalStore = defineStore('modal', {
         /**
          * 司令退避モーダル表示
          */
-        SHOW_COMMAND_EVACUATION(area_id: AreaId, node: string, node_datas: NodeDatas): void {
+        SHOW_COMMAND_EVACUATION(
+            area_id: AreaId,
+            node: string,
+            node_datas: NodeDatas,
+            edge_datas: EdgeDatas,
+        ): void {
             if (!isBattleNode(area_id, node, node_datas)) return;
+            if (!isLastStopNode(area_id, node, edge_datas)) return;
 
             this.isCommandEvacuationVisible = true;
         },
