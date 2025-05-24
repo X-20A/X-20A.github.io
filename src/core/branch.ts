@@ -1,6 +1,6 @@
 import { PreSailNull } from '@/models/types/brand';
-import { AdoptFleet, countAktmrPlusCVs, countNotEquipArctic, countShip, countTaiyo, isFCL, isInclude } from './AdoptFleet';
-import type { Scanner } from './Scanner';
+import { countAktmrPlusCVs, countNotEquipArctic, countShip, countTaiyo, isFCL, isInclude } from './AdoptFleet';
+import type { SimFleet } from './SimFleet';
 import { AreaId, BranchResponse } from '@/models/types';
 import CustomError from '@/errors/CustomError';
 
@@ -34,7 +34,7 @@ export const enum Sp {
 /**
  * 艦隊・マップ・ノード情報から次ノード遷移を計算する関数。
  * @param node 現在ノード名またはnull
- * @param scanner ルート情報などを持つスキャナー
+ * @param SimFleet ルート情報などを持つスキャナー
  * @param fleet 艦隊情報
  * @param area_id エリアID
  * @param option オプション設定
@@ -43,13 +43,13 @@ export const enum Sp {
 export function calcNextNode(
     area_id: AreaId,
     node: string | PreSailNull,
-    scanner: Scanner,
-    fleet: AdoptFleet,
+    sim_fleet: SimFleet,
     option: Record<string, string>,
 ): BranchResponse[] | string {
     // AdoptFleet展開
     // コーディングを減らしたいだけ 処理コストは変わらないと思う
     // const f_names = fleet.ship_names; // AdoptFleet.isIncludeがあるからいらない？
+    const fleet = sim_fleet.adopt_fleet;
     const f_length = fleet.fleet_length;
     const f_type = fleet.fleet_type;
     const isUnion = fleet.isUnion;
@@ -67,7 +67,7 @@ export function calcNextNode(
     const daigo = fleet.daigo_count;
     const reigo = fleet.reigo_count;
 
-    const track = scanner.route;
+    const track = sim_fleet.route;
 
     const composition = fleet.composition;
     const BB = composition.BB;
@@ -3991,11 +3991,11 @@ export function calcNextNode(
                     }
                     break;
                 case 'N':
-                    if (scanner.route.includes('K')) {
+                    if (sim_fleet.route.includes('K')) {
                         return 'O';
-                    } else if (scanner.route.includes('Q')) {
+                    } else if (sim_fleet.route.includes('Q')) {
                         return 'O';
-                    } else if (scanner.route.includes('L')) {
+                    } else if (sim_fleet.route.includes('L')) {
                         return 'T';
                     } // どれかは経由するので例外なし
                     break;
@@ -6769,6 +6769,6 @@ export function calcNextNode(
 
 
     console.log('node: ', node);
-    console.log('route: ', scanner.route);
+    console.log('route: ', sim_fleet.route);
     throw new CustomError('条件漏れ');
 }

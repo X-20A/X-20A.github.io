@@ -1,4 +1,4 @@
-import { CacheFleet, createCacheFleet } from '@/core/CacheFleet';
+import { FleetComponent, createFleetComponent } from '@/core/FleetComponent';
 import { createShip, Ship } from '@/models/Ship';
 import type { EquipInDeck, Improvement } from '@/models/types';
 import type DeckBuilder from '@/models/types/DeckBuilder';
@@ -13,22 +13,21 @@ import type { AdoptFleet } from '@/core/AdoptFleet';
 import { ShipDatas } from '@/data/ship';
 import { EquipDatas } from '@/data/equip';
 
-
 /**
- * デッキビルダーからCacheFleet[]を生成    
+ * デッキビルダーからFleetComponent[]を生成    
  * 艦隊(艦)が少なくとも一つあることを保証(なければエラー)
  * @param deck 入力されたデッキビルダー
  * @returns - デッキビルダーから読み取った艦隊インスタンス
  * @throws {Error} - デッキビルダーの形式がまずかったり、艦隊が空だったりするとエラーを投げるのでcatchすること
  */
-export function createCacheFleetsFromDeckBuilder(
+export function createFleetComponentsFromDeckBuilder(
     deck: DeckBuilder,
     ship_datas: ShipDatas,
     equip_datas: EquipDatas,
-): CacheFleet[] {
-	const fleets = [] as CacheFleet[];
+): FleetComponent[] {
+	const fleets = [] as FleetComponent[];
     
-	const command_lv = isNumber(deck.hqlv) ? Number(deck.hqlv): 120;
+	const command_lv = isNumber(deck.hqlv) ? Number(deck.hqlv) : 120;
 	for (let i = 1;i < 5;i++) { // 艦隊
         const fleet_key = `f${i}` as 'f1'|'f2'|'f3'|'f4';
 		if (!deck[fleet_key]) continue;
@@ -69,10 +68,6 @@ export function createCacheFleetsFromDeckBuilder(
 			const asw = ship_deck.asw;
             const luck = ship_deck.luck;
 
-			if (!(isNumber(id) && isNumber(lv))) {
-				throw new CustomError('デッキビルダーの形式に誤りがあります');
-			}
-
 			const ship = createShip(
 				i,
 				j,
@@ -89,7 +84,7 @@ export function createCacheFleetsFromDeckBuilder(
 		}
 		if (ships.length === 0) continue;
 
-		const fleet = createCacheFleet(ships, command_lv);
+		const fleet = createFleetComponent(ships, command_lv);
 		fleets.push(fleet);
 	}
 	if (!fleets.length) {
@@ -146,4 +141,4 @@ export function createDeckBuilderFromAdoptFleet(adoptFleet: AdoptFleet): DeckBui
     }
 
     return deck;
-} 
+}

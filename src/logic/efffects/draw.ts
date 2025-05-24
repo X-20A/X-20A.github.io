@@ -3,6 +3,7 @@ import { node_datas, edge_datas, NT as NodeType, warning_node_datas } from '@/da
 import styles from '@/styles';
 import type { AreaId, SimResult } from '../../models/types';
 import Big from 'big.js';
+import { CommandEvacuation, isEvacuationNode } from '@/core/CommandEvacuation';
 
 /**
  * シミュ結果からマップを描画
@@ -13,7 +14,8 @@ import Big from 'big.js';
  */
 export default function doDrawMap(
     selectedArea: AreaId,
-    sim_result: SimResult[]
+    sim_result: SimResult[],
+    command_evacuations: CommandEvacuation[],
 ): cytoscape.Core {
     // データの形式を調整
     const transit_data = {} as { [key: string]: Big };
@@ -34,7 +36,7 @@ export default function doDrawMap(
         }
     };
 
-    type TempNodeType = NodeType | 'alert' | 'shadow'
+    type TempNodeType = NodeType | 'alert' | 'shadow' | 'evacuation'
 
     interface Node {
         data: {
@@ -95,6 +97,16 @@ export default function doDrawMap(
                         label: 'alert',
                     },
                     position: { x: x + 14, y: y - 14 }
+                });
+            }
+            if (isEvacuationNode(command_evacuations, key)) {
+                elements.nodes.push({
+                    data: {
+                        id: key + 'evacuation',
+                        name: key + 'evacuation',
+                        label: 'evacuation',
+                    },
+                    position: { x: x - 14, y: y - 20 }
                 });
             }
         }

@@ -7,7 +7,7 @@ import { formatCraftNames } from "@/logic/resource";
 /**
  * SyonanResourceのプロパティ定義
  */
-export interface SyonanResource {
+export type SyonanResource = {
     composition: Composition;
     fleet_total_drum: number;
     fleet_total_craft: number;

@@ -1,0 +1,239 @@
+<template>
+  <div
+    class="evacuation-modal"
+    v-if="isCommandEvacuationVisible"
+    @pointerdown.stop
+  >
+    <div class="fleet-title">司令退避する艦を選択</div>
+    <div class="evacuation-list">
+      <div
+        v-for="(fleet, fleet_index) in display_fleets"
+        :key="fleet_index"
+        class="fleet-block"
+      >
+        <div class="ship-list">
+          <div
+            v-for="(ship, ship_index) in fleet.ships"
+            :key="ship.unique_id"
+            class="ship-item"
+            :class="{
+              evacuated: isEvacuated(fleet_index, ship.unique_id),
+              flagship: ship_index === 0
+            }"
+            :style="ship_index === 0 ? 'cursor: default;' : ''"
+            @pointerdown="ship_index !== 0 && toggleEvacuation(fleet_index, ship.unique_id)"
+          >
+            <img
+              class="ship-icon"
+              :src="getShipIconUrl(ship.id)"
+              :alt="ship.name"
+              :title="ship.name"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="design-button clear-btn" @click="clearEvacuation">
+      一括解除
+    </button>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import { computed } from 'vue';
+import { useStore, useModalStore } from '@/stores';
+import {
+  type CommandEvacuation,
+  addCommandEvacuation,
+  removeCommandEvacuation
+} from '@/core/CommandEvacuation';
+import { createNode, UniqueId } from '@/models/types/brand';
+
+const store = useStore();
+const cxtTapedNode = computed(() => store.cxtTapedNode);
+const adoptFleet = computed(() => store.adoptFleet);
+const commandEvacuations = computed(() => store.commandEvacuations);
+
+const modalStore = useModalStore();
+const isCommandEvacuationVisible = computed(() => modalStore.isCommandEvacuationVisible);
+
+/**
+ * 艦船表示用オブジェクト
+ */
+type DisplayFleet = {
+	ships: Array<{
+		id: number;
+		unique_id: UniqueId;
+		name: string;
+	}>;
+};
+
+const display_fleets = computed<DisplayFleet[]>(() => {
+  if (!adoptFleet.value) return [];
+  return adoptFleet.value.fleets.map(fleet => ({
+    ships: fleet.ships.map(ship => ({
+			id: ship.id,
+      unique_id: ship.unique_id,
+      name: ship.name,
+    })),
+  }));
+});
+
+const current_evacuation = computed<CommandEvacuation | undefined>(() => {
+  return commandEvacuations.value.find(
+    evacuation => evacuation.node === cxtTapedNode.value
+  );
+});
+
+/**
+ * 指定艦が退避状態か判定する。
+ * @param fleet_index 艦隊インデックス
+ * @param ship_unique_id 艦インデックス
+ * @returns 退避状態
+ */
+function isEvacuated(fleet_index: number, ship_unique_id: UniqueId): boolean {
+	if (!current_evacuation.value) return false;
+  return (
+    (current_evacuation.value.evacuation_ship_unique_ids[fleet_index]?.includes(ship_unique_id)) ??
+    false
+  );
+}
+
+/**
+ * 艦アイコンURLを返す
+ * @param ship_id 艦ID
+ * @returns アイコンURL
+ */
+function getShipIconUrl(ship_id: number): string {
+	// バナーが存在するかはテストで確認する
+	return `./banners/${ship_id}.png`;
+}
+
+/**
+ * 艦の退避状態をトグルする。
+ * 旗艦は退避不可。全艦解除時は該当ノードの退避情報を削除。
+ * @param fleet_index 艦隊インデックス
+ * @param ship_unique_id 艦インデックス
+ */
+function toggleEvacuation(fleet_index: number, ship_unique_id: UniqueId): void {
+  if (!cxtTapedNode.value) return;
+  if (ship_unique_id === 1) return; // 旗艦は退避不可
+
+  const node_key = cxtTapedNode.value;
+  const evacuations = commandEvacuations.value;
+  const evac_index = evacuations.findIndex(evac => evac.node === node_key);
+
+  // 新規作成
+  if (evac_index === -1) {
+    const evacuation_ship_unique_id: { [fleet_index: number]: UniqueId[] } = {};
+		evacuation_ship_unique_id[fleet_index] = [ship_unique_id];
+    const new_evac: CommandEvacuation = {
+      node: createNode(node_key),
+      evacuation_ship_unique_ids: evacuation_ship_unique_id,
+    };
+    store.UPDATE_COMMAND_EVACUATIONS(addCommandEvacuation(evacuations, new_evac));
+    return;
+  }
+
+  // 既存をイミュータブルに更新
+  const target = evacuations[evac_index];
+  // 各配列もスプレッドでコピーし、参照渡しを防ぐ
+  const new_evacuation_ship_unique_id: { [fleet_index: number]: UniqueId[] } = {};
+  for (const key of Object.keys(target.evacuation_ship_unique_ids)) {
+    new_evacuation_ship_unique_id[Number(key)] = [...target.evacuation_ship_unique_ids[Number(key)]];
+  }
+  const current_arr = new_evacuation_ship_unique_id[fleet_index] || [];
+  if (current_arr.includes(ship_unique_id)) {
+    new_evacuation_ship_unique_id[fleet_index] = current_arr.filter(i => i !== ship_unique_id);
+  } else {
+    new_evacuation_ship_unique_id[fleet_index] = [...current_arr, ship_unique_id];
+  }
+
+  // 全艦解除時は該当ノードの退避情報を削除
+  if (Object.values(new_evacuation_ship_unique_id).every(arr => arr.length === 0)) {
+    store.UPDATE_COMMAND_EVACUATIONS(removeCommandEvacuation(evacuations, node_key));
+    return;
+  }
+  store.UPDATE_COMMAND_EVACUATIONS([
+    ...evacuations.slice(0, evac_index),
+    { ...target, evacuation_ship_unique_ids: new_evacuation_ship_unique_id },
+    ...evacuations.slice(evac_index + 1),
+  ]);
+}
+
+/**
+ * 退避設定を全解除する。
+ */
+function clearEvacuation(): void {
+  const new_evacuations = commandEvacuations.value.filter(
+    evacuation => evacuation.node !== cxtTapedNode.value
+  );
+  store.UPDATE_COMMAND_EVACUATIONS(new_evacuations);
+}
+
+let is_first_tap = true;
+window.addEventListener('contextmenu', (event) => {
+	// モーダル表示時の右クリックメニューを抑止
+	if (is_first_tap) {
+		event.preventDefault();
+		is_first_tap = false;
+	}
+});
+</script>
+
+<style scoped>
+.evacuation-modal {
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 8px;
+  min-width: 895px;
+  color: #000000;
+}
+.evacuation-list {
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #e4e4e4;
+  user-select: none;
+}
+.fleet-block {
+  margin: 5px 3px;
+}
+.fleet-title {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+.ship-list {
+  display: flex;
+  gap: 5px;
+}
+.ship-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.ship-item.evacuated {
+  background: #888;
+  opacity: 0.5;
+}
+.ship-item.flagship {
+  border: 3px solid #2ecc40;
+	padding: 3px;
+  box-sizing: border-box;
+  cursor: default;
+}
+.ship-icon {
+  height: 32px;
+  border-radius: 4px;
+  object-fit: cover;
+  background: #222;
+}
+.clear-btn {
+  margin-top: 7px;
+  padding: 8px 16px;
+}
+</style>

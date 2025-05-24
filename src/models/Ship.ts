@@ -9,12 +9,14 @@ import { calcShipSpeed } from '../logic/speed/ship';
 import { calcEquipSeek } from '../logic/seek/equip';
 import { createEquip } from './Equip';
 import { Sp as Speed } from '@/core/branch';
+import { createUniqueId, UniqueId } from './types/brand';
 
 /**
  * Ship型: 艦船の情報を表現する型
  */
 export type Ship = {
     readonly id: number;
+    readonly unique_id: UniqueId;
     readonly name: string;
     readonly lv: number;
     readonly type: ShipType;
@@ -123,6 +125,7 @@ export function createShip(
 
     return {
         id: ship_id,
+        unique_id: createUniqueId(ship_index),
         name: data.name,
         lv,
         type: data.type,

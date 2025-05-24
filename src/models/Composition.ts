@@ -1,4 +1,4 @@
-import { CacheFleet } from "@/core/CacheFleet";
+import { FleetComponent } from "@/core/FleetComponent";
 import { ST as ShipType } from "@/data/ship";
 
 /**
@@ -31,7 +31,7 @@ export type Composition = {
  * @param fleets 艦隊配列
  * @returns 艦種ごとの数を持つCompositionオブジェクト
  */
-export function createComposition(fleets: CacheFleet[]): Composition {
+export function createComposition(fleets: FleetComponent[]): Composition {
     const initial: Composition = {
         BB: 0,
         BBV: 0,

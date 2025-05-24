@@ -136,10 +136,18 @@
 			</div>
 		</div>
 	</div>
-	<div v-if="isAreaVisible || isRefferenceVisible || isErrorVisible" class="modal-overlay" @pointerdown="closeModals">
+	<div
+		v-if="isAreaVisible
+			|| isRefferenceVisible
+			|| isErrorVisible
+			|| isCommandEvacuationVisible"
+		class="modal-overlay"
+		@pointerdown="closeModals"
+	>
 		<Area />
 		<Refference />
 		<Error />
+		<CommandEvacuation />
 	</div>
 	<NomalResourcePopup :data="nomalResource" :style="popupStyle" class="popup popup-info" />
 	<SyonanResourcePopup :data="syonanResource" :style="popupStyle" class="popup popup-info" />
@@ -169,13 +177,14 @@ import Option from './components/Option.vue';
 import Area from './components/modals/Area.vue';
 import Refference from './components/modals/Refference.vue';
 import Error from './components/modals/Error.vue';
+import CommandEvacuation from './components/modals/CommandEvacuation.vue';
 import SvgIcon from './components/SvgIcon.vue';
 import type { SelectedType } from '@/models/types';
 import CustomError from '@/errors/CustomError';
 import { Ft as FleetType } from '@/core/branch';
 import {
-	createCacheFleetsFromDeckBuilder,
-	createDeckBuilderFromAdoptFleet
+	createFleetComponentsFromDeckBuilder,
+	createDeckBuilderFromAdoptFleet,
 } from './logic/deckBuilder';
 import {
 	generateFormatedTime,
@@ -183,10 +192,9 @@ import {
 	sanitizeText
 } from '@/logic/util';
 import { AdoptFleet, countNotEquipArctic, createAdoptFleet, getEscortFleetLength, getEscortFleetNames, getMainFleetLength, getMainFleetNames } from './core/AdoptFleet';
-import type DeckBuilder from '@/models/types/DeckBuilder';
 import type { DeckBuilder as GkcoiDeckBuilder } from 'gkcoi/dist/type';
 import doDrawMap from '@/logic/efffects/draw';
-import { edge_datas } from './data/map';
+import { edge_datas, node_datas } from './data/map';
 import {
 	getGkcoiBlob,
 	getCyBlob,
@@ -199,20 +207,22 @@ import NotSpanner from '@/icons/items/not-spanner.png';
 import Drum from '@/icons/items/drum.png';
 import Craft from '@/icons/items/craft.png';
 import Radar from '@/icons/items/radar.png';
-import { deleteParam, getParam } from './logic/url';
+import { doDeleteParam, getParam } from './logic/url';
 import { doCombineBlobs, doDownloadDataURL } from './logic/efffects/render';
 import { isSpecialResourceNode } from './logic/resource';
 import NomalResourcePopup from './components/resource/NomalResourcePopup.vue';
 import SyonanResourcePopup from './components/resource/SyonanResourcePopup.vue';
-import { CacheFleet } from './core/CacheFleet';
+import { FleetComponent } from './core/FleetComponent';
 import { createSyonanResource, SyonanResource } from './models/resource/SyonanResource';
 import { createNomalResource, NomalResource } from './models/resource/NomalResource';
-import DetailBox from './components/DetailBox.vue';
+import DetailBox from './components/Detail.vue';
 import Footer from './components/Footer.vue';
-import { createSimControllerState, startSim } from './core/SimController';
+import { createSimExecutor, startSim } from './core/SimExecutor';
 import ship_datas from './data/ship';
 import equip_datas from './data/equip';
 import Const from './constants/const';
+import { clearCommandEvacuation } from './core/CommandEvacuation';
+import { parseAreaId, parseDeckBuilderString, parseSelectedType } from './models/shemas';
 
 const store = useStore();
 const modalStore = useModalStore();
@@ -220,7 +230,9 @@ const modalStore = useModalStore();
 const fleetInput = ref(''); // 入力取得用
 const fleetInputRef = ref<HTMLInputElement | null>(null); // focus用
 
-const cacheFleets = computed(() => store.cacheFleets as CacheFleet[]);
+const deck = computed(() => store.deck);
+
+const fleetComponents = computed(() => store.fleetComponents as FleetComponent[]);
 
 const selectedType = computed(() => store.selectedType);
 
@@ -232,9 +244,11 @@ const drewArea = computed(() => store.drewArea);
 
 const options = computed(() => store.options);
 
+const commandEvacuations = computed(() => store.commandEvacuations);
+
 const simResult = computed(() => store.simResult);
 
-const isVisibleTypeSelect = computed(() => cacheFleets.value.filter(item => item !== null).length >= 2);
+const isVisibleTypeSelect = computed(() => fleetComponents.value.filter(item => item !== null).length >= 2);
 const isFleetOptionsVisible = ref(false);
 
 const showFleetOptions = () => {
@@ -247,6 +261,7 @@ const hideFleetOptions = () => {
 const isAreaVisible = computed(() => modalStore.isAreaVisible);
 const isRefferenceVisible = computed(() => modalStore.isRefferenceVisible);
 const isErrorVisible = computed(() => modalStore.isErrorVisible);
+const isCommandEvacuationVisible = computed(() => modalStore.isCommandEvacuationVisible);
 
 const showArea = () => {
 	modalStore.SHOW_AREA();
@@ -283,9 +298,16 @@ const fleetTypeLabels = {
 	3: '輸送護衛部隊',
 }
 
-// import
+watch(deck, () => { // localStorageからの読込想定
+	if (!deck.value) return;
+
+	loadFleet(deck.value);
+})
+
+// import貼り付け
 watch(fleetInput, (text) => {
 	if (!text) return;
+
 	if (fleetInput.value) fleetInput.value = ''; // 空欄化
 	try {
 		loadFleet(text);
@@ -296,81 +318,88 @@ watch(fleetInput, (text) => {
 	}
 });
 
-const loadFleet = (text: string) => {
-	let deck = null;
+/**
+ * デッキビルダー文字列から艦隊読込
+ * @param deck_string 
+ */
+const loadFleet = (deck_string: string): void => {
 	try {
-		deck = JSON.parse(text) as DeckBuilder;
-	} catch (e) {
-		throw new CustomError('デッキビルダーのデータ形式に誤りがあります');
-	}
-	const cache_fleets = createCacheFleetsFromDeckBuilder(
-		deck,
-		ship_datas,
-		equip_datas,
-	);
-	store.UPDATE_CACHE_FLEETS(cache_fleets);
-	store.SAVE_DATA();
+		const deck = parseDeckBuilderString(deck_string);
+		const fleet_components = createFleetComponentsFromDeckBuilder(
+			deck,
+			ship_datas,
+			equip_datas,
+		);
+		store.UPDATE_FLEET_COMPONENTS(fleet_components);
 
-	let selected_type = 1 as SelectedType;
-	if (deck?.f1?.t) {
-		const fleet_type = isNumber(deck.f1.t) && [0, 1, 2, 3].includes(Number(deck.f1.t))
-			? Number(deck.f1.t) as FleetType
-			: 0 as FleetType
-		;
-		switch (fleet_type) {
-			case 1:
-				selected_type = 5;
-				break;
-			case 2:
-				selected_type = 6;
-				break;
-			case 3:
-				selected_type = 7;
-				break;
+		store.UPDATE_DECK(deck_string);
+		store.SAVE_DATA();
+
+		let selected_type = 1 as SelectedType;
+		if (deck?.f1?.t) {
+			const fleet_type = isNumber(deck.f1.t) && [0, 1, 2, 3].includes(Number(deck.f1.t))
+				? Number(deck.f1.t) as FleetType
+				: 0 as FleetType
+				;
+			switch (fleet_type) {
+				case 1:
+					selected_type = 5;
+					break;
+				case 2:
+					selected_type = 6;
+					break;
+				case 3:
+					selected_type = 7;
+					break;
+			}
 		}
+		adjustFleetType(selected_type);
+	} catch (e) {
+		modalStore.SHOW_ERROR(e);
+		console.error(e);
+		return;
 	}
-	adjustFleetType(selected_type);
 };
 
 const updateSelectedType = (type_id: number) => {
-	if ([1,2,3,4,5,6,7].includes(type_id)) adjustFleetType(type_id as SelectedType);
+	adjustFleetType(type_id);
 }
 
 // fleet_typeとかselected_typeの調停
-const adjustFleetType = (selected_type: SelectedType) => { // 入力系とimportの2箇所から発火
+const adjustFleetType = (selected_type_number: number) => { // 入力系とimportの2箇所から発火
 	try {
+		const selected_type = parseSelectedType(selected_type_number);
 		if (selected_type >= 5) {
-			if (!store.cacheFleets[0]) {
+			if (!store.fleetComponents[0]) {
 				throw new CustomError('連合艦隊が指定されましたが第一艦隊が空です');
 			}
-			if (!store.cacheFleets[1]) {
+			if (!store.fleetComponents[1]) {
 				throw new CustomError('連合艦隊が指定されましたが第二艦隊が空です');
 			}
 		}
+
+		store.UPDATE_SELECTED_TYPE(selected_type);
+		store.SAVE_DATA();
 	} catch (e: unknown) {
 		modalStore.SHOW_ERROR(e);
 		console.error(e);
 		return;
 	}
-
-	store.UPDATE_SELECTED_TYPE(selected_type);
-	store.SAVE_DATA();
 }
 
-// cacheFleets, selectedTypeからシミュに使用する艦隊をセット
-watch([cacheFleets, selectedType], () => {
+// fleetComponents, selectedTypeからシミュに使用する艦隊をセット
+watch([fleetComponents, selectedType], () => {
 	if (!selectedType.value) return;
 
 	try { // ここでも一応、変な値が保存されてるとエラーになり得る
-		let fleets = [] as CacheFleet[];
+		let fleets = [] as FleetComponent[];
 		let fleet_type = 0 as FleetType;
 		if (selectedType.value >= 5) {
-			fleets = [cacheFleets.value[0], cacheFleets.value[1]];
+			fleets = [fleetComponents.value[0], fleetComponents.value[1]];
 			fleet_type = selectedType.value - 4 as FleetType;
 		} else {
-			fleets = [cacheFleets.value[selectedType.value - 1]];
+			fleets = [fleetComponents.value[selectedType.value - 1]];
 		}
-
 		if (!fleets[0]) throw new CustomError('艦隊が空です');
 
 		const adopt_fleet = createAdoptFleet(
@@ -392,86 +421,106 @@ const hidePopup = () => {
 	branchHtml.value = null;
 }
 
+watch([adoptFleet, selectedArea], () => { // 退避設定は海域 | 艦隊間で持ち越さない
+	const cleared_command_evacuation = clearCommandEvacuation();
+	store.UPDATE_COMMAND_EVACUATIONS(cleared_command_evacuation);
+});
+
 let is_first_run = true;
 // 艦隊 & 海域 & オプション が揃ったらシミュ開始
-watch([adoptFleet, selectedArea, options], async () => {
+watch([adoptFleet, selectedArea, options, commandEvacuations], async () => {
 	if (
-		adoptFleet.value
-		&& selectedArea.value
-		&& options.value
-	) {
-    try {
-			const sim = createSimControllerState(
-				adoptFleet.value as AdoptFleet,
-				selectedArea.value,
-				options.value,
-			);
-			// console.time('シミュ計測');
-			const result = startSim(sim);
-			// console.timeEnd('シミュ計測');
-			store.UPDATE_SIM_RESULT(result);
+		!adoptFleet.value
+		|| !selectedArea.value
+		|| !options.value
+	) return;
 
-			cy = doDrawMap(selectedArea.value, simResult.value); // ここまでになるべく余計なことをしない
-			
-			if (is_first_run) {
-				console.timeEnd('読込 → マップ表示'); // debug
-				await store.DYNAMIC_LOAD();
-				is_first_run = false;
-			}
-			
-			hidePopup();
-			store.UPDATE_DREW_AREA(selectedArea.value);
+	try {
+		parseAreaId(selectedArea.value);
+		const sim = createSimExecutor(
+			adoptFleet.value as AdoptFleet,
+			selectedArea.value,
+			options.value,
+			commandEvacuations.value,
+		);
+		// console.time('シミュ計測');
+		const result = startSim(
+			sim,
+			adoptFleet.value as AdoptFleet,
+			commandEvacuations.value,
+		);
+		// console.timeEnd('シミュ計測');
+		store.UPDATE_SIM_RESULT(result);
 
-			cy.on('mousedown tapstart', (event) => { // cytoscape周りはどうしてもDOM操作が必要になる
-				if (!cy) return;
+		cy = doDrawMap(
+			selectedArea.value,
+			simResult.value,
+			commandEvacuations.value,
+		); // ここまでになるべく余計なことをしない
 
-				const target = event.target;
-				if (event.target.data('name')) { // node
-					const html = generarteBranchHtml(target.data('name'));
-					if (!html) return;
-					branchHtml.value = html;
-					adjustBranchStyle(cy, event);
-				} else { // 背景
-					hidePopup();
-				}
-			});
-
-			cy.on('cxttapstart taphold', 'node', async (event) => {
-				if (!cy) return;
-				const node = event.target.data('name');
-				if (!node) return;
-				if (!drewArea.value) return;
-
-				hidePopup();
-				if (isSpecialResourceNode(drewArea.value, node)) {
-					syonanResource.value = createSyonanResource(
-						drewArea.value,
-						node,
-						adoptFleet.value as AdoptFleet,
-						icons.value,
-						Drum,
-						Craft,
-						Const.VALID_CRAFT_NAMES,
-					);
-				} else {
-					nomalResource.value = createNomalResource(
-						drewArea.value,
-						node,
-						adoptFleet.value as AdoptFleet,
-						icons.value,
-						Drum,
-						Craft,
-						Const.VALID_CRAFT_NAMES,
-					);
-				}
-			adjustBranchStyle(cy, event);
-			});
-		} catch (e: unknown) {
-			modalStore.SHOW_ERROR(e);
-			console.error(e);
-			return;
+		if (is_first_run) {
+			console.timeEnd('読込 → マップ表示'); // debug
+			await store.DYNAMIC_LOAD();
+			is_first_run = false;
 		}
-  }
+
+		hidePopup();
+		store.UPDATE_DREW_AREA(selectedArea.value);
+
+		cy.on('mousedown tapstart', (event) => { // cytoscape周りはどうしてもDOM操作が必要になる
+			if (!cy) return;
+
+			const target = event.target;
+			if (event.target.data('name')) { // node
+				const html = generarteBranchHtml(target.data('name'));
+				if (!html) return;
+				branchHtml.value = html;
+				adjustBranchStyle(cy, event);
+			} else { // 背景
+				hidePopup();
+			}
+		});
+
+		cy.on('cxttapstart taphold', 'node', async (event) => {
+			if (!cy) return;
+			const node = event.target.data('name');
+			if (!node) return;
+			if (!drewArea.value) return;
+
+			// 獲得資源
+			hidePopup();
+			if (isSpecialResourceNode(drewArea.value, node)) {
+				syonanResource.value = createSyonanResource(
+					drewArea.value,
+					node,
+					adoptFleet.value as AdoptFleet,
+					icons.value,
+					Drum,
+					Craft,
+					Const.VALID_CRAFT_NAMES,
+				);
+			} else {
+				nomalResource.value = createNomalResource(
+					drewArea.value,
+					node,
+					adoptFleet.value as AdoptFleet,
+					icons.value,
+					Drum,
+					Craft,
+					Const.VALID_CRAFT_NAMES,
+				);
+			}
+			adjustBranchStyle(cy, event);
+
+			// 司令退避設定
+			store.UPDATE_CXT_TAPED_NODE(node);
+			modalStore.SHOW_COMMAND_EVACUATION(drewArea.value, node, node_datas);
+		});
+	} catch (e: unknown) {
+		modalStore.SHOW_ERROR(e);
+		console.error(e);
+		return;
+	}
 }, { deep: true });
 
 const branchHtml = ref<string | null>(null);
@@ -602,12 +651,13 @@ const screenShot = async () => {
 
 let save_y = 0;
 // スクロールバウンス回避
-watch([isAreaVisible, isRefferenceVisible, isErrorVisible], () => {
+watch([isAreaVisible, isRefferenceVisible, isErrorVisible, isCommandEvacuationVisible], () => {
 	const style = document.body.style;
 	if (
 		isAreaVisible.value
 		|| isRefferenceVisible.value
 		|| isErrorVisible.value
+		|| isCommandEvacuationVisible.value
 	) { // DOMはあんまし触りたくないけどしゃあないかな
 		save_y = window.scrollY;
   	style.top = `-${window.scrollY}px`;
@@ -627,28 +677,14 @@ onMounted(async () => {
 	store.LOAD_DATA();
 	const predeck = getParam('predeck');
 	if (predeck) {
-		try {
-			loadFleet(
-				decodeURIComponent(predeck)
-			);
-		} catch (e: unknown) {
-			modalStore.SHOW_ERROR(e);
-			console.error(e);
-		}
-		deleteParam();
+		loadFleet(decodeURIComponent(predeck));
+		doDeleteParam();
 	} else {
 		const pdz = getParam('pdz');
 		if (pdz) {
-			try {
-				const LZString = await import('lz-string');
-				loadFleet(
-					LZString.decompressFromEncodedURIComponent(pdz)
-				);
-			} catch (e: unknown) {
-				modalStore.SHOW_ERROR(e);
-				console.error(e);
-			}
-			deleteParam();
+			const LZString = await import('lz-string');
+			loadFleet(LZString.decompressFromEncodedURIComponent(pdz));
+			doDeleteParam();
 		}
 	}
 	fleetInputRef.value?.focus();

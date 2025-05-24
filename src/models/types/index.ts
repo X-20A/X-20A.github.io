@@ -1,7 +1,6 @@
 import type Big from "big.js";
 import { NA as National, SG as SpeedGroup, ST as ShipType } from "@/data/ship";
 import { NT as NodeType } from "@/data/map";
-import { CacheFleet } from "@/core/CacheFleet";
 
 export type Seek = [number, number, number, number]
 
@@ -81,7 +80,7 @@ export type OptionsType = Partial<Record<AreaId, Record<string, string>>>;
 
 
 export type SaveData = {
-    fleets: CacheFleet[],
+    deck: string | null,
     selected_type: SelectedType | null,
     area: AreaId | null,
     options: OptionsType | null,

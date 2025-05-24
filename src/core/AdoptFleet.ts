@@ -1,33 +1,32 @@
 import { type Seek } from "../models/types";
 import { ST as ShipType } from "@/data/ship";
-import Const from "../constants/const";
 import { Ft as FleetType, Sp as Speed } from "../core/branch";
-import { CacheFleet, createCacheFleet } from "./CacheFleet";
+import { FleetComponent } from "./FleetComponent";
 import { Composition, createComposition } from "@/models/Composition";
 
 /**
- * AdoptFleetのプロパティ型
+ * FleetComponentsからSelectedTypeによって抽出、構成されたシミュに使用される艦隊のデフォルト構造
  */
-export interface AdoptFleet {
-    fleets: CacheFleet[];
-    composition: Composition;
-    ship_names: string[];
-    fleet_type: FleetType;
-    isUnion: boolean;
-    fleet_length: number;
-    isFaster: boolean;
-    speed: Speed;
-    seek: Seek;
-    save_seek: Seek;
-    drum_carrier_count: number;
-    radar_carrier_count: number;
-    craft_carrier_count: number;
-    arBulge_carrier_count: number;
-    SBB_count: number;
-    yamato_class_count: number;
-    matsu_count: number;
-    daigo_count: number;
-    reigo_count: number;
+export type AdoptFleet = {
+    readonly fleets: FleetComponent[];
+    readonly composition: Composition;
+    readonly ship_names: string[];
+    readonly fleet_type: FleetType;
+    readonly isUnion: boolean;
+    readonly fleet_length: number;
+    readonly isFaster: boolean;
+    readonly speed: Speed;
+    readonly seek: Seek;
+    readonly save_seek: Seek;
+    readonly drum_carrier_count: number;
+    readonly radar_carrier_count: number;
+    readonly craft_carrier_count: number;
+    readonly arBulge_carrier_count: number;
+    readonly SBB_count: number;
+    readonly yamato_class_count: number;
+    readonly matsu_count: number;
+    readonly daigo_count: number;
+    readonly reigo_count: number;
 }
 
 /** 第五艦隊ID配列 */
@@ -60,23 +59,18 @@ const REIGO_IDS: ReadonlyArray<ReadonlyArray<number>> = [
 
 /**
  * AdoptFleetオブジェクトを生成する
- * @param fleets - CacheFleet配列
+ * @param fleets - FleetComponent配列
  * @param fleet_type_id - 艦隊種別ID
  * @param seek - 艦隊索敵値(省略可)
  * @param save_seek - 艦隊索敵値(退避, 省略可)
  * @returns AdoptFleetオブジェクト
  */
 export function createAdoptFleet(
-    fleets: CacheFleet[],
+    fleets: FleetComponent[],
     fleet_type_id: FleetType,
     seek?: Seek,
     save_seek?: Seek
 ): AdoptFleet {
-    // CacheFleetのバージョンが古い場合は再生成
-    if (!fleets[0].version || fleets[0].version < Const.FLEET_VERSION) {
-        fleets = fleets.map(fleet => createCacheFleet(fleet.ships));
-    }
-
     const isUnion = fleet_type_id > 0;
     const ships = fleets[1] ? fleets[0].ships.concat(fleets[1].ships) : fleets[0].ships;
 

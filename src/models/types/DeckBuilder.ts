@@ -59,9 +59,9 @@ export interface DeckBuilderFleet {
 
 export default interface DeckBuilder {
     version: number,
-    hqlv: number,
-    lang: "jp" | "en" | "kr" | "scn" | "tcn"
-    theme:
+    hqlv?: number,
+    lang?: "jp" | "en" | "kr" | "scn" | "tcn"
+    theme?:
         | "dark"
         | "dark-ex"
         | "light"

@@ -5,11 +5,6 @@ import type { OptionsType } from '@/models/types'
  * ※横断的なもののみ
  */
 export default class Const {
-    /**
-     * CacheFleet の仕様を更新したら送る    
-     * TODO: このやり方だと、ShipやCacheFleetで変数名の変更ができないのでなんか考える
-     */
-    static readonly FLEET_VERSION = 6; // @expansion
 
     static readonly VALID_CRAFT_NAMES: ReadonlyArray<string> =
         [

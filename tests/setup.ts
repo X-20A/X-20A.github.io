@@ -1,5 +1,5 @@
-import { AdoptFleet, createAdoptFleet } from "@/core/AdoptFleet";
-import { createCacheFleetsFromDeckBuilder } from "@/logic/deckBuilder";
+import { createAdoptFleet } from "@/core/AdoptFleet";
+import { createFleetComponentsFromDeckBuilder } from "@/logic/deckBuilder";
 import type DeckBuilder from '@/models/types/DeckBuilder';
 import type {
     DeckBuilderFleet,
@@ -16,13 +16,13 @@ const item_ids = Object.keys(equip_datas).map(key => Number.parseInt(key));
 
 export const getSimSet = () => {
     const deck = generateRandomDeck();
-    const cache_fleets = createCacheFleetsFromDeckBuilder(
+    const fleet_components = createFleetComponentsFromDeckBuilder(
         deck,
         ship_datas,
         equip_datas,
     );
     const fleet_type_id = deck?.f1?.t as Ft;
-    const adoptFleet = createAdoptFleet(cache_fleets, fleet_type_id);
+    const adoptFleet = createAdoptFleet(fleet_components, fleet_type_id);
 
     const areaIds: AreaId[] = [
         '1-1', '1-2', '1-3', '1-4', '1-5', '1-6',
@@ -93,7 +93,7 @@ const generateRandomDeck = () => {
     return deck;
 };
 
-const generateRandomFleetDeck = (ship_length: number) => {
+const generateRandomFleetDeck = (ship_length: number): DeckBuilderFleet => {
     const fleet = {} as DeckBuilderFleet;
     for (let i = 1; i <= ship_length; i++) {
         const random_ship_index = Math.floor(Math.random() * ship_ids.length);

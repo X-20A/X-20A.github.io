@@ -1,9 +1,14 @@
+import { NT } from "@/data/map";
+import { AreaId, NodeDatas } from "@/models/types";
+import { UniqueId } from "@/models/types/brand";
 /**
  * 艦隊退避コマンド
  */
-export interface CommandEvacuation {
-    node: string;
-    evacuation_ship_nums: number[][];
+export type CommandEvacuation = {
+    readonly node: string;
+    readonly evacuation_ship_unique_ids: {
+        [fleet_index: number]: UniqueId[],
+    };
 }
 
 /**
@@ -51,4 +56,39 @@ export function removeCommandEvacuation(
  */
 export function clearCommandEvacuation(): CommandEvacuation[] {
     return [];
+}
+
+/**
+ * Nodeが戦闘系であるか判定して返す
+ * @param area 
+ * @param node 
+ * @param node_datas 
+ * @returns 
+ */
+export function isBattleNode(
+    area: AreaId | null,
+    node: string | null,
+    node_datas: NodeDatas,
+): boolean {
+    if (!area) return false;
+    if (!node) return false;
+
+    const BATTLE_NODE_TYPES = [
+        NT.ab,
+        NT.ad,
+        NT.en,
+        NT.su,
+        NT.ni,
+        NT.as,
+    ];
+    return BATTLE_NODE_TYPES.includes(node_datas[area][node][2]);
+}
+
+/** 現在のNodeに司令退避が設定されているか判定して返す */
+export function isEvacuationNode(
+    command_vacuations: CommandEvacuation[],
+    current_node: string
+): boolean {
+    return command_vacuations
+        .some(command_vacuation => command_vacuation.node === current_node);
 }

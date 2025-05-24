@@ -16,6 +16,8 @@
 </template>
 
 <script lang="ts" setup>
+import SvgIcon from './SvgIcon.vue';
+
 
 </script>
 

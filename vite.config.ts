@@ -22,7 +22,7 @@ export default defineConfig({
         visualizer({
             filename: './dist/stats.html', // 出力ファイルのパス
             template: 'flamegraph', // これ以外だとtreemapくらいかな listでjson出力
-            // open: true, // ビルド後に自動でブラウザで開く
+            open: true, // ビルド後に自動でブラウザで開く
         }), 
 	],
 	resolve: {

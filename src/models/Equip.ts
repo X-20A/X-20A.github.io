@@ -5,7 +5,7 @@ import CustomError from "@/errors/CustomError";
 /**
  * 装備オブジェクトの型定義
  */
-export interface Equip {
+export type Equip = {
     /** 装備ID */
     readonly id: number;
     /** 改修値 */

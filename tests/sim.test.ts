@@ -3,13 +3,13 @@ import Big from 'big.js';
 import LZString from 'lz-string';
 import axios from 'axios';
 import {
-    createSimControllerState,
+    createSimExecutor,
     startSim,
-} from '@/core/SimController';
+} from '@/core/SimExecutor';
 import { getSimSet } from './setup';
 import Const from '@/constants/const';
 import { AreaId, OptionsType } from '@/models/types';
-import { createCacheFleetsFromDeckBuilder } from '@/logic/deckBuilder';
+import { createFleetComponentsFromDeckBuilder } from '@/logic/deckBuilder';
 import { createAdoptFleet, getEscortFleetNames, getMainFleetNames } from '@/core/AdoptFleet';
 import { getParam } from '@/logic/url';
 import { nomal_mock_datas, astray_mock_datas } from './mock';
@@ -17,6 +17,9 @@ import { node_datas, NT as NodeType } from '@/data/map';
 import ship_datas, { ST as ShipType } from '@/data/ship';
 import equip_datas, { EquipType } from '@/data/equip';
 import { Ft } from '@/core/branch';
+import { CommandEvacuation } from '@/core/CommandEvacuation';
+import path from 'path';
+import fs from 'fs';
 
 describe('Simテスト', () => {
     it(`rand-test: ランダムに生成した艦隊をSimクラスに渡してクラス内でエラーが発生しないこと、
@@ -31,9 +34,13 @@ describe('Simテスト', () => {
             const defaultOptions = Const.OPTIONS;
 
             // 各シミュレーション実行用関数
-            const runSim = async (areaId: AreaId, options: OptionsType) => {
-                const simState = createSimControllerState(adoptFleet, areaId, options);
-                const result = await startSim(simState);
+            const runSim = async (
+                areaId: AreaId,
+                options: OptionsType,
+                command_evacuations: CommandEvacuation[] = [],
+            ) => {
+                const executor = createSimExecutor(adoptFleet, areaId, options, command_evacuations);
+                const result = await startSim(executor, adoptFleet, command_evacuations);
                 // console.log(result);
                 const totalRate = result.reduce(
                     (sum, item) => sum.plus(item.rate),
@@ -121,14 +128,14 @@ describe('Simテスト', () => {
             const compressed_deck = getParam('pdz', mock_data.deck)!;
             const deck_string = LZString.decompressFromEncodedURIComponent(compressed_deck);
             const deck = JSON.parse(deck_string);
-            const cache_fleets = createCacheFleetsFromDeckBuilder(
+            const fleet_components = createFleetComponentsFromDeckBuilder(
                 deck,
                 ship_datas,
                 equip_datas,
             );
             const fleet_type_id = deck!.f1!.t as Ft;
             const adoptFleet = createAdoptFleet(
-                cache_fleets,
+                fleet_components,
                 fleet_type_id,
                 [999, 999, 999, 999],
             );
@@ -145,9 +152,11 @@ describe('Simテスト', () => {
                 }
                 const options = Const.OPTIONS;
                 options[area_id] = { ...options[area_id], ...mock_option };
+
+                const command_evacuations: CommandEvacuation[] = []; // 退避設定はなし
                 
-                const simState = createSimControllerState(adoptFleet, area_id, options);
-                const result = startSim(simState);
+                const executor = createSimExecutor(adoptFleet, area_id, options, command_evacuations);
+                const result = startSim(executor, adoptFleet, command_evacuations);
                 const actual_route = result[0].route.join('-');
 
                 if (expected_route !== actual_route) {
@@ -260,6 +269,20 @@ describe('Simテスト', () => {
         // 空であることを確認
         expect(missing_ships.length).toBe(0);
         expect(mismatch_ship_params.length).toBe(0);
+
+        // 艦バナー画像の存在チェック
+        const missing_banners: number[] = [];
+        const banners_dir = path.resolve(__dirname, '../public/banners');
+        for (const ac_ship of ac_ships) {
+            const banner_path = path.join(banners_dir, `${ac_ship.id}.png`);
+            if (!fs.existsSync(banner_path)) {
+                missing_banners.push(ac_ship.id);
+            }
+        }
+        if (missing_banners.length) {
+            console.log('バナー画像が存在しない艦ID: ', missing_banners);
+        }
+        expect(missing_banners.length).toBe(0);
 
         type MissingEquip = {
             id: number,

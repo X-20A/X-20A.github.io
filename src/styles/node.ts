@@ -6,6 +6,7 @@ import boss from '@/icons/nodes/boss.png';
 import airB from '@/icons/nodes/air-b.png';
 import airD from '@/icons/nodes/air-d.png';
 import calm from '@/icons/nodes/calm.png';
+import command from '@/icons/items/command.png';
 import shadow from '@/icons/nodes/shadow.png';
 import enemy from '@/icons/nodes/enemy.png';
 import whirl from '@/icons/nodes/whirl.png';
@@ -44,6 +45,16 @@ const nodes: CyStyle[] = [
             'content': '!',
             'font-size': '18px',
             'events': 'no' // クリック不可
+        }
+    },
+    {
+        selector: 'node[label = "evacuation"]',
+        style: {
+            'events': 'no', // クリック不可
+            'background-image': command,
+            'label': '',
+            'width': '28px',
+            'height': '28px',
         }
     },
     {

@@ -11,12 +11,20 @@ import type {
     OptionsType,
     BranchLastUpdate,
     BranchType,
-    ItemIconKey
+    ItemIconKey,
+    NodeDatas
 } from '@/models/types';
-import { CacheFleet } from '@/core/CacheFleet';
+import { FleetComponent } from '@/core/FleetComponent';
+import { isBattleNode, type CommandEvacuation } from '@/core/CommandEvacuation';
+import { Node } from '@/models/types/brand';
+import { parseOptionsType } from '@/models/shemas';
+import { node_datas } from '@/data/map';
+
+const LOCAL_STORAGE_KEY = 'compass-v2.1';
 
 export const useStore = defineStore('compass', {
 	state: () => ({
+        deck: null as string | null,
         /**
          * 選択された艦隊(SelectedType参照)    
          * 艦隊読込時にも自動で操作されたりする    
@@ -25,10 +33,9 @@ export const useStore = defineStore('compass', {
 		selectedType: null as SelectedType | null,
 		/**
 		 * デッキビルダーで第四艦隊まで読み込んだやつ    
-		 * ここからselectedTypeに応じてadoptFleetを選ぶ    
-		 * 保存する
+		 * ここからselectedTypeに応じてadoptFleetを選ぶ
 		 */
-		cacheFleets: [] as CacheFleet[],
+		fleetComponents: [] as FleetComponent[],
 		/** 実際にシミュで使う艦隊 */
 		adoptFleet: null as AdoptFleet | null,
 		/**
@@ -40,6 +47,8 @@ export const useStore = defineStore('compass', {
         options: null as OptionsType | null,
         /** 現在描画されている海域 */
         drewArea: null as AreaId | null,
+        /**  */
+        cxtTapedNode: null as Node | null,
         /** シミュレーション結果 */
         simResult: [] as SimResult[],
 
@@ -47,13 +56,19 @@ export const useStore = defineStore('compass', {
         branchInfo: null as BranchLastUpdate | null,
         branchData: null as BranchType | null,
         icons: {} as Record<ItemIconKey, string>,
+
+        /** 司令退避設定（ノードごと） */
+        commandEvacuations: [] as CommandEvacuation[],
 	}),
 	actions: {
+        UPDATE_DECK(value: string): void {
+            this.deck = value;
+        },
 		UPDATE_SELECTED_TYPE(value: SelectedType): void {
 			this.selectedType = value;
 		},
-        UPDATE_CACHE_FLEETS(value: CacheFleet[]): void {
-			this.cacheFleets = value;
+        UPDATE_FLEET_COMPONENTS(value: FleetComponent[]): void {
+			this.fleetComponents = value;
 		},
         UPDATE_ADOPT_FLEET(value: AdoptFleet): void {
 			this.adoptFleet = value;
@@ -63,6 +78,9 @@ export const useStore = defineStore('compass', {
         },
         UPDATE_DREW_AREA(value: AreaId): void {
             this.drewArea = value;
+        },
+        UPDATE_CXT_TAPED_NODE(value: Node): void {
+            this.cxtTapedNode = value;
         },
         UPDATE_SIM_RESULT(value: SimResult[]): void {
             this.simResult = value;
@@ -80,16 +98,17 @@ export const useStore = defineStore('compass', {
             this.UPDATE_ADOPT_FLEET(switchSeek(this.adoptFleet as AdoptFleet));
         },
         LOAD_DATA(): void {
-            const data = localStorage.getItem('compass-v2');
+            const data = localStorage.getItem(LOCAL_STORAGE_KEY);
             if (data) {
                 try {
                     const json = JSON.parse(data) as SaveData;
-                    if (json.fleets) this.UPDATE_CACHE_FLEETS(json.fleets);
+                    if (json.deck) this.UPDATE_DECK(json.deck);
                     if (json.selected_type) this.UPDATE_SELECTED_TYPE(json.selected_type);
                     if (json.area) this.UPDATE_SELECTED_AREA(json.area);
                     if (json.options) {
                         // Const.OPTIONS に json.options をマージ
-                        this.UPDATE_OPTIONS({ ...Const.OPTIONS, ...json.options });
+                        const parsed_options = parseOptionsType(json.options);
+                        this.UPDATE_OPTIONS({ ...Const.OPTIONS, ...(parsed_options ?? {}) });
                     } else {
                         // Const.OPTIONS をそのまま渡す
                         this.UPDATE_OPTIONS(Const.OPTIONS);
@@ -111,14 +130,14 @@ export const useStore = defineStore('compass', {
             let localSaveData = save_data;
             if (!localSaveData) {
                 localSaveData = {
-                    fleets: this.cacheFleets as CacheFleet[],
+                    deck: this.deck,
                     selected_type: this.selectedType,
                     area: this.selectedArea,
                     options: this.options,
                 };
             }
 
-            localStorage.setItem('compass-v2', JSON.stringify(localSaveData));
+            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(localSaveData));
         },
         async DYNAMIC_LOAD(): Promise<void> {
             const module = await import('@/data/branch');
@@ -144,7 +163,14 @@ export const useStore = defineStore('compass', {
         },
         UPDATE_ICONS(value: Record<ItemIconKey, string>) {
             this.icons = value;
-        }
+        },
+        /**
+         * 司令退避設定を更新
+         * @param evacuations - CommandEvacuation配列
+         */
+        UPDATE_COMMAND_EVACUATIONS(evacuations: CommandEvacuation[]): void {
+            this.commandEvacuations = evacuations;
+        },
 	},
 });
 
@@ -156,6 +182,8 @@ export const useModalStore = defineStore('modal', {
         isRefferenceVisible: false,
         /** エラーモーダルの表示状態 */
 		isErrorVisible: false,
+        /** 司令退避モーダルの表示状態 */
+        isCommandEvacuationVisible: false,
         /** 表示するエラーメッセージ */
 		errorMessage: '',
         currentRefferenceTab: 'Route' as 'Route' | 'Branch',
@@ -172,6 +200,14 @@ export const useModalStore = defineStore('modal', {
          */
         SHOW_REFFERENCE(): void {
             this.isRefferenceVisible = true;
+        },
+        /**
+         * 司令退避モーダル表示
+         */
+        SHOW_COMMAND_EVACUATION(area_id: AreaId, node: string, node_datas: NodeDatas): void {
+            if (!isBattleNode(area_id, node, node_datas)) return;
+
+            this.isCommandEvacuationVisible = true;
         },
         /**
          * エラーモーダル    
@@ -192,10 +228,11 @@ export const useModalStore = defineStore('modal', {
             this.isAreaVisible = false;
             this.isRefferenceVisible = false;
             this.isErrorVisible = false;
+            this.isCommandEvacuationVisible = false;
             this.errorMessage = '';
         },
         UPDATE_CURRENT_REFFERENCE_TAB(value: 'Route' | 'Branch'): void {
             this.currentRefferenceTab = value;
-        }
+        },
 	}
 });
