@@ -96,7 +96,7 @@ export function createFleetComponent(ships: Ship[], command_lv?: number): FleetC
         if (ship.has_arBulge) acc.arBulge_carrier_count++;
         if (
             ship.type === ShipType.BB
-            && ship.speed_group < SLOW_THRESHOLD
+            && ship.speed_group >= SLOW_THRESHOLD
         ) acc.SBB_count++;
         if (YAMATO_CLASS_IDS.includes(ship.id)) acc.yamato_class_count++;
         if (MATSU_CLASS_IDS.includes(ship.id)) acc.matsu_count++;
