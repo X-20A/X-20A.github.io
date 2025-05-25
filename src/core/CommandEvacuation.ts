@@ -89,7 +89,7 @@ export function isLastStopNode(
     node: string,
     edge_datas: EdgeDatas,
 ): boolean {
-    return edge_datas[area_id].some(edge_data => edge_data[0] === node);
+    return edge_datas[area_id].every(edge_data => edge_data[0] !== node);
 }
 
 /** 現在のNodeに司令退避が設定されているか判定して返す */

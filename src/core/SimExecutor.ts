@@ -52,15 +52,15 @@ export function createSimExecutor(
 }
 
 /**
- * 1つのSimFleetを終点まで進める（イミュータブル/再帰）
+ * 1つのSimFleetを終点まで進める
  * @param evacuated_sim_fleet 進行中のSimFleet
  * @param executor シミュ状態
  * @param area_routes マップ経路データ
- * @param clone_count クローン数
+ * @param clone_count SimFleetが分裂した回数
  * @param sim_fleets SimFleetスタック
  * @param command_evacuations 退避艦情報
  * @param results 結果配列
- * @returns clone_count（更新後）
+ * @returns { clone_count: number, sim_fleets: SimFleet[], results: SimResult[] }
  */
 function advanceSimFleet(
     sim_fleet: SimFleet,
@@ -70,7 +70,7 @@ function advanceSimFleet(
     sim_fleets: SimFleet[],
     command_evacuations: CommandEvacuation[],
     results: SimResult[]
-): number {
+): { clone_count: number, sim_fleets: SimFleet[], results: SimResult[] } {
     // 退避適用
     const evacuated_sim_fleet = getEvacuatedFleet(
         sim_fleet,
@@ -100,30 +100,28 @@ function advanceSimFleet(
                 results,
             );
         } else { // 確率分岐ならSimFleet分裂
-            const branched = branched_nodes.slice(1).map(({ node, rate }) => {
-                const branched_sim_fleet
-                    = progressSimFleet(cloneSimFleet(evacuated_sim_fleet), node, rate);
-                sim_fleets.push(branched_sim_fleet);
-                return 1;
-            });
-            const new_clone_count = clone_count + branched.length;
-            if (clone_count >= MAX_CLONE_COUNT) {
+            const branched_sim_fleets = branched_nodes.slice(1).map(({ node, rate }) =>
+                progressSimFleet(cloneSimFleet(evacuated_sim_fleet), node, rate)
+            );
+            const new_sim_fleets = [...sim_fleets, ...branched_sim_fleets.reverse()];
+            const new_clone_count = clone_count + branched_sim_fleets.length;
+            if (clone_count >= MAX_CLONE_COUNT) { // ひとまず副作用許容
                 console.group('Debug');
                 console.log('経路: ', evacuated_sim_fleet.route);
                 console.groupEnd();
                 throw new CustomError('あー！無限ループ！');
             }
             const updated_sim_fleet = progressSimFleet(
-                    evacuated_sim_fleet,
-                    branched_nodes[0].node,
-                    branched_nodes[0].rate,
-                );
+                evacuated_sim_fleet,
+                branched_nodes[0].node,
+                branched_nodes[0].rate,
+            );
             return advanceSimFleet(
                 updated_sim_fleet,
                 executor,
                 area_routes,
                 new_clone_count,
-                sim_fleets,
+                new_sim_fleets,
                 command_evacuations,
                 results,
             );
@@ -142,11 +140,11 @@ function advanceSimFleet(
         );
     } else {
         // 終点
-        results.push({
+        const new_result: SimResult = {
             route: evacuated_sim_fleet.route.filter(item => item !== null),
             rate: evacuated_sim_fleet.rate,
-        });
-        return clone_count;
+        };
+        return { clone_count, sim_fleets, results: [...results, new_result] };
     }
 }
 
@@ -158,14 +156,13 @@ export function startSim(
     adopt_fleet: AdoptFleet,
     command_evacuations: CommandEvacuation[],
 ): SimResult[] {
-    const sim_fleets: SimFleet[] = [createDefaultSimFleet(adopt_fleet)];
-    const results: SimResult[] = [];
+    let sim_fleets: SimFleet[] = [createDefaultSimFleet(adopt_fleet)];
+    let results: SimResult[] = [];
     const area_routes = edge_datas[executor.area_id];
     let clone_count = executor.clone_count;
     while (sim_fleets.length > 0) {
         const sim_fleet = sim_fleets.pop()!;
-
-        clone_count = advanceSimFleet(
+        const advance_result = advanceSimFleet(
             sim_fleet,
             executor,
             area_routes,
@@ -174,6 +171,9 @@ export function startSim(
             command_evacuations,
             results
         );
+        clone_count = advance_result.clone_count;
+        sim_fleets = advance_result.sim_fleets;
+        results = advance_result.results;
     }
     return results;
 }

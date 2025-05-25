@@ -8,7 +8,7 @@ import type {
     DeckBuilderItem
 } from '@/models/types/DeckBuilder';
 import CustomError from "@/errors/CustomError";
-import { isNumber } from '@/logic/util';
+import { isExistsAndNumber } from '@/logic/util';
 import type { AdoptFleet } from '@/core/AdoptFleet';
 import { ShipDatas } from '@/data/ship';
 import { EquipDatas } from '@/data/equip';
@@ -27,7 +27,7 @@ export function createFleetComponentsFromDeckBuilder(
 ): FleetComponent[] {
 	const fleets = [] as FleetComponent[];
     
-	const command_lv = isNumber(deck.hqlv) ? Number(deck.hqlv) : 120;
+	const command_lv = isExistsAndNumber(deck.hqlv) ? Number(deck.hqlv) : 120;
 	for (let i = 1;i < 5;i++) { // 艦隊
         const fleet_key = `f${i}` as 'f1'|'f2'|'f3'|'f4';
 		if (!deck[fleet_key]) continue;
@@ -45,7 +45,7 @@ export function createFleetComponentsFromDeckBuilder(
 				for (let k = 0; k < keys.length; k++) { // 装備
 					const key = keys[k];
 					const item = ship_deck.items[key];
-					if (isNumber(item.id) && isNumber(item.id)) {
+					if (isExistsAndNumber(item.id) && isExistsAndNumber(item.id)) {
 						const id = Number(item.id);
 						const implovement = Number(item.rf);
 

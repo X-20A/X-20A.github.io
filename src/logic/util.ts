@@ -4,7 +4,7 @@
  * @param value なんでもどうぞ
  * @returns 
  */
-export function isNumber(value: unknown): boolean {
+export function isExistsAndNumber(value: unknown): boolean {
     if (typeof value === 'number') {
         return true;
     }
@@ -20,33 +20,32 @@ export function isNumber(value: unknown): boolean {
 }
 
 /**
- * 現在時刻を「HHmm」形式（例: 0930, 1745）の文字列で返す    
+ * 指定したDateオブジェクトまたは現在時刻を「HHmm」形式（例: 0930, 1745）の文字列で返す    
  * 時・分が1桁の場合は先頭に0を付与する
+ * @param date 日付オブジェクト
  * @returns フォーマット済み時刻文字列
  */
-export function generateFormatedTime() {
-    const now = new Date();
-    let hours: number | string = now.getHours();
-    let minutes: number | string = now.getMinutes();
+export function getZeroFilledTime(date: Date): string {
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
     // 二桁の形式に変換
-    hours = hours < 10 ? '0' + hours : hours;
-    minutes = minutes < 10 ? '0' + minutes : minutes;
-    return `${hours}${minutes}`;
+    const filled_hours = hours < 10 ? '0' + hours : hours;
+    const filled_minutes = minutes < 10 ? '0' + minutes : minutes;
+    return `${filled_hours}${filled_minutes}`;
 }
 
 /**
- * html文字列を無害化して返す
- * @param input 
- * @returns 
+ * 指定した文字列をHTMLエスケープし、無害化した新しい文字列を返す
+ * @param input エスケープ対象の文字列
+ * @returns エスケープ済み文字列
  */
 export function sanitizeText(input: string): string {
-    const map: { [key: string]: string } = {
+    const escape_map: Record<string, string> = {
         '&': '&amp;',
         '<': '&lt;',
         '>': '&gt;',
         '"': '&quot;',
         "'": '&#39;',
     };
-
-    return input.replace(/[&<>"']/g, (char) => map[char]);
+    return input.replace(/[&<>"']/g, (char: string) => escape_map[char]);
 }

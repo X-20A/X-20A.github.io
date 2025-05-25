@@ -103,24 +103,25 @@ export function createShip(
     const status_seek = calcShipSeek(data, bonus_seek, lv);
     const equip_seek = calcEquipSeek(equips);
 
-    let drum_count = 0;
-    let has_radar = false;
-    let has_radar5 = false;
-    let has_craft = false;
-    let has_arBulge = false;
-    let valid_craft_count = 0;
-    let has_arctic_gear = false;
-
-    equips.forEach(equip => {
-        if (equip.id === 75) drum_count++;
-        if (equip.id === 268) has_arBulge = true;
-        if (equip.id === 402) has_arctic_gear = true;
-        if (ROUTING_CRAFTS.includes(equip.id)) has_craft = true;
-        if (RESOURCE_CRAFTS.includes(equip.id)) valid_craft_count++;
+    const summary = equips.reduce((acc, equip) => {
+        if (equip.id === 75) acc.drum_count++;
+        if (equip.id === 268) acc.has_arBulge = true;
+        if (equip.id === 402) acc.has_arctic_gear = true;
+        if (ROUTING_CRAFTS.includes(equip.id)) acc.has_craft = true;
+        if (RESOURCE_CRAFTS.includes(equip.id)) acc.valid_craft_count++;
         if ([EquipType.RadarS, EquipType.RadarL].includes(equip.type)) {
-            has_radar = true;
-            if (equip.seek >= 5) has_radar5 = true;
+            acc.has_radar = true;
+            if (equip.seek >= 5) acc.has_radar5 = true;
         }
+        return acc;
+    }, {
+        drum_count: 0,
+        has_radar: false,
+        has_radar5: false,
+        has_craft: false,
+        has_arBulge: false,
+        valid_craft_count: 0,
+        has_arctic_gear: false,
     });
 
     return {
@@ -138,12 +139,6 @@ export function createShip(
         equip_in_decks,
         status_seek,
         equip_seek,
-        drum_count,
-        has_radar,
-        has_radar5,
-        has_craft,
-        has_arBulge,
-        valid_craft_count,
-        has_arctic_gear,
+        ...summary,
     };
 }

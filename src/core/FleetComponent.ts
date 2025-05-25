@@ -122,6 +122,6 @@ export function createFleetComponent(ships: Ship[], command_lv?: number): FleetC
         ship_names,
         speed,
         seek,
-        ...summary
+        ...summary,
     };
 }

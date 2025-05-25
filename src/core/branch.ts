@@ -32,7 +32,7 @@ export const enum Sp {
 }
 
 /**
- * 艦隊・マップ・ノード情報から次ノード遷移を計算する関数。
+ * 艦隊・マップ・ノード情報から次Nodeを判定して返す
  * @param node 現在ノード名またはnull
  * @param SimFleet ルート情報などを持つスキャナー
  * @param fleet 艦隊情報

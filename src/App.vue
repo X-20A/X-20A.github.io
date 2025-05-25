@@ -187,8 +187,8 @@ import {
 	createDeckBuilderFromAdoptFleet,
 } from './logic/deckBuilder';
 import {
-	generateFormatedTime,
-	isNumber,
+	getZeroFilledTime,
+	isExistsAndNumber,
 	sanitizeText
 } from '@/logic/util';
 import { AdoptFleet, countNotEquipArctic, createAdoptFleet, getEscortFleetLength, getEscortFleetNames, getMainFleetLength, getMainFleetNames } from './core/AdoptFleet';
@@ -337,7 +337,7 @@ const loadFleet = (deck_string: string): void => {
 
 		let selected_type = 1 as SelectedType;
 		if (deck?.f1?.t) {
-			const fleet_type = isNumber(deck.f1.t) && [0, 1, 2, 3].includes(Number(deck.f1.t))
+			const fleet_type = isExistsAndNumber(deck.f1.t) && [0, 1, 2, 3].includes(Number(deck.f1.t))
 				? Number(deck.f1.t) as FleetType
 				: 0 as FleetType
 				;
@@ -614,7 +614,7 @@ const switchSeek = () => {
 const screenShot = async () => {
 	if (adoptFleet.value && cy) {
 		const gkcoi = await import('gkcoi'); // 動的import
-		const time = generateFormatedTime();
+		const time = getZeroFilledTime(new Date());
 		const fileName = `${drewArea.value}_${time}`;
 
 		const deck = createDeckBuilderFromAdoptFleet(adoptFleet.value as AdoptFleet);
