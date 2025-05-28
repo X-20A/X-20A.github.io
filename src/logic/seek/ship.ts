@@ -1,5 +1,5 @@
-import { ShipData } from '@/models/types';
-import { EquipBonusSeek } from '../../models/types/brand';
+import type { ShipData } from '@/models/types';
+import type { EquipBonusSeek } from '../../models/types/brand';
 
 /**
  * 艦Lv, 装備ボーナスを考慮した艦の索敵値を返す

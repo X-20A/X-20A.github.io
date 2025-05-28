@@ -17,10 +17,19 @@
 		"noNonNullAssertion": "off", // foo!.varの書き方でエラー
 		"noUselessElse": "off" // https://x.gd/N8oHE
 	  },
+	  "suspicious": {
+		"noConstEnum": "off" // const enumの使用を許可
+	  },
 	  "nursery": {
 		// "useCollapsedIf": "off" // https://x.gd/BmVDF
+	  },
+	  "complexity": {
+		"noStaticOnlyClass": "off" // ← スタティックのみのクラスを許容
 	  }
     }
+  },
+  "formatter": {
+	"enabled": true
   },
   "files": {
     "ignore": [

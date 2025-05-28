@@ -1,5 +1,5 @@
-import { Ship } from "../../models/Ship";
-import { Sp as Speed } from "@/core/branch";
+import type { Ship } from "../../models/Ship";
+import type { Sp as Speed } from "@/core/branch";
 
 /**
  * 艦隊速度を判定し、速度IDを返す

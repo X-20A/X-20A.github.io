@@ -13,7 +13,7 @@ export function isSpecialResourceNode(
  */
 export function formatCraftNames(
     names: ReadonlyArray<string>,
-    breakIndex: number = 6
+    breakIndex = 6
 ): string {
     if (!Array.isArray(names)) return '';
     const first = names.slice(0, breakIndex).join(' | ');

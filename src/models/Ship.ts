@@ -1,15 +1,15 @@
-import { EquipInDeck } from '@/models/types';
+import type { EquipInDeck } from '@/models/types';
 import
-    { NA as National, SG as SpeedGroup, ST as ShipType, ShipDatas, }
+    type { NA as National, SG as SpeedGroup, ST as ShipType, ShipDatas, }
 from '@/data/ship';
-import { EquipDatas, EquipType } from '@/data/equip';
+import { type EquipDatas, EquipType } from '@/data/equip';
 import { calcShipSeek } from '../logic/seek/ship';
 import { calcBonus } from '../logic/seek/equipBonus';
 import { calcShipSpeed } from '../logic/speed/ship';
 import { calcEquipSeek } from '../logic/seek/equip';
 import { createEquip } from './Equip';
-import { Sp as Speed } from '@/core/branch';
-import { createUniqueId, UniqueId } from './types/brand';
+import type { Sp as Speed } from '@/core/branch';
+import { createUniqueId, type UniqueId } from './types/brand';
 
 /**
  * Ship型: 艦船の情報を表現する型

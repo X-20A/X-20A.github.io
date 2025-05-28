@@ -1,5 +1,5 @@
 import { EquipType } from "@/data/equip";
-import { Equip } from "@/models/Equip";
+import type { Equip } from "@/models/Equip";
 
 /**
  * 装備係数、改修を考慮した装備の索敵値を返す

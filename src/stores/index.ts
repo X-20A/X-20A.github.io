@@ -15,9 +15,9 @@ import type {
     NodeDatas,
     EdgeDatas
 } from '@/models/types';
-import { FleetComponent } from '@/core/FleetComponent';
+import type { FleetComponent } from '@/core/FleetComponent';
 import { isBattleNode, isLastStopNode, type CommandEvacuation } from '@/core/CommandEvacuation';
-import { Node } from '@/models/types/brand';
+import type { Node } from '@/models/types/brand';
 import { parseOptionsType } from '@/models/shemas';
 
 const LOCAL_STORAGE_KEY = 'compass-v2.1';

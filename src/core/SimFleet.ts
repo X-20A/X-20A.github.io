@@ -1,8 +1,8 @@
 import Big from 'big.js';
 import CustomError from '@/errors/CustomError';
-import { createPreSailNull, PreSailNull } from '@/models/types/brand';
-import { AdoptFleet, createAdoptFleet } from './AdoptFleet';
-import { CommandEvacuation, isEvacuationNode } from './CommandEvacuation';
+import { createPreSailNull, type PreSailNull } from '@/models/types/brand';
+import { type AdoptFleet, createAdoptFleet } from './AdoptFleet';
+import { type CommandEvacuation, isEvacuationNode } from './CommandEvacuation';
 import { createFleetComponent } from './FleetComponent';
 
 /**

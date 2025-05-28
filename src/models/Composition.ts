@@ -1,4 +1,4 @@
-import { FleetComponent } from "@/core/FleetComponent";
+import type { FleetComponent } from "@/core/FleetComponent";
 import { ST as ShipType } from "@/data/ship";
 
 /**

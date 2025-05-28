@@ -1,17 +1,17 @@
-import { AdoptFleet, getTotalDrumCount, getTotalValidCraftCount } from "@/core/AdoptFleet";
-import { AreaId, ItemIconKey } from "../types";
-import { NodeResource, ResourceData } from "../types/resource";
-import { createResourceIconSuite, ResourceIconSuite } from "./ResourceIconSuite";
+import { type AdoptFleet, getTotalDrumCount, getTotalValidCraftCount } from "@/core/AdoptFleet";
+import type { AreaId, ItemIconKey } from "../types";
+import type { NodeResource, ResourceData } from "../types/resource";
+import { createResourceIconSuite, type ResourceIconSuite } from "./ResourceIconSuite";
 import { formatCraftNames } from "@/logic/resource";
 
 /**
  * 資源種別
  */
 export const enum ResourceType {
-    fuel,
-    ammo,
-    steel,
-    imo,
+    fuel = 0,
+    ammo = 1,
+    steel = 2,
+    imo = 3,
 }
 
 // ResourceTypeの数値→文字列変換用マップ

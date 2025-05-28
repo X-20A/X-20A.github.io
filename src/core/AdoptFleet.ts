@@ -1,8 +1,8 @@
-import { type Seek } from "../models/types";
+import type { Seek } from "../models/types";
 import { ST as ShipType } from "@/data/ship";
-import { Ft as FleetType, Sp as Speed } from "../core/branch";
-import { FleetComponent } from "./FleetComponent";
-import { Composition, createComposition } from "@/models/Composition";
+import type { Ft as FleetType, Sp as Speed } from "../core/branch";
+import type { FleetComponent } from "./FleetComponent";
+import { type Composition, createComposition } from "@/models/Composition";
 
 /**
  * FleetComponentsからSelectedTypeによって抽出、構成されたシミュに使用される艦隊のデフォルト構造
@@ -79,7 +79,7 @@ export function createAdoptFleet(
     const daigo_dup: number[] = [];
     const reigo_dup: number[] = [];
 
-    ships.forEach(ship => {
+    for (const ship of ships) {
         for (const daigo_ship_ids of DAIGO_IDS) {
             if (!daigo_dup.includes(ship.id) && daigo_ship_ids.includes(ship.id)) {
                 daigo_dup.push(...daigo_ship_ids);
@@ -94,7 +94,7 @@ export function createAdoptFleet(
                 break;
             }
         }
-    });
+    };
 
     let composition: Composition;
     let ship_names: string[];

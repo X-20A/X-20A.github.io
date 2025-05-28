@@ -3,7 +3,7 @@ import { node_datas, edge_datas, NT as NodeType, warning_node_datas } from '@/da
 import styles from '@/styles';
 import type { AreaId, SimResult } from '../../models/types';
 import Big from 'big.js';
-import { CommandEvacuation, isEvacuationNode } from '@/core/CommandEvacuation';
+import { type CommandEvacuation, isEvacuationNode } from '@/core/CommandEvacuation';
 
 /**
  * シミュ結果からマップを描画

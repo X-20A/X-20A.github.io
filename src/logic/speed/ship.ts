@@ -1,6 +1,6 @@
 import { SG as SpeedGroup } from '@/data/ship';
-import { Sp as Speed } from '@/core/branch';
-import { Equip } from '@/models/Equip';
+import type { Sp as Speed } from '@/core/branch';
+import type { Equip } from '@/models/Equip';
 
 /**
  * 装備と速力グループから速度IDを判定して返す
@@ -14,14 +14,14 @@ export function calcShipSpeed(equips: Equip[], speed_group: SpeedGroup): Speed {
     let new_kan = 0; // 新型缶
     let power_kan = 0; // 新型缶☆7↑
 
-    equips.forEach(item => {
+    for (const item of equips) {
         if (item.id === 33) turbine++;
-        if (item.id === 34) kan++;
-        if (item.id === 87) {
+        else if (item.id === 34) kan++;
+        else if (item.id === 87) {
             new_kan++;
             if (item.implovement >= 7) power_kan++;
         }
-    });
+    }
 
     const kan_total = kan + new_kan;
 

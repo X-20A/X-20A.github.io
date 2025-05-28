@@ -1,5 +1,6 @@
-import { FleetComponent, createFleetComponent } from '@/core/FleetComponent';
-import { createShip, Ship } from '@/models/Ship';
+import { type FleetComponent, createFleetComponent } from '@/core/FleetComponent';
+import type { Ship } from '@/models/Ship';
+import { createShip } from '@/models/Ship';
 import type { EquipInDeck, Improvement } from '@/models/types';
 import type DeckBuilder from '@/models/types/DeckBuilder';
 import type {
@@ -10,8 +11,8 @@ import type {
 import CustomError from "@/errors/CustomError";
 import { isExistsAndNumber } from '@/logic/util';
 import type { AdoptFleet } from '@/core/AdoptFleet';
-import { ShipDatas } from '@/data/ship';
-import { EquipDatas } from '@/data/equip';
+import type { ShipDatas } from '@/data/ship';
+import type { EquipDatas } from '@/data/equip';
 
 /**
  * デッキビルダーからFleetComponent[]を生成    

@@ -8,18 +8,18 @@ import {
 } from '@/core/SimExecutor';
 import { getSimSet } from './setup';
 import Const from '@/constants/const';
-import { AreaId, OptionsType } from '@/models/types';
+import type { AreaId, OptionsType } from '@/models/types';
 import { createFleetComponentsFromDeckBuilder } from '@/logic/deckBuilder';
 import { createAdoptFleet, getEscortFleetNames, getMainFleetNames } from '@/core/AdoptFleet';
 import { getParam } from '@/logic/url';
 import { nomal_mock_datas, astray_mock_datas } from './mock';
 import { node_datas, NT as NodeType } from '@/data/map';
 import ship_datas, { ST as ShipType } from '@/data/ship';
-import equip_datas, { EquipType } from '@/data/equip';
-import { Ft } from '@/core/branch';
-import { CommandEvacuation } from '@/core/CommandEvacuation';
-import path from 'path';
-import fs from 'fs';
+import equip_datas, { type EquipType } from '@/data/equip';
+import type { Ft } from '@/core/branch';
+import type { CommandEvacuation } from '@/core/CommandEvacuation';
+import path from 'node:path';
+import fs from 'node:fs';
 
 describe('Simテスト', () => {
     it(`rand-test: ランダムに生成した艦隊をSimクラスに渡してクラス内でエラーが発生しないこと、
@@ -61,7 +61,7 @@ describe('Simテスト', () => {
             let debug_option: Record<string, string> | undefined;
 
             try {
-                for (var area_id of areaIds) { // area_idは任意に再設定できるように
+                for (const area_id of areaIds) { // area_idは任意に再設定できるように
                     // area_id = '60-1';
                     debug_area_id = area_id;
                     // console.log('テスト海域: ', area_id);
@@ -271,6 +271,7 @@ describe('Simテスト', () => {
         expect(mismatch_ship_params.length).toBe(0);
 
         // 艦バナー画像の存在チェック
+        // TODO: コンパイルかビルド後にこけることがある jsファイルを参照してる？
         const missing_banners: number[] = [];
         const banners_dir = path.resolve(__dirname, '../public/banners');
         for (const ac_ship of ac_ships) {

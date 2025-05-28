@@ -1,7 +1,7 @@
-import { PreSailNull } from '@/models/types/brand';
+import type { PreSailNull } from '@/models/types/brand';
 import { countAktmrPlusCVs, countNotEquipArctic, countShip, countTaiyo, isFCL, isInclude } from './AdoptFleet';
 import type { SimFleet } from './SimFleet';
-import { AreaId, BranchResponse } from '@/models/types';
+import type { AreaId, BranchResponse } from '@/models/types';
 import CustomError from '@/errors/CustomError';
 
 /**
@@ -6504,7 +6504,7 @@ export function calcNextNode(
                     } else if (Number(option.difficulty) > 2 && reigo > 4) {
                         return 'U2';
                     } else if (option.difficulty === '2' && reigo > 3) {
-
+                        return 'U2';
                     } else if (option.difficulty === '1' && reigo > 2) {
                         return 'U2';
                     } else if (yamato > 0) {

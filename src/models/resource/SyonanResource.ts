@@ -1,7 +1,7 @@
-import { AdoptFleet, getTotalDrumCount, getTotalValidCraftCount } from "@/core/AdoptFleet";
-import { AreaId, ItemIconKey } from "../types";
-import { createResourceIconSuite, ResourceIconSuite } from "./ResourceIconSuite";
-import { Composition } from "../Composition";
+import { type AdoptFleet, getTotalDrumCount, getTotalValidCraftCount } from "@/core/AdoptFleet";
+import type { AreaId, ItemIconKey } from "../types";
+import { createResourceIconSuite, type ResourceIconSuite } from "./ResourceIconSuite";
+import type { Composition } from "../Composition";
 import { formatCraftNames } from "@/logic/resource";
 
 /**

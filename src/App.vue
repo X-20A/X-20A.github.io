@@ -146,7 +146,7 @@
 	>
 		<Area />
 		<Refference />
-		<Error />
+		<ErrorView />
 		<CommandEvacuation />
 	</div>
 	<NomalResourcePopup :data="nomalResource" :style="popupStyle" class="popup popup-info" />
@@ -176,12 +176,12 @@ import Header from './components/Header.vue';
 import Option from './components/Option.vue';
 import Area from './components/modals/Area.vue';
 import Refference from './components/modals/Refference.vue';
-import Error from './components/modals/Error.vue';
+import ErrorView from './components/modals/ErrorView.vue';
 import CommandEvacuation from './components/modals/CommandEvacuation.vue';
 import SvgIcon from './components/SvgIcon.vue';
 import type { SelectedType } from '@/models/types';
 import CustomError from '@/errors/CustomError';
-import { Ft as FleetType } from '@/core/branch';
+import type { Ft as FleetType } from '@/core/branch';
 import {
 	createFleetComponentsFromDeckBuilder,
 	createDeckBuilderFromAdoptFleet,
@@ -191,7 +191,7 @@ import {
 	isExistsAndNumber,
 	sanitizeText
 } from '@/logic/util';
-import { AdoptFleet, countNotEquipArctic, createAdoptFleet, getEscortFleetLength, getEscortFleetNames, getMainFleetLength, getMainFleetNames } from './core/AdoptFleet';
+import { type AdoptFleet, countNotEquipArctic, createAdoptFleet, getEscortFleetLength, getEscortFleetNames, getMainFleetLength, getMainFleetNames } from './core/AdoptFleet';
 import type { DeckBuilder as GkcoiDeckBuilder } from 'gkcoi/dist/type';
 import doDrawMap from '@/logic/efffects/draw';
 import { edge_datas, node_datas } from './data/map';
@@ -209,12 +209,11 @@ import Craft from '@/icons/items/craft.png';
 import Radar from '@/icons/items/radar.png';
 import { doDeleteParam, getParam } from './logic/url';
 import { doCombineBlobs, doDownloadDataURL } from './logic/efffects/render';
-import { isSpecialResourceNode } from './logic/resource';
 import NomalResourcePopup from './components/resource/NomalResourcePopup.vue';
 import SyonanResourcePopup from './components/resource/SyonanResourcePopup.vue';
-import { FleetComponent } from './core/FleetComponent';
-import { createSyonanResource, SyonanResource } from './models/resource/SyonanResource';
-import { createNomalResource, NomalResource } from './models/resource/NomalResource';
+import type { FleetComponent } from './core/FleetComponent';
+import type { SyonanResource } from './models/resource/SyonanResource';
+import type { NomalResource } from './models/resource/NomalResource';
 import DetailBox from './components/Detail.vue';
 import Footer from './components/Footer.vue';
 import { createSimExecutor, startSim } from './core/SimExecutor';
@@ -223,6 +222,7 @@ import equip_datas from './data/equip';
 import Const from './constants/const';
 import { clearCommandEvacuation } from './core/CommandEvacuation';
 import { parseAreaId, parseDeckBuilderString, parseSelectedType } from './models/shemas';
+import { registerCytoscapeEvents } from '@/logic/efffects/cytoscapeEvents';
 
 const store = useStore();
 const modalStore = useModalStore();
@@ -278,7 +278,7 @@ const closeModals = () => {
  * storeに登録しようとするとMap maximum size exceeded    
  * たぶん大きすぎる為
  */
-let cy = null as cytoscape.Core | null;
+let cytoscape_core = null as cytoscape.Core | null;
 
 const branchData = computed(() => store.branchData);
 
@@ -415,13 +415,8 @@ watch([fleetComponents, selectedType], () => {
 		}
 });
 
-const hidePopup = () => {
-	nomalResource.value = null;
-	syonanResource.value = null;
-	branchHtml.value = null;
-}
-
-watch([adoptFleet, selectedArea], () => { // 退避設定は海域 | 艦隊間で持ち越さない
+watch([adoptFleet, selectedArea], () => {
+	// 退避設定は 海域 | 艦隊 間で持ち越さない
 	const cleared_command_evacuation = clearCommandEvacuation();
 	store.UPDATE_COMMAND_EVACUATIONS(cleared_command_evacuation);
 });
@@ -452,7 +447,7 @@ watch([adoptFleet, selectedArea, options, commandEvacuations], async () => {
 		// console.timeEnd('シミュ計測');
 		store.UPDATE_SIM_RESULT(result);
 
-		cy = doDrawMap(
+		cytoscape_core = doDrawMap(
 			selectedArea.value,
 			simResult.value,
 			commandEvacuations.value,
@@ -467,55 +462,25 @@ watch([adoptFleet, selectedArea, options, commandEvacuations], async () => {
 		hidePopup();
 		store.UPDATE_DREW_AREA(selectedArea.value);
 
-		cy.on('mousedown tapstart', (event) => { // cytoscape周りはどうしてもDOM操作が必要になる
-			if (!cy) return;
-
-			const target = event.target;
-			if (event.target.data('name')) { // node
-				const html = generarteBranchHtml(target.data('name'));
-				if (!html) return;
-				branchHtml.value = html;
-				adjustBranchStyle(cy, event);
-			} else { // 背景
-				hidePopup();
-			}
-		});
-
-		cy.on('cxttapstart taphold', 'node', async (event) => {
-			if (!cy) return;
-			const node = event.target.data('name');
-			if (!node) return;
-			if (!drewArea.value) return;
-
-			// 獲得資源
-			hidePopup();
-			if (isSpecialResourceNode(drewArea.value, node)) {
-				syonanResource.value = createSyonanResource(
-					drewArea.value,
-					node,
-					adoptFleet.value as AdoptFleet,
-					icons.value,
-					Drum,
-					Craft,
-					Const.VALID_CRAFT_NAMES,
-				);
-			} else {
-				nomalResource.value = createNomalResource(
-					drewArea.value,
-					node,
-					adoptFleet.value as AdoptFleet,
-					icons.value,
-					Drum,
-					Craft,
-					Const.VALID_CRAFT_NAMES,
-				);
-			}
-			adjustBranchStyle(cy, event);
-
-			// 司令退避設定
-			store.UPDATE_CXT_TAPED_NODE(node);
-			modalStore.SHOW_COMMAND_EVACUATION(drewArea.value, node, node_datas, edge_datas);
-		});
+		registerCytoscapeEvents(
+			cytoscape_core,
+			generarteBranchHtml,
+			adjustPopupPosition,
+			hidePopup,
+			branchHtml,
+			drewArea,
+			adoptFleet,
+			icons,
+			Drum,
+			Craft,
+			Const,
+			store,
+			modalStore,
+			node_datas,
+			edge_datas,
+			syonanResource,
+			nomalResource
+		);
 	} catch (e: unknown) {
 		modalStore.SHOW_ERROR(e);
 		console.error(e);
@@ -535,6 +500,12 @@ const node = ref<string | null>(null);
 const nomalResource = ref<NomalResource | null>(null);
 
 const syonanResource = ref<SyonanResource | null>(null);
+
+const hidePopup = () => {
+	nomalResource.value = null;
+	syonanResource.value = null;
+	branchHtml.value = null;
+}
 
 const generarteBranchHtml = (node_name: string): string | null => {
 	node.value = node_name;
@@ -561,9 +532,9 @@ const generarteBranchHtml = (node_name: string): string | null => {
 	return node_data;
 };
 
-const adjustBranchStyle = (
+const adjustPopupPosition = (
 	cy: cytoscape.Core,
-	element: cytoscape.EventObject
+	element: cytoscape.EventObject,
 ) => {
 	const position = element.target.renderedPosition();
 
@@ -612,40 +583,40 @@ const switchSeek = () => {
 };
 
 const screenShot = async () => {
-	if (adoptFleet.value && cy) {
-		const gkcoi = await import('gkcoi'); // 動的import
-		const time = getZeroFilledTime(new Date());
-		const fileName = `${drewArea.value}_${time}`;
+	if (!adoptFleet.value || !cytoscape_core)  return;
 
-		const deck = createDeckBuilderFromAdoptFleet(adoptFleet.value as AdoptFleet);
-		const gkcoiBuilder = Object.assign(deck, {
-			lang: 'jp',
-			theme: 'dark',
-		}) as GkcoiDeckBuilder;
-		const fleet_seek = adoptFleet.value.seek;
-		const speed = adoptFleet.value.speed * 5;
-		const los = {
-			'1': fleet_seek[0],
-			'2': fleet_seek[1],
-			'3': fleet_seek[2],
-			'4': fleet_seek[3],
-		};
-		const canvas = await gkcoi.generate(
-			gkcoiBuilder,
-			undefined,
-			los,
-			speed as 0|5|10|15|20,
-		);
-		const g_blob = getGkcoiBlob(canvas);
-		const cy_blob = getCyBlob(cy);
-		try {
-			const data_url = await doCombineBlobs(cy_blob, g_blob);
-			doDownloadDataURL(data_url, fileName);
-		} catch (error) {
-			modalStore.SHOW_ERROR('画像出力に失敗しました');
-			console.error(error);
-			return;
-		}
+	const gkcoi = await import('gkcoi'); // 動的import
+	const time = getZeroFilledTime(new Date());
+	const fileName = `${drewArea.value}_${time}`;
+
+	const deck = createDeckBuilderFromAdoptFleet(adoptFleet.value as AdoptFleet);
+	const gkcoiBuilder = Object.assign(deck, {
+		lang: 'jp',
+		theme: 'dark',
+	}) as GkcoiDeckBuilder;
+	const fleet_seek = adoptFleet.value.seek;
+	const speed = adoptFleet.value.speed * 5;
+	const los = {
+		'1': fleet_seek[0],
+		'2': fleet_seek[1],
+		'3': fleet_seek[2],
+		'4': fleet_seek[3],
+	};
+	const canvas = await gkcoi.generate(
+		gkcoiBuilder,
+		undefined,
+		los,
+		speed as 0 | 5 | 10 | 15 | 20,
+	);
+	const g_blob = getGkcoiBlob(canvas);
+	const cy_blob = getCyBlob(cytoscape_core);
+	try {
+		const data_url = await doCombineBlobs(cy_blob, g_blob);
+		doDownloadDataURL(data_url, fileName);
+	} catch (error) {
+		modalStore.SHOW_ERROR('画像出力に失敗しました');
+		console.error(error);
+		return;
 	}
 };
 

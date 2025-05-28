@@ -1,4 +1,4 @@
-import { ItemIconKey } from "../types";
+import type { ItemIconKey } from "../types";
 
 /**
  * リソースアイコンセットの型定義

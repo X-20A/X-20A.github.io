@@ -1,7 +1,7 @@
-import { type Ship } from '@/models/Ship';
+import type { Ship } from '@/models/Ship';
 import type { Seek } from '@/models/types';
 import { SG, ST as ShipType } from '@/data/ship';
-import { Sp as Speed } from '@/core/branch';
+import type { Sp as Speed } from '@/core/branch';
 import { calcFleetSpeed } from '../logic/speed/fleet';
 import { calcFleetSeek } from '../logic/seek/fleet';
 import { createUniqueId } from '@/models/types/brand';

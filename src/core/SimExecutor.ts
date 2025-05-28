@@ -2,7 +2,7 @@ import { edge_datas } from "@/data/map";
 import CustomError from "@/errors/CustomError";
 import type { AdoptFleet } from "./AdoptFleet";
 import {
-    SimFleet,
+    type SimFleet,
     createDefaultSimFleet,
     cloneSimFleet,
     progressSimFleet,
@@ -10,7 +10,7 @@ import {
 } from "./SimFleet";
 import { calcNextNode } from "./branch";
 import type { SimResult, AreaId, OptionsType, EdgeData } from "@/models/types";
-import { CommandEvacuation } from "./CommandEvacuation";
+import type { CommandEvacuation } from "./CommandEvacuation";
 
 /**
  * シミュ制御オブジェクト

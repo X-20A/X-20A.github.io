@@ -47,7 +47,7 @@ import {
   addCommandEvacuation,
   removeCommandEvacuation
 } from '@/core/CommandEvacuation';
-import { createNode, UniqueId } from '@/models/types/brand';
+import { createNode, type UniqueId } from '@/models/types/brand';
 
 const store = useStore();
 const cxtTapedNode = computed(() => store.cxtTapedNode);

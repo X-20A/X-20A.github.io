@@ -56,3 +56,8 @@ export default class Const {
         return structuredClone(Const._OPTIONS);
     }
 }
+
+/**
+ * 定数クラスの型
+ */
+export type ConstType = typeof Const;

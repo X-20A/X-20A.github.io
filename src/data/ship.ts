@@ -88,7 +88,7 @@ export const enum SG {
 }
 
 
-import { type ShipData } from '@/models/types';
+import type { ShipData } from '@/models/types';
 
 export type ShipDatas = Record<number, ShipData>;
 

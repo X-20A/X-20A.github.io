@@ -1,6 +1,6 @@
 import { NT } from "@/data/map";
-import { AreaId, EdgeDatas, NodeDatas } from "@/models/types";
-import { UniqueId } from "@/models/types/brand";
+import type { AreaId, EdgeDatas, NodeDatas } from "@/models/types";
+import type { UniqueId } from "@/models/types/brand";
 /**
  * 艦隊退避コマンド
  */

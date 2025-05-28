@@ -1,4 +1,4 @@
-import { EquipDatas, EquipType } from "@/data/equip";
+import type { EquipDatas, EquipType } from "@/data/equip";
 import type { Improvement } from "../models/types";
 import CustomError from "@/errors/CustomError";
 

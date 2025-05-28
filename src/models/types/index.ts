@@ -1,6 +1,6 @@
 import type Big from "big.js";
-import { NA as National, SG as SpeedGroup, ST as ShipType } from "@/data/ship";
-import { NT as NodeType } from "@/data/map";
+import type { NA as National, SG as SpeedGroup, ST as ShipType } from "@/data/ship";
+import type { NT as NodeType } from "@/data/map";
 
 export type Seek = [number, number, number, number]
 

@@ -43,7 +43,7 @@
 	</div>
 </template>
 <script setup lang="ts">
-import { SyonanResource } from '@/models/resource/SyonanResource';
+import type { SyonanResource } from '@/models/resource/SyonanResource';
 
 defineProps<{ data: SyonanResource | null }>();
 </script>

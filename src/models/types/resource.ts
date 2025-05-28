@@ -1,5 +1,5 @@
-import { AreaId } from ".";
-import { ResourceType } from "../resource/NomalResource";
+import type { AreaId } from "../types";
+import type { ResourceType } from "../resource/NomalResource";
 
 // マスごとのデータ
 // 通常の資源マスにおいては、資源マスと獲得資源の数が1:1である
