@@ -33,70 +33,70 @@ import type { ConstType } from '@/constants/const';
  * @param nomalResource 通常資源ref
  */
 export function registerCytoscapeEvents(
-  cytoscape_core: cytoscape.Core,
-  generarteBranchHtml: (node_name: string) => string | null,
-  adjustBranchStyle: (cy: cytoscape.Core, event: cytoscape.EventObject) => void,
-  hidePopup: () => void,
-  branchHtml: Ref<string | null>,
-  drewArea: Ref<AreaId | null>,
-  adoptFleet: Ref<AdoptFleet | null>,
-  icons: Ref<Record<ItemIconKey, string>>,
-  Drum: string,
-  Craft: string,
-  Const: ConstType,
-  store: StoreType,
-  modalStore: ModalStoreType,
-  node_datas: NodeDatas,
-  edge_datas: EdgeDatas,
-  syonanResource: Ref<SyonanResource | null>,
-  nomalResource: Ref<NomalResource | null>
+    cytoscape_core: cytoscape.Core,
+    generarteBranchHtml: (node_name: string) => string | null,
+    adjustBranchStyle: (cy: cytoscape.Core, event: cytoscape.EventObject) => void,
+    hidePopup: () => void,
+    branchHtml: Ref<string | null>,
+    drewArea: Ref<AreaId | null>,
+    adoptFleet: Ref<AdoptFleet | null>,
+    icons: Ref<Record<ItemIconKey, string>>,
+    Drum: string,
+    Craft: string,
+    Const: ConstType,
+    store: StoreType,
+    modalStore: ModalStoreType,
+    node_datas: NodeDatas,
+    edge_datas: EdgeDatas,
+    syonanResource: Ref<SyonanResource | null>,
+    nomalResource: Ref<NomalResource | null>
 ) {
-  cytoscape_core.on('mousedown tapstart', (event) => {
-    if (!cytoscape_core) return;
-    const target = event.target;
-    if (target.data('name')) { // node
-      const html = generarteBranchHtml(target.data('name'));
-      if (!html) return;
-      branchHtml.value = html;
-      adjustBranchStyle(cytoscape_core, event);
-    } else { // 背景
-      hidePopup();
-    }
-  });
+    cytoscape_core.on('mousedown tapstart', (event) => {
+        if (!cytoscape_core) return;
+        const target = event.target;
+        if (target.data('name')) { // node
+            const html = generarteBranchHtml(target.data('name'));
+            if (!html) return;
+            branchHtml.value = html;
+            adjustBranchStyle(cytoscape_core, event);
+        } else { // 背景
+            hidePopup();
+        }
+    });
 
-  cytoscape_core.on('cxttapstart taphold', 'node', async (event) => {
-    if (!cytoscape_core) return;
-    const node = event.target.data('name');
-    if (!node) return;
-    if (!drewArea.value) return;
-    hidePopup();
-    if (isSpecialResourceNode(drewArea.value, node)) {
-      if (adoptFleet.value) {
-        syonanResource.value = createSyonanResource(
-          drewArea.value,
-          node,
-          adoptFleet.value,
-          icons.value,
-          Drum,
-          Craft,
-          Const.VALID_CRAFT_NAMES,
-        );
-      }
-    } else {
-      if (adoptFleet.value) {
-        nomalResource.value = createNomalResource(
-          drewArea.value,
-          node,
-          adoptFleet.value,
-          icons.value,
-          Drum,
-          Craft,
-          Const.VALID_CRAFT_NAMES,
-        );
-      }
-    }
-    adjustBranchStyle(cytoscape_core, event);
-    store.UPDATE_CXT_TAPED_NODE(node);
-    modalStore.SHOW_COMMAND_EVACUATION(drewArea.value, node, node_datas, edge_datas);
-  });
+    cytoscape_core.on('cxttapstart taphold', 'node', async (event) => {
+        if (!cytoscape_core) return;
+        const node = event.target.data('name');
+        if (!node) return;
+        if (!drewArea.value) return;
+        hidePopup();
+        if (isSpecialResourceNode(drewArea.value, node)) {
+            if (adoptFleet.value) {
+                syonanResource.value = createSyonanResource(
+                    drewArea.value,
+                    node,
+                    adoptFleet.value,
+                    icons.value,
+                    Drum,
+                    Craft,
+                    Const.VALID_CRAFT_NAMES,
+                );
+            }
+        } else {
+            if (adoptFleet.value) {
+                nomalResource.value = createNomalResource(
+                    drewArea.value,
+                    node,
+                    adoptFleet.value,
+                    icons.value,
+                    Drum,
+                    Craft,
+                    Const.VALID_CRAFT_NAMES,
+                );
+            }
+        }
+        adjustBranchStyle(cytoscape_core, event);
+        store.UPDATE_CXT_TAPED_NODE(node);
+        modalStore.SHOW_COMMAND_EVACUATION(drewArea.value, node, node_datas, edge_datas);
+    });
 }

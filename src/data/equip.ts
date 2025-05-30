@@ -596,12 +596,13 @@ const equip_datas: EquipDatas = {
 ,552:[4,EquipType.DiveBomber] // 九九式練爆二二型改(夜間装備実験機)
 ,553:[0,EquipType.MainGunS] // 10cm連装高角砲改
 ,554:[2,EquipType.TorpBomber] // 九七式艦攻改(北東海軍航空隊)
-
 ,555:[0,EquipType.MainGunM] // 18cm/57 三連装主砲
 ,556:[1,EquipType.SecGun] // 10cm/56 単装高角砲(集中配備)
-
 ,557:[1,EquipType.DiveBomber] // 零式艦戦62型改(夜間爆戦)
 ,558:[2,EquipType.DiveBomber] // 零式艦戦62型改(熟練/夜間爆戦)
+
+,559:[3,EquipType.TorpBomber] // Ju87 D-4(Fliegerass)
+,560:[0,EquipType.Fighter] // Bf109 T-3(G)
 }; // @expansion
 
 export default equip_datas;
