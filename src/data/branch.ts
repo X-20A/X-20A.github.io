@@ -1,6 +1,6 @@
 import type { BranchLastUpdate, BranchType } from "@/models/types";
 /* date:ソースの最終更新 */
-export const branch_info: BranchLastUpdate = {
+export const BRANCH_INFO: BranchLastUpdate = {
     "1-1": null,
     "1-2": null,
     "1-3": "2020/02/28",
@@ -69,7 +69,7 @@ export const branch_info: BranchLastUpdate = {
  * $da: 第五艦隊
  * $re: 礼号作戦
  */
-const branch_data: BranchType = {
+const BRANCH_DATAS: BranchType = {
     "1-1": {
         "A": "ランダム$eCマスへの割合$e6隻: 55%$e5隻: 60%$e4隻: 65%$e3隻: 70%$e2隻: 75%$e1隻: 80%",
     },
@@ -647,4 +647,4 @@ const branch_data: BranchType = {
     },
 }; // @expansion
 
-export default branch_data;
+export default BRANCH_DATAS;

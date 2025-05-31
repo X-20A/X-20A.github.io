@@ -47,7 +47,7 @@ import {
   addCommandEvacuation,
   removeCommandEvacuation
 } from '@/core/CommandEvacuation';
-import { createNode, type UniqueId } from '@/models/types/brand';
+import { brandNode, type UniqueId } from '@/models/types/brand';
 
 const store = useStore();
 const cxtTapedNode = computed(() => store.cxtTapedNode);
@@ -128,7 +128,7 @@ function toggleEvacuation(fleet_index: number, ship_unique_id: UniqueId): void {
     const evacuation_ship_unique_id: { [fleet_index: number]: UniqueId[] } = {};
 		evacuation_ship_unique_id[fleet_index] = [ship_unique_id];
     const new_evac: CommandEvacuation = {
-      node: createNode(node_key),
+      node: brandNode(node_key),
       evacuation_ship_unique_ids: evacuation_ship_unique_id,
     };
     store.UPDATE_COMMAND_EVACUATIONS(addCommandEvacuation(evacuations, new_evac));

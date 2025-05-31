@@ -141,7 +141,7 @@ export const useStore = defineStore('compass', {
         },
         async DYNAMIC_LOAD(): Promise<void> {
             const module = await import('@/data/branch');
-            this.UPDATE_BRANCH_INFO(module.branch_info);
+            this.UPDATE_BRANCH_INFO(module.BRANCH_INFO);
             this.UPDATE_BRANCH_DATA(module.default);
 
             const prepare_icons = {

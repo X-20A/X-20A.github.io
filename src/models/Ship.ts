@@ -9,7 +9,17 @@ import { calcShipSpeed } from '../logic/speed/ship';
 import { calcEquipSeek } from '../logic/seek/equip';
 import { createEquip } from './Equip';
 import type { Sp as Speed } from '@/core/branch';
-import { createUniqueId, type UniqueId } from './types/brand';
+import {
+    brandUniqueId,
+    type FleetIndex,
+    type ShipAsw,
+    type ShipHp,
+    type ShipId,
+    type ShipIndex,
+    type ShipLuck,
+    type ShipLv,
+    type UniqueId,
+} from './types/brand';
 
 /**
  * Ship型: 艦船の情報を表現する型
@@ -54,8 +64,8 @@ const RESOURCE_CRAFTS: Readonly<number[]> =
  * Shipオブジェクトを生成するファクトリ関数
  * @param fleet_index 艦隊番号
  * @param ship_index 艦番号
- * @param ship_id 艦船ID
  * @param lv レベル
+ * @param ship_id 艦船ID
  * @param equip_in_decks 装備情報
  * @param hp HP(任意)
  * @param asw 対潜値(任意)
@@ -64,16 +74,16 @@ const RESOURCE_CRAFTS: Readonly<number[]> =
  * @throws 未対応艦の場合はエラー
  */
 export function createShip(
-    fleet_index: number,
-    ship_index: number,
-    ship_id: number,
-    lv: number,
-    equip_in_decks: EquipInDeck[],
+    fleet_index: FleetIndex,
+    ship_index: ShipIndex,
     ship_datas: ShipDatas,
     equip_datas: EquipDatas,
-    hp?: number,
-    asw?: number,
-    luck?: number,
+    lv: ShipLv,
+    ship_id: ShipId,
+    equip_in_decks: EquipInDeck[],
+    hp?: ShipHp,
+    asw?: ShipAsw,
+    luck?: ShipLuck,
 ): Ship {
     const data = ship_datas[ship_id];
 
@@ -126,7 +136,7 @@ export function createShip(
 
     return {
         id: ship_id,
-        unique_id: createUniqueId(ship_index),
+        unique_id: brandUniqueId(ship_index),
         name: data.name,
         lv,
         type: data.type,

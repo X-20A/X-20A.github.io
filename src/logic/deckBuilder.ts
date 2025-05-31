@@ -13,6 +13,7 @@ import { isExistsAndNumber } from '@/logic/util';
 import type { AdoptFleet } from '@/core/AdoptFleet';
 import type { ShipDatas } from '@/data/ship';
 import type { EquipDatas } from '@/data/equip';
+import { brandFleetIndex, brandShipAsw, brandShipHp, brandShipId, brandShipIndex, brandShipLuck, brandShipLv } from '@/models/types/brand';
 
 /**
  * デッキビルダーからFleetComponent[]を生成    
@@ -29,18 +30,18 @@ export function createFleetComponentsFromDeckBuilder(
 	const fleets = [] as FleetComponent[];
     
 	const command_lv = isExistsAndNumber(deck.hqlv) ? Number(deck.hqlv) : 120;
-	for (let i = 1;i < 5;i++) { // 艦隊
-        const fleet_key = `f${i}` as 'f1'|'f2'|'f3'|'f4';
+	for (let fleet_index = brandFleetIndex(1);fleet_index < 5;fleet_index++) { // 艦隊
+        const fleet_key = `f${fleet_index}` as 'f1'|'f2'|'f3'|'f4';
 		if (!deck[fleet_key]) continue;
 
 		const ships = [] as Ship[];
 		const fleet_deck = deck[fleet_key];
-		for (let j = 1;j <= 7;j++) { // 艦
-            const ship_key = `s${j}` as 's1'|'s2'|'s3'|'s4'|'s5'|'s6'|'s7';
+		for (let ship_index = brandShipIndex(1);ship_index <= 7;ship_index++) { // 艦
+            const ship_key = `s${ship_index}` as 's1'|'s2'|'s3'|'s4'|'s5'|'s6'|'s7';
 			if (!fleet_deck[ship_key]) continue;
 
 			const ship_deck = fleet_deck[ship_key];
-			const equips = [] as EquipInDeck[];
+			const equip_decks = [] as EquipInDeck[];
 			if (ship_deck.items) {
 				const keys = Object.keys(ship_deck.items);
 				for (let k = 0; k < keys.length; k++) { // 装備
@@ -57,29 +58,29 @@ export function createFleetComponentsFromDeckBuilder(
                             : 0,
                             is_ex: key === 'ix',
                         }
-						equips.push(equip);
+						equip_decks.push(equip);
 					}
 					if (k === 6) break; // 6個目で抜ける
 				}
 			}
 			
-			const id = ship_deck.id;
-			const lv = ship_deck.lv;
-			const hp = ship_deck.hp;
-			const asw = ship_deck.asw;
-            const luck = ship_deck.luck;
+            const ship_id = brandShipId(ship_deck.id);
+            const ship_lv = brandShipLv(ship_deck.lv);
+            const ship_hp = brandShipHp(ship_deck.hp);
+            const ship_asw = brandShipAsw(ship_deck.asw);
+            const ship_luck = brandShipLuck(ship_deck.luck);
 
 			const ship = createShip(
-				i,
-				j,
-				Number(id),
-				Number(lv),
-				equips,
+				fleet_index,
+				ship_index,
                 ship_datas,
                 equip_datas,
-				Number(hp),
-				Number(asw),
-                Number(luck),
+				ship_lv,
+                ship_id,
+				equip_decks,
+				ship_hp,
+				ship_asw,
+                ship_luck,
 			);
 			ships.push(ship);
 		}

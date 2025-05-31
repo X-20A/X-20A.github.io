@@ -108,7 +108,7 @@ export type EquipData = [number, EquipType];
 export type EquipDatas = Record<number, EquipData>;
 
 /** 基地系は除外 */
-const equip_datas: EquipDatas = {
+const EQUIP_DATAS: EquipDatas = {
  1:[0,EquipType.MainGunS] // 12cm単装砲
 ,2:[0,EquipType.MainGunS] // 12.7cm連装砲
 ,3:[0,EquipType.MainGunS] // 10cm連装高角砲
@@ -605,4 +605,4 @@ const equip_datas: EquipDatas = {
 ,560:[0,EquipType.Fighter] // Bf109 T-3(G)
 }; // @expansion
 
-export default equip_datas;
+export default EQUIP_DATAS;

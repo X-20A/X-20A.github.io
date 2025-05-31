@@ -1,6 +1,6 @@
 import Big from 'big.js';
 import CustomError from '@/errors/CustomError';
-import { createPreSailNull, type PreSailNull } from '@/models/types/brand';
+import { brandPreSailNull, type PreSailNull } from '@/models/types/brand';
 import { type AdoptFleet, createAdoptFleet } from './AdoptFleet';
 import { type CommandEvacuation, isEvacuationNode } from './CommandEvacuation';
 import { createFleetComponent } from './FleetComponent';
@@ -28,8 +28,8 @@ export const MAX_PROGRESS_COUNT = 30;
 export function createDefaultSimFleet(fleet: AdoptFleet): SimFleet {
     return {
         adopt_fleet: fleet,
-        route: [createPreSailNull()],
-        current_node: createPreSailNull(),
+        route: [brandPreSailNull()],
+        current_node: brandPreSailNull(),
         rate: new Big(1),
         progress_count: 0,
     };

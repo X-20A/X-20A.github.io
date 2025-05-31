@@ -4,7 +4,7 @@ import { SG, ST as ShipType } from '@/data/ship';
 import type { Sp as Speed } from '@/core/branch';
 import { calcFleetSpeed } from '../logic/speed/fleet';
 import { calcFleetSeek } from '../logic/seek/fleet';
-import { createUniqueId } from '@/models/types/brand';
+import { brandUniqueId } from '@/models/types/brand';
 
 /**
  * 大和型ID配列    
@@ -79,7 +79,7 @@ export function createFleetComponent(ships: Ship[], command_lv?: number): FleetC
         const new_ships = ships.map((ship, index) => {
             return {
                 ...ship,
-                unique_id: createUniqueId(index),
+                unique_id: brandUniqueId(index),
             }
         });
         createFleetComponent(new_ships);

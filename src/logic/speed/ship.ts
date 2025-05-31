@@ -1,5 +1,5 @@
 import { SG as SpeedGroup } from '@/data/ship';
-import type { Sp as Speed } from '@/core/branch';
+import { Sp as Speed } from '@/core/branch';
 import type { Equip } from '@/models/Equip';
 
 /**
@@ -9,110 +9,135 @@ import type { Equip } from '@/models/Equip';
  * @returns 
  */
 export function calcShipSpeed(equips: Equip[], speed_group: SpeedGroup): Speed {
-    let turbine = 0; // タービン
-    let kan = 0; // 強化缶
-    let new_kan = 0; // 新型缶
-    let power_kan = 0; // 新型缶☆7↑
+    /** 改良型艦本式タービン 装備フラグ */
+    let has_turbine = false;
+    /** 強化型艦本式缶 装備数 */
+    let nomal_kan_count = 0;
+    /** 新型高温高圧缶 装備数 */
+    let new_kan_count = 0;
+    /** 新型高温高圧缶☆7↑ 装備数 */
+    let power_kan_count = 0;
 
     for (const item of equips) {
-        if (item.id === 33) turbine++;
-        else if (item.id === 34) kan++;
+        if (item.id === 33) has_turbine = true;
+        else if (item.id === 34) nomal_kan_count++;
         else if (item.id === 87) {
-            new_kan++;
-            if (item.implovement >= 7) power_kan++;
+            new_kan_count++;
+            if (item.implovement >= 7) power_kan_count++;
         }
     }
 
-    const kan_total = kan + new_kan;
+    const total_kan_count = nomal_kan_count + new_kan_count;
 
-    let speed: Speed;
     switch (speed_group) {
         case SpeedGroup.FastA:
-            speed = 2;
-            if (turbine && new_kan || power_kan > 1) {
-                speed = 4;
-            } else if (turbine && kan_total || power_kan) {
-                speed = 3;
-            }
-            break;
+            if (
+                (has_turbine && new_kan_count)
+                || (has_turbine && total_kan_count >= 2)
+                || (new_kan_count >= 2)
+            ) return Speed.fastest;
+
+            if (
+                (has_turbine && total_kan_count)
+                || power_kan_count
+            ) return Speed.faster;
+
+            return Speed.fast;
         case SpeedGroup.FastB1:
-            speed = 2;
-            if (turbine && new_kan && kan_total > 1) {
-                speed = 4;
-            } else if (turbine && kan_total) {
-                speed = 3;
+            if (has_turbine && new_kan_count && total_kan_count >= 2) {
+                return Speed.fastest;
             }
-            break;
+            if (has_turbine && total_kan_count) {
+                return Speed.faster;
+            }
+
+            return Speed.fast;
         case SpeedGroup.FastB2:
-            speed = 2;
-            if (turbine && (new_kan > 1 || kan_total > 2)) {
-                speed = 4;
-            } else if (turbine && kan_total) {
-                speed = 3;
+            if (has_turbine && (new_kan_count >= 2 || total_kan_count >= 3)) {
+                return Speed.fastest;
             }
-            break;
+            if (has_turbine && total_kan_count) {
+                return Speed.faster;
+            }
+
+            return Speed.fast;
         case SpeedGroup.FastC:
-            speed = 2;
-            if (turbine && kan_total) {
-                speed = 3;
+            if (has_turbine && total_kan_count) {
+                return Speed.faster;
             }
-            break;
+
+            return Speed.fast;
         case SpeedGroup.SlowA:
-            speed = 1;
-            if (turbine && new_kan && kan_total > 2) {
-                speed = 4;
-            } else if (turbine && power_kan > 1) {
-                speed = 4;
-            } else if (turbine && new_kan && kan_total > 1) {
-                speed = 3;
-            } else if (turbine && power_kan) {
-                speed = 3;
-            } else if (turbine && kan_total) {
-                speed = 2;
+            if (has_turbine && new_kan_count && total_kan_count >= 3) {
+                return Speed.fastest;
             }
-            break;
+            if (has_turbine && power_kan_count >= 2) {
+                return Speed.fastest;
+            }
+            if (has_turbine && new_kan_count && total_kan_count >= 2) {
+                return Speed.faster;
+            }
+            if (has_turbine && power_kan_count) {
+                return Speed.faster;
+            }
+            if (has_turbine && total_kan_count) {
+                return Speed.fast;
+            }
+
+            return Speed.slow;
         case SpeedGroup.SlowB:
-            speed = 1;
-            if (turbine && (new_kan > 1 || kan_total > 2)) {
-                speed = 3;
-            } else if (turbine && kan_total) {
-                speed = 2;
+            if (has_turbine && (new_kan_count >= 2 || total_kan_count >= 3)) {
+                return Speed.faster;
             }
-            break;
-        case SpeedGroup.SlowC:
-            speed = 1;
-            if (turbine && kan_total) {
-                speed = 2;
+            if (has_turbine && total_kan_count) {
+                return Speed.fast;
             }
-            break;
-        case SpeedGroup.SlowD:
-            speed = 1;
-            if (turbine && new_kan) {
-                speed = 3;
-            } else if (new_kan || turbine && kan_total) {
-                speed = 2;
-            }
-            break;
-        case SpeedGroup.SlowE:
-            speed = 1;
-            if (turbine && new_kan && kan_total > 1) {
-                speed = 4;
-            } else if (turbine && new_kan) {
-                speed = 3;
-            } else if (turbine && kan_total) {
-                speed = 2;
-            } else if (new_kan) {
-                speed = 2;
-            }
-            break;
+
+            return Speed.slow;
         case SpeedGroup.SlowB2:
-            speed = 1;
-            if (turbine && (new_kan > 1 || kan_total > 2)) {
-                speed = 3;
-            } else if (turbine) {
-                speed = 2;
+            if (has_turbine && (new_kan_count >= 2 || total_kan_count >= 3)) {
+                return Speed.faster;
             }
-            break;
+            if (has_turbine) {
+                return Speed.fast;
+            }
+
+            return Speed.slow;
+        case SpeedGroup.SlowC:
+            if (has_turbine && total_kan_count) {
+                return Speed.fast;
+            }
+
+            return Speed.slow;
+        case SpeedGroup.SlowD:
+            if (
+                (has_turbine && new_kan_count)
+                || (has_turbine && nomal_kan_count >= 3)
+            ) {
+                return Speed.faster;
+            }
+            if (new_kan_count || (has_turbine && total_kan_count)) {
+                return Speed.fast;
+            }
+
+            return Speed.slow;
+        case SpeedGroup.SlowE:
+            if (has_turbine && new_kan_count && nomal_kan_count >= 2) {
+                return Speed.fastest;
+            }
+            if (has_turbine && new_kan_count >= 2) {
+                return Speed.fastest;
+            }
+            if (has_turbine && new_kan_count) {
+                return Speed.faster;
+            }
+            if (has_turbine && total_kan_count) {
+                return Speed.fast;
+            }
+            if (new_kan_count) {
+                return Speed.fast;
+            }
+
+            return Speed.slow;
     }
-    return speed;
 }

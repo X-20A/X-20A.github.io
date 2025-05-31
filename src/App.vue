@@ -194,7 +194,7 @@ import {
 import { type AdoptFleet, countNotEquipArctic, createAdoptFleet, getEscortFleetLength, getEscortFleetNames, getMainFleetLength, getMainFleetNames } from './core/AdoptFleet';
 import type { DeckBuilder as GkcoiDeckBuilder } from 'gkcoi/dist/type';
 import doDrawMap from '@/logic/efffects/draw';
-import { edge_datas, node_datas } from './data/map';
+import { EDGE_DATAS, NODE_DATAS } from './data/map';
 import {
 	getGkcoiBlob,
 	getCyBlob,
@@ -217,8 +217,8 @@ import type { NomalResource } from './models/resource/NomalResource';
 import DetailBox from './components/Detail.vue';
 import Footer from './components/Footer.vue';
 import { createSimExecutor, startSim } from './core/SimExecutor';
-import ship_datas from './data/ship';
-import equip_datas from './data/equip';
+import SHIP_DATAS from './data/ship';
+import EQUIP_DATAS from './data/equip';
 import Const from './constants/const';
 import { clearCommandEvacuation } from './core/CommandEvacuation';
 import { parseAreaId, parseDeckBuilderString, parseSelectedType } from './models/shemas';
@@ -327,8 +327,8 @@ const loadFleet = (deck_string: string): void => {
 		const deck = parseDeckBuilderString(deck_string);
 		const fleet_components = createFleetComponentsFromDeckBuilder(
 			deck,
-			ship_datas,
-			equip_datas,
+			SHIP_DATAS,
+			EQUIP_DATAS,
 		);
 		store.UPDATE_FLEET_COMPONENTS(fleet_components);
 
@@ -476,8 +476,8 @@ watch([adoptFleet, selectedArea, options, commandEvacuations], async () => {
 			Const,
 			store,
 			modalStore,
-			node_datas,
-			edge_datas,
+			NODE_DATAS,
+			EDGE_DATAS,
 			syonanResource,
 			nomalResource
 		);
@@ -565,7 +565,7 @@ const switchActive = (event: Event) => {
 		const option = options.value[drewArea.value]!;
 		const current_selectted = option[node_name];
 
-		const area_edges = edge_datas[drewArea.value];
+		const area_edges = EDGE_DATAS[drewArea.value];
 		const possible_edges =
 			area_edges.filter(item => item[0] === node_name);
 

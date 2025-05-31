@@ -7,19 +7,19 @@ import type {
     DeckBuilderShip
 } from '@/models/types/DeckBuilder';
 import type { AreaId } from "@/models/types";
-import ship_datas from "@/data/ship";
-import equip_datas from "@/data/equip";
+import SHIP_DATAS from "@/data/ship";
+import EQUIP_DATAS from "@/data/equip";
 import type { Ft } from "@/core/branch";
 
-const ship_ids = Object.keys(ship_datas).map(key => Number.parseInt(key));
-const item_ids = Object.keys(equip_datas).map(key => Number.parseInt(key));
+const ship_ids = Object.keys(SHIP_DATAS).map(key => Number.parseInt(key));
+const item_ids = Object.keys(EQUIP_DATAS).map(key => Number.parseInt(key));
 
 export const getSimSet = () => {
     const deck = generateRandomDeck();
     const fleet_components = createFleetComponentsFromDeckBuilder(
         deck,
-        ship_datas,
-        equip_datas,
+        SHIP_DATAS,
+        EQUIP_DATAS,
     );
     const fleet_type_id = deck?.f1?.t as Ft;
     const adoptFleet = createAdoptFleet(fleet_components, fleet_type_id);

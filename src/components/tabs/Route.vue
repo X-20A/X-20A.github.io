@@ -35,7 +35,7 @@
 import { ref, watch, computed } from 'vue';
 import { useStore } from '@/stores';
 import SvgIcon from '@/components/SvgIcon.vue';
-import { node_datas, NT as NodeType } from '@/data/map';
+import { NODE_DATAS, NT as NodeType } from '@/data/map';
 
 // 経路一覧
 
@@ -57,7 +57,7 @@ watch([simResult, isBattleOnly], () => {
 	if (!simResult.value) return;
 
 	if (isBattleOnly.value === true) {
-		const area_nodes = node_datas[selectedArea.value!];
+		const area_nodes = NODE_DATAS[selectedArea.value!];
 		formated_result.value = simResult.value
 			.sort((a, b) => b.rate.minus(a.rate).toNumber())
 			.map(item => ({

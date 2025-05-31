@@ -1,4 +1,4 @@
-import { edge_datas } from "@/data/map";
+import { EDGE_DATAS } from "@/data/map";
 import CustomError from "@/errors/CustomError";
 import type { AdoptFleet } from "./AdoptFleet";
 import {
@@ -158,7 +158,7 @@ export function startSim(
 ): SimResult[] {
     let sim_fleets: SimFleet[] = [createDefaultSimFleet(adopt_fleet)];
     let results: SimResult[] = [];
-    const area_routes = edge_datas[executor.area_id];
+    const area_routes = EDGE_DATAS[executor.area_id];
     let clone_count = executor.clone_count;
     while (sim_fleets.length > 0) {
         const sim_fleet = sim_fleets.pop()!;

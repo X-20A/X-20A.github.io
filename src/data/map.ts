@@ -39,7 +39,7 @@ export const enum NT {
     un = 16
 }
 
-export const node_datas: NodeDatas = {
+export const NODE_DATAS: NodeDatas = {
     "1-1":{"1":[260,246,NT.st],"A":[597,328,NT.en],"B":[840,204,NT.en],"C":[858,486,NT.bo]},
 
     "1-2":{"1":[180,246,NT.st],"A":[491,171,NT.en],"B":[505,328,NT.re],"C":[709,500,NT.en],"D":[809,171,NT.en],"E":[968,362,NT.bo]},
@@ -146,7 +146,7 @@ export const node_datas: NodeDatas = {
 }; // @expansion
 
 /** 暫定度が高いNode 「!」を表示する */
-export const warning_node_datas: Record<string, string[] > = {
+export const WARNING_NODE_DATAS: Record<string, string[] > = {
     "7-4": ["G"],
     "59-4": ["F", "G", "J"],
     "59-5": ["J", "Z1"],
@@ -156,7 +156,7 @@ export const warning_node_datas: Record<string, string[] > = {
 }; // @expansion
 // "": ["", "", "", "", "", "", "", ""],
 
-export const edge_datas: EdgeDatas = {
+export const EDGE_DATAS: EdgeDatas = {
     "1-1":[["1","A"],["A","B"],["A","C"]],
 
     "1-2":[["1","A"],["1","B"],["B","C"],["A","D"],["A","E"],["D","E"]],

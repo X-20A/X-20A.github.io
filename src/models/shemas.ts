@@ -103,6 +103,33 @@ export function isValidDeckBuilderString(input: string): boolean {
 }
 
 /**
+ * 任意の値を再帰的に走査し、number型であるべき値がstringの場合は数値変換する（副作用なし）
+ * @param value 任意の値
+ * @returns number型に変換された値
+ */
+function recursivelyConvertStringToNumber(value: unknown): unknown {
+    if (Array.isArray(value)) {
+        return value.map(recursivelyConvertStringToNumber);
+    }
+    if (value !== null && typeof value === "object") {
+        const result: Record<string, unknown> = {};
+        for (const [key, val] of Object.entries(value)) {
+            // DeckBuilderのスキーマでnumber型であるべきプロパティ名
+            const number_keys = [
+                "id", "rf", "mas", "lv", "luck", "hp", "fp", "tp", "aa", "ar", "asw", "ev", "los", "t", "version", "hqlv"
+            ];
+            if (number_keys.includes(key) && typeof val === "string" && /^-?\d+(\.\d+)?$/.test(val)) {
+                result[key] = Number(val);
+            } else {
+                result[key] = recursivelyConvertStringToNumber(val);
+            }
+        }
+        return result;
+    }
+    return value;
+}
+
+/**
  * 文字列をDeckBuilderとしてパースし、失敗時はエラーを投げる関数
  * @param input 入力文字列
  * @returns DeckBuilderオブジェクト
@@ -111,7 +138,8 @@ export function isValidDeckBuilderString(input: string): boolean {
 export function parseDeckBuilderString(input: string): DeckBuilder {
     try {
         const json = JSON.parse(input);
-        return parse(deck_builder_schema, json) as DeckBuilder;
+        const normalized = recursivelyConvertStringToNumber(json);
+        return parse(deck_builder_schema, normalized) as DeckBuilder;
     } catch (e) {
         console.error(e);
         throw new CustomError('デッキビルダーの形式に誤りがあります');

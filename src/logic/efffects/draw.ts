@@ -1,5 +1,5 @@
 import cytoscape from 'cytoscape';
-import { node_datas, edge_datas, NT as NodeType, warning_node_datas } from '@/data/map';
+import { NODE_DATAS, EDGE_DATAS, NT as NodeType, WARNING_NODE_DATAS } from '@/data/map';
 import styles from '@/styles';
 import type { AreaId, SimResult } from '../../models/types';
 import Big from 'big.js';
@@ -63,8 +63,8 @@ export default function doDrawMap(
         edges: [] as Edge[]
     };
     // nodes流し込み
-    const local_nodes = node_datas[selectedArea];
-    const warning_nodes = warning_node_datas[selectedArea] ?? [];
+    const local_nodes = NODE_DATAS[selectedArea];
+    const warning_nodes = WARNING_NODE_DATAS[selectedArea] ?? [];
     for (const key in local_nodes) {
         if (Object.hasOwn(local_nodes, key)) {
             const [x, y, label] = local_nodes[key];
@@ -113,7 +113,7 @@ export default function doDrawMap(
     }
 
     // edges流し込み
-    const local_edges = edge_datas[selectedArea];
+    const local_edges = EDGE_DATAS[selectedArea];
     for (const key in local_edges) {
         if (Object.hasOwn(local_edges, key)) {
             const [source, target] = local_edges[key];
