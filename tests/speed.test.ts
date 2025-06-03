@@ -7,6 +7,10 @@ import { brandFleetIndex, brandShipId, brandShipIndex, brandShipLv, FleetIndex, 
 import { describe, it, expect } from "vitest";
 import { BuildTuple, SPEED_EXPECTS, SpeedExpect, SpeedKey } from "./speedExpects";
 
+type CreateShipFn = (
+    equip_in_decks: EquipInDeck[],
+) => Ship;
+
 describe('艦速度テスト', () => {
     it('speed-test: 速度グループごとに想定される速度(装備込)になることを確認', async () => {
         const FLEET_INDEX = brandFleetIndex(1);
@@ -84,13 +88,6 @@ describe('艦速度テスト', () => {
             SPEED_EXPECTS.SlowE,
             'SlowE',
         );
-
-        type CreateShipFn = (
-            equip_in_decks: EquipInDeck[],
-            hp?: ShipHp,
-            asw?: ShipAsw,
-            luck?: ShipLuck,
-        ) => Ship;
         
         function cartesianEquipPattern (
             create_ship_fn: CreateShipFn,
@@ -105,7 +102,7 @@ describe('艦速度テスト', () => {
             }
 
             /** 強化型艦本式缶 */
-            const NOMAL_KAN: EquipInDeck = {
+            const NORMAL_KAN: EquipInDeck = {
                 id: 34,
                 improvement: 0,
                 is_ex: false,
@@ -124,38 +121,28 @@ describe('艦速度テスト', () => {
                 improvement: 7,
                 is_ex: false,
             }
-            
-            /**
-             * 艦船生成関数をカリー化し、装備パターンのみで速度を取得できる関数を返す。
-             * @param create_ship_fn 艦船生成関数
-             * @returns 装備パターンを受けて速度を返す関数
-             */
-            function curryGetSpeed(create_ship_fn: CreateShipFn): (equip_in_decks: EquipInDeck[]) => Speed {
-                return function (equip_in_decks: EquipInDeck[]): Speed {
-                    return create_ship_fn(equip_in_decks).speed;
-                };
-            }
+
             const getSpeed = curryGetSpeed(create_ship_fn);
             const result: BuildTuple<Speed, 19> = [
                 getSpeed([]), // すっぴん
 
                 getSpeed([POWER_KAN]),
                 getSpeed([POWER_KAN, POWER_KAN]),
-                getSpeed([TURBINE, NOMAL_KAN]),
-                getSpeed([TURBINE, NOMAL_KAN, NOMAL_KAN]),
-                getSpeed([TURBINE, NOMAL_KAN, NOMAL_KAN, NOMAL_KAN]),
-                getSpeed([TURBINE, NOMAL_KAN, NOMAL_KAN, NOMAL_KAN, NOMAL_KAN]),
+                getSpeed([TURBINE, NORMAL_KAN]),
+                getSpeed([TURBINE, NORMAL_KAN, NORMAL_KAN]),
+                getSpeed([TURBINE, NORMAL_KAN, NORMAL_KAN, NORMAL_KAN]),
+                getSpeed([TURBINE, NORMAL_KAN, NORMAL_KAN, NORMAL_KAN, NORMAL_KAN]),
                 getSpeed([TURBINE, POWER_KAN]),
                 getSpeed([TURBINE, NEW_KAN]),
-                getSpeed([TURBINE, NEW_KAN, NOMAL_KAN]),
-                getSpeed([TURBINE, NEW_KAN, NOMAL_KAN, NOMAL_KAN]),
-                getSpeed([TURBINE, NEW_KAN, NOMAL_KAN, NOMAL_KAN, NOMAL_KAN]),
+                getSpeed([TURBINE, NEW_KAN, NORMAL_KAN]),
+                getSpeed([TURBINE, NEW_KAN, NORMAL_KAN, NORMAL_KAN]),
+                getSpeed([TURBINE, NEW_KAN, NORMAL_KAN, NORMAL_KAN, NORMAL_KAN]),
                 getSpeed([TURBINE, POWER_KAN, POWER_KAN]),
                 getSpeed([TURBINE, NEW_KAN, NEW_KAN]),
-                getSpeed([TURBINE, NEW_KAN, NEW_KAN, NOMAL_KAN]),
-                getSpeed([TURBINE, NEW_KAN, NEW_KAN, NOMAL_KAN, NOMAL_KAN]),
+                getSpeed([TURBINE, NEW_KAN, NEW_KAN, NORMAL_KAN]),
+                getSpeed([TURBINE, NEW_KAN, NEW_KAN, NORMAL_KAN, NORMAL_KAN]),
                 getSpeed([TURBINE, NEW_KAN, NEW_KAN, NEW_KAN]),
-                getSpeed([TURBINE, NEW_KAN, NEW_KAN, NEW_KAN, NOMAL_KAN]),
+                getSpeed([TURBINE, NEW_KAN, NEW_KAN, NEW_KAN, NORMAL_KAN]),
                 getSpeed([TURBINE, NEW_KAN, NEW_KAN, NEW_KAN, NEW_KAN]),
             ];
 
@@ -187,6 +174,17 @@ describe('艦速度テスト', () => {
         }
     });
 });
+
+/**
+ * 艦船生成関数をカリー化し、装備パターンのみで速度を取得できる関数を返す。
+ * @param create_ship_fn 艦船生成関数
+ * @returns 装備パターンを受けて速度を返す関数
+ */
+function curryGetSpeed(create_ship_fn: CreateShipFn): (equip_in_decks: EquipInDeck[]) => Speed {
+    return function (equip_in_decks: EquipInDeck[]): Speed {
+        return create_ship_fn(equip_in_decks).speed;
+    };
+}
 
 /**
  * createShipの三段階カリー化バージョン

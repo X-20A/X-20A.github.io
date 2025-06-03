@@ -19,7 +19,7 @@ import type { SelectedType, AreaId } from "./types";
  */
 const deck_builder_item_schema = object({
     id: number(),
-    rf: number(),
+    rf: optional(number()),
     mas: optional(number()),
 });
 

@@ -10,12 +10,12 @@
     "rand-test": "vitest --run -t 'rand-test'",
     "route-test": "vitest --run -t 'route-test'",
     "data-test": "vitest --run -t 'data-test'",
-	"speed-test": "vitest --run -t 'speed-test'",
+    "speed-test": "vitest --run -t 'speed-test'",
     "tests": "vitest run",
-	"tsc": "vue-tsc --noEmit",
+    "tsc": "vue-tsc --noEmit",
     "dep": "depcheck",
     "lint": "biome lint",
-	"format": "biome format"
+    "format": "biome format"
   },
   "dependencies": {
     "@biomejs/biome": "^1.9.4",
@@ -24,7 +24,6 @@
     "big.js": "^6.2.2",
     "cytoscape": "^3.31.0",
     "gkcoi": "^1.6.1",
-    "lizod": "^0.2.7",
     "lz-string": "^1.5.0",
     "pinia": "^3.0.0",
     "rollup-plugin-visualizer": "^5.14.0",
@@ -34,8 +33,7 @@
     "vite-plugin-vue-devtools": "^7.7.0",
     "vite-plugin-vuetify": "^2.0.4",
     "vue": "^3.5.13",
-    "vuetify": "^3.7.6",
-    "zod": "^3.25.23"
+    "vuetify": "^3.7.6"
   },
   "devDependencies": {
     "@types/big.js": "^6.2.2",

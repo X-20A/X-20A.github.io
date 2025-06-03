@@ -48,8 +48,8 @@ export function createFleetComponentsFromDeckBuilder(
 					const key = keys[k];
 					const item = ship_deck.items[key];
 					if (isExistsAndNumber(item.id) && isExistsAndNumber(item.id)) {
-						const id = Number(item.id);
-						const implovement = Number(item.rf);
+						const id = item.id;
+						const implovement = item.rf ?? 0;
 
 						const equip: EquipInDeck = {
 							id: id,
