@@ -54,7 +54,7 @@ export const enum NA {
     /** イギリス */
     UK = 4,
     /** ドイツ */
-    German = 5,
+    Germany = 5,
     /** フランス */
     France = 6,
     /** ソ連 */
@@ -260,16 +260,16 @@ const ship_datas: ShipDatas = {
 ,168:{name:"浦風",type:ST.DD,seek:7,seek2:19,na:NA.Japan,sg:SG.FastB2}
 ,169:{name:"谷風",type:ST.DD,seek:7,seek2:19,na:NA.Japan,sg:SG.FastB2}
 ,170:{name:"浜風",type:ST.DD,seek:7,seek2:19,na:NA.Japan,sg:SG.FastB2}
-,171:{name:"Bismarck",type:ST.BB,seek:16,seek2:42,na:NA.German,sg:SG.FastB2}
-,172:{name:"Bismarck改",type:ST.BB,seek:18,seek2:52,na:NA.German,sg:SG.FastB2}
-,173:{name:"Bismarck zwei",type:ST.BB,seek:19,seek2:54,na:NA.German,sg:SG.FastB2}
-,174:{name:"Z1",type:ST.DD,seek:6,seek2:24,na:NA.German,sg:SG.FastB2}
-,175:{name:"Z3",type:ST.DD,seek:6,seek2:24,na:NA.German,sg:SG.FastB2}
-,176:{name:"Prinz Eugen",type:ST.CA,seek:15,seek2:40,na:NA.German,sg:SG.FastB2}
-,177:{name:"Prinz Eugen改",type:ST.CA,seek:16,seek2:50,na:NA.German,sg:SG.FastB2}
-,178:{name:"Bismarck drei",type:ST.BB,seek:22,seek2:59,na:NA.German,sg:SG.FastB2}
-,179:{name:"Z1 zwei",type:ST.DD,seek:9,seek2:43,na:NA.German,sg:SG.FastB2}
-,180:{name:"Z3 zwei",type:ST.DD,seek:9,seek2:43,na:NA.German,sg:SG.FastB2}
+,171:{name:"Bismarck",type:ST.BB,seek:16,seek2:42,na:NA.Germany,sg:SG.FastB2}
+,172:{name:"Bismarck改",type:ST.BB,seek:18,seek2:52,na:NA.Germany,sg:SG.FastB2}
+,173:{name:"Bismarck zwei",type:ST.BB,seek:19,seek2:54,na:NA.Germany,sg:SG.FastB2}
+,174:{name:"Z1",type:ST.DD,seek:6,seek2:24,na:NA.Germany,sg:SG.FastB2}
+,175:{name:"Z3",type:ST.DD,seek:6,seek2:24,na:NA.Germany,sg:SG.FastB2}
+,176:{name:"Prinz Eugen",type:ST.CA,seek:15,seek2:40,na:NA.Germany,sg:SG.FastB2}
+,177:{name:"Prinz Eugen改",type:ST.CA,seek:16,seek2:50,na:NA.Germany,sg:SG.FastB2}
+,178:{name:"Bismarck drei",type:ST.BB,seek:22,seek2:59,na:NA.Germany,sg:SG.FastB2}
+,179:{name:"Z1 zwei",type:ST.DD,seek:9,seek2:43,na:NA.Germany,sg:SG.FastB2}
+,180:{name:"Z3 zwei",type:ST.DD,seek:9,seek2:43,na:NA.Germany,sg:SG.FastB2}
 ,181:{name:"天津風",type:ST.DD,seek:8,seek2:19,na:NA.Japan,sg:SG.FastB1}
 ,182:{name:"明石",type:ST.AR,seek:1,seek2:5,na:NA.Japan,sg:SG.SlowC}
 ,183:{name:"大淀",type:ST.CL,seek:24,seek2:80,na:NA.Japan,sg:SG.FastB2}
@@ -431,7 +431,7 @@ const ship_datas: ShipDatas = {
 ,350:{name:"海風改",type:ST.DD,seek:8,seek2:40,na:NA.Japan,sg:SG.FastB2}
 ,351:{name:"江風改",type:ST.DD,seek:8,seek2:40,na:NA.Japan,sg:SG.FastB2}
 ,352:{name:"速吸改",type:ST.AO,seek:18,seek2:59,na:NA.Japan,sg:SG.SlowC}
-,353:{name:"Graf Zeppelin改",type:ST.CV,seek:46,seek2:75,na:NA.German,sg:SG.FastB2}
+,353:{name:"Graf Zeppelin改",type:ST.CV,seek:46,seek2:75,na:NA.Germany,sg:SG.FastB2}
 ,354:{name:"嵐改",type:ST.DD,seek:8,seek2:39,na:NA.Japan,sg:SG.FastB2}
 ,355:{name:"萩風改",type:ST.DD,seek:8,seek2:39,na:NA.Japan,sg:SG.FastB2}
 ,356:{name:"鹿島改",type:ST.CT,seek:10,seek2:50,na:NA.Japan,sg:SG.SlowB}
@@ -507,8 +507,8 @@ const ship_datas: ShipDatas = {
 ,428:{name:"摩耶改二",type:ST.CA,seek:16,seek2:55,na:NA.Japan,sg:SG.FastB2}
 ,429:{name:"天城改",type:ST.CV,seek:46,seek2:80,na:NA.Japan,sg:SG.FastB1}
 ,430:{name:"葛城改",type:ST.CV,seek:44,seek2:78,na:NA.Japan,sg:SG.FastB2}
-,431:{name:"U-511",type:ST.SS,seek:8,seek2:28,na:NA.German,sg:SG.SlowC}
-,432:{name:"Graf Zeppelin",type:ST.CV,seek:40,seek2:69,na:NA.German,sg:SG.FastB2}
+,431:{name:"U-511",type:ST.SS,seek:8,seek2:28,na:NA.Germany,sg:SG.SlowC}
+,432:{name:"Graf Zeppelin",type:ST.CV,seek:40,seek2:69,na:NA.Germany,sg:SG.FastB2}
 ,433:{name:"Saratoga",type:ST.CV,seek:40,seek2:68,na:NA.USA,sg:SG.FastB2}
 ,434:{name:"睦月改二",type:ST.DD,seek:8,seek2:43,na:NA.Japan,sg:SG.FastB2}
 ,435:{name:"如月改二",type:ST.DD,seek:9,seek2:44,na:NA.Japan,sg:SG.FastB2}

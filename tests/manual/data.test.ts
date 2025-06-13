@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import path from 'node:path';
+import path, { basename } from 'node:path';
 import fs from 'node:fs';
 import axios from 'axios';
 import SHIP_DATAS, { ST as ShipType } from '@/data/ship';
@@ -11,7 +11,7 @@ describe('Dataテスト', () => {
         const response = await axios.get(
             'http://localhost:3000/proxy'
         );
-        expect(response.status).toBe(200); // 通信成功確認
+        expect(200).toBe(response.status); // 通信成功確認
 
         type MasterShip = {
             id: number,
@@ -98,13 +98,14 @@ describe('Dataテスト', () => {
         if (mismatch_ship_params.length) console.log('艦パラメータ不一致: ', mismatch_ship_params);
 
         // 空であることを確認
-        expect(missing_ships.length).toBe(0);
-        expect(mismatch_ship_params.length).toBe(0);
+        expect(0).toBe(missing_ships.length);
+        expect(0).toBe(mismatch_ship_params.length);
 
         // 艦バナー画像の存在チェック
-        // TODO: コンパイルかビルド後にこけることがある jsファイルを参照してる？
         const missing_banners: number[] = [];
-        const banners_dir = path.resolve(__dirname, '../public/banners');
+        const banners_dir = path
+            .resolve(__dirname, '../public/banners')
+            .replaceAll('\\tests', ''); // なぜか compass\tests みたいになってるので除去
         for (const ac_ship of ac_ships) {
             const banner_path = path.join(banners_dir, `${ac_ship.id}.png`);
             if (!fs.existsSync(banner_path)) {
@@ -114,7 +115,7 @@ describe('Dataテスト', () => {
         if (missing_banners.length) {
             console.log('バナー画像が存在しない艦ID: ', missing_banners);
         }
-        expect(missing_banners.length).toBe(0);
+        expect(0).toBe(missing_banners.length);
 
         type MissingEquip = {
             id: number,
@@ -166,7 +167,7 @@ describe('Dataテスト', () => {
         if (mismatch_equip_params.length) console.log('装備パラメータ不一致: ', mismatch_equip_params);
 
         // 空であることを確認
-        expect(missing_equips.length).toBe(0);
-        expect(mismatch_equip_params.length).toBe(0);
+        expect(0).toBe(missing_equips.length);
+        expect(0).toBe(mismatch_equip_params.length);
     });
 });

@@ -5,7 +5,7 @@ import { createShip, Ship } from "@/models/Ship";
 import { EquipInDeck } from "@/models/types";
 import { brandFleetIndex, brandShipId, brandShipIndex, brandShipLv, FleetIndex, ShipAsw, ShipHp, ShipId, ShipIndex, ShipLuck, ShipLv } from "@/models/types/brand";
 import { describe, it, expect } from "vitest";
-import { BuildTuple, SPEED_EXPECTS, SpeedExpect, SpeedKey } from "./speedExpects";
+import { BuildTuple, SPEED_EXPECTS, SpeedExpect, SpeedKey } from "../expects/speed";
 
 type CreateShipFn = (
     equip_in_decks: EquipInDeck[],

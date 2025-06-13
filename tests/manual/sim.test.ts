@@ -5,18 +5,18 @@ import {
     createSimExecutor,
     startSim,
 } from '@/core/SimExecutor';
-import { getSimSet } from './setup';
 import Const from '@/constants/const';
 import type { AreaId, OptionsType } from '@/models/types';
 import { createFleetComponentsFromDeckBuilder } from '@/logic/deckBuilder';
 import { createAdoptFleet, getEscortFleetNames, getMainFleetNames } from '@/core/AdoptFleet';
 import { getParam } from '@/logic/url';
-import { nomal_mock_datas, astray_mock_datas } from './routeExpects';
+import { nomal_mock_datas, astray_mock_datas } from '../expects/route';
 import { NODE_DATAS, NT as NodeType } from '@/data/map';
 import SHIP_DATAS from '@/data/ship';
 import EQUIP_DATAS from '@/data/equip';
 import type { Ft } from '@/core/branch';
 import type { CommandEvacuation } from '@/core/CommandEvacuation';
+import { getSimSet } from './setup';
 
 describe('Simテスト', () => {
     it(`rand-test: ランダムに生成した艦隊をSimクラスに渡してクラス内でエラーが発生しないこと、
@@ -43,7 +43,7 @@ describe('Simテスト', () => {
                     (sum, item) => sum.plus(item.rate),
                     new Big(0)
                 );
-                expect(totalRate.toNumber()).toBe(1);
+                expect(1).toBe(totalRate.toNumber());
             };
 
             // 配列の配列から全組み合わせを生成するヘルパー関数 デカルト積っていうらしいよ

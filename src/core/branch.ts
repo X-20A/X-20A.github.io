@@ -178,7 +178,7 @@ export function calcNextNode(
                         return 'E';
                     } else if (CLE === 1 && Ds === 5) {
                         return 'E';
-                    } else if (CL === 1 && Ds > 3) {
+                    } else if (CL === 1 && DD > 3) {
                         return 'E';
                     } else {
                         return [
