@@ -2358,10 +2358,30 @@ export function calcNextNode(
                 case null:
                     return '1';
                 case '1':
-                    if (BBCVs > 4 || BBs > 3 || CVH > 2 || Ss > 0) {
+                    if (BBCVs > 4 || BBs > 3 || CVH > 2) {
                         return [
                             { node: 'A', rate: 0.5 },
                             { node: 'B', rate: 0.5 },
+                        ];
+                    } else if (Ss === 1) {
+                        return [
+                            { node: 'A', rate: 0.35 },
+                            { node: 'B', rate: 0.65 },
+                        ];
+                    } else if (Ss === 2) {
+                        return [
+                            { node: 'A', rate: 0.4 },
+                            { node: 'B', rate: 0.6 },
+                        ];
+                    } else if (Ss === 3) {
+                        return [
+                            { node: 'A', rate: 0.55 },
+                            { node: 'B', rate: 0.45 },
+                        ];
+                    } else if (Ss >= 4) {
+                        return [
+                            { node: 'A', rate: 0.7 },
+                            { node: 'B', rate: 0.3 },
                         ];
                     } else {
                         return 'B';

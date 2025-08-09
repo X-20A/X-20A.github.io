@@ -132,8 +132,8 @@ describe('Dataテスト', () => {
         const mismatch_equip_params = [] as MismatchEquipParam[];
         for (const ac_item of ac_items) { // 装備データ照合
             const id = ac_item.id;
-            // 深海、[陸攻、陸戦、陸偵、深山] 弾き
-            if (id > 1500 || [47, 48, 49, 53].includes(Number(ac_item.type))) continue;
+            // 深海、[陸攻、陸戦、陸偵、深山, Ho229] 弾き
+            if (id > 1500 || [47, 48, 49, 53, 57].includes(Number(ac_item.type))) continue;
 
             const equip = EQUIP_DATAS[id];
             if (!equip) {
