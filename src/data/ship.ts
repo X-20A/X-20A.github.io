@@ -284,7 +284,7 @@ const ship_datas: ShipDatas = {
 ,192:{name:"那智改二",type:ST.CA,seek:20,seek2:63,na:NA.Japan,sg:SG.FastB2}
 ,193:{name:"足柄改二",type:ST.CA,seek:17,seek2:57,na:NA.Japan,sg:SG.FastB2}
 ,194:{name:"羽黒改二",type:ST.CA,seek:18,seek2:58,na:NA.Japan,sg:SG.FastB2}
-,195:{name:"綾波改二",type:ST.DD,seek:13,seek2:49,na:NA.Japan,sg:SG.FastB2}
+,195:{name:"綾波改二",type:ST.DD,seek:13,seek2:51,na:NA.Japan,sg:SG.FastB2}
 ,196:{name:"飛龍改二",type:ST.CV,seek:52,seek2:89,na:NA.Japan,sg:SG.FastB1}
 ,197:{name:"蒼龍改二",type:ST.CV,seek:55,seek2:93,na:NA.Japan,sg:SG.FastB1}
 ,198:{name:"霰改二",type:ST.DD,seek:11,seek2:53,na:NA.Japan,sg:SG.FastB2}
@@ -689,7 +689,7 @@ const ship_datas: ShipDatas = {
 ,617:{name:"屋代改",type:ST.DE,seek:5,seek2:30,na:NA.Japan,sg:SG.SlowB}
 ,618:{name:"Perth改",type:ST.CL,seek:10,seek2:50,na:NA.Other,sg:SG.FastB2}
 ,619:{name:"Grecale改",type:ST.DD,seek:10,seek2:46,na:NA.Italia,sg:SG.FastB2}
-,620:{name:"Helena改",type:ST.CL,seek:24,seek2:76,na:NA.USA,sg:SG.FastB2}
+,620:{name:"Helena改",type:ST.CL,seek:0,seek2:77,na:NA.USA,sg:SG.FastB2}
 ,621:{name:"神州丸",type:ST.LHA,seek:20,seek2:52,na:NA.Japan,sg:SG.SlowB}
 ,622:{name:"夕張改二",type:ST.CL,seek:11,seek2:52,na:NA.Japan,sg:SG.FastB2}
 ,623:{name:"夕張改二特",type:ST.CL,seek:10,seek2:50,na:NA.Japan,sg:SG.SlowB2}
@@ -718,7 +718,7 @@ const ship_datas: ShipDatas = {
 ,646:{name:"加賀改二護",type:ST.CV,seek:54,seek2:93,na:NA.Japan,sg:SG.FastC}
 ,647:{name:"浦波改二",type:ST.DD,seek:12,seek2:44,na:NA.Japan,sg:SG.FastB2}
 ,648:{name:"秋雲改二",type:ST.DD,seek:10,seek2:42,na:NA.Japan,sg:SG.FastB2}
-,649:{name:"高波改二",type:ST.DD,seek:14,seek2:60,na:NA.Japan,sg:SG.FastB2}
+,649:{name:"高波改二",type:ST.DD,seek:14,seek2:62,na:NA.Japan,sg:SG.FastB2}
 ,650:{name:"宗谷",type:ST.AO,seek:16,seek2:32,na:NA.Japan,sg:SG.SlowB}
 ,651:{name:"丹陽",type:ST.DD,seek:15,seek2:50,na:NA.Japan,sg:SG.FastB2}
 ,652:{name:"球磨改二",type:ST.CL,seek:13,seek2:58,na:NA.Japan,sg:SG.FastB2}

@@ -3,7 +3,7 @@ import EQUIP_DATAS, { EquipDatas } from "@/data/equip";
 import SHIP_DATAS, { ShipDatas } from "@/data/ship";
 import { createShip, Ship } from "@/models/Ship";
 import { EquipInDeck } from "@/models/types";
-import { brandFleetIndex, brandShipId, brandShipIndex, brandShipLv, FleetIndex, ShipAsw, ShipHp, ShipId, ShipIndex, ShipLuck, ShipLv } from "@/models/types/brand";
+import { brandFleetIndex, brandShipId, brandShipIndex, brandShipLv, FleetIndex, ShipId, ShipIndex, ShipLv } from "@/models/types/brand";
 import { describe, it, expect } from "vitest";
 import { BuildTuple, SPEED_EXPECTS, SpeedExpect, SpeedKey } from "../expects/speed";
 
