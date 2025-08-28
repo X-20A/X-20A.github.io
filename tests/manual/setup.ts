@@ -1,12 +1,12 @@
-import { createAdoptFleet } from "@/core/AdoptFleet";
-import { createFleetComponentsFromDeckBuilder } from "@/logic/deckBuilder";
-import type DeckBuilder from '@/models/types/DeckBuilder';
+import { derive_adopt_fleet } from "@/models/fleet/AdoptFleet";
+import { derive_FleetComponents_from_DeckBuilder } from "@/logic/deckBuilder";
+import type DeckBuilder from '@/types/DeckBuilder';
 import type {
     DeckBuilderFleet,
     DeckBuilderItem,
     DeckBuilderShip
-} from '@/models/types/DeckBuilder';
-import type { AreaId } from "@/models/types";
+} from '@/types/DeckBuilder';
+import type { AreaId } from "@/types";
 import SHIP_DATAS from "@/data/ship";
 import EQUIP_DATAS from "@/data/equip";
 import type { Ft } from "@/core/branch";
@@ -16,13 +16,11 @@ const item_ids = Object.keys(EQUIP_DATAS).map(key => Number.parseInt(key));
 
 export const getSimSet = () => {
     const deck = generateRandomDeck();
-    const fleet_components = createFleetComponentsFromDeckBuilder(
+    const fleet_components = derive_FleetComponents_from_DeckBuilder(
         deck,
-        SHIP_DATAS,
-        EQUIP_DATAS,
     );
     const fleet_type_id = deck?.f1?.t as Ft;
-    const adoptFleet = createAdoptFleet(fleet_components, fleet_type_id);
+    const adoptFleet = derive_adopt_fleet(fleet_components, fleet_type_id);
 
     const areaIds: AreaId[] = [
         '1-1', '1-2', '1-3', '1-4', '1-5', '1-6',

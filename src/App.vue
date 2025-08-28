@@ -94,14 +94,14 @@
 			<template v-if="adoptFleet.fleet_type > 0"><!-- 連合艦隊 -->
 				<div>
 					<strong>主力: </strong>
-					<template v-for="(name, index) in getMainFleetNames(adoptFleet)" :key="index">
+					<template v-for="(name, index) in calc_main_fleet_ship_names(adoptFleet)" :key="index">
 						<span>{{ name }}</span>
 						<span v-if="index < getMainFleetLength(adoptFleet) - 1"> | </span>
 					</template>
 				</div>
 				<div>
 					<strong>随伴: </strong>
-					<template v-for="(name, index) in getEscortFleetNames(adoptFleet)" :key="index">
+					<template v-for="(name, index) in calc_escort_fleet_ship_names(adoptFleet)" :key="index">
 						<span>{{ name }}</span>
 						<span v-if="index < getEscortFleetLength(adoptFleet) - 1"> | </span>
 					</template>
@@ -179,50 +179,50 @@ import Refference from './components/modals/Refference.vue';
 import ErrorView from './components/modals/ErrorView.vue';
 import CommandEvacuation from './components/modals/CommandEvacuation.vue';
 import SvgIcon from './components/SvgIcon.vue';
-import type { SelectedType } from '@/models/types';
+import type { SelectedType } from '@/types';
 import CustomError from '@/errors/CustomError';
 import type { Ft as FleetType } from '@/core/branch';
 import {
-	createFleetComponentsFromDeckBuilder,
-	createDeckBuilderFromAdoptFleet,
+	derive_FleetComponents_from_DeckBuilder,
+	derive_DeckBuilder_from_AdoptFleet,
 } from './logic/deckBuilder';
 import {
 	getZeroFilledTime,
-	isExistsAndNumber,
-	sanitizeText
+	is_exists_and_Number,
+	sanitize_text
 } from '@/logic/util';
-import { type AdoptFleet, countNotEquipArctic, createAdoptFleet, getEscortFleetLength, getEscortFleetNames, getMainFleetLength, getMainFleetNames } from './core/AdoptFleet';
+import { type AdoptFleet, countNotEquipArctic, derive_adopt_fleet, getEscortFleetLength, calc_escort_fleet_ship_names, getMainFleetLength, calc_main_fleet_ship_names } from './models/fleet/AdoptFleet';
 import type { DeckBuilder as GkcoiDeckBuilder } from 'gkcoi/dist/type';
-import doDrawMap from '@/logic/efffects/draw';
+import do_draw_map from '@/logic/efffects/draw';
 import { EDGE_DATAS, NODE_DATAS } from './data/map';
 import {
-	getGkcoiBlob,
-	getCyBlob,
+	calc_Gkcoi_Blob,
+	calc_Cytoscape_Blob,
 } from '@/logic/render';
 import {
-	convertBranchDataToHTML,
+	convert_branch_data_to_HTML,
 } from './logic/convert';
 import Bulge from '@/icons/items/bulge.png';
 import NotSpanner from '@/icons/items/not-spanner.png';
 import Drum from '@/icons/items/drum.png';
 import Craft from '@/icons/items/craft.png';
 import Radar from '@/icons/items/radar.png';
-import { doDeleteParam, getParam } from './logic/url';
-import { doCombineBlobs, doDownloadDataURL } from './logic/efffects/render';
+import { do_delete_URL_param, calc_URL_param } from './logic/url';
+import { do_combine_blobs, do_download_data_URL } from './logic/efffects/render';
 import NomalResourcePopup from './components/resource/NomalResourcePopup.vue';
 import SyonanResourcePopup from './components/resource/SyonanResourcePopup.vue';
-import type { FleetComponent } from './core/FleetComponent';
+import type { FleetComponent } from './models/fleet/FleetComponent';
 import type { SyonanResource } from './models/resource/SyonanResource';
 import type { NomalResource } from './models/resource/NomalResource';
 import DetailBox from './components/Detail.vue';
 import Footer from './components/Footer.vue';
-import { createSimExecutor, startSim } from './core/SimExecutor';
+import { derive_sim_executer, start_sim } from './core/SimExecutor';
 import SHIP_DATAS from './data/ship';
 import EQUIP_DATAS from './data/equip';
 import Const from './constants/const';
-import { clearCommandEvacuation } from './core/CommandEvacuation';
-import { parseAreaId, parseDeckBuilderString, parseSelectedType } from './models/shemas';
-import { registerCytoscapeEvents } from '@/logic/efffects/cytoscapeEvents';
+import { clear_command_evacuation } from './core/CommandEvacuation';
+import { parseAreaId, parse_DeckBuilder_String, parseSelectedType } from './models/shemas';
+import { register_Cytoscape_events } from '@/logic/efffects/cytoscapeEvents';
 
 const store = useStore();
 const modalStore = useModalStore();
@@ -324,11 +324,9 @@ watch(fleetInput, (text) => {
  */
 const loadFleet = (deck_string: string): void => {
 	try {
-		const deck = parseDeckBuilderString(deck_string);
-		const fleet_components = createFleetComponentsFromDeckBuilder(
+		const deck = parse_DeckBuilder_String(deck_string);
+		const fleet_components = derive_FleetComponents_from_DeckBuilder(
 			deck,
-			SHIP_DATAS,
-			EQUIP_DATAS,
 		);
 		store.UPDATE_FLEET_COMPONENTS(fleet_components);
 
@@ -337,7 +335,7 @@ const loadFleet = (deck_string: string): void => {
 
 		let selected_type = 1 as SelectedType;
 		if (deck?.f1?.t) {
-			const fleet_type = isExistsAndNumber(deck.f1.t) && [0, 1, 2, 3].includes(Number(deck.f1.t))
+			const fleet_type = is_exists_and_Number(deck.f1.t) && [0, 1, 2, 3].includes(Number(deck.f1.t))
 				? Number(deck.f1.t) as FleetType
 				: 0 as FleetType
 				;
@@ -402,7 +400,7 @@ watch([fleetComponents, selectedType], () => {
 		}
 		if (!fleets[0]) throw new CustomError('艦隊が空です');
 
-		const adopt_fleet = createAdoptFleet(
+		const adopt_fleet = derive_adopt_fleet(
 			fleets,
 			fleet_type,
 		);
@@ -417,7 +415,7 @@ watch([fleetComponents, selectedType], () => {
 
 watch([adoptFleet, selectedArea], () => {
 	// 退避設定は 海域 | 艦隊 間で持ち越さない
-	const cleared_command_evacuation = clearCommandEvacuation();
+	const cleared_command_evacuation = clear_command_evacuation();
 	store.UPDATE_COMMAND_EVACUATIONS(cleared_command_evacuation);
 });
 
@@ -432,14 +430,14 @@ watch([adoptFleet, selectedArea, options, commandEvacuations], async () => {
 
 	try {
 		parseAreaId(selectedArea.value);
-		const sim = createSimExecutor(
+		const sim = derive_sim_executer(
 			adoptFleet.value as AdoptFleet,
 			selectedArea.value,
 			options.value,
 			commandEvacuations.value,
 		);
 		// console.time('シミュ計測');
-		const result = startSim(
+		const result = start_sim(
 			sim,
 			adoptFleet.value as AdoptFleet,
 			commandEvacuations.value,
@@ -447,7 +445,7 @@ watch([adoptFleet, selectedArea, options, commandEvacuations], async () => {
 		// console.timeEnd('シミュ計測');
 		store.UPDATE_SIM_RESULT(result);
 
-		cytoscape_core = doDrawMap(
+		cytoscape_core = do_draw_map(
 			selectedArea.value,
 			simResult.value,
 			commandEvacuations.value,
@@ -462,7 +460,7 @@ watch([adoptFleet, selectedArea, options, commandEvacuations], async () => {
 		hidePopup();
 		store.UPDATE_DREW_AREA(selectedArea.value);
 
-		registerCytoscapeEvents(
+		register_Cytoscape_events(
 			cytoscape_core,
 			generarteBranchHtml,
 			adjustPopupPosition,
@@ -523,9 +521,9 @@ const generarteBranchHtml = (node_name: string): string | null => {
 
 	if (!node_data) return null;;
 
-	const topic = sanitizeText(`${selectedArea.value}-${node_name}`);
+	const topic = sanitize_text(`${selectedArea.value}-${node_name}`);
 
-	node_data = convertBranchDataToHTML(node_data, topic);
+	node_data = convert_branch_data_to_HTML(node_data, topic);
 
 	node_data = `<p>${node_data}</p>`;
 	
@@ -589,7 +587,7 @@ const screenShot = async () => {
 	const time = getZeroFilledTime(new Date());
 	const fileName = `${drewArea.value}_${time}`;
 
-	const deck = createDeckBuilderFromAdoptFleet(adoptFleet.value as AdoptFleet);
+	const deck = derive_DeckBuilder_from_AdoptFleet(adoptFleet.value as AdoptFleet);
 	const gkcoiBuilder = Object.assign(deck, {
 		lang: 'jp',
 		theme: 'dark',
@@ -608,11 +606,11 @@ const screenShot = async () => {
 		los,
 		speed as 0 | 5 | 10 | 15 | 20,
 	);
-	const g_blob = getGkcoiBlob(canvas);
-	const cy_blob = getCyBlob(cytoscape_core);
+	const g_blob = calc_Gkcoi_Blob(canvas);
+	const cy_blob = calc_Cytoscape_Blob(cytoscape_core);
 	try {
-		const data_url = await doCombineBlobs(cy_blob, g_blob);
-		doDownloadDataURL(data_url, fileName);
+		const data_url = await do_combine_blobs(cy_blob, g_blob);
+		do_download_data_URL(data_url, fileName);
 	} catch (error) {
 		modalStore.SHOW_ERROR('画像出力に失敗しました');
 		console.error(error);
@@ -646,16 +644,16 @@ watch([isAreaVisible, isRefferenceVisible, isErrorVisible, isCommandEvacuationVi
 
 onMounted(async () => {
 	store.LOAD_DATA();
-	const predeck = getParam('predeck');
+	const predeck = calc_URL_param('predeck');
 	if (predeck) {
 		loadFleet(decodeURIComponent(predeck));
-		doDeleteParam();
+		do_delete_URL_param();
 	} else {
-		const pdz = getParam('pdz');
+		const pdz = calc_URL_param('pdz');
 		if (pdz) {
 			const LZString = await import('lz-string');
 			loadFleet(LZString.decompressFromEncodedURIComponent(pdz));
-			doDeleteParam();
+			do_delete_URL_param();
 		}
 	}
 	fleetInputRef.value?.focus();

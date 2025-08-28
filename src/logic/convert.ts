@@ -3,7 +3,7 @@
  * @param convertedData 
  * @returns 
  */
-export function convertBranchDataToHTML(data: string, topic: string): string {
+export function convert_branch_data_to_HTML(data: string, topic: string): string {
     let converted_data = data;
     converted_data = converted_data.replaceAll('$e', '<br>');
     converted_data = converted_data.replaceAll('$i', '&nbsp;&nbsp;&nbsp;&nbsp;');

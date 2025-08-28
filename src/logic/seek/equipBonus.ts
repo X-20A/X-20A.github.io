@@ -1,12 +1,17 @@
 import
 { NA as National, ST as ShipType }
     from '@/data/ship';
-import { brandEquipBonusSeek, type EquipBonusSeek } from '../../models/types/brand';
 import type { Equip } from '@/models/Equip';
+import { includes_ship_name, some_startsWith_ship_name, startsWith_ship_name } from '@/models/ship/NakedShip';
+import { Brand } from '@/types';
+import { ShipName } from '@/types/shipName';
+
+/** 装備ボーナスのブランド型 */
+export type EquipBonusSeek = Brand<number, 'EquipBonusSeek'>;
 
 /** 装備ボーナスを計算して返す */
-export function calcBonus(
-    ship_name: string,
+export function calc_equip_bonus(
+    ship_name: ShipName,
     ship_type: ShipType,
     national: National,
     equips: Equip[]
@@ -17,7 +22,7 @@ export function calcBonus(
         const equip = equips[i];
         switch (equip.id) {
             case 315: // SG初期
-                if (['丹陽', '雪風改二'].includes(ship_name)) {
+                if (includes_ship_name(['丹陽', '雪風改二'], ship_name)) {
                     if (!disable_ids.includes(equip.id)) {
                         total_bonus += 3;
                         disable_ids.push(equip.id);
@@ -27,7 +32,7 @@ export function calcBonus(
                 }
                 break;
             case 456: // SG後期
-                if (['丹陽', '雪風改二'].includes(ship_name)) {
+                if (includes_ship_name(['丹陽', '雪風改二'], ship_name)) {
                     if (!disable_ids.includes(equip.id)) {
                         total_bonus += 3;
                         disable_ids.push(equip.id);
@@ -65,7 +70,7 @@ export function calcBonus(
                         total_bonus += 3;
                         disable_ids.push(equip.id);
                     }
-                } else if (['朝霜改二', '清霜改二', '初霜改二', '潮改二', 'Верный', '霞改二', '時雨改三', '雪風改二'].includes(ship_name)) {
+                } else if (includes_ship_name(['朝霜改二', '清霜改二', '初霜改二', '潮改二', 'Верный', '霞改二', '時雨改三', '雪風改二'], ship_name)) {
                     if (!disable_ids.includes(equip.id)) {
                         total_bonus += 2;
                         disable_ids.push(equip.id);
@@ -80,9 +85,12 @@ export function calcBonus(
             }
             case 30: // 21号対空電探
             case 410: { // 21号対空電探改二
-                const akizuki = ['秋月', '照月', '初月', '涼月', '冬月'];
-                const mogami = ['最上改', '最上改二', '最上改二特'];
-                if (akizuki.some(item => ship_name.startsWith(item)) || mogami.includes(ship_name)) {
+                const AKIZUKI_BASE_NAMES: ShipName[] = ['秋月', '照月', '初月', '涼月', '冬月'];
+                const MOGAMI_KAI_OR_MORE: ShipName[] = ['最上改', '最上改二', '最上改二特']; // 無印は含まない
+                if (
+                    some_startsWith_ship_name(AKIZUKI_BASE_NAMES, ship_name) ||
+                    some_startsWith_ship_name(MOGAMI_KAI_OR_MORE, ship_name)
+                ) {
                     if (!disable_ids.includes(equip.id)) {
                         total_bonus += 2;
                         disable_ids.push(equip.id);
@@ -91,9 +99,9 @@ export function calcBonus(
                 break;
             }
             case 118: { // 紫雲
-                if (ship_name.includes('大淀')) {
+                if (startsWith_ship_name('大淀', ship_name)) {
                     total_bonus += 2;
-                    if (equip.implovement === 10) { // 改修maxで更に+1
+                    if (equip.improvement === 10) { // 改修maxで更に+1
                         total_bonus += 1;
                     }
                 }
@@ -105,7 +113,7 @@ export function calcBonus(
                         if (!disable_ids.includes(equip.id)) {
                             total_bonus += 2;
                             // 改修でさらにボーナス
-                            if (equip.implovement > 3) {
+                            if (equip.improvement > 3) {
                                 total_bonus += 1;
                             }
                             disable_ids.push(equip.id);
@@ -120,27 +128,27 @@ export function calcBonus(
                 break;
             }
             case 115: // Ar196改
-                if (['Bismarck', 'Prinz Eugen'].some(item => ship_name.startsWith(item))) {
+                if (some_startsWith_ship_name(['Bismarck', 'Prinz Eugen'], ship_name)) {
                     total_bonus += 2;
                 }
                 break;
             case 371: // Fairey Seafox改
-                if (ship_name.includes('Gotland')) {
+                if (startsWith_ship_name('Gotland', ship_name)) {
                     if (!disable_ids.includes(equip.id)) {
                         total_bonus += 6;
                         disable_ids.push(equip.id);
                     }
-                } else if (ship_name.includes('Nelson')) {
+                } else if (startsWith_ship_name('Nelson', ship_name)) {
                     if (!disable_ids.includes(equip.id)) {
                         total_bonus += 5;
                         disable_ids.push(equip.id);
                     }
-                } else if (ship_name.includes('Commandant Teste')) {
+                } else if (startsWith_ship_name('Commandant Teste', ship_name)) {
                     if (!disable_ids.includes(equip.id)) {
                         total_bonus += 4;
                         disable_ids.push(equip.id);
                     }
-                } else if (['Warspite', 'Richelieu', 'Jean Bart'].some(item => ship_name.startsWith(item))) {
+                } else if (some_startsWith_ship_name(['Warspite', 'Richelieu', 'Jean Bart'], ship_name)) {
                     if (!disable_ids.includes(equip.id)) {
                         total_bonus += 3;
                         disable_ids.push(equip.id);
@@ -148,17 +156,17 @@ export function calcBonus(
                 }
                 break;
             case 370: // Swordfish Mk.II改(水偵型)
-                if (ship_name.includes('Warspite')) {
+                if (startsWith_ship_name('Warspite', ship_name)) {
                     if (!disable_ids.includes(equip.id)) {
                         total_bonus += 3;
                         disable_ids.push(equip.id);
                     }
-                } else if (['Nelson', 'Sheffield', 'Gotland'].some(item => ship_name.startsWith(item))) {
+                } else if (some_startsWith_ship_name(['Nelson', 'Sheffield', 'Gotland'], ship_name)) {
                     if (!disable_ids.includes(equip.id)) {
                         total_bonus += 2;
                         disable_ids.push(equip.id);
                     }
-                } else if (['Commandant Teste', '瑞穂', '神威'].some(item => ship_name.startsWith(item))) {
+                } else if (some_startsWith_ship_name(['Commandant Teste', '瑞穂', '神威'], ship_name)) {
                     if (!disable_ids.includes(equip.id)) {
                         total_bonus += 1;
                         disable_ids.push(equip.id);
@@ -166,7 +174,7 @@ export function calcBonus(
                 }
                 break;
             case 194: { // Laté 298B
-                if (['Commandant Teste', 'Richelieu', 'Jean Bart', '瑞穂', '神威'].some(item => ship_name.startsWith(item))) {
+                if (some_startsWith_ship_name(['Commandant Teste', 'Richelieu', 'Jean Bart', '瑞穂', '神威'], ship_name)) {
                     total_bonus += 2;
                     disable_ids.push(equip.id);
                 }
@@ -196,12 +204,12 @@ export function calcBonus(
                         total_bonus += 1;
                         disable_ids.push(equip.id);
                     }
-                } else if (['Gotland', 'Commandant Teste'].some(item => ship_name.startsWith(item))) {
+                } else if (some_startsWith_ship_name(['Gotland', 'Commandant Teste'], ship_name)) {
                     if (!disable_ids.includes(equip.id)) {
                         total_bonus += 3;
                         disable_ids.push(equip.id);
                     }
-                } else if (['瑞穂', '神威'].some(item => ship_name.startsWith(item))) {
+                } else if (some_startsWith_ship_name(['瑞穂', '神威'], ship_name)) {
                     if (!disable_ids.includes(equip.id)) {
                         total_bonus += 2;
                         disable_ids.push(equip.id);
@@ -217,28 +225,31 @@ export function calcBonus(
                         total_bonus += 3;
                         disable_ids.push(equip.id);
                     }
-                } else if (ship_name.includes('Gotland')) {
+                } else if (startsWith_ship_name('Gotland', ship_name)) {
                     total_bonus += 3;
-                } else if (['Commandant Teste', '瑞穂', '神威'].some(item => ship_name.startsWith(item))) {
+                } else if (some_startsWith_ship_name(['Commandant Teste', '瑞穂', '神威'], ship_name)) {
                     total_bonus += 2;
                 }
                 break;
             case 367: // Swordfish(水上機型)
-                if (['Gotland', 'Commandant Teste', '瑞穂', '神威'].some(item => ship_name.startsWith(item))) {
+                if (some_startsWith_ship_name(['Gotland', 'Commandant Teste', '瑞穂', '神威'], ship_name)) {
                     total_bonus += 1;
                 }
                 break;
             case 408: // 装甲艇(AB艇)
-                if (ship_name.includes('神州丸')) {
+                if (startsWith_ship_name('神州丸', ship_name)) {
                     total_bonus += 2;
-                } else if (ship_name.includes('あきつ丸') || ship_type === ShipType.DD) { // 本来大発の乗る駆逐艦だが、駆逐に乗ってる時点でボーナスつけちゃう
+                } else if (
+                    startsWith_ship_name('あきつ丸', ship_name) ||
+                    ship_type === ShipType.DD
+                ) { // 本来大発の乗る駆逐艦だが、駆逐に乗ってる時点でボーナスつけちゃう
                     total_bonus += 1;
                 }
                 break;
             case 409: // 武装大発
-                if (ship_name.includes('神州丸')) {
+                if (startsWith_ship_name('神州丸', ship_name)) {
                     total_bonus += 2;
-                } else if (ship_name.includes('あきつ丸')) {
+                } else if (startsWith_ship_name('あきつ丸', ship_name)) {
                     total_bonus += 1;
                 }
                 break;
@@ -266,14 +277,14 @@ export function calcBonus(
                 break;
             case 521: { // 紫雲(熟練)
                 if (ship_name === '大淀改') {
-                    if (equip.implovement > 0) { // 改修1以上で+5
+                    if (equip.improvement > 0) { // 改修1以上で+5
                         total_bonus += 5;
                     }
-                    if (equip.implovement > 3) { // ☆4以上で更に+1
+                    if (equip.improvement > 3) { // ☆4以上で更に+1
                         total_bonus += 1;
                     }
                 } else if (ship_name === '三隈改二特') {
-                    if (equip.implovement > 0) { // 改修1以上で+4
+                    if (equip.improvement > 0) { // 改修1以上で+4
                         total_bonus += 4;
                     }
                 }
@@ -295,7 +306,7 @@ export function calcBonus(
                 }
                 break;
             case 273: { // 彩雲(偵四)
-                if (equip.implovement === 2) { // ☆2のときのみ
+                if (equip.improvement === 2) { // ☆2のときのみ
                     if (!disable_ids.includes(equip.id)) {
                         total_bonus += 1;
                         disable_ids.push(equip.id);
@@ -304,21 +315,21 @@ export function calcBonus(
                 break;
             }
             case 510: // Walrus
-                if (['Nelson', 'Rodney'].includes(ship_name)) { // 含同改
+                if (some_startsWith_ship_name(['Nelson', 'Rodney'], ship_name)) { // 含同改
                     total_bonus += 5;
-                } else if (['Warspite', 'Sheffield'].includes(ship_name)) { // 含同改
+                } else if (some_startsWith_ship_name(['Warspite', 'Sheffield'], ship_name)) { // 含同改
                     total_bonus += 2;
                 }
                 break;
             case 545: // 天山一二型甲改二(村田隊/電探装備)
-                if (['翔鶴改二', '翔鶴改二甲'].includes(ship_name)) {
+                if (includes_ship_name(['翔鶴改二', '翔鶴改二甲'], ship_name)) {
                     total_bonus += 2;
-                } else if (['瑞鶴改二','瑞鶴改二甲','加賀改二護','大鳳改','赤城改二戊','加賀改二戊'].includes(ship_name)) {
+                } else if (includes_ship_name(['瑞鶴改二','瑞鶴改二甲','加賀改二護','大鳳改','赤城改二戊','加賀改二戊'], ship_name)) {
                     total_bonus += 1;
                 }
                 break;
         }
     }
 
-    return brandEquipBonusSeek(total_bonus);
+    return total_bonus as EquipBonusSeek;
 }

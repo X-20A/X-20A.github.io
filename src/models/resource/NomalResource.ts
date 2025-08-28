@@ -1,8 +1,8 @@
-import { type AdoptFleet, getTotalDrumCount, getTotalValidCraftCount } from "@/core/AdoptFleet";
-import type { AreaId, ItemIconKey } from "../types";
-import type { NodeResource, ResourceData } from "../types/resource";
-import { createResourceIconSuite, type ResourceIconSuite } from "./ResourceIconSuite";
-import { formatCraftNames } from "@/logic/resource";
+import { type AdoptFleet, calc_total_drum_count, calc_total_valid_craft_count } from "@/models/fleet/AdoptFleet";
+import type { AreaId, ItemIconKey } from "@/types";
+import type { NodeResource, ResourceData } from "@/types/resource";
+import { derive_resource_icon_suite, type ResourceIconSuite } from "./ResourceIconSuite";
+import { calc_formated_craft_names } from "@/logic/resource";
 
 /**
  * 資源種別
@@ -13,14 +13,6 @@ export const enum ResourceType {
     steel = 2,
     imo = 3,
 }
-
-// ResourceTypeの数値→文字列変換用マップ
-const ResourceTypeString: Record<ResourceType, string> = {
-    [ResourceType.fuel]: "fuel",
-    [ResourceType.ammo]: "ammo",
-    [ResourceType.steel]: "steel",
-    [ResourceType.imo]: "imo",
-};
 
 /**
  * ドラム缶・大発系による獲得資源増加の係数のデフォルト値
@@ -145,7 +137,7 @@ const RESOURCE_DATA: ResourceData = {
         O: { type: ResourceType.imo, base: [40, 50], coefficient: { drum: 2, craft: 3 } }
     },
     // 7-4-Oは特殊処理
-};
+} as const;
 
 /**
  * NomalResource型
@@ -177,17 +169,17 @@ export type NomalResource = {
  * @param craft 大発系アイコン
  * @returns NomalResourceオブジェクト
  */
-function createNomalResourceObj(
+const derive_nomal_resource_Object = (
     node_resource: NodeResource,
     fleet: AdoptFleet,
     respurce_icons: Record<ItemIconKey, string>,
     drum: string,
     craft: string,
     craftNames: ReadonlyArray<string>,
-): NomalResource {
-    const fleet_total_drum = getTotalDrumCount(fleet);
-    const fleet_total_craft = getTotalValidCraftCount(fleet);
-    const icon_suite = createResourceIconSuite(respurce_icons, drum, craft);
+): NomalResource => {
+    const fleet_total_drum = calc_total_drum_count(fleet);
+    const fleet_total_craft = calc_total_valid_craft_count(fleet);
+    const icon_suite = derive_resource_icon_suite(respurce_icons, drum, craft);
 
     let actual_drum_coefficient: number | undefined = undefined;
     let actual_craft_coefficient: number | undefined = undefined;
@@ -205,9 +197,9 @@ function createNomalResourceObj(
         add = actual_drum_coefficient * fleet_total_drum + actual_craft_coefficient * fleet_total_craft;
     }
 
-    const formattedCraftNames = formatCraftNames(craftNames);
+    const formattedCraftNames = calc_formated_craft_names(craftNames);
 
-    return {
+    const resource: NomalResource = {
         fleet_total_drum,
         fleet_total_craft,
         icon_suite,
@@ -221,6 +213,8 @@ function createNomalResourceObj(
         DEFAULT_ADD_COEFFICIENT,
         formattedCraftNames,
     };
+
+    return resource;
 }
 
 /**
@@ -233,7 +227,7 @@ function createNomalResourceObj(
  * @param craft 大発系アイコン
  * @returns NomalResourceオブジェクトまたはnull
  */
-export function createNomalResource(
+export function derive_normal_resource(
     area_id: AreaId,
     node: string,
     fleet: AdoptFleet,
@@ -242,10 +236,12 @@ export function createNomalResource(
     craft: string,
     craftNames: ReadonlyArray<string>,
 ): NomalResource | null {
-    if (!RESOURCE_DATA[area_id]) return null;
-    if (!RESOURCE_DATA[area_id][node]) return null;
+    if (
+        !RESOURCE_DATA[area_id] ||
+        !RESOURCE_DATA[area_id][node]
+    ) return null;
 
-    return createNomalResourceObj(
+    return derive_nomal_resource_Object(
         RESOURCE_DATA[area_id][node],
         fleet,
         resource_icons,

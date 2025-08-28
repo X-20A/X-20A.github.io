@@ -7,7 +7,7 @@
     <div class="box">
       <div class="inner">
 				<div style="flex-grow: 1;"> <!-- 通常海域 -->
-					<div v-for="(world, index) in worlds" :key="index">
+					<div v-for="(world, index) in NORMAL_AREAS" :key="index">
 						<div class="world-box">
 							<span class="world-name">{{ world.name }}</span>
 							<hr class="beside-bar" />
@@ -25,7 +25,7 @@
 				</div>
         
         <div style="flex-grow: 12;"> <!-- イベント海域 -->
-          <div v-for="(event, index) in events" :key="'event-' + index">
+          <div v-for="(event, index) in EVENT_AREAS" :key="'event-' + index">
             <div class="world-box">
               <span class="world-name" :style="{ color: event.color || '' }">
                 {{ event.name }}
@@ -51,7 +51,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useStore, useModalStore } from '@/stores';
-import type { AreaId } from '@/models/types';
+import type { AreaId } from '@/types';
 
 // 海域選択モーダル
 
@@ -79,7 +79,7 @@ type Area = {
 };
 
 // 通常海域
-const worlds: Area[] = [
+const NORMAL_AREAS: Area[] = [
   {
     name: "鎮守府海域",
     areas: [
@@ -151,10 +151,10 @@ const worlds: Area[] = [
       { value: "7-5", label: "7-5" },
     ],
   },
-];
+] as const;
 
 // イベント
-const events: Area[] = [ // @expansion
+const EVENT_AREAS: Area[] = [ // @expansion
 	{
 		name: '2025春',
 		color: "aqua",
@@ -190,7 +190,7 @@ const events: Area[] = [ // @expansion
     name: "2023夏",
     areas: [{ value: "57-7", label: "E-7" }],
   },
-];
+] as const;
 </script>
 
 <style scoped>

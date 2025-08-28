@@ -1,9 +1,9 @@
 import Big from 'big.js';
 import CustomError from '@/errors/CustomError';
-import { brandPreSailNull, type PreSailNull } from '@/models/types/brand';
-import { type AdoptFleet, createAdoptFleet } from './AdoptFleet';
-import { type CommandEvacuation, isEvacuationNode } from './CommandEvacuation';
-import { createFleetComponent } from './FleetComponent';
+import { brandPreSailNull, type PreSailNull } from '@/types/brand';
+import { type AdoptFleet, derive_adopt_fleet } from './AdoptFleet';
+import { type CommandEvacuation, is_evacuation_node } from '../../core/CommandEvacuation';
+import { derive_fleet_component } from './FleetComponent';
 
 /**
  * 走査子の状態を表す型
@@ -25,7 +25,9 @@ export const MAX_PROGRESS_COUNT = 30;
  * 新規のSimFleetを返す
  * @returns 新規SimFleet
  */
-export function createDefaultSimFleet(fleet: AdoptFleet): SimFleet {
+export function derive_default_sim_fleet(
+    fleet: AdoptFleet,
+): SimFleet {
     return {
         adopt_fleet: fleet,
         route: [brandPreSailNull()],
@@ -40,7 +42,9 @@ export function createDefaultSimFleet(fleet: AdoptFleet): SimFleet {
  * @param sim_fleet コピー元
  * @returns SimFleetのコピー
  */
-export function cloneSimFleet(sim_fleet: SimFleet): SimFleet {
+export function clone_sim_fleet(
+    sim_fleet: SimFleet,
+): SimFleet {
     return {
         adopt_fleet: sim_fleet.adopt_fleet,
         route: [...sim_fleet.route],
@@ -58,7 +62,7 @@ export function cloneSimFleet(sim_fleet: SimFleet): SimFleet {
  * @returns 進行後のSimFleet
  * @throws CustomError 無限ループ検知時
  */
-export function progressSimFleet(
+export function progress_sim_fleet(
     sim_fleet: SimFleet,
     next_node: string,
     rate: number
@@ -88,12 +92,12 @@ export function progressSimFleet(
  * @param current_node 
  * @returns 
  */
-export function getEvacuatedFleet(
+export function calc_evacuated_fleet(
     sim_fleet: SimFleet,
     command_evacuations: CommandEvacuation[],
     current_node: string,
 ): SimFleet {
-    if (!isEvacuationNode(command_evacuations, current_node)) return sim_fleet;
+    if (!is_evacuation_node(command_evacuations, current_node)) return sim_fleet;
 
     // 対象ノードの退避艦を取得
     const evacuation =
@@ -103,13 +107,14 @@ export function getEvacuatedFleet(
     // AdoptFleetの各FleetComponentから該当indexの艦を除外し、createFleetComponentで再生成
     const new_fleet_components = sim_fleet.adopt_fleet.fleets.map((fleet_component, fleet_index) => {
         const omit_unique_ids = evacuation.evacuation_ship_unique_ids[fleet_index] || [];
-        const new_ships = fleet_component.ships.filter((ship) => !omit_unique_ids.includes(ship.unique_id));
+        const new_ships =
+            fleet_component.units.filter((unit) => !omit_unique_ids.includes(unit.unit_index));
 
-        return createFleetComponent(new_ships);
+        return derive_fleet_component(new_ships);
     });
 
     // AdoptFleet再生成
-    const new_adopt_fleet = createAdoptFleet(
+    const new_adopt_fleet = derive_adopt_fleet(
         new_fleet_components,
         sim_fleet.adopt_fleet.fleet_type
     );

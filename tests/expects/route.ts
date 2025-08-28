@@ -1,4 +1,4 @@
-import type { AreaId } from "@/models/types";
+import type { AreaId } from "@/types";
 
 type MockData = {
     area: AreaId,

@@ -49,7 +49,7 @@ const maskRef = ref<HTMLElement | null>(null);
  * @param start 開始位置(px)
  * @param end 終了位置(px)
  */
-function animateSidebar(start: number, end: number) {
+function animate_sidebar(start: number, end: number) {
   const duration = 150; // アニメーションの時間（ミリ秒）
   let startTime: number | null = null;
 
@@ -74,7 +74,7 @@ function animateSidebar(start: number, end: number) {
 
 // サイドバーを開く
 function openSidebar() {
-  animateSidebar(-200, 0);
+  animate_sidebar(-200, 0);
   if (maskRef.value) {
     maskRef.value.style.display = 'block';
   }
@@ -82,7 +82,7 @@ function openSidebar() {
 
 // サイドバーを閉じる
 function closeSidebar() {
-  animateSidebar(0, -200);
+  animate_sidebar(0, -200);
   if (maskRef.value) {
     maskRef.value.style.display = 'none';
   }

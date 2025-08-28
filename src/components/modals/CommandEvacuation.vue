@@ -14,14 +14,14 @@
         <div class="ship-list">
           <div
             v-for="(ship, ship_index) in fleet.ships"
-            :key="ship.unique_id"
+            :key="ship.unit_index"
             class="ship-item"
             :class="{
-              evacuated: isEvacuated(fleet_index, ship.unique_id),
+              evacuated: isEvacuated(fleet_index, ship.unit_index),
               flagship: ship_index === 0
             }"
             :style="ship_index === 0 ? 'cursor: default;' : ''"
-            @pointerdown="ship_index !== 0 && toggleEvacuation(fleet_index, ship.unique_id)"
+            @pointerdown="ship_index !== 0 && toggleEvacuation(fleet_index, ship.unit_index)"
           >
             <img
               class="ship-icon"
@@ -44,10 +44,13 @@ import { computed } from 'vue';
 import { useStore, useModalStore } from '@/stores';
 import {
   type CommandEvacuation,
-  addCommandEvacuation,
-  removeCommandEvacuation
+  add_command_evacuation,
+  remove_command_evacuation
 } from '@/core/CommandEvacuation';
-import { brandNode, type UniqueId } from '@/models/types/brand';
+import { brandNode } from '@/types/brand';
+import { UnitIndex } from '@/models/fleet/FleetUnit';
+import { ShipId } from '@/types/shipId';
+import { ShipName } from '@/types/shipName';
 
 const store = useStore();
 const cxtTapedNode = computed(() => store.cxtTapedNode);
@@ -62,21 +65,25 @@ const isCommandEvacuationVisible = computed(() => modalStore.isCommandEvacuation
  */
 type DisplayFleet = {
 	ships: Array<{
-		id: number;
-		unique_id: UniqueId;
-		name: string;
+		id: ShipId;
+		unit_index: UnitIndex;
+		name: ShipName;
 	}>;
 };
 
 const display_fleets = computed<DisplayFleet[]>(() => {
-  if (!adoptFleet.value) return [];
-  return adoptFleet.value.fleets.map(fleet => ({
-    ships: fleet.ships.map(ship => ({
-			id: ship.id,
-      unique_id: ship.unique_id,
-      name: ship.name,
-    })),
-  }));
+	if (!adoptFleet.value) return [];
+
+	return adoptFleet.value.fleets.map(fleet => ({
+		ships: fleet.units.map(unit => {
+			const { ship } = unit;
+			return {
+				id: ship.id,
+				unit_index: unit.unit_index,
+				name: ship.name,
+			};
+		}),
+	}));
 });
 
 const current_evacuation = computed<CommandEvacuation | undefined>(() => {
@@ -88,13 +95,13 @@ const current_evacuation = computed<CommandEvacuation | undefined>(() => {
 /**
  * 指定艦が退避状態か判定する。
  * @param fleet_index 艦隊インデックス
- * @param ship_unique_id 艦インデックス
+ * @param unit_index 艦インデックス
  * @returns 退避状態
  */
-function isEvacuated(fleet_index: number, ship_unique_id: UniqueId): boolean {
+function isEvacuated(fleet_index: number, unit_index: UnitIndex): boolean {
 	if (!current_evacuation.value) return false;
   return (
-    (current_evacuation.value.evacuation_ship_unique_ids[fleet_index]?.includes(ship_unique_id)) ??
+    (current_evacuation.value.evacuation_ship_unique_ids[fleet_index]?.includes(unit_index)) ??
     false
   );
 }
@@ -104,7 +111,7 @@ function isEvacuated(fleet_index: number, ship_unique_id: UniqueId): boolean {
  * @param ship_id 艦ID
  * @returns アイコンURL
  */
-function getShipIconUrl(ship_id: number): string {
+function getShipIconUrl(ship_id: ShipId): string {
 	// バナーが存在するかはテストで確認する
 	return `./banners/${ship_id}.png`;
 }
@@ -113,11 +120,11 @@ function getShipIconUrl(ship_id: number): string {
  * 艦の退避状態をトグルする。
  * 旗艦は退避不可。全艦解除時は該当ノードの退避情報を削除。
  * @param fleet_index 艦隊インデックス
- * @param ship_unique_id 艦インデックス
+ * @param unit_index 艦インデックス
  */
-function toggleEvacuation(fleet_index: number, ship_unique_id: UniqueId): void {
+function toggleEvacuation(fleet_index: number, unit_index: UnitIndex): void {
   if (!cxtTapedNode.value) return;
-  if (ship_unique_id === 1) return; // 旗艦は退避不可
+  if (unit_index === 1) return; // 旗艦は退避不可
 
   const node_key = cxtTapedNode.value;
   const evacuations = commandEvacuations.value;
@@ -125,33 +132,34 @@ function toggleEvacuation(fleet_index: number, ship_unique_id: UniqueId): void {
 
   // 新規作成
   if (evac_index === -1) {
-    const evacuation_ship_unique_id: { [fleet_index: number]: UniqueId[] } = {};
-		evacuation_ship_unique_id[fleet_index] = [ship_unique_id];
+		const evacuation_ship_unique_id: { [fleet_index: number]: number[] } = {};
+		evacuation_ship_unique_id[fleet_index] = [unit_index];
     const new_evac: CommandEvacuation = {
       node: brandNode(node_key),
       evacuation_ship_unique_ids: evacuation_ship_unique_id,
     };
-    store.UPDATE_COMMAND_EVACUATIONS(addCommandEvacuation(evacuations, new_evac));
+    store.UPDATE_COMMAND_EVACUATIONS(add_command_evacuation(evacuations, new_evac));
     return;
   }
 
   // 既存をイミュータブルに更新
   const target = evacuations[evac_index];
   // 各配列もスプレッドでコピーし、参照渡しを防ぐ
-  const new_evacuation_ship_unique_id: { [fleet_index: number]: UniqueId[] } = {};
+	const new_evacuation_ship_unique_id: { [fleet_index: number]: number[] } = {};
   for (const key of Object.keys(target.evacuation_ship_unique_ids)) {
-    new_evacuation_ship_unique_id[Number(key)] = [...target.evacuation_ship_unique_ids[Number(key)]];
+    new_evacuation_ship_unique_id[Number(key)] =
+			[...target.evacuation_ship_unique_ids[Number(key)]];
   }
   const current_arr = new_evacuation_ship_unique_id[fleet_index] || [];
-  if (current_arr.includes(ship_unique_id)) {
-    new_evacuation_ship_unique_id[fleet_index] = current_arr.filter(i => i !== ship_unique_id);
+  if (current_arr.includes(unit_index)) {
+    new_evacuation_ship_unique_id[fleet_index] = current_arr.filter(i => i !== unit_index);
   } else {
-    new_evacuation_ship_unique_id[fleet_index] = [...current_arr, ship_unique_id];
+    new_evacuation_ship_unique_id[fleet_index] = [...current_arr, unit_index];
   }
 
   // 全艦解除時は該当ノードの退避情報を削除
   if (Object.values(new_evacuation_ship_unique_id).every(arr => arr.length === 0)) {
-    store.UPDATE_COMMAND_EVACUATIONS(removeCommandEvacuation(evacuations, node_key));
+    store.UPDATE_COMMAND_EVACUATIONS(remove_command_evacuation(evacuations, node_key));
     return;
   }
   store.UPDATE_COMMAND_EVACUATIONS([

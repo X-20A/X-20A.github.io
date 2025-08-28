@@ -1,12 +1,15 @@
 import type Big from "big.js";
 import type { NA as National, SG as SpeedGroup, ST as ShipType } from "@/data/ship";
 import type { NT as NodeType } from "@/data/map";
+import { ShipName } from "./shipName";
+
+export type Brand<T, B> = T & { __brand: B };
 
 export type Seek = [number, number, number, number]
 
 export interface ShipData {
     /** 艦名 */
-	name: string
+	name: ShipName
     /** 艦種ID */
 	type: ShipType
     /** 索敵値(最小) */

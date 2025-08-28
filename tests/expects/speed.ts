@@ -7,7 +7,6 @@ export type BuildTuple<T, N extends number, R extends unknown[] = []> =
 // 要素数 19 の Sp 型のタプル
 export type SpeedExpect = BuildTuple<Speed | undefined, 19>;
 
-
 export type SpeedKey =
     | 'FastA'
     | 'FastB1'
@@ -18,7 +17,6 @@ export type SpeedKey =
     | 'SlowC'
     | 'SlowD'
     | 'SlowE'
-
 
 type SpeedExpects = {
     [key in SpeedKey]: SpeedExpect
@@ -227,4 +225,4 @@ export const SPEED_EXPECTS: SpeedExpects = {
         Speed.fastest,
         Speed.fastest,
     ],
-}
+} as const;

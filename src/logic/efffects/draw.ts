@@ -1,9 +1,9 @@
 import cytoscape from 'cytoscape';
 import { NODE_DATAS, EDGE_DATAS, NT as NodeType, WARNING_NODE_DATAS } from '@/data/map';
 import styles from '@/styles';
-import type { AreaId, SimResult } from '../../models/types';
+import type { AreaId, SimResult } from '@/types';
 import Big from 'big.js';
-import { type CommandEvacuation, isEvacuationNode } from '@/core/CommandEvacuation';
+import { type CommandEvacuation, is_evacuation_node } from '@/core/CommandEvacuation';
 
 /**
  * シミュ結果からマップを描画
@@ -12,7 +12,7 @@ import { type CommandEvacuation, isEvacuationNode } from '@/core/CommandEvacuati
  * @returns 
  * @subEffect -マップの描画
  */
-export default function doDrawMap(
+export default function do_draw_map(
     selectedArea: AreaId,
     sim_result: SimResult[],
     command_evacuations: CommandEvacuation[],
@@ -99,7 +99,7 @@ export default function doDrawMap(
                     position: { x: x + 14, y: y - 14 }
                 });
             }
-            if (isEvacuationNode(command_evacuations, key)) {
+            if (is_evacuation_node(command_evacuations, key)) {
                 elements.nodes.push({
                     data: {
                         id: key + 'evacuation',

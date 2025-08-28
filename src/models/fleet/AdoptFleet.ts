@@ -1,23 +1,26 @@
-import type { Seek } from "../models/types";
 import { ST as ShipType } from "@/data/ship";
-import type { Ft as FleetType, Sp as Speed } from "../core/branch";
+import type { Ft as FleetType, Sp as Speed } from "../../core/branch";
 import type { FleetComponent } from "./FleetComponent";
-import { type Composition, createComposition } from "@/models/Composition";
+import { type Composition, derive_composition } from "@/models/Composition";
+import { Seek } from "@/types";
+import { ShipId } from "@/types/shipId";
+import { extract_ships_from_fleet_unit } from "./FleetUnit";
+import { ShipName } from "@/types/shipName";
 
 /**
  * FleetComponentsからSelectedTypeによって抽出、構成されたシミュに使用される艦隊のデフォルト構造
  */
 export type AdoptFleet = {
-    readonly fleets: FleetComponent[];
-    readonly composition: Composition;
-    readonly ship_names: string[];
-    readonly fleet_type: FleetType;
-    readonly isUnion: boolean;
-    readonly fleet_length: number;
-    readonly isFaster: boolean;
-    readonly speed: Speed;
-    readonly seek: Seek;
-    readonly save_seek: Seek;
+    readonly fleets: FleetComponent[],
+    readonly ship_names: ShipName[],
+    readonly composition: Composition,
+    readonly fleet_type: FleetType,
+    readonly is_union: boolean,
+    readonly fleet_length: number,
+    readonly is_faster: boolean,
+    readonly speed: Speed,
+    readonly seek: Seek,
+    readonly save_seek: Seek,
     readonly drum_carrier_count: number;
     readonly radar_carrier_count: number;
     readonly craft_carrier_count: number;
@@ -30,7 +33,7 @@ export type AdoptFleet = {
 }
 
 /** 第五艦隊ID配列 */
-const DAIGO_IDS: ReadonlyArray<ReadonlyArray<number>> = [
+const DAIGO_IDS: Array<Array<ShipId>> = [
     [16, 233, 407],
     [63, 192, 266],
     [64, 193, 267],
@@ -44,10 +47,10 @@ const DAIGO_IDS: ReadonlyArray<ReadonlyArray<number>> = [
     [41, 241, 419],
     [38, 238, 326],
     [40, 240],
-];
+] as const;
 
 /** 礼号作戦ID配列 */
-const REIGO_IDS: ReadonlyArray<ReadonlyArray<number>> = [
+const REIGO_IDS: Array<Array<ShipId>> = [
     [64, 267, 193],
     [183, 321],
     [49, 253, 464, 470],
@@ -55,7 +58,7 @@ const REIGO_IDS: ReadonlyArray<ReadonlyArray<number>> = [
     [425, 344, 578],
     [994, 736],
     [992, 997],
-];
+] as const;
 
 /**
  * AdoptFleetオブジェクトを生成する
@@ -65,21 +68,24 @@ const REIGO_IDS: ReadonlyArray<ReadonlyArray<number>> = [
  * @param save_seek - 艦隊索敵値(退避, 省略可)
  * @returns AdoptFleetオブジェクト
  */
-export function createAdoptFleet(
+export function derive_adopt_fleet(
     fleets: FleetComponent[],
     fleet_type_id: FleetType,
     seek?: Seek,
     save_seek?: Seek
 ): AdoptFleet {
-    const isUnion = fleet_type_id > 0;
-    const ships = fleets[1] ? fleets[0].ships.concat(fleets[1].ships) : fleets[0].ships;
+    const is_union = fleet_type_id > 0;
+    const all_ships = fleets[1]
+        ? extract_ships_from_fleet_unit(fleets[0].units)
+            .concat(extract_ships_from_fleet_unit(fleets[1].units))
+        : extract_ships_from_fleet_unit(fleets[0].units);
 
     let daigo_count = 0;
     let reigo_count = 0;
     const daigo_dup: number[] = [];
     const reigo_dup: number[] = [];
 
-    for (const ship of ships) {
+    for (const ship of all_ships) {
         for (const daigo_ship_ids of DAIGO_IDS) {
             if (!daigo_dup.includes(ship.id) && daigo_ship_ids.includes(ship.id)) {
                 daigo_dup.push(...daigo_ship_ids);
@@ -95,10 +101,6 @@ export function createAdoptFleet(
             }
         }
     };
-
-    let composition: Composition;
-    let ship_names: string[];
-    let fleet_length: number;
     let speed: Speed;
     let isFaster: boolean;
     let fleet_seek: Seek;
@@ -111,13 +113,10 @@ export function createAdoptFleet(
     let yamato_class_count: number;
     let matsu_count: number;
 
-    if (isUnion) {
+    if (is_union) {
         const main = fleets[0];
         const escort = fleets[1];
 
-        composition = createComposition(fleets);
-        ship_names = main.ship_names.concat(escort.ship_names);
-        fleet_length = main.ships.length + escort.ships.length;
         if (main.speed === 4 && escort.speed === 4) {
             speed = 4;
         } else if (main.speed >= 3 && escort.speed >= 3) {
@@ -154,9 +153,6 @@ export function createAdoptFleet(
     } else {
         const fleet = fleets[0];
 
-        composition = createComposition([fleet]);
-        ship_names = fleet.ship_names;
-        fleet_length = fleet.ships.length;
         speed = fleet.speed;
         isFaster = speed >= 3;
 
@@ -177,14 +173,14 @@ export function createAdoptFleet(
         matsu_count = fleet.matsu_count;
     }
 
-    return {
+    const fleet: AdoptFleet = {
         fleets,
-        composition,
-        ship_names,
+        ship_names: all_ships.map(ship => ship.name),
+        composition: derive_composition(all_ships),
         fleet_type: fleet_type_id,
-        isUnion,
-        fleet_length,
-        isFaster,
+        is_union,
+        fleet_length: all_ships.length,
+        is_faster: isFaster,
         speed,
         seek: fleet_seek,
         save_seek: fleet_save_seek,
@@ -198,22 +194,29 @@ export function createAdoptFleet(
         daigo_count,
         reigo_count,
     };
+
+    return fleet;
 }
 
 /**
  * 主力艦隊の艦名配列を返す
  * @param fleet AdoptFleet
  */
-export function getMainFleetNames(fleet: AdoptFleet): string[] {
-    return fleet.fleets[0].ship_names;
+export function calc_main_fleet_ship_names(fleet: AdoptFleet): ShipName[] {
+    const ships = extract_ships_from_fleet_unit(fleet.fleets[0].units);
+    return ships.map(ship => ship.name);
 }
 
 /**
  * 随伴艦隊の艦名配列を返す
  * @param fleet AdoptFleet
  */
-export function getEscortFleetNames(fleet: AdoptFleet): string[] {
-    return fleet.fleets[1]?.ship_names ?? [];
+export function calc_escort_fleet_ship_names(fleet: AdoptFleet): ShipName[] {
+    const escort_fleet = fleet.fleets[1];
+    if (!escort_fleet) return [];
+
+    const ships = extract_ships_from_fleet_unit(fleet.fleets[1].units);
+    return ships.map(ship => ship.name);
 }
 
 /**
@@ -221,7 +224,7 @@ export function getEscortFleetNames(fleet: AdoptFleet): string[] {
  * @param fleet AdoptFleet
  */
 export function getMainFleetLength(fleet: AdoptFleet): number {
-    return fleet.fleets[0].ships.length;
+    return fleet.fleets[0].units.length;
 }
 
 /**
@@ -229,7 +232,7 @@ export function getMainFleetLength(fleet: AdoptFleet): number {
  * @param fleet AdoptFleet
  */
 export function getEscortFleetLength(fleet: AdoptFleet): number {
-    return fleet.fleets[1]?.ships.length ?? 0;
+    return fleet.fleets[1]?.units.length ?? 0;
 }
 
 /**
@@ -253,7 +256,7 @@ export function isInclude(fleet: AdoptFleet, target_name: string | string[]): bo
  * @param fleet AdoptFleet
  */
 export function isFCL(fleet: AdoptFleet): boolean {
-    return fleet.fleets[0].ships[0].type === ShipType.CL;
+    return fleet.fleets[0].units[0].ship.type === ShipType.CL;
 }
 
 /**
@@ -272,14 +275,16 @@ export function countShip(fleet: AdoptFleet, target_name: string | string[]): nu
     }
 }
 
+const TAIYO_CLASS_NAMES = ['春日丸', '大鷹', '八幡丸', '雲鷹', '神鷹'] as const;
+
 /**
  * 艦隊内の大鷹型の数を返す
  * @param fleet AdoptFleet
  */
 export function countTaiyo(fleet: AdoptFleet): number {
-    const taiyos = ['春日丸', '大鷹', '八幡丸', '雲鷹', '神鷹'];
+    
     return fleet.ship_names.filter(ship_name =>
-        taiyos.some(name => ship_name.startsWith(name))
+        TAIYO_CLASS_NAMES.some(name => ship_name.startsWith(name))
     ).length;
 }
 
@@ -302,11 +307,13 @@ export function countAktmrPlusCVs(fleet: AdoptFleet): number {
 export function countNotEquipArctic(fleet: AdoptFleet): number {
     let count = 0;
     for (const f of fleet.fleets) {
-        for (const ship of f.ships) {
-            if ([ShipType.CV, ShipType.CVB, ShipType.CVL].includes(ship.type) || ship.name.includes('あきつ丸')) {
-                if (!ship.has_arctic_gear) {
-                    count++;
-                }
+        for (const unit of f.units) {
+            const { ship } = unit;
+            if (
+                [ShipType.CV, ShipType.CVB, ShipType.CVL].includes(ship.type) ||
+                ship.name.includes('あきつ丸')
+            ) {
+                if (!ship.has_arctic_gear) count++;
             }
         }
     }
@@ -318,16 +325,16 @@ export function countNotEquipArctic(fleet: AdoptFleet): number {
  * @param fleet AdoptFleet
  * @returns 新しいAdoptFleet
  */
-export function switchSeek(fleet: AdoptFleet): AdoptFleet {
+export function switch_seek(fleet: AdoptFleet): AdoptFleet {
     if (fleet.seek.every(value => value === 999)) {
-        return createAdoptFleet(
+        return derive_adopt_fleet(
             fleet.fleets,
             fleet.fleet_type,
             fleet.save_seek,
             fleet.save_seek
         );
     } else {
-        return createAdoptFleet(
+        return derive_adopt_fleet(
             fleet.fleets,
             fleet.fleet_type,
             [999, 999, 999, 999],
@@ -340,7 +347,7 @@ export function switchSeek(fleet: AdoptFleet): AdoptFleet {
  * 艦隊内のドラム缶の総数を返す
  * @param fleet AdoptFleet
  */
-export function getTotalDrumCount(fleet: AdoptFleet): number {
+export function calc_total_drum_count(fleet: AdoptFleet): number {
     if (fleet.fleets.length === 2) {
         return fleet.fleets[0].total_drum_count
             + fleet.fleets[1].total_drum_count;
@@ -353,7 +360,7 @@ export function getTotalDrumCount(fleet: AdoptFleet): number {
  * 資源マスでの獲得資源増加に有効な艦隊内の大発の総数を返す
  * @param fleet AdoptFleet
  */
-export function getTotalValidCraftCount(fleet: AdoptFleet): number {
+export function calc_total_valid_craft_count(fleet: AdoptFleet): number {
     if (fleet.fleets.length === 2) {
         return fleet.fleets[0].total_valid_craft_count
             + fleet.fleets[1].total_valid_craft_count;

@@ -1,15 +1,17 @@
-import type { EquipDatas, EquipType } from "@/data/equip";
-import type { Improvement } from "../models/types";
+import type { EquipType } from "@/data/equip";
+import type { Improvement } from "@/types";
 import CustomError from "@/errors/CustomError";
+import EQUIP_DATAS from "@/data/equip";
+import { EquipId } from "@/types/equipId";
 
 /**
  * 装備オブジェクトの型定義
  */
 export type Equip = {
     /** 装備ID */
-    readonly id: number;
+    readonly id: EquipId;
     /** 改修値 */
-    readonly implovement: Improvement;
+    readonly improvement: Improvement;
     /** 種別ID */
     readonly type: EquipType;
     /** 索敵値 */
@@ -28,25 +30,25 @@ export type Equip = {
  * @returns Equipオブジェクト
  * @throws CustomError 未対応装備の場合
  */
-export function createEquip(
+export function derive_equip(
     id: number,
     implovement: Improvement,
-    ship_name: string,
-    slot_index: number,
     is_ex: boolean,
-    equip_datas: EquipDatas,
 ): Equip {
-    const data = equip_datas[id];
+    const equip_id = id as EquipId;
+    const data = EQUIP_DATAS[equip_id];
 
     if (!data) {
-        throw new CustomError(`${ship_name}の${slot_index + 1}番目の装備は未対応です`);
+        throw new CustomError(`id: ${id}の装備は未対応です`);
     }
 
-    return {
-        id,
-        implovement,
+    const equip: Equip = {
+        id: equip_id,
+        improvement: implovement,
         type: data[1],
         seek: data[0],
         is_ex
     };
+
+    return equip;
 }

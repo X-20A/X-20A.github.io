@@ -3,7 +3,7 @@
  * @param cy
  * @returns 
  */
-export function getCyBlob(cy: cytoscape.Core): Blob {
+export function calc_Cytoscape_Blob(cy: cytoscape.Core): Blob {
     return cy.jpg({
         maxWidth: 1293,
         quality: 1,
@@ -13,14 +13,14 @@ export function getCyBlob(cy: cytoscape.Core): Blob {
     });
 }
 // Canvasをblobで取得
-export function getGkcoiBlob(canvas: HTMLCanvasElement): Blob {
+export function calc_Gkcoi_Blob(canvas: HTMLCanvasElement): Blob {
     // CanvasからBase64形式の画像データを取得
     const dataUrl = canvas.toDataURL('image/jpeg');
     // Base64形式のデータからBlobオブジェクトを作成
-    return dataURItoBlob(dataUrl);
+    return convert_dataURI_to_Blob(dataUrl);
 }
 // Data URIをBlobオブジェクトに変換
-export function dataURItoBlob(dataURI: string): Blob {
+export function convert_dataURI_to_Blob(dataURI: string): Blob {
     const byteString = atob(dataURI.split(',')[1]);
     const ab = new ArrayBuffer(byteString.length);
     const ia = new Uint8Array(ab);

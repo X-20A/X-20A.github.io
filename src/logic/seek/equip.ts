@@ -2,30 +2,13 @@ import { EquipType } from "@/data/equip";
 import type { Equip } from "@/models/Equip";
 
 /**
- * 装備係数、改修を考慮した装備の索敵値を返す
- * @param equips 
- * @returns 
- */
-export function calcEquipSeek(equips: Equip[]): number {
-    let total = 0;
-    for (let i = 0; i < equips.length; i++) {
-        const equip = equips[i];
-        if (equip.seek === 0) continue;
-
-        const equip_coefficient = getEquipCoefficient(equip);
-        const improvement_coefficient = getImprovementCoefficient(equip);
-
-        total += (Math.sqrt(equip.implovement) * improvement_coefficient + equip.seek) * equip_coefficient;
-    }
-    return total;
-}
-
-/**
  * 装備の装備係数を返す
  * @param equip 
  * @returns 
  */
-function getEquipCoefficient(equip: Equip): number {
+const calc_equip_coefficient = (
+    equip: Equip,
+): number => {
     let equip_conefficient = 0.6;
     switch (equip.type) {
         case EquipType.TorpBomber: // 艦攻
@@ -49,7 +32,9 @@ function getEquipCoefficient(equip: Equip): number {
  * @param equip 
  * @returns 
  */
-function getImprovementCoefficient(equip: Equip): number {
+const calc_improvement_coefficient = (
+    equip: Equip,
+): number => {
     let implovment_coefficient = 0;
     switch (equip.type) { // 改修係数
         case EquipType.SeaPlaneBomber: // 水爆
@@ -68,4 +53,24 @@ function getImprovementCoefficient(equip: Equip): number {
             break;
     }
     return implovment_coefficient;
+}
+
+/**
+ * 装備係数、改修を考慮した装備の索敵値を返す
+ * @param equips 
+ * @returns 
+ */
+export function calc_equip_seek(equips: Equip[]): number {
+    let total = 0;
+    for (let i = 0; i < equips.length; i++) {
+        const equip = equips[i];
+        if (equip.seek === 0) continue;
+
+        const equip_coefficient = calc_equip_coefficient(equip);
+        const improvement_coefficient = calc_improvement_coefficient(equip);
+
+        total += (Math.sqrt(equip.improvement) * improvement_coefficient
+            + equip.seek) * equip_coefficient;
+    }
+    return total;
 }

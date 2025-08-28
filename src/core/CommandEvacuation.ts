@@ -1,13 +1,13 @@
 import { NT } from "@/data/map";
-import type { AreaId, EdgeDatas, NodeDatas } from "@/models/types";
-import type { UniqueId } from "@/models/types/brand";
+import type { AreaId, EdgeDatas, NodeDatas } from "@/types";
+
 /**
  * 艦隊退避コマンド
  */
 export type CommandEvacuation = {
     readonly node: string;
     readonly evacuation_ship_unique_ids: {
-        [fleet_index: number]: UniqueId[],
+        [fleet_index: number]: number[],
     };
 }
 
@@ -16,7 +16,7 @@ export type CommandEvacuation = {
  * @param items 初期値（省略可）
  * @returns 新しいCommandEvacuation配列
  */
-export function createCommandEvacuation(
+export function derive_command_evacuation(
     items: CommandEvacuation[] = [],
 ): CommandEvacuation[] {
     return [...items];
@@ -28,7 +28,7 @@ export function createCommandEvacuation(
  * @param item 追加するCommandEvacuation
  * @returns 新しいCommandEvacuation配列
  */
-export function addCommandEvacuation(
+export function add_command_evacuation(
     list: CommandEvacuation[],
     item: CommandEvacuation
 ): CommandEvacuation[] {
@@ -41,7 +41,7 @@ export function addCommandEvacuation(
  * @param node 削除対象のnode
  * @returns 新しいCommandEvacuation配列
  */
-export function removeCommandEvacuation(
+export function remove_command_evacuation(
     list: CommandEvacuation[],
     node: string
 ): CommandEvacuation[] {
@@ -54,7 +54,7 @@ export function removeCommandEvacuation(
  * CommandEvacuation配列を空にする
  * @returns 空のCommandEvacuation配列
  */
-export function clearCommandEvacuation(): CommandEvacuation[] {
+export function clear_command_evacuation(): CommandEvacuation[] {
     return [];
 }
 
@@ -65,7 +65,7 @@ export function clearCommandEvacuation(): CommandEvacuation[] {
  * @param node_datas 
  * @returns 
  */
-export function isBattleNode(
+export function is_battle_node(
     area: AreaId | null,
     node: string | null,
     node_datas: NodeDatas,
@@ -84,7 +84,7 @@ export function isBattleNode(
     return BATTLE_NODE_TYPES.includes(node_datas[area][node][2]);
 }
 
-export function isLastStopNode(
+export function is_last_stop_node(
     area_id: AreaId,
     node: string,
     edge_datas: EdgeDatas,
@@ -93,7 +93,7 @@ export function isLastStopNode(
 }
 
 /** 現在のNodeに司令退避が設定されているか判定して返す */
-export function isEvacuationNode(
+export function is_evacuation_node(
     command_vacuations: CommandEvacuation[],
     current_node: string
 ): boolean {

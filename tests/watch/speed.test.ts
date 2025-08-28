@@ -1,128 +1,103 @@
 import { Sp as Speed } from "@/core/branch";
-import EQUIP_DATAS, { EquipDatas } from "@/data/equip";
-import SHIP_DATAS, { ShipDatas } from "@/data/ship";
-import { createShip, Ship } from "@/models/Ship";
-import { EquipInDeck } from "@/models/types";
-import { brandFleetIndex, brandShipId, brandShipIndex, brandShipLv, FleetIndex, ShipId, ShipIndex, ShipLv } from "@/models/types/brand";
+import { EquipInDeck } from "@/types";
 import { describe, it, expect } from "vitest";
 import { BuildTuple, SPEED_EXPECTS, SpeedExpect, SpeedKey } from "../expects/speed";
+import { ASAHI, FLEY, HITOMI, HOSHO_KAI_NI, SAM_MK_2, SHIKINAMI, SHIPMAKAZE_KAI, YAMATO_KAI_NI, YAMATO_KAI_NI_JU } from "../assets/ship";
+import { NakedShip } from "@/models/ship/NakedShip";
+import { derive_equipped_ship } from "@/models/ship/EquippedShip";
+import { derive_equip } from "@/models/Equip";
 
-type CreateShipFn = (
-    equip_in_decks: EquipInDeck[],
-) => Ship;
+/** 改良型艦本式タービン */
+const TURBINE: EquipInDeck = {
+    id: 33,
+    improvement: 0,
+    is_ex: false,
+}
+
+/** 強化型艦本式缶 */
+const NORMAL_KAN: EquipInDeck = {
+    id: 34,
+    improvement: 0,
+    is_ex: false,
+}
+
+/** 新型高温高圧缶 */
+const NEW_KAN: EquipInDeck = {
+    id: 87,
+    improvement: 0,
+    is_ex: false,
+}
+
+/** 新型高温高圧缶★7 */
+const POWER_KAN: EquipInDeck = {
+    id: 87,
+    improvement: 7,
+    is_ex: false,
+}
 
 describe('艦速度テスト', () => {
     it('speed-test: 速度グループごとに想定される速度(装備込)になることを確認', async () => {
-        const FLEET_INDEX = brandFleetIndex(1);
-        const SHIP_INDEX = brandShipIndex(1);
-        const SHIP_LV = brandShipLv(99);
-
-        const pre_ship = makeCreateShip(
-            FLEET_INDEX,
-            SHIP_INDEX,
-            SHIP_DATAS,
-            EQUIP_DATAS,
-            SHIP_LV,
-        ); // ここまでどうでもいい
-
         // 高速A群
-        const SHIMAKAZE_KAI_ID = brandShipId(229);
         cartesianEquipPattern(
-            pre_ship(SHIMAKAZE_KAI_ID),
+            SHIPMAKAZE_KAI,
             SPEED_EXPECTS.FastA,
             'FastA',
         );
         // 高速B1群
-        const YAMATO_KAI_NI_ID = brandShipId(911);
         cartesianEquipPattern(
-            pre_ship(YAMATO_KAI_NI_ID),
+            YAMATO_KAI_NI,
             SPEED_EXPECTS.FastB1,
             'FastB1',
         );
         // 高速B2群
-        const SHIKINAMI_ID = brandShipId(14);
         cartesianEquipPattern(
-            pre_ship(SHIKINAMI_ID),
+            SHIKINAMI,
             SPEED_EXPECTS.FastB2,
             'FastB2',
         );
         // 高速C群
-        const SAM_MK_2_ID = brandShipId(920);
         cartesianEquipPattern(
-            pre_ship(SAM_MK_2_ID),
+            SAM_MK_2,
             SPEED_EXPECTS.FastC,
             'FastC',
         );
         // 低速A群
-        const YAMATO_KAI_NI_JU_ID = brandShipId(916);
         cartesianEquipPattern(
-            pre_ship(YAMATO_KAI_NI_JU_ID),
+            YAMATO_KAI_NI_JU,
             SPEED_EXPECTS.SlowA,
             'SlowA',
         );
         // 低速B群
-        const ASAHI_ID = brandShipId(953);
         cartesianEquipPattern(
-            pre_ship(ASAHI_ID),
+            ASAHI,
             SPEED_EXPECTS.SlowB,
             'SlowB',
         );
         // 低速C群
-        const HITOMI_ID = brandShipId(494);
         cartesianEquipPattern(
-            pre_ship(HITOMI_ID),
+            HITOMI,
             SPEED_EXPECTS.SlowC,
             'SlowC',
         );
         // 低速D群
-        const FLEY_ID = brandShipId(881);
         cartesianEquipPattern(
-            pre_ship(FLEY_ID),
+            FLEY,
             SPEED_EXPECTS.SlowD,
             'SlowD',
         );
         // 低速E群
-        const HOSHO_KAI_NI_ID = brandShipId(894);
         cartesianEquipPattern(
-            pre_ship(HOSHO_KAI_NI_ID),
+            HOSHO_KAI_NI,
             SPEED_EXPECTS.SlowE,
             'SlowE',
         );
         
         function cartesianEquipPattern (
-            create_ship_fn: CreateShipFn,
+            ship: NakedShip,
             expects: SpeedExpect,
             key: SpeedKey,
         ): void {
-            /** 改良型艦本式タービン */
-            const TURBINE: EquipInDeck = {
-                id: 33,
-                improvement: 0,
-                is_ex: false,
-            }
-
-            /** 強化型艦本式缶 */
-            const NORMAL_KAN: EquipInDeck = {
-                id: 34,
-                improvement: 0,
-                is_ex: false,
-            }
-
-            /** 新型高温高圧缶 */
-            const NEW_KAN: EquipInDeck = {
-                id: 87,
-                improvement: 0,
-                is_ex: false,
-            }
-
-            /** 新型高温高圧缶★7 */
-            const POWER_KAN: EquipInDeck = {
-                id: 87,
-                improvement: 7,
-                is_ex: false,
-            }
-
-            const getSpeed = curryGetSpeed(create_ship_fn);
+            const getSpeed = curryGetSpeed(ship);
             const result: BuildTuple<Speed, 19> = [
                 getSpeed([]), // すっぴん
 
@@ -172,50 +147,22 @@ describe('艦速度テスト', () => {
             if (is_not_SlowD) expect(expects[17]).toBe(result[17]);
             if (is_not_SlowD) expect(expects[18]).toBe(result[18]);
         }
+        function curryGetSpeed(ship: NakedShip): (equip_in_decks: EquipInDeck[]) => Speed {
+            return function (equip_in_decks: EquipInDeck[]): Speed {
+                const equips = equip_in_decks.map(deck => 
+                    derive_equip(
+                        deck.id,
+                        deck.improvement,
+                        deck.is_ex,
+                    )
+                );
+                const equipped_ship =  derive_equipped_ship(
+                    ship,
+                    equips,
+                );
+
+                return equipped_ship.speed;
+            };
+        }
     });
 });
-
-/**
- * 艦船生成関数をカリー化し、装備パターンのみで速度を取得できる関数を返す。
- * @param create_ship_fn 艦船生成関数
- * @returns 装備パターンを受けて速度を返す関数
- */
-function curryGetSpeed(create_ship_fn: CreateShipFn): (equip_in_decks: EquipInDeck[]) => Speed {
-    return function (equip_in_decks: EquipInDeck[]): Speed {
-        return create_ship_fn(equip_in_decks).speed;
-    };
-}
-
-/**
- * createShipの三段階カリー化バージョン
- * @param fleet_index 艦隊番号
- * @param ship_index 艦番号
- * @param ship_datas 艦船データ
- * @param equip_datas 装備データ
- * @param lv レベル
- * @returns ship_idを受け取り、さらに装備・HP・ASW・運を受け取ってShipを返す関数
- */
-export function makeCreateShip(
-    fleet_index: FleetIndex,
-    ship_index: ShipIndex,
-    ship_datas: ShipDatas,
-    equip_datas: EquipDatas,
-    lv: ShipLv,
-): (
-    ship_id: ShipId
-) => (
-    equip_in_decks: EquipInDeck[],
-) => Ship {
-    return (ship_id: ShipId) => (
-        equip_in_decks: EquipInDeck[],
-    ) =>
-        createShip(
-            fleet_index,
-            ship_index,
-            ship_datas,
-            equip_datas,
-            lv,
-            ship_id,
-            equip_in_decks,
-        );
-}

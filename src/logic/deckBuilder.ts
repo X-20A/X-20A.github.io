@@ -1,19 +1,20 @@
-import { type FleetComponent, createFleetComponent } from '@/core/FleetComponent';
-import type { Ship } from '@/models/Ship';
-import { createShip } from '@/models/Ship';
-import type { EquipInDeck, Improvement } from '@/models/types';
-import type DeckBuilder from '@/models/types/DeckBuilder';
+import { type FleetComponent, derive_fleet_component } from '@/models/fleet/FleetComponent';
+import type { EquippedShip } from '@/models/ship/EquippedShip';
+import { derive_equipped_ship } from '@/models/ship/EquippedShip';
+import type { EquipInDeck, Improvement } from '@/types';
+import type DeckBuilder from '@/types/DeckBuilder';
 import type {
     DeckBuilderFleet,
     DeckBuilderShip,
     DeckBuilderItem
-} from '@/models/types/DeckBuilder';
+} from '@/types/DeckBuilder';
 import CustomError from "@/errors/CustomError";
-import { isExistsAndNumber } from '@/logic/util';
-import type { AdoptFleet } from '@/core/AdoptFleet';
-import type { ShipDatas } from '@/data/ship';
-import type { EquipDatas } from '@/data/equip';
-import { brandFleetIndex, brandShipAsw, brandShipHp, brandShipId, brandShipIndex, brandShipLuck, brandShipLv } from '@/models/types/brand';
+import { is_exists_and_Number } from '@/logic/util';
+import type { AdoptFleet } from '@/models/fleet/AdoptFleet';
+import { brandShipAsw, brandShipHp, brandShipIndex, brandShipLuck, brandShipLv } from '@/types/brand';
+import { derive_equip } from '@/models/Equip';
+import { derive_naked_ship } from '@/models/ship/NakedShip';
+import { derive_fleet_unit } from '@/models/fleet/FleetUnit';
 
 /**
  * デッキビルダーからFleetComponent[]を生成    
@@ -22,19 +23,17 @@ import { brandFleetIndex, brandShipAsw, brandShipHp, brandShipId, brandShipIndex
  * @returns - デッキビルダーから読み取った艦隊インスタンス
  * @throws {Error} - デッキビルダーの形式がまずかったり、艦隊が空だったりするとエラーを投げるのでcatchすること
  */
-export function createFleetComponentsFromDeckBuilder(
+export function derive_FleetComponents_from_DeckBuilder(
     deck: DeckBuilder,
-    ship_datas: ShipDatas,
-    equip_datas: EquipDatas,
 ): FleetComponent[] {
 	const fleets = [] as FleetComponent[];
     
-	const command_lv = isExistsAndNumber(deck.hqlv) ? Number(deck.hqlv) : 120;
-	for (let fleet_index = brandFleetIndex(1);fleet_index < 5;fleet_index++) { // 艦隊
+	const command_lv = is_exists_and_Number(deck.hqlv) ? Number(deck.hqlv) : 120;
+	for (let fleet_index = 1;fleet_index < 5;fleet_index++) { // 艦隊
         const fleet_key = `f${fleet_index}` as 'f1'|'f2'|'f3'|'f4';
 		if (!deck[fleet_key]) continue;
 
-		const ships = [] as Ship[];
+		const ships = [] as EquippedShip[];
 		const fleet_deck = deck[fleet_key];
 		for (let ship_index = brandShipIndex(1);ship_index <= 7;ship_index++) { // 艦
             const ship_key = `s${ship_index}` as 's1'|'s2'|'s3'|'s4'|'s5'|'s6'|'s7';
@@ -47,7 +46,7 @@ export function createFleetComponentsFromDeckBuilder(
 				for (let k = 0; k < keys.length; k++) { // 装備
 					const key = keys[k];
 					const item = ship_deck.items[key];
-					if (isExistsAndNumber(item.id) && isExistsAndNumber(item.id)) {
+					if (is_exists_and_Number(item.id) && is_exists_and_Number(item.id)) {
 						const id = item.id;
 						const implovement = item.rf ?? 0;
 
@@ -64,29 +63,38 @@ export function createFleetComponentsFromDeckBuilder(
 				}
 			}
 			
-            const ship_id = brandShipId(ship_deck.id);
+            const ship_id = ship_deck.id;
             const ship_lv = brandShipLv(ship_deck.lv);
             const ship_hp = brandShipHp(ship_deck.hp);
             const ship_asw = brandShipAsw(ship_deck.asw);
             const ship_luck = brandShipLuck(ship_deck.luck);
 
-			const ship = createShip(
-				fleet_index,
-				ship_index,
-                ship_datas,
-                equip_datas,
-				ship_lv,
+            const naked_ship = derive_naked_ship(
+                ship_lv,
                 ship_id,
-				equip_decks,
-				ship_hp,
-				ship_asw,
+                ship_hp,
+                ship_asw,
                 ship_luck,
+            );
+
+            const equips = equip_decks.map(equip_deck =>
+                derive_equip(
+                    equip_deck.id,
+                    equip_deck.improvement,
+                    equip_deck.is_ex,
+                )
+            );
+
+			const ship = derive_equipped_ship(
+                naked_ship,
+                equips,
 			);
 			ships.push(ship);
 		}
 		if (ships.length === 0) continue;
 
-		const fleet = createFleetComponent(ships, command_lv);
+        const units = ships.map((ship, index) => derive_fleet_unit(index, ship));
+        const fleet = derive_fleet_component(units, command_lv);
 		fleets.push(fleet);
 	}
 	if (!fleets.length) {
@@ -96,14 +104,16 @@ export function createFleetComponentsFromDeckBuilder(
 	return fleets;
 }
 
-export function createDeckBuilderFromAdoptFleet(adoptFleet: AdoptFleet): DeckBuilder {
+export function derive_DeckBuilder_from_AdoptFleet(
+    adoptFleet: AdoptFleet,
+): DeckBuilder {
     const deck = {} as DeckBuilder;
     for (let i = 0;i < adoptFleet.fleets.length;i++) {
         const fleet = adoptFleet.fleets[i];
         
         const deck_fleet = {} as DeckBuilderFleet;
-        for (let j = 0;j < fleet.ships.length;j++) {
-            const ship = fleet.ships[j];
+        for (let j = 0;j < fleet.units.length;j++) {
+            const ship = fleet.units[j].ship;
 
             const deck_ship = {} as DeckBuilderShip;
             deck_ship.id = ship.id;
@@ -118,8 +128,8 @@ export function createDeckBuilderFromAdoptFleet(adoptFleet: AdoptFleet): DeckBui
             deck_ship.ev = 0;
             deck_ship.los = Number(ship.status_seek);
             const deck_item: { [name: string]: DeckBuilderItem } = {};
-            for (let k = 0;k < ship.equip_in_decks.length;k++) {
-                const equip = ship.equip_in_decks[k];
+            for (let k = 0;k < ship.equips.length;k++) {
+                const equip = ship.equips[k];
 
                 const deck_equip = {
                     id: equip.id,

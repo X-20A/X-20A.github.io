@@ -7,7 +7,7 @@
     >
       <template v-for="(group, key) in matched_data" :key="key">
         <div class="inner">
-          <p class="title" @pointerdown="startDrag">
+          <p class="title" @pointerdown="start_drag">
 						{{ group.label ? group.label : key }}:
 					</p>
           <div class="value-box">
@@ -19,7 +19,7 @@
                     type="radio"
 										:value="option.value"
 										v-model="selectedOptions[key]"
-										@change="updateOption"
+										@change="update_option"
                   />
                   <span>
 										{{ option.label ? option.label : option.value }}
@@ -37,7 +37,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { useStore } from '@/stores';
-import type { AreaId } from '@/models/types';
+import type { AreaId } from '@/types';
 
 // オプションパネル
 
@@ -62,7 +62,7 @@ type OptionSelector = {
   [key in AreaId]?: Record<string, OptionGroup>;
 };
 
-const option_data: OptionSelector = {
+const OPTION_DATA: OptionSelector = {
 	'7-3': {
 		'phase': {
 			label: '第二ボス',
@@ -295,12 +295,12 @@ const option_data: OptionSelector = {
 			],
 		},
 	},
-}; // @expansion
+} as const; // @expansion
 
 // 海域絞り込み
 const matched_data = computed(() => {
-  if (selectedArea.value && option_data[selectedArea.value] && options.value) {
-		const base_datas = option_data[selectedArea.value]!;
+  if (selectedArea.value && OPTION_DATA[selectedArea.value] && options.value) {
+		const base_datas = OPTION_DATA[selectedArea.value]!;
     return base_datas;
   }
 });
@@ -308,7 +308,7 @@ const matched_data = computed(() => {
 const selectedOptions = ref<Record<string, string>>({});
 
 // 入力からstore
-const updateOption = (event: Event) => {
+const update_option = (event: Event) => {
 	if (selectedArea.value) {
 		const target = event.target as HTMLInputElement;
 		const key = target.name;
@@ -335,16 +335,16 @@ const isDragging = ref(false); // ドラッグ中かどうか
 const offset = ref({ x: 0, y: 0 }); // マウスとのオフセット
 
 // ドラッグ開始
-const startDrag = (event: MouseEvent) => {
+const start_drag = (event: MouseEvent) => {
   isDragging.value = true;
   offset.value.x = event.clientX - position.value.x;
   offset.value.y = event.clientY - position.value.y;
-  window.addEventListener('mousemove', onDrag);
-  window.addEventListener('mouseup', stopDrag);
+  window.addEventListener('mousemove', on_drag);
+  window.addEventListener('mouseup', stop_drag);
 };
 
 // ドラッグ中の処理
-const onDrag = (event: MouseEvent) => {
+const on_drag = (event: MouseEvent) => {
   if (isDragging.value) {
     position.value.x = event.clientX - offset.value.x;
     position.value.y = event.clientY - offset.value.y;
@@ -352,10 +352,10 @@ const onDrag = (event: MouseEvent) => {
 };
 
 // ドラッグ終了
-const stopDrag = () => {
+const stop_drag = () => {
   isDragging.value = false;
-  window.removeEventListener('mousemove', onDrag);
-  window.removeEventListener('mouseup', stopDrag);
+  window.removeEventListener('mousemove', on_drag);
+  window.removeEventListener('mouseup', stop_drag);
 };
 </script>
 

@@ -4,7 +4,7 @@
  * @param value なんでもどうぞ
  * @returns 
  */
-export function isExistsAndNumber(value: unknown): boolean {
+export function is_exists_and_Number(value: unknown): boolean {
     if (typeof value === 'number') {
         return true;
     }
@@ -39,7 +39,7 @@ export function getZeroFilledTime(date: Date): string {
  * @param input エスケープ対象の文字列
  * @returns エスケープ済み文字列
  */
-export function sanitizeText(input: string): string {
+export function sanitize_text(input: string): string {
     const escape_map: Record<string, string> = {
         '&': '&amp;',
         '<': '&lt;',

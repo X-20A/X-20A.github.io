@@ -2,18 +2,16 @@ import { describe, it, expect } from 'vitest';
 import Big from 'big.js';
 import LZString from 'lz-string';
 import {
-    createSimExecutor,
-    startSim,
+    derive_sim_executer,
+    start_sim,
 } from '@/core/SimExecutor';
 import Const from '@/constants/const';
-import type { AreaId, OptionsType } from '@/models/types';
-import { createFleetComponentsFromDeckBuilder } from '@/logic/deckBuilder';
-import { createAdoptFleet, getEscortFleetNames, getMainFleetNames } from '@/core/AdoptFleet';
-import { getParam } from '@/logic/url';
+import type { AreaId, OptionsType } from '@/types';
+import { derive_FleetComponents_from_DeckBuilder } from '@/logic/deckBuilder';
+import { derive_adopt_fleet, calc_escort_fleet_ship_names, calc_main_fleet_ship_names } from '@/models/fleet/AdoptFleet';
+import { calc_URL_param } from '@/logic/url';
 import { nomal_mock_datas, astray_mock_datas } from '../expects/route';
 import { NODE_DATAS, NT as NodeType } from '@/data/map';
-import SHIP_DATAS from '@/data/ship';
-import EQUIP_DATAS from '@/data/equip';
 import type { Ft } from '@/core/branch';
 import type { CommandEvacuation } from '@/core/CommandEvacuation';
 import { getSimSet } from './setup';
@@ -36,8 +34,8 @@ describe('Simテスト', () => {
                 options: OptionsType,
                 command_evacuations: CommandEvacuation[] = [],
             ) => {
-                const executor = createSimExecutor(adoptFleet, areaId, options, command_evacuations);
-                const result = await startSim(executor, adoptFleet, command_evacuations);
+                const executor = derive_sim_executer(adoptFleet, areaId, options, command_evacuations);
+                const result = await start_sim(executor, adoptFleet, command_evacuations);
                 // console.log(result);
                 const totalRate = result.reduce(
                     (sum, item) => sum.plus(item.rate),
@@ -99,8 +97,8 @@ describe('Simテスト', () => {
                 console.error('Error occurred:', error);
                 console.log('area: ', debug_area_id);
                 console.log('option: ', debug_option);
-                console.log(getMainFleetNames(adoptFleet));
-                if (adoptFleet.fleet_type > 0) console.log(getEscortFleetNames(adoptFleet));
+                console.log(calc_main_fleet_ship_names(adoptFleet));
+                if (adoptFleet.fleet_type > 0) console.log(calc_escort_fleet_ship_names(adoptFleet));
                 console.log(adoptFleet.fleet_type);
                 console.log(JSON.stringify(simSet.deck));
                 throw error;
@@ -122,16 +120,14 @@ describe('Simテスト', () => {
             const debug_deck =
                 mock_data.deck.replaceAll('https://x-20a.github.io', 'http://localhost:5173/compass/');
 
-            const compressed_deck = getParam('pdz', mock_data.deck)!;
+            const compressed_deck = calc_URL_param('pdz', mock_data.deck)!;
             const deck_string = LZString.decompressFromEncodedURIComponent(compressed_deck);
             const deck = JSON.parse(deck_string);
-            const fleet_components = createFleetComponentsFromDeckBuilder(
+            const fleet_components = derive_FleetComponents_from_DeckBuilder(
                 deck,
-                SHIP_DATAS,
-                EQUIP_DATAS,
             );
             const fleet_type_id = deck!.f1!.t as Ft;
-            const adoptFleet = createAdoptFleet(
+            const adoptFleet = derive_adopt_fleet(
                 fleet_components,
                 fleet_type_id,
                 [999, 999, 999, 999],
@@ -152,8 +148,8 @@ describe('Simテスト', () => {
 
                 const command_evacuations: CommandEvacuation[] = []; // 退避設定はなし
                 
-                const executor = createSimExecutor(adoptFleet, area_id, options, command_evacuations);
-                const result = startSim(executor, adoptFleet, command_evacuations);
+                const executor = derive_sim_executer(adoptFleet, area_id, options, command_evacuations);
+                const result = start_sim(executor, adoptFleet, command_evacuations);
                 const actual_route = result[0].route.join('-');
 
                 if (expected_route !== actual_route) {

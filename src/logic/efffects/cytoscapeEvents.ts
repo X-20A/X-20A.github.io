@@ -4,12 +4,12 @@
  */
 import type cytoscape from 'cytoscape';
 import type { Ref } from 'vue';
-import type { AdoptFleet } from '@/core/AdoptFleet';
-import { createSyonanResource, type SyonanResource } from '@/models/resource/SyonanResource';
-import { createNomalResource, type NomalResource } from '@/models/resource/NomalResource';
-import type { AreaId, ItemIconKey, NodeDatas, EdgeDatas } from '@/models/types';
+import type { AdoptFleet } from '@/models/fleet/AdoptFleet';
+import { derive_Syonan_resource, type SyonanResource } from '@/models/resource/SyonanResource';
+import { derive_normal_resource, type NomalResource } from '@/models/resource/NomalResource';
+import type { AreaId, ItemIconKey, NodeDatas, EdgeDatas } from '@/types';
 import type { StoreType, ModalStoreType } from '../../stores/types';
-import { isSpecialResourceNode } from '../resource';
+import { is_special_resource_node } from '../resource';
 import type { ConstType } from '@/constants/const';
 
 /**
@@ -32,7 +32,7 @@ import type { ConstType } from '@/constants/const';
  * @param syonanResource 湘南資源ref
  * @param nomalResource 通常資源ref
  */
-export function registerCytoscapeEvents(
+export function register_Cytoscape_events(
     cytoscape_core: cytoscape.Core,
     generarteBranchHtml: (node_name: string) => string | null,
     adjustBranchStyle: (cy: cytoscape.Core, event: cytoscape.EventObject) => void,
@@ -70,9 +70,9 @@ export function registerCytoscapeEvents(
         if (!node) return;
         if (!drewArea.value) return;
         hidePopup();
-        if (isSpecialResourceNode(drewArea.value, node)) {
+        if (is_special_resource_node(drewArea.value, node)) {
             if (adoptFleet.value) {
-                syonanResource.value = createSyonanResource(
+                syonanResource.value = derive_Syonan_resource(
                     drewArea.value,
                     node,
                     adoptFleet.value,
@@ -84,7 +84,7 @@ export function registerCytoscapeEvents(
             }
         } else {
             if (adoptFleet.value) {
-                nomalResource.value = createNomalResource(
+                nomalResource.value = derive_normal_resource(
                     drewArea.value,
                     node,
                     adoptFleet.value,

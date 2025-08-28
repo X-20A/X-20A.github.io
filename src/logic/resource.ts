@@ -1,4 +1,4 @@
-export function isSpecialResourceNode(
+export function is_special_resource_node(
     areaId: string,
     node: string,
 ): boolean {
@@ -11,7 +11,7 @@ export function isSpecialResourceNode(
  * @param {number} [breakIndex=6] - 改行するインデックス（デフォルト: 6）
  * @returns {string} 整形済みクラフト名リスト（HTML）
  */
-export function formatCraftNames(
+export function calc_formated_craft_names(
     names: ReadonlyArray<string>,
     breakIndex = 6
 ): string {

@@ -1,4 +1,4 @@
-import type { ItemIconKey } from "../types";
+import type { ItemIconKey } from "@/types";
 
 /**
  * リソースアイコンセットの型定義
@@ -19,12 +19,12 @@ export type ResourceIconSuite = {
  * @param craft 開発資材アイコン
  * @returns ResourceIconSuite
  */
-export function createResourceIconSuite(
+export function derive_resource_icon_suite(
     icons: Record<ItemIconKey, string>,
     drum: string,
     craft: string
 ): ResourceIconSuite {
-    return {
+    const suite: ResourceIconSuite = {
         fuel: icons.fuel,
         ammo: icons.ammo,
         steel: icons.steel,
@@ -32,4 +32,6 @@ export function createResourceIconSuite(
         drum,
         craft
     };
+
+    return suite;
 }

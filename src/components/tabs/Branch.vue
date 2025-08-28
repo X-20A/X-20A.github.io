@@ -30,8 +30,8 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue';
 import { useStore } from '@/stores';
-import { convertBranchDataToHTML } from '@/logic/convert';
-import { sanitizeText } from '@/logic/util';
+import { convert_branch_data_to_HTML } from '@/logic/convert';
+import { sanitize_text } from '@/logic/util';
 
 // 分岐条件一覧
 
@@ -68,8 +68,8 @@ watch(selectedArea, () => {
 
 	formated_branch.value = Object.fromEntries(
     Object.entries(area_branch).map(([key, node_branch]) => {
-			const topic = sanitizeText(`${selectedArea.value}-${node_branch}`);
-			let html = convertBranchDataToHTML(node_branch, topic);
+			const topic = sanitize_text(`${selectedArea.value}-${node_branch}`);
+			let html = convert_branch_data_to_HTML(node_branch, topic);
 			
 			if (html === '$sw') html = '能動分岐';
 			

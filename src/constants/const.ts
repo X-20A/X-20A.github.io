@@ -1,4 +1,5 @@
-import type { OptionsType } from '@/models/types'
+import type { OptionsType } from '@/types'
+import { EquipName } from '@/types/equipName';
 
 /**
  * 定数系    
@@ -6,7 +7,7 @@ import type { OptionsType } from '@/models/types'
  */
 export default class Const {
 
-    static readonly VALID_CRAFT_NAMES: ReadonlyArray<string> =
+    static readonly VALID_CRAFT_NAMES: EquipName[] =
         [
             '大発動艇',
             '大発動艇(八九式中戦車&陸戦隊)',
@@ -23,7 +24,7 @@ export default class Const {
     /**
      * getterからコピーを取得できる
      */
-    private static readonly _OPTIONS = {
+    private static readonly _OPTIONS: OptionsType = {
         '4-5': { 'A': 'D', 'C': 'F', 'I': 'J' },
         '5-3': { 'O': 'K' },
         '5-5': { 'F': 'D' },
@@ -47,7 +48,7 @@ export default class Const {
         '60-4': { 'phase': '1', 'A': 'B', 'F': 'F1', 'G': 'G1' },
         '60-5': { 'phase': '1', 'difficulty': '4', 'B': 'B1', 'D': 'D1' },
         '60-6': { 'phase': '1', 'difficulty': '4', 'G': 'J', 'K': 'J3', 'R': 'S' },
-    } as OptionsType;  // @expansion
+    };  // @expansion
 
     /**
      * オプションの初期値

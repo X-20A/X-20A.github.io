@@ -16,7 +16,8 @@
     "tsc": "vue-tsc --noEmit",
     "dep": "depcheck",
     "lint": "biome lint",
-    "format": "biome format"
+    "format": "biome format",
+	"gen_type": "bun run scripts/generateUnion.ts"
   },
   "dependencies": {
     "@biomejs/biome": "^1.9.4",

@@ -2,44 +2,58 @@ import { SG as SpeedGroup } from '@/data/ship';
 import { Sp as Speed } from '@/core/branch';
 import type { Equip } from '@/models/Equip';
 
+type PreInfo = {
+    /** 改良型艦本式タービン 装備フラグ */
+    readonly has_turbine: boolean,
+    /** 強化型艦本式缶 装備数 */
+    readonly nomal_kan_count: number,
+    /** 新型高温高圧缶 装備数 */
+    readonly new_kan_count: number,
+    /** 新型高温高圧缶☆7↑ 装備数 */
+    readonly power_kan_count: number,
+}
+const INITIAL: PreInfo = {
+    has_turbine: false,
+    nomal_kan_count: 0,
+    new_kan_count: 0,
+    power_kan_count: 0,
+} as const;
+
+const calc_pre_info = (
+    equips: Equip[],
+): PreInfo => {
+    return equips.reduce((acc, item) => {
+        if (item.id === 33) {
+            return { ...acc, has_turbine: true };
+        } else if (item.id === 34) {
+            return { ...acc, nomal_kan_count: acc.nomal_kan_count + 1 };
+        } else if (item.id === 87) {
+            return {
+                ...acc,
+                new_kan_count: acc.new_kan_count + 1,
+                power_kan_count: acc.power_kan_count + (item.improvement >= 7 ? 1 : 0)
+            };
+        }
+        return acc;
+    }, { ...INITIAL });
+}
+
 /**
  * 装備と速力グループから速度IDを判定して返す
  * @param equips 
  * @param speed_group 
  * @returns 
  */
-export function calcShipSpeed(equips: Equip[], speed_group: SpeedGroup): Speed {
+export function calc_ship_speed(
+    equips: Equip[],
+    speed_group: SpeedGroup,
+): Speed {
     const {
-        /** 改良型艦本式タービン 装備フラグ */
         has_turbine,
-        /** 強化型艦本式缶 装備数 */
         nomal_kan_count,
-        /** 新型高温高圧缶 装備数 */
         new_kan_count,
-        /** 新型高温高圧缶☆7↑ 装備数 */
         power_kan_count
-    } = equips.reduce(
-        (acc, item) => {
-            if (item.id === 33) {
-                return { ...acc, has_turbine: true };
-            } else if (item.id === 34) {
-                return { ...acc, nomal_kan_count: acc.nomal_kan_count + 1 };
-            } else if (item.id === 87) {
-                return {
-                    ...acc,
-                    new_kan_count: acc.new_kan_count + 1,
-                    power_kan_count: acc.power_kan_count + (item.implovement >= 7 ? 1 : 0)
-                };
-            }
-            return acc;
-        },
-        {
-            has_turbine: false,
-            nomal_kan_count: 0,
-            new_kan_count: 0,
-            power_kan_count: 0
-        }
-    );
+    } = calc_pre_info(equips);
 
     const total_kan_count = nomal_kan_count + new_kan_count;
 

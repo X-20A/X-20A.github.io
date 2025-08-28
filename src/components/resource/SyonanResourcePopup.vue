@@ -10,7 +10,7 @@
 			&nbsp;+
 			<span class="tooltip-container">
 				<img :src="data.icon_suite.craft" class="item-icon craft-icon">
-				<span class="tooltip-text" v-html="data.formattedCraftNames"></span>
+				<span class="tooltip-text" v-html="data.formatted_craft_names"></span>
 			</span>
 			{{ data.fleet_total_craft }} * {{ data.FUEL_EQUIP_COEFFICIENT.craft }}
 		</p>
@@ -30,7 +30,7 @@
 			&nbsp;+
 			<span class="tooltip-container">
 				<img :src="data.icon_suite.craft" class="item-icon craft-icon">
-				<span class="tooltip-text" v-html="data.formattedCraftNames"></span>
+				<span class="tooltip-text" v-html="data.formatted_craft_names"></span>
 			</span>
 			{{ data.fleet_total_craft }} * {{ data.IMO_EQUIP_COEFFICIENT.craft }}
 		</p>

@@ -1,3 +1,6 @@
+import type { ShipData } from '@/types';
+import { ShipId } from '@/types/shipId';
+
 /* http://kancolle-calc.net/deckbuilder.html 様より失敬 */
 
 // 同一ファイル内に定義しないとバンドル時にインライン化されないので注意
@@ -87,14 +90,11 @@ export const enum SG {
   SlowB2 = 10,
 }
 
-
-import type { ShipData } from '@/models/types';
-
-export type ShipDatas = Record<number, ShipData>;
+export type ShipDatas = Record<ShipId, ShipData>;
 
 // NOTE: 配列にしてもgzip後は1kBしか変わらない あとなぜかrand-testがこける
-const ship_datas: ShipDatas = {
-1:{name:"睦月",type:ST.DD,seek:4,seek2:17,na:NA.Japan,sg:SG.FastB2}
+const SHIP_DATAS: ShipDatas = {
+ 1:{name:"睦月",type:ST.DD,seek:4,seek2:17,na:NA.Japan,sg:SG.FastB2}
 ,2:{name:"如月",type:ST.DD,seek:4,seek2:17,na:NA.Japan,sg:SG.FastB2}
 ,6:{name:"長月",type:ST.DD,seek:4,seek2:17,na:NA.Japan,sg:SG.FastB2}
 ,7:{name:"三日月",type:ST.DD,seek:4,seek2:17,na:NA.Japan,sg:SG.FastB2}
@@ -908,4 +908,4 @@ const ship_datas: ShipDatas = {
 ,737:{name:"Richard P.Leary改",type:ST.DD,seek:21,seek2:61,na:NA.USA,sg:SG.FastB2}
 }; // @expansion
 
-export default ship_datas;
+export default SHIP_DATAS;

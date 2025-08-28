@@ -1,15 +1,15 @@
 import { EDGE_DATAS } from "@/data/map";
 import CustomError from "@/errors/CustomError";
-import type { AdoptFleet } from "./AdoptFleet";
+import type { AdoptFleet } from "../models/fleet/AdoptFleet";
 import {
     type SimFleet,
-    createDefaultSimFleet,
-    cloneSimFleet,
-    progressSimFleet,
-    getEvacuatedFleet,
-} from "./SimFleet";
+    derive_default_sim_fleet,
+    clone_sim_fleet,
+    progress_sim_fleet,
+    calc_evacuated_fleet,
+} from "../models/fleet/SimFleet";
 import { calcNextNode } from "./branch";
-import type { SimResult, AreaId, OptionsType, EdgeData } from "@/models/types";
+import type { SimResult, AreaId, OptionsType, EdgeData } from "@/types";
 import type { CommandEvacuation } from "./CommandEvacuation";
 
 /**
@@ -36,7 +36,7 @@ export const MAX_CLONE_COUNT = 15;
  * @param command_evacuations 退避艦情報
  * @returns SimControllerState
  */
-export function createSimExecutor(
+export function derive_sim_executer(
     adopt_fleet: AdoptFleet,
     area_id: AreaId,
     options: OptionsType,
@@ -62,7 +62,7 @@ export function createSimExecutor(
  * @param results 結果配列
  * @returns { clone_count: number, sim_fleets: SimFleet[], results: SimResult[] }
  */
-function advanceSimFleet(
+function advance_sim_fleet(
     sim_fleet: SimFleet,
     executor: SimExecutor,
     area_routes: EdgeData[],
@@ -72,7 +72,7 @@ function advanceSimFleet(
     results: SimResult[]
 ): { clone_count: number, sim_fleets: SimFleet[], results: SimResult[] } {
     // 退避適用
-    const evacuated_sim_fleet = getEvacuatedFleet(
+    const evacuated_sim_fleet = calc_evacuated_fleet(
         sim_fleet,
         command_evacuations,
         sim_fleet.current_node
@@ -89,8 +89,8 @@ function advanceSimFleet(
             executor.option,
         );
         if (!Array.isArray(branched_nodes)) { // 確率分岐でない
-            const updated_sim_fleet = progressSimFleet(evacuated_sim_fleet, branched_nodes, 1);
-            return advanceSimFleet(
+            const updated_sim_fleet = progress_sim_fleet(evacuated_sim_fleet, branched_nodes, 1);
+            return advance_sim_fleet(
                 updated_sim_fleet,
                 executor,
                 area_routes,
@@ -101,7 +101,7 @@ function advanceSimFleet(
             );
         } else { // 確率分岐ならSimFleet分裂
             const branched_sim_fleets = branched_nodes.slice(1).map(({ node, rate }) =>
-                progressSimFleet(cloneSimFleet(evacuated_sim_fleet), node, rate)
+                progress_sim_fleet(clone_sim_fleet(evacuated_sim_fleet), node, rate)
             );
             const new_sim_fleets = [...sim_fleets, ...branched_sim_fleets.reverse()];
             const new_clone_count = clone_count + branched_sim_fleets.length;
@@ -111,12 +111,12 @@ function advanceSimFleet(
                 console.groupEnd();
                 throw new CustomError('あー！無限ループ！');
             }
-            const updated_sim_fleet = progressSimFleet(
+            const updated_sim_fleet = progress_sim_fleet(
                 evacuated_sim_fleet,
                 branched_nodes[0].node,
                 branched_nodes[0].rate,
             );
-            return advanceSimFleet(
+            return advance_sim_fleet(
                 updated_sim_fleet,
                 executor,
                 area_routes,
@@ -128,8 +128,8 @@ function advanceSimFleet(
         }
     } else if (next_node.length === 1) {
         // 一本道
-        const updated_sim_fleet = progressSimFleet(evacuated_sim_fleet, next_node[0][1], 1);
-        return advanceSimFleet(
+        const updated_sim_fleet = progress_sim_fleet(evacuated_sim_fleet, next_node[0][1], 1);
+        return advance_sim_fleet(
             updated_sim_fleet,
             executor,
             area_routes,
@@ -151,18 +151,18 @@ function advanceSimFleet(
 /**
  * シミュレーション開始
  */
-export function startSim(
+export function start_sim(
     executor: SimExecutor,
     adopt_fleet: AdoptFleet,
     command_evacuations: CommandEvacuation[],
 ): SimResult[] {
-    let sim_fleets: SimFleet[] = [createDefaultSimFleet(adopt_fleet)];
+    let sim_fleets: SimFleet[] = [derive_default_sim_fleet(adopt_fleet)];
     let results: SimResult[] = [];
     const area_routes = EDGE_DATAS[executor.area_id];
     let clone_count = executor.clone_count;
     while (sim_fleets.length > 0) {
         const sim_fleet = sim_fleets.pop()!;
-        const advance_result = advanceSimFleet(
+        const advance_result = advance_sim_fleet(
             sim_fleet,
             executor,
             area_routes,

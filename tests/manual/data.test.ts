@@ -1,9 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import path, { basename } from 'node:path';
+import path from 'node:path';
 import fs from 'node:fs';
 import axios from 'axios';
 import SHIP_DATAS, { ST as ShipType } from '@/data/ship';
 import EQUIP_DATAS, { EquipType } from '@/data/equip';
+import { ShipId } from '@/types/shipId';
 
 describe('Dataテスト', () => {
     it('data-test: 制空シミュのデータと照合して艦や装備に抜けや不一致が無いか確認', async () => {
@@ -45,7 +46,7 @@ describe('Dataテスト', () => {
         const missing_ships = [] as MissingShip[];
         const mismatch_ship_params = [] as MismatchShipParam[];
         for (const ac_ship of ac_ships) { // 艦データ照合
-            const id = ac_ship.id;
+            const id = ac_ship.id as ShipId;
 
             const ship = SHIP_DATAS[id];
             if (!ship) {

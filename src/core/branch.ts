@@ -1,7 +1,7 @@
-import type { PreSailNull } from '@/models/types/brand';
-import { countAktmrPlusCVs, countNotEquipArctic, countShip, countTaiyo, isFCL, isInclude } from './AdoptFleet';
-import type { SimFleet } from './SimFleet';
-import type { AreaId, BranchResponse } from '@/models/types';
+import type { PreSailNull } from '@/types/brand';
+import { countAktmrPlusCVs, countNotEquipArctic, countShip, countTaiyo, isFCL, isInclude } from '../models/fleet/AdoptFleet';
+import type { SimFleet } from '../models/fleet/SimFleet';
+import type { AreaId, BranchResponse } from '@/types';
 import CustomError from '@/errors/CustomError';
 
 /**
@@ -46,58 +46,58 @@ export function calcNextNode(
     sim_fleet: SimFleet,
     option: Record<string, string>,
 ): BranchResponse[] | string {
-    // AdoptFleet展開
-    // コーディングを減らしたいだけ 処理コストは変わらないと思う
-    // const f_names = fleet.ship_names; // AdoptFleet.isIncludeがあるからいらない？
     const fleet = sim_fleet.adopt_fleet;
-    const f_length = fleet.fleet_length;
-    const f_type = fleet.fleet_type;
-    const isUnion = fleet.isUnion;
-    const speed = fleet.speed;
-    const isFaster = fleet.isFaster;
-    const seek = fleet.seek;
-    const drum = fleet.drum_carrier_count;
-    const radar = fleet.radar_carrier_count;
-    // const radar5 = fleet.radar5_carrier_count; // 索敵5以上の電探を装備した艦の数
-    const craft = fleet.craft_carrier_count;
-    const arBulge = fleet.arBulge_carrier_count;
-    const SBB_count = fleet.SBB_count;
-    const yamato = fleet.yamato_class_count;
-    const matsu = fleet.matsu_count;
-    const daigo = fleet.daigo_count;
-    const reigo = fleet.reigo_count;
+
+    const {
+        fleet_length: f_length,
+        fleet_type: f_type,
+        is_union: isUnion,
+        speed,
+        is_faster: isFaster,
+        seek,
+        drum_carrier_count: drum,
+        radar_carrier_count: radar,
+        // radar5_carrier_count: radar5,
+        craft_carrier_count: craft,
+        arBulge_carrier_count: arBulge,
+        SBB_count,
+        yamato_class_count: yamato,
+        matsu_count: matsu,
+        daigo_count: daigo,
+        reigo_count: reigo,
+    } = fleet;
 
     const track = sim_fleet.route;
 
-    const composition = fleet.composition;
-    const BB = composition.BB;
-    const BBV = composition.BBV;
-    const CV = composition.CV;
-    const CVB = composition.CVB;
-    const CVL = composition.CVL;
-    const CA = composition.CA;
-    const CAV = composition.CAV;
-    const CL = composition.CL;
-    const CLT = composition.CLT;
-    const CT = composition.CT;
-    const DD = composition.DD;
-    const DE = composition.DE;
-    const SS = composition.SS;
-    const SSV = composition.SSV;
-    const AV = composition.AV;
-    const AO = composition.AO;
-    const LHA = composition.LHA;
-    const AS = composition.AS;
-    // const AR = composition.AR; // 工作艦
-
-    const BBs = BB + BBV; // 戦艦級
-    const CVH = CV + CVB;
-    const CVs = CV + CVL + CVB; // 空母系
-    const BBCVs = BBs + CVs; // 戦艦級+空母系
-    const CAs = CA + CAV; // 重巡級
-    const CLE = CL + CT;
-    const Ds = DD + DE; // 駆逐艦 + 海防艦
-    const Ss = SS + SSV; // 潜水艦 + 潜水空母
+    const {
+        BB,
+        BBV,
+        CV,
+        // CVB, // 単体で要求されることが無い
+        CVL,
+        CA,
+        CAV,
+        CL,
+        CLT,
+        CT,
+        DD,
+        DE,
+        // SS, // 単体で要求されることが無い
+        // SSV, // 単体で要求されることが無い
+        AV,
+        AO,
+        LHA,
+        AS,
+        // AR, // 使う機会が無い
+        BBs,
+        CVH,
+        CVs,
+        BBCVs,
+        CAs,
+        CLE,
+        Ds,
+        Ss,
+    } = fleet.composition;
 
     switch (area_id) {
         case '1-1':

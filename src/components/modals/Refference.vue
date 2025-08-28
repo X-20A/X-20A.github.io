@@ -30,7 +30,7 @@
 import { ref, computed } from 'vue';
 import Route from '../tabs/Route.vue';
 import Branch from '../tabs/Branch.vue';
-import { useStore, useModalStore } from '@/stores';
+import { useModalStore } from '@/stores';
 
 // 経路/分岐条件一覧
 
@@ -39,7 +39,6 @@ const route = ref(Route);
 const branch = ref(Branch);
 const tab = ref(route.value);
 
-const store = useStore();
 const modalStore = useModalStore();
 
 const isRefferenceVisible = computed(() => modalStore.isRefferenceVisible);

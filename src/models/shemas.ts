@@ -10,9 +10,8 @@ import {
     parse,
     safeParse
 } from "valibot";
-import type DeckBuilder from "./types/DeckBuilder";
-import type { OptionsType } from "./types";
-import type { SelectedType, AreaId } from "./types";
+import type DeckBuilder from "@/types/DeckBuilder";
+import type { OptionsType, SelectedType, AreaId } from "@/types";
 
 /**
  * DeckBuilderItem型のvalibotスキーマ定義
@@ -92,7 +91,7 @@ export const deck_builder_schema = object({
  * @param input 入力文字列
  * @returns DeckBuilderとして有効な場合true、無効な場合false
  */
-export function isValidDeckBuilderString(input: string): boolean {
+export function is_valid_DeckBuilder_String(input: string): boolean {
     try {
         const parsed = JSON.parse(input);
         parse(deck_builder_schema, parsed);
@@ -107,9 +106,11 @@ export function isValidDeckBuilderString(input: string): boolean {
  * @param value 任意の値
  * @returns number型に変換された値
  */
-function recursivelyConvertStringToNumber(value: unknown): unknown {
+const recursively_convert_String_to_Number = (
+    value: unknown,
+): unknown => {
     if (Array.isArray(value)) {
-        return value.map(recursivelyConvertStringToNumber);
+        return value.map(recursively_convert_String_to_Number);
     }
     if (value !== null && typeof value === "object") {
         const result: Record<string, unknown> = {};
@@ -121,7 +122,7 @@ function recursivelyConvertStringToNumber(value: unknown): unknown {
             if (number_keys.includes(key) && typeof val === "string" && /^-?\d+(\.\d+)?$/.test(val)) {
                 result[key] = Number(val);
             } else {
-                result[key] = recursivelyConvertStringToNumber(val);
+                result[key] = recursively_convert_String_to_Number(val);
             }
         }
         return result;
@@ -135,10 +136,10 @@ function recursivelyConvertStringToNumber(value: unknown): unknown {
  * @returns DeckBuilderオブジェクト
  * @throws パースまたはバリデーション失敗時
  */
-export function parseDeckBuilderString(input: string): DeckBuilder {
+export function parse_DeckBuilder_String(input: string): DeckBuilder {
     try {
         const json = JSON.parse(input);
-        const normalized = recursivelyConvertStringToNumber(json);
+        const normalized = recursively_convert_String_to_Number(json);
         return parse(deck_builder_schema, normalized) as DeckBuilder;
     } catch (e) {
         console.error(e);

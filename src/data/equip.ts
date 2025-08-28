@@ -2,6 +2,8 @@
     http://kancolle-calc.net/deckbuilder.html 様より失敬
 */
 
+import { EquipId } from "@/types/equipId";
+
 // 同一ファイル内に定義しないとバンドル時にインライン化されないので注意
 export const enum EquipType {
     /** 小口径主砲 */
@@ -105,7 +107,7 @@ export const enum EquipType {
 /** 索敵値, 装備種別ID */
 export type EquipData = [number, EquipType];
 
-export type EquipDatas = Record<number, EquipData>;
+export type EquipDatas = Record<EquipId, EquipData>;
 
 /** 基地系は除外 */
 const EQUIP_DATAS: EquipDatas = {
@@ -603,6 +605,6 @@ const EQUIP_DATAS: EquipDatas = {
 
 ,559:[3,EquipType.TorpBomber] // Ju87 D-4(Fliegerass)
 ,560:[0,EquipType.Fighter] // Bf109 T-3(G)
-}; // @expansion
+} as const; // @expansion
 
 export default EQUIP_DATAS;

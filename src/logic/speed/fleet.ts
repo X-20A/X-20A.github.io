@@ -1,11 +1,11 @@
-import type { Ship } from "../../models/Ship";
+import type { EquippedShip } from "../../models/ship/EquippedShip";
 import type { Sp as Speed } from "@/core/branch";
 
 /**
  * 艦隊速度を判定し、速度IDを返す
  * @returns 
  */
-export function calcFleetSpeed(ships: Ship[]): Speed {
+export function calc_fleet_speed(ships: EquippedShip[]): Speed {
     let speed_id = 1 as Speed;
     if (ships.every(ship => ship.speed === 4)) {
         speed_id = 4;

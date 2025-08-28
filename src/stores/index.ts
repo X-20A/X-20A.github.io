@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 
 import CustomError from "@/errors/CustomError";
-import { switchSeek, type AdoptFleet } from '@/core/AdoptFleet';
+import { switch_seek, type AdoptFleet } from '@/models/fleet/AdoptFleet';
 import Const from '@/constants/const';
 import type {
     SelectedType,
@@ -14,10 +14,10 @@ import type {
     ItemIconKey,
     NodeDatas,
     EdgeDatas
-} from '@/models/types';
-import type { FleetComponent } from '@/core/FleetComponent';
-import { isBattleNode, isLastStopNode, type CommandEvacuation } from '@/core/CommandEvacuation';
-import type { Node } from '@/models/types/brand';
+} from '@/types';
+import type { FleetComponent } from '@/models/fleet/FleetComponent';
+import { is_battle_node, is_last_stop_node, type CommandEvacuation } from '@/core/CommandEvacuation';
+import type { Node } from '@/types/brand';
 import { parseOptionsType } from '@/models/shemas';
 
 const LOCAL_STORAGE_KEY = 'compass-v2.1';
@@ -95,7 +95,7 @@ export const useStore = defineStore('compass', {
         },
         SWITCH_SEEK(): void {
             if (!this.adoptFleet) return;
-            this.UPDATE_ADOPT_FLEET(switchSeek(this.adoptFleet as AdoptFleet));
+            this.UPDATE_ADOPT_FLEET(switch_seek(this.adoptFleet as AdoptFleet));
         },
         LOAD_DATA(): void {
             const data = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -141,7 +141,7 @@ export const useStore = defineStore('compass', {
         },
         async DYNAMIC_LOAD(): Promise<void> {
             const module = await import('@/data/branch');
-            this.UPDATE_BRANCH_INFO(module.BRANCH_INFO);
+            this.UPDATE_BRANCH_INFO(module.BRANCH_LAST_UPDATES);
             this.UPDATE_BRANCH_DATA(module.default);
 
             const prepare_icons = {
@@ -210,8 +210,8 @@ export const useModalStore = defineStore('modal', {
             node_datas: NodeDatas,
             edge_datas: EdgeDatas,
         ): void {
-            if (!isBattleNode(area_id, node, node_datas)) return;
-            if (isLastStopNode(area_id, node, edge_datas)) return;
+            if (!is_battle_node(area_id, node, node_datas)) return;
+            if (is_last_stop_node(area_id, node, edge_datas)) return;
 
             this.isCommandEvacuationVisible = true;
         },

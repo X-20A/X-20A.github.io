@@ -5,7 +5,7 @@
  * @param fileName 
  * @subEffect -canvas要素の生成
  */
-export function doCombineBlobs(
+export function do_combine_blobs(
     blob1: Blob,
     blob2: Blob,
 ): Promise<string> {
@@ -47,7 +47,7 @@ export function doCombineBlobs(
  * DataURLをダウンロードする
  * @subEffect -DOMの生成 & ダウンロード
  */
-export function doDownloadDataURL(dataURL: string, fileName: string) {
+export function do_download_data_URL(dataURL: string, fileName: string) {
     const a = document.createElement('a');
     a.href = dataURL;
     a.download = `${fileName}.jpg`;
