@@ -5,6 +5,7 @@ import axios from 'axios';
 import SHIP_DATAS, { ST as ShipType } from '@/data/ship';
 import EQUIP_DATAS, { EquipType } from '@/data/equip';
 import { ShipId } from '@/types/shipId';
+import { EquipId } from '@/types/equipId';
 
 describe('Dataテスト', () => {
     it('data-test: 制空シミュのデータと照合して艦や装備に抜けや不一致が無いか確認', async () => {
@@ -132,7 +133,7 @@ describe('Dataテスト', () => {
         const missing_equips = [] as MissingEquip[];
         const mismatch_equip_params = [] as MismatchEquipParam[];
         for (const ac_item of ac_items) { // 装備データ照合
-            const id = ac_item.id;
+            const id = ac_item.id as EquipId;
             // 深海、[陸攻、陸戦、陸偵、深山, Ho229] 弾き
             if (id > 1500 || [47, 48, 49, 53, 57].includes(Number(ac_item.type))) continue;
 
