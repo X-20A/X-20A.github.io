@@ -124,7 +124,7 @@ function getShipIconUrl(ship_id: ShipId): string {
  */
 function toggleEvacuation(fleet_index: number, unit_index: UnitIndex): void {
   if (!cxtTapedNode.value) return;
-  if (unit_index === 1) return; // 旗艦は退避不可
+  if (unit_index === 0) return; // 旗艦は退避不可
 
   const node_key = cxtTapedNode.value;
   const evacuations = commandEvacuations.value;
