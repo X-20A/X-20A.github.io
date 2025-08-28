@@ -17,7 +17,7 @@
 							:key="area.value"
 							class="areas"
 							:value="area.value"
-							@pointerdown="selectArea(area.value)"
+							@pointerdown="select_area(area.value)"
 						>
 							{{ area.label }}
 						</button>
@@ -37,7 +37,7 @@
               :key="area.value"
               class="areas"
               :value="area.value"
-              @pointerdown="selectArea(area.value)"
+              @pointerdown="select_area(area.value)"
             >
               {{ area.label }}
             </button>
@@ -58,7 +58,7 @@ import type { AreaId } from '@/types';
 const store = useStore();
 const modalStore = useModalStore();
 
-const selectArea = (area_id: AreaId) => {
+const select_area = (area_id: AreaId) => {
   store.UPDATE_SELECTED_AREA(area_id);
 	store.SAVE_DATA();
 

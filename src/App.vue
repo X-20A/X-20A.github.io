@@ -41,33 +41,37 @@
 				<span> | </span>
 				<span>搭載艦数[ </span>
 
-				<span class="tooltip-container"> <!-- この辺はイベント後にAdditional Stat的なのにしまうかも -->
-					<span style="color: #4800ff;cursor: default;">第五</span>
-					<span>: {{ adoptFleet.daigo_count }}&nbsp;</span>
-					<span class="tooltip-text">
-						那智 | 足柄 | 阿武隈 | 多摩 | 木曾 | 霞 | 不知火 | 薄雲 | 曙 | 潮 | 初霜 | 初春 | 若葉
+				<template v-if="is_target_world([60])">
+					<span class="tooltip-container">
+						<span style="color: #4800ff;cursor: default;">第五</span>
+						<span>: {{ adoptFleet.daigo_count }}&nbsp;</span>
+						<span class="tooltip-text">
+							那智 | 足柄 | 阿武隈 | 多摩 | 木曾 | 霞 | 不知火 | 薄雲 | 曙 | 潮 | 初霜 | 初春 | 若葉
+						</span>
 					</span>
-				</span>
 
-				<span class="tooltip-container">
-					<span style="color: #e65100;cursor: default;">礼号</span>
-					<span>: {{ adoptFleet.reigo_count }}&nbsp;</span>
-					<span class="tooltip-text">
-						足柄 | 大淀 | 霞 | 清霜 | 朝霜 | 榧 | 杉
+					<span class="tooltip-container">
+						<span style="color: #e65100;cursor: default;">礼号</span>
+						<span>: {{ adoptFleet.reigo_count }}&nbsp;</span>
+						<span class="tooltip-text">
+							足柄 | 大淀 | 霞 | 清霜 | 朝霜 | 榧 | 杉
+						</span>
 					</span>
-				</span>
 
-				<span class="tooltip-container">
-					<img :src="Bulge" alt="北方迷彩(＋北方装備)" style="height: 20px;vertical-align: -4px;">
-					<span>: {{ adoptFleet.arBulge_carrier_count }}&nbsp;</span>
-					<span class="tooltip-text">北方迷彩(＋北方装備)</span>
-				</span>
+					<span class="tooltip-container">
+						<img :src="Bulge" alt="北方迷彩(＋北方装備)" style="height: 20px;vertical-align: -4px;">
+						<span>: {{ adoptFleet.arBulge_carrier_count }}&nbsp;</span>
+						<span class="tooltip-text">北方迷彩(＋北方装備)</span>
+					</span>
+				</template>
 
-				<span class="tooltip-container">
-					<img :src="NotSpanner" alt="寒冷地装備＆甲板要員を装備していない空母系+あきつ丸" style="height: 17px;vertical-align: -3px;">
-					<span>: {{ countNotEquipArctic(adoptFleet) }}&nbsp;</span>
-					<span class="tooltip-text">寒冷地装備＆甲板要員を装備していない(空母系+あきつ丸)</span>
-				</span>
+				<template v-if="is_target_world([58])">
+					<span class="tooltip-container">
+						<img :src="NotSpanner" alt="寒冷地装備＆甲板要員を装備していない空母系+あきつ丸" style="height: 17px;vertical-align: -3px;">
+						<span>: {{ countNotEquipArctic(adoptFleet) }}&nbsp;</span>
+						<span class="tooltip-text">寒冷地装備＆甲板要員を装備していない(空母系+あきつ丸)</span>
+					</span>
+				</template>
 
 				<span class="tooltip-container">
 					<img :src="Drum" alt="ドラム缶" style="height: 17px;vertical-align: -3px;">
@@ -136,14 +140,10 @@
 			</div>
 		</div>
 	</div>
-	<div
-		v-if="isAreaVisible
+	<div v-if="isAreaVisible
 			|| isRefferenceVisible
 			|| isErrorVisible
-			|| isCommandEvacuationVisible"
-		class="modal-overlay"
-		@pointerdown="closeModals"
-	>
+			|| isCommandEvacuationVisible" class="modal-overlay" @pointerdown="closeModals">
 		<Area />
 		<Refference />
 		<ErrorView />
@@ -217,12 +217,11 @@ import type { NomalResource } from './models/resource/NomalResource';
 import DetailBox from './components/Detail.vue';
 import Footer from './components/Footer.vue';
 import { derive_sim_executer, start_sim } from './core/SimExecutor';
-import SHIP_DATAS from './data/ship';
-import EQUIP_DATAS from './data/equip';
 import Const from './constants/const';
 import { clear_command_evacuation } from './core/CommandEvacuation';
 import { parseAreaId, parse_DeckBuilder_String, parseSelectedType } from './models/shemas';
 import { register_Cytoscape_events } from '@/logic/efffects/cytoscapeEvents';
+import { disassembly_area_id } from './logic/area';
 
 const store = useStore();
 const modalStore = useModalStore();
@@ -271,6 +270,22 @@ const showRefference = () => {
 }
 const closeModals = () => {
 	modalStore.HIDE_MODALS();
+}
+
+/**
+ * 海域IDのworldがtarget_worldsに含まれているか判定する関数
+ * @param target_worlds 判定対象world配列
+ * @returns boolean
+ */
+function is_target_world(
+	target_worlds: number[],
+): boolean {
+	if (!selectedArea.value) return false;
+
+	const { world } = disassembly_area_id(selectedArea.value);
+	return world
+		? target_worlds.includes(world)
+		: false;
 }
 
 /**

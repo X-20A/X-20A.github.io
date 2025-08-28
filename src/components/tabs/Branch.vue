@@ -32,6 +32,7 @@ import { ref, watch, computed } from 'vue';
 import { useStore } from '@/stores';
 import { convert_branch_data_to_HTML } from '@/logic/convert';
 import { sanitize_text } from '@/logic/util';
+import { disassembly_area_id } from '@/logic/area';
 
 // 分岐条件一覧
 
@@ -77,9 +78,11 @@ watch(selectedArea, () => {
     })
 	);
 
-	const split = selectedArea.value.split('-');
-	const world = Number(split[0]);
-	const area = Number(split[1]);
+	const {
+		world,
+		section,
+	} = disassembly_area_id(selectedArea.value);
+	
 	let url = '';
 	if (world > 7) {
 		source.value.label = 'NGA';
@@ -124,7 +127,7 @@ watch(selectedArea, () => {
 				url += '南西海域';
 				break;
 		}
-		url += `#area${area}`;
+		url += `#area${section}`;
 	}
 	source.value.url = url;
 
