@@ -5,11 +5,12 @@ import { EquipType } from '@/data/equip';
 import { calc_equip_bonus } from '../../logic/seek/equipBonus';
 import { calc_ship_speed } from '../../logic/speed/ship';
 import { calc_equip_seek } from '../../logic/seek/equip';
-import { Equip } from '../Equip';
+import { Equip, includes_equip_id } from '../Equip';
 import type { Sp as Speed } from '@/core/branch';
 import { ShipId } from '@/types/shipId';
 import { ShipName } from '@/types/shipName';
 import { NakedShip } from './NakedShip';
+import { EquipId } from '@/types/equipId';
 
 type PreInfo = {
     readonly drum_count: number;
@@ -37,8 +38,8 @@ const calc_pre_info = (
         if (equip.id === 75) acc.drum_count++;
         if (equip.id === 268) acc.has_arBulge = true;
         if (equip.id === 402) acc.has_arctic_gear = true;
-        if (ROUTING_CRAFTS.includes(equip.id)) acc.has_craft = true;
-        if (RESOURCE_CRAFTS.includes(equip.id)) acc.valid_craft_count++;
+        if (includes_equip_id(ROUTING_CRAFT_IDS, equip.id)) acc.has_craft = true;
+        if (includes_equip_id(RESOURCE_CRAFT_IDS, equip.id)) acc.valid_craft_count++;
         if ([EquipType.RadarS, EquipType.RadarL].includes(equip.type)) {
             acc.has_radar = true;
             if (equip.seek >= 5) acc.has_radar5 = true;
@@ -69,14 +70,14 @@ export type EquippedShip = {
 /**
  * ルート分岐に関わる大発群
  */
-const ROUTING_CRAFTS: Readonly<number[]> =
-    [68, 166, 167, 193, 409, 436, 449, 525, 526];
+const ROUTING_CRAFT_IDS: EquipId[] =
+    [68, 166, 167, 193, 409, 436, 449, 525, 526] as const;
 
 /**
  * 資源獲得量増加に寄与する大発群
  */
-const RESOURCE_CRAFTS: Readonly<number[]> =
-    [68, 166, 167, 193, 408, 409, 436, 449, 525, 526];
+const RESOURCE_CRAFT_IDS: EquipId[] =
+    [68, 166, 167, 193, 408, 409, 436, 449, 525, 526] as const;
 
 /**
  * Shipオブジェクトを生成するファクトリ関数

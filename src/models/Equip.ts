@@ -52,3 +52,16 @@ export function derive_equip(
 
     return equip;
 }
+
+/**
+ * 装備IDが含まれるか判定して返す
+ * @param match_ids 
+ * @param search_id 
+ * @returns 
+ */
+export function includes_equip_id(
+    match_ids: EquipId[],
+    search_id: EquipId,
+): boolean {
+    return match_ids.includes(search_id);
+}
