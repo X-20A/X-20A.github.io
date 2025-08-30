@@ -3,6 +3,7 @@ import type { CommandEvacuation } from '@/core/CommandEvacuation';
 import type { FleetComponent } from '@/models/fleet/FleetComponent';
 import type { AreaId, ItemIconKey, NodeDatas, EdgeDatas, SelectedType, SimResult, OptionsType, SaveData, BranchLastUpdate, BranchType } from '@/types';
 import type { Node } from '@/types/brand';
+import { LoadDataCommands } from '.';
 
 /**
  * ストア型定義
@@ -19,7 +20,7 @@ export type StoreType = {
     UPDATE_OPTIONS: (value: OptionsType) => void;
     UPDATE_OPTION_WITH_KEY: (area: AreaId, key: string, value: string) => void;
     SWITCH_SEEK: () => void;
-    LOAD_DATA: () => void;
+    LOAD_DATA: (commands: LoadDataCommands) => void;
     SAVE_DATA: (save_data?: SaveData) => void;
     DYNAMIC_LOAD: () => Promise<void>;
     UPDATE_BRANCH_INFO: (value: BranchLastUpdate) => void;

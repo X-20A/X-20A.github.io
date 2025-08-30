@@ -316,7 +316,7 @@ const fleetTypeLabels = {
 watch(deck, () => { // localStorageからの読込想定
 	if (!deck.value) return;
 
-	loadFleet(deck.value);
+	load_fleet(deck.value);
 })
 
 // import貼り付け
@@ -325,7 +325,7 @@ watch(fleetInput, (text) => {
 
 	if (fleetInput.value) fleetInput.value = ''; // 空欄化
 	try {
-		loadFleet(text);
+		load_fleet(text);
 	} catch (e: unknown) {
 		modalStore.SHOW_ERROR(e);
 		console.error(e);
@@ -337,7 +337,7 @@ watch(fleetInput, (text) => {
  * デッキビルダー文字列から艦隊読込
  * @param deck_string 
  */
-const loadFleet = (deck_string: string): void => {
+const load_fleet = (deck_string: string): void => {
 	try {
 		const deck = parse_DeckBuilder_String(deck_string);
 		const fleet_components = derive_FleetComponents_from_DeckBuilder(
@@ -402,7 +402,10 @@ const adjustFleetType = (selected_type_number: number) => { // 入力系とimpor
 
 // fleetComponents, selectedTypeからシミュに使用する艦隊をセット
 watch([fleetComponents, selectedType], () => {
-	if (!selectedType.value) return;
+	if (
+		!selectedType.value ||
+		fleetComponents.value.length === 0
+	) return;
 
 	try { // ここでも一応、変な値が保存されてるとエラーになり得る
 		let fleets = [] as FleetComponent[];
@@ -658,24 +661,27 @@ watch([isAreaVisible, isRefferenceVisible, isErrorVisible, isCommandEvacuationVi
 });
 
 onMounted(async () => {
-	store.LOAD_DATA();
 	const predeck = calc_URL_param('predeck');
+	const pdz = calc_URL_param('pdz');
+
+	const exclude_deck =
+		predeck !== null ||
+		pdz !== null;
+	store.LOAD_DATA({ exclude_deck });
 	if (predeck) {
-		loadFleet(decodeURIComponent(predeck));
+		load_fleet(decodeURIComponent(predeck));
 		do_delete_URL_param();
-	} else {
-		const pdz = calc_URL_param('pdz');
-		if (pdz) {
-			const LZString = await import('lz-string');
-			loadFleet(LZString.decompressFromEncodedURIComponent(pdz));
-			do_delete_URL_param();
-		}
+	} else if (pdz) {
+		const LZString = await import('lz-string');
+		load_fleet(LZString.decompressFromEncodedURIComponent(pdz));
+		do_delete_URL_param();
 	}
+
 	fleetInputRef.value?.focus();
 
-	const github_domain = 'https://github.com/X-20A/X-20A.github.io/tree/';
-	console.log(`Source: ${github_domain}compass_dev`);
-	console.log(`API guide: ${github_domain}main`);
+	const GITHUB_DOMAIN = 'https://github.com/X-20A/X-20A.github.io/tree/';
+	console.log(`Source: ${GITHUB_DOMAIN}compass_dev`);
+	console.log(`API guide: ${GITHUB_DOMAIN}main`);
 });
 </script>
 

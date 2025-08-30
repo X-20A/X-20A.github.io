@@ -20,6 +20,11 @@ import { is_battle_node, is_last_stop_node, type CommandEvacuation } from '@/cor
 import type { Node } from '@/types/brand';
 import { parseOptionsType } from '@/models/shemas';
 
+export type LoadDataCommands = {
+    /** deck読込をスキップするか */
+    exclude_deck: boolean;
+}
+
 const LOCAL_STORAGE_KEY = 'compass-v2.1';
 
 export const useStore = defineStore('compass', {
@@ -97,12 +102,12 @@ export const useStore = defineStore('compass', {
             if (!this.adoptFleet) return;
             this.UPDATE_ADOPT_FLEET(switch_seek(this.adoptFleet as AdoptFleet));
         },
-        LOAD_DATA(): void {
+        LOAD_DATA(commands: LoadDataCommands): void {
             const data = localStorage.getItem(LOCAL_STORAGE_KEY);
             if (data) {
                 try {
                     const json = JSON.parse(data) as SaveData;
-                    if (json.deck) this.UPDATE_DECK(json.deck);
+                    if (!commands.exclude_deck && json.deck) this.UPDATE_DECK(json.deck);
                     if (json.selected_type) this.UPDATE_SELECTED_TYPE(json.selected_type);
                     if (json.area) this.UPDATE_SELECTED_AREA(json.area);
                     if (json.options) {
