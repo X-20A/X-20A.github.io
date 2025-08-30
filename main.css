@@ -4,7 +4,6 @@ body {
 	overflow-x: hidden;
 	overflow-y: scroll;
 	scrollbar-width: none;
-	min-width: 960px;
 }
 a {
 	text-decoration: none;

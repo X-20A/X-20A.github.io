@@ -1,133 +1,135 @@
 <template>
 	<Header />
 	<div class="container">
-		<div class="input-container">
-			<div class="split">
-				<div class="inputs">
-					<div style="flex: 1;position: relative; user-select: none;">
-						<div>
-							<input type="text" class="import" id="fleet-import" placeholder="DeckBuilder" v-model="fleetInput"
-								ref="fleetInputRef" /><!-- #fleet-importは七四式読込に残しとく -->
+		<button class="design-button area-select-button" @pointerdown="showArea">
+			{{ selectedArea ? '海域: ' + selectedArea : '海域'}}
+		</button>
+		<div class="upper-container">
+			<div class="input-container">
+				<div class="split">
+					<div class="inputs">
+						<div style="flex: 1;position: relative; user-select: none;">
+							<div>
+								<input type="text" class="import" id="fleet-import" placeholder="DeckBuilder" v-model="fleetInput"
+									ref="fleetInputRef" /><!-- #fleet-importは七四式読込に残しとく -->
+							</div>
+							<p class="type-select" v-if="isVisibleTypeSelect" @mouseover="showFleetOptions">艦隊種別</p>
+							<div v-if="isFleetOptionsVisible" class="fleet-option-box" @mouseover="showFleetOptions"
+								@mouseleave="hideFleetOptions">
+								<span class="fleet-type" @pointerdown=updateSelectedType(1)>第一艦隊</span>
+								<span class="fleet-type" @pointerdown=updateSelectedType(2)>第二艦隊</span>
+								<span class="fleet-type" @pointerdown=updateSelectedType(3)>第三艦隊</span>
+								<span class="fleet-type" @pointerdown=updateSelectedType(4)>第四艦隊</span>
+								<span class="fleet-type" @pointerdown=updateSelectedType(5)>空母機動部隊</span>
+								<span class="fleet-type" @pointerdown=updateSelectedType(6)>水上打撃部隊</span>
+								<span class="fleet-type" @pointerdown=updateSelectedType(7)>輸送護衛部隊</span>
+							</div>
 						</div>
-						<p class="type-select" v-if="isVisibleTypeSelect" @mouseover="showFleetOptions">艦隊種別</p>
-						<div v-if="isFleetOptionsVisible" class="fleet-option-box" @mouseover="showFleetOptions"
-							@mouseleave="hideFleetOptions">
-							<span class="fleet-type" @pointerdown=updateSelectedType(1)>第一艦隊</span>
-							<span class="fleet-type" @pointerdown=updateSelectedType(2)>第二艦隊</span>
-							<span class="fleet-type" @pointerdown=updateSelectedType(3)>第三艦隊</span>
-							<span class="fleet-type" @pointerdown=updateSelectedType(4)>第四艦隊</span>
-							<span class="fleet-type" @pointerdown=updateSelectedType(5)>空母機動部隊</span>
-							<span class="fleet-type" @pointerdown=updateSelectedType(6)>水上打撃部隊</span>
-							<span class="fleet-type" @pointerdown=updateSelectedType(7)>輸送護衛部隊</span>
-						</div>
+
+						<Option />
 					</div>
-					<div style="flex: 1;">
-						<button class="design-button" @pointerdown="showArea">{{ selectedArea ? '海域: ' + selectedArea : '海域'
-							}}</button>
-					</div>
-					<Option />
 				</div>
 			</div>
-		</div>
-		<div class="import-display" v-if="adoptFleet">
-			<template v-if="adoptFleet.fleet_type > 0">
-				<p>{{ fleetTypeLabels[adoptFleet.fleet_type] }}</p>
-			</template>
-			<template v-if="adoptFleet.fleet_type === 0 && adoptFleet.fleet_length === 7">
-				<p>遊撃部隊</p>
-			</template>
-			<p>
-				<span>{{ speedLabels[adoptFleet.speed] }}</span>
-				<span> | </span>
-				<span>搭載艦数[ </span>
+			<div v-if="adoptFleet">
+				<template v-if="adoptFleet.fleet_type > 0">
+					<p>{{ fleetTypeLabels[adoptFleet.fleet_type] }}</p>
+				</template>
+				<template v-if="adoptFleet.fleet_type === 0 && adoptFleet.fleet_length === 7">
+					<p>遊撃部隊</p>
+				</template>
+				<p>
+					<span>{{ speedLabels[adoptFleet.speed] }}</span>
+					<span> | </span>
+					<span>搭載艦数[ </span>
 
-				<template v-if="is_target_world([60])">
+					<template v-if="is_target_world([60])">
+						<span class="tooltip-container">
+							<span style="color: #4800ff;cursor: default;">第五</span>
+							<span>: {{ adoptFleet.daigo_count }}&nbsp;</span>
+							<span class="tooltip-text">
+								那智 | 足柄 | 阿武隈 | 多摩 | 木曾 | 霞 | 不知火 | 薄雲 | 曙 | 潮 | 初霜 | 初春 | 若葉
+							</span>
+						</span>
+
+						<span class="tooltip-container">
+							<span style="color: #e65100;cursor: default;">礼号</span>
+							<span>: {{ adoptFleet.reigo_count }}&nbsp;</span>
+							<span class="tooltip-text">
+								足柄 | 大淀 | 霞 | 清霜 | 朝霜 | 榧 | 杉
+							</span>
+						</span>
+
+						<span class="tooltip-container">
+							<img :src="Bulge" alt="北方迷彩(＋北方装備)" style="height: 20px;vertical-align: -4px;">
+							<span>: {{ adoptFleet.arBulge_carrier_count }}&nbsp;</span>
+							<span class="tooltip-text">北方迷彩(＋北方装備)</span>
+						</span>
+					</template>
+
+					<template v-if="is_target_world([58])">
+						<span class="tooltip-container">
+							<img :src="NotSpanner" alt="寒冷地装備＆甲板要員を装備していない空母系+あきつ丸" style="height: 17px;vertical-align: -3px;">
+							<span>: {{ countNotEquipArctic(adoptFleet) }}&nbsp;</span>
+							<span class="tooltip-text">寒冷地装備＆甲板要員を装備していない(空母系+あきつ丸)</span>
+						</span>
+					</template>
+
 					<span class="tooltip-container">
-						<span style="color: #4800ff;cursor: default;">第五</span>
-						<span>: {{ adoptFleet.daigo_count }}&nbsp;</span>
+						<img :src="Drum" alt="ドラム缶" style="height: 17px;vertical-align: -3px;">
+						<span>: {{ adoptFleet.drum_carrier_count }}&nbsp;</span>
+						<span class="tooltip-text">ドラム缶</span>
+					</span>
+
+					<span class="tooltip-container">
+						<img :src="Craft" alt="大発系" style="height: 21px;vertical-align: -4px;">
+						<span>: {{ adoptFleet.craft_carrier_count }}&nbsp;</span>
 						<span class="tooltip-text">
-							那智 | 足柄 | 阿武隈 | 多摩 | 木曾 | 霞 | 不知火 | 薄雲 | 曙 | 潮 | 初霜 | 初春 | 若葉
+							大発動艇 | 大発動艇(八九式中戦車&陸戦隊) | 特二式内火艇 | 特大発動艇 | 武装大発<br> | 大発動艇(II号戦車/北アフリカ仕様) | 特大発動艇+一式砲戦車 | 特四式内火艇 | 特四式内火艇改
 						</span>
 					</span>
 
 					<span class="tooltip-container">
-						<span style="color: #e65100;cursor: default;">礼号</span>
-						<span>: {{ adoptFleet.reigo_count }}&nbsp;</span>
-						<span class="tooltip-text">
-							足柄 | 大淀 | 霞 | 清霜 | 朝霜 | 榧 | 杉
-						</span>
+						<img :src="Radar" alt="電探系" style="height: 19px;vertical-align: -5px;">
+						<span>: {{ adoptFleet.radar_carrier_count }}</span>
+						<span class="tooltip-text">電探系</span>
 					</span>
 
-					<span class="tooltip-container">
-						<img :src="Bulge" alt="北方迷彩(＋北方装備)" style="height: 20px;vertical-align: -4px;">
-						<span>: {{ adoptFleet.arBulge_carrier_count }}&nbsp;</span>
-						<span class="tooltip-text">北方迷彩(＋北方装備)</span>
-					</span>
+					<span> ]</span>
+				</p>
+				<template v-if="adoptFleet.fleet_type > 0"><!-- 連合艦隊 -->
+					<div>
+						<strong>主力: </strong>
+						<template v-for="(name, index) in calc_main_fleet_ship_names(adoptFleet)" :key="index">
+							<span>{{ name }}</span>
+							<span v-if="index < getMainFleetLength(adoptFleet) - 1"> | </span>
+						</template>
+					</div>
+					<div>
+						<strong>随伴: </strong>
+						<template v-for="(name, index) in calc_escort_fleet_ship_names(adoptFleet)" :key="index">
+							<span>{{ name }}</span>
+							<span v-if="index < getEscortFleetLength(adoptFleet) - 1"> | </span>
+						</template>
+					</div>
 				</template>
-
-				<template v-if="is_target_world([58])">
-					<span class="tooltip-container">
-						<img :src="NotSpanner" alt="寒冷地装備＆甲板要員を装備していない空母系+あきつ丸" style="height: 17px;vertical-align: -3px;">
-						<span>: {{ countNotEquipArctic(adoptFleet) }}&nbsp;</span>
-						<span class="tooltip-text">寒冷地装備＆甲板要員を装備していない(空母系+あきつ丸)</span>
-					</span>
-				</template>
-
-				<span class="tooltip-container">
-					<img :src="Drum" alt="ドラム缶" style="height: 17px;vertical-align: -3px;">
-					<span>: {{ adoptFleet.drum_carrier_count }}&nbsp;</span>
-					<span class="tooltip-text">ドラム缶</span>
-				</span>
-
-				<span class="tooltip-container">
-					<img :src="Craft" alt="大発系" style="height: 21px;vertical-align: -4px;">
-					<span>: {{ adoptFleet.craft_carrier_count }}&nbsp;</span>
-					<span class="tooltip-text">
-						大発動艇 | 大発動艇(八九式中戦車&陸戦隊) | 特二式内火艇 | 特大発動艇 | 武装大発<br> | 大発動艇(II号戦車/北アフリカ仕様) | 特大発動艇+一式砲戦車 | 特四式内火艇 | 特四式内火艇改
-					</span>
-				</span>
-
-				<span class="tooltip-container">
-					<img :src="Radar" alt="電探系" style="height: 19px;vertical-align: -5px;">
-					<span>: {{ adoptFleet.radar_carrier_count }}</span>
-					<span class="tooltip-text">電探系</span>
-				</span>
-
-				<span> ]</span>
-			</p>
-			<template v-if="adoptFleet.fleet_type > 0"><!-- 連合艦隊 -->
-				<div>
-					<strong>主力: </strong>
-					<template v-for="(name, index) in calc_main_fleet_ship_names(adoptFleet)" :key="index">
+				<template v-else><!-- 通常艦隊 or 遊撃部隊 -->
+					<template v-for="(name, index) in adoptFleet.ship_names" :key="index">
 						<span>{{ name }}</span>
-						<span v-if="index < getMainFleetLength(adoptFleet) - 1"> | </span>
+						<span v-if="index < adoptFleet.fleet_length - 1"> | </span>
 					</template>
-				</div>
-				<div>
-					<strong>随伴: </strong>
-					<template v-for="(name, index) in calc_escort_fleet_ship_names(adoptFleet)" :key="index">
-						<span>{{ name }}</span>
-						<span v-if="index < getEscortFleetLength(adoptFleet) - 1"> | </span>
-					</template>
-				</div>
-			</template>
-			<template v-else><!-- 通常艦隊 or 遊撃部隊 -->
-				<template v-for="(name, index) in adoptFleet.ship_names" :key="index">
-					<span>{{ name }}</span>
-					<span v-if="index < adoptFleet.fleet_length - 1"> | </span>
 				</template>
-			</template>
-			<p :style="adoptFleet?.seek[0] === 999 ? 'color: #f6a306' : ''">
-				<span>索敵値: </span>
-				<strong>1: </strong>
-				<span>{{ adoptFleet.seek[0] }}</span>
-				<strong> 2: </strong>
-				<span>{{ adoptFleet.seek[1] }}</span>
-				<strong> 3: </strong>
-				<span>{{ adoptFleet.seek[2] }}</span>
-				<strong> 4: </strong>
-				<span>{{ adoptFleet.seek[3] }}</span>
-			</p>
+				<p :style="adoptFleet?.seek[0] === 999 ? 'color: #f6a306' : ''">
+					<span>索敵値: </span>
+					<strong>1: </strong>
+					<span>{{ adoptFleet.seek[0] }}</span>
+					<strong> 2: </strong>
+					<span>{{ adoptFleet.seek[1] }}</span>
+					<strong> 3: </strong>
+					<span>{{ adoptFleet.seek[2] }}</span>
+					<strong> 4: </strong>
+					<span>{{ adoptFleet.seek[3] }}</span>
+				</p>
+			</div>
 		</div>
 		<div class="result-container">
 			<template v-if="simResult.length > 0">
@@ -437,7 +439,6 @@ watch([adoptFleet, selectedArea], () => {
 	store.UPDATE_COMMAND_EVACUATIONS(cleared_command_evacuation);
 });
 
-let is_first_run = true;
 // 艦隊 & 海域 & オプション が揃ったらシミュ開始
 watch([adoptFleet, selectedArea, options, commandEvacuations], async () => {
 	if (
@@ -462,47 +463,62 @@ watch([adoptFleet, selectedArea, options, commandEvacuations], async () => {
 		);
 		// console.timeEnd('シミュ計測');
 		store.UPDATE_SIM_RESULT(result);
-
-		cytoscape_core = do_draw_map(
-			selectedArea.value,
-			simResult.value,
-			commandEvacuations.value,
-		); // ここまでになるべく余計なことをしない
-
-		if (is_first_run) {
-			console.timeEnd('読込 → マップ表示'); // debug
-			await store.DYNAMIC_LOAD();
-			is_first_run = false;
-		}
-
-		hidePopup();
-		store.UPDATE_DREW_AREA(selectedArea.value);
-
-		register_Cytoscape_events(
-			cytoscape_core,
-			generarteBranchHtml,
-			adjustPopupPosition,
-			hidePopup,
-			branchHtml,
-			drewArea,
-			adoptFleet,
-			icons,
-			Drum,
-			Craft,
-			Const,
-			store,
-			modalStore,
-			NODE_DATAS,
-			EDGE_DATAS,
-			syonanResource,
-			nomalResource
-		);
 	} catch (e: unknown) {
 		modalStore.SHOW_ERROR(e);
 		console.error(e);
 		return;
 	}
 }, { deep: true });
+
+let is_first_run = true;
+
+watch([simResult], async () => {
+	draw_map();
+}, { deep: true });
+
+window.addEventListener('resize', draw_map);
+
+async function draw_map() {
+	if (
+		!simResult.value ||
+		!selectedArea.value
+	) return;
+
+	cytoscape_core = do_draw_map(
+		selectedArea.value,
+		simResult.value,
+		commandEvacuations.value,
+	); // ここまでになるべく余計なことをしない
+
+	if (is_first_run) {
+		console.timeEnd('読込 → マップ表示'); // debug
+		await store.DYNAMIC_LOAD();
+		is_first_run = false;
+	}
+
+	hidePopup();
+	store.UPDATE_DREW_AREA(selectedArea.value);
+
+	register_Cytoscape_events(
+		cytoscape_core,
+		generarteBranchHtml,
+		adjustPopupPosition,
+		hidePopup,
+		branchHtml,
+		drewArea,
+		adoptFleet,
+		icons,
+		Drum,
+		Craft,
+		Const,
+		store,
+		modalStore,
+		NODE_DATAS,
+		EDGE_DATAS,
+		syonanResource,
+		nomalResource
+	);
+}
 
 const branchHtml = ref<string | null>(null);
 
@@ -690,11 +706,29 @@ onMounted(async () => {
   margin: auto;
   margin-top: 40px;
 	padding-bottom: 8px;
-  width:960px;
+  max-width:960px;
+}
+.area-select-button {
+	position: absolute;
+	z-index: 9998;
+	top: 55px;
+	left: 50%;
+	transform: translateX(-50%);
+}
+.upper-container {
+	padding-right: 120px;
+	padding-left: clamp(0px, 230px + (100vw - 960px) * 230 / 960, 230px);
+}
+@media (max-width: 640px) {
+	.upper-container {
+		padding-right: 0px;
+		padding-left: 0;
+	}
 }
 .input-container {
 	text-align: center;
-	padding: 15px 120px 20px 225px;
+	padding-top: 15px;
+	padding-bottom: 20px;
 }
 .type-select {
 	margin-left: 3px;
@@ -708,15 +742,12 @@ onMounted(async () => {
 .fleet-option-box {
 	width: 121px;
 	font-size: 14px;
-	z-index: 9999;
+	z-index: 9997;
 	background-color: white;
 	left: 3px;
 	top: 24px;
 	position: absolute;
 	border: 1px solid;
-}
-.import-display {
-	padding-left: 230px;
 }
 .alert {
 	width: 20px;
@@ -753,8 +784,8 @@ onMounted(async () => {
 	display: flex;
 }
 .import {
-  margin:0px 10px 0px 3px;
-	width: 115px;
+  margin:0px 10px 0px 0px;
+	max-width: 115px;
 }
 .non-margin {
 	margin: 0;
@@ -792,8 +823,11 @@ onMounted(async () => {
 	position:relative;
 	top:0;
 	left:0;
-	width: 960px;
-	height: 640px;
+	width: 100%;
+	max-width: 960px;
+	height: auto;
+	aspect-ratio: 3 / 2;
+	max-height: 640px;
 	z-index:999;
 	background: blanchedalmond !important;
 }
