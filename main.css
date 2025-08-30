@@ -198,10 +198,8 @@ li {
 	user-select: none;
 	border: 0;
 	cursor: pointer;
-	position: relative;
 	overflow: hidden;
 	text-decoration: none;
-	display: inline-block;
 	background: #2196F3;
 	color: #fff;
 	padding: 7px 20px;

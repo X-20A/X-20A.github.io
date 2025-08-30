@@ -670,7 +670,6 @@ watch([isAreaVisible, isRefferenceVisible, isErrorVisible, isCommandEvacuationVi
   	style.top = "";
 		style.left = "";
 		style.position = "";
-		style.minWidth = '960px';
 		window.scrollTo({ top: save_y });
 	}
 });
