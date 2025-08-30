@@ -25,7 +25,6 @@
 								<span class="fleet-type" @pointerdown=updateSelectedType(7)>輸送護衛部隊</span>
 							</div>
 						</div>
-
 						<Option />
 					</div>
 				</div>
@@ -731,7 +730,6 @@ onMounted(async () => {
 	padding-bottom: 20px;
 }
 .type-select {
-	margin-left: 3px;
 	width:119px;
 	border: solid 1px;
 	font-size: 14px;
