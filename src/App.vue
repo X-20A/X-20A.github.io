@@ -223,6 +223,7 @@ import { clear_command_evacuation } from './core/CommandEvacuation';
 import { parseAreaId, parse_DeckBuilder_String, parseSelectedType } from './models/shemas';
 import { register_Cytoscape_events } from '@/logic/efffects/cytoscapeEvents';
 import { disassembly_area_id } from './logic/area';
+import lzstring from "lz-string";
 
 const store = useStore();
 const modalStore = useModalStore();
@@ -686,8 +687,7 @@ onMounted(async () => {
 		load_fleet(decodeURIComponent(predeck));
 		do_delete_URL_param();
 	} else if (pdz) {
-		const LZString = await import('lz-string');
-		load_fleet(LZString.decompressFromEncodedURIComponent(pdz));
+		load_fleet(lzstring.decompressFromEncodedURIComponent(pdz));
 		do_delete_URL_param();
 	}
 
