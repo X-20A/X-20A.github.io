@@ -907,8 +907,8 @@ const SHIP_DATAS: ShipDatas = {
 ,942:{name:"Richard P.Leary",type:ST.DD,seek:20,seek2:32,na:NA.USA,sg:SG.FastB2}
 ,737:{name:"Richard P.Leary改",type:ST.DD,seek:21,seek2:61,na:NA.USA,sg:SG.FastB2}
 
-,998:{name:'Norge',type:ST.DE,seek:0,seek2:0,na:NA.Norge,sg:SG.FastB2}
-,738:{name:'Norge改',type:ST.DE,seek:0,seek2:0,na:NA.Norge,sg:SG.FastB2}
+,998:{name:'Norge',type:ST.DE,seek:0,seek2:0,na:NA.Norge,sg:SG.SlowB}
+,738:{name:'Norge改',type:ST.DE,seek:0,seek2:0,na:NA.Norge,sg:SG.SlowB}
 ,999:{name:'Eidsvold',type:ST.DE,seek:0,seek2:0,na:NA.Norge,sg:SG.SlowB}
 ,739:{name:'Eidsvold改',type:ST.DE,seek:0,seek2:0,na:NA.Norge,sg:SG.SlowB}
 ,1022:{name:'Glorious',type:ST.BB,seek:0,seek2:0,na:NA.Norge,sg:SG.FastB2}
