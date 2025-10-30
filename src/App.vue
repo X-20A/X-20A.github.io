@@ -767,7 +767,6 @@ onMounted(async () => {
 }
 .fleet-type {
 	cursor: pointer;
-	padding-left: 2px;
 	display: block;
 	user-select: none;
 }

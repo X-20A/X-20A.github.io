@@ -602,9 +602,13 @@ const EQUIP_DATAS: EquipDatas = {
 ,556:[1,EquipType.SecGun] // 10cm/56 単装高角砲(集中配備)
 ,557:[1,EquipType.DiveBomber] // 零式艦戦62型改(夜間爆戦)
 ,558:[2,EquipType.DiveBomber] // 零式艦戦62型改(熟練/夜間爆戦)
-
 ,559:[3,EquipType.TorpBomber] // Ju87 D-4(Fliegerass)
 ,560:[0,EquipType.Fighter] // Bf109 T-3(G)
+
+,564:[0,EquipType.MainGunM] // 21cm単装主砲
+,565:[0,EquipType.SecGun] // 15cm単装副砲
+,566:[0,EquipType.SecGun] // 10.2cm三連装副砲
+,567:[1,EquipType.Fighter] // Sea Gladiator
 } as const; // @expansion
 
 export default EQUIP_DATAS;

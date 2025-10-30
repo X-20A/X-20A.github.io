@@ -811,4 +811,10 @@ export type ShipName =
     | '浜波改二'
     | 'Richard P.Leary'
     | 'Richard P.Leary改'
+    | 'Norge'
+    | 'Norge改'
+    | 'Eidsvold'
+    | 'Eidsvold改'
+    | 'Glorious'
+    | 'Glorious改'
 ;

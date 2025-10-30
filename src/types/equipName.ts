@@ -496,4 +496,8 @@ export type EquipName =
     | '零式艦戦62型改(熟練/夜間爆戦)'
     | 'Ju87 D-4(Fliegerass)'
     | 'Bf109 T-3(G)'
+    | '21cm単装主砲'
+    | '15cm単装副砲'
+    | '10.2cm三連装副砲'
+    | 'Sea Gladiator'
 ;

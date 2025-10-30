@@ -62,8 +62,10 @@ export const enum NA {
     France = 6,
     /** ソ連 */
     USSR = 7,
+    /** ノルウェイ */
+    Norge = 8,
     /** その他 */
-    Other = 8,
+    Other = 9,
 }
 
 /** 速力グループID */
@@ -643,7 +645,7 @@ const SHIP_DATAS: ShipDatas = {
 ,570:{name:"平戸",type:ST.DE,seek:3,seek2:15,na:NA.Japan,sg:SG.SlowB}
 ,571:{name:"Nelson",type:ST.BB,seek:12,seek2:42,na:NA.UK,sg:SG.SlowB}
 ,572:{name:"Rodney",type:ST.BB,seek:12,seek2:43,na:NA.UK,sg:SG.SlowB}
-,573:{name:"陸奥改二",type:ST.BB,seek:15,seek2:56,na:NA.Japan,sg:SG.SlowA}
+,573:{name:"陸奥改二",type:ST.BB,seek:15,seek2:57,na:NA.Japan,sg:SG.SlowA}
 ,574:{name:"Gotland",type:ST.CL,seek:45,seek2:70,na:NA.Other,sg:SG.FastB2}
 ,575:{name:"Maestrale",type:ST.DD,seek:7,seek2:20,na:NA.Italia,sg:SG.FastB2}
 ,576:{name:"Nelson改",type:ST.BB,seek:14,seek2:48,na:NA.UK,sg:SG.SlowB}
@@ -890,7 +892,7 @@ const SHIP_DATAS: ShipDatas = {
 ,984:{name:"Wahoo",type:ST.SS,seek:12,seek2:44,na:NA.USA,sg:SG.SlowC}
 ,989:{name:"Wahoo改",type:ST.SS,seek:14,seek2:46,na:NA.USA,sg:SG.SlowC}
 ,994:{name:"榧",type:ST.DD,seek:8,seek2:25,na:NA.Japan,sg:SG.FastB2}
-,736:{name:"榧改",type:ST.DD,seek:16,seek2:46,na:NA.Japan,sg:SG.FastB2}
+,736:{name:"榧改",type:ST.DD,seek:16,seek2:47,na:NA.Japan,sg:SG.FastB2}
 ,995:{name:"大泊",type:ST.AO,seek:7,seek2:14,na:NA.Japan,sg:SG.SlowB}
 ,1000:{name:"大泊改",type:ST.AO,seek:8,seek2:16,na:NA.Japan,sg:SG.SlowB}
 ,1001:{name:"Киров",type:ST.CL,seek:13,seek2:42,na:NA.USSR,sg:SG.FastB1}
@@ -901,11 +903,18 @@ const SHIP_DATAS: ShipDatas = {
 ,1008:{name:"しまね丸改",type:ST.AO,seek:22,seek2:66,na:NA.Japan,sg:SG.SlowB}
 ,1005:{name:"Minneapolis",type:ST.CA,seek:15,seek2:56,na:NA.USA,sg:SG.FastB2}
 ,1010:{name:"Minneapolis改",type:ST.CA,seek:16,seek2:58,na:NA.USA,sg:SG.FastB2}
-
 ,983:{name:"浜波改二",type:ST.DD,seek:10,seek2:55,na:NA.Japan,sg:SG.FastB2}
-
 ,942:{name:"Richard P.Leary",type:ST.DD,seek:20,seek2:32,na:NA.USA,sg:SG.FastB2}
 ,737:{name:"Richard P.Leary改",type:ST.DD,seek:21,seek2:61,na:NA.USA,sg:SG.FastB2}
+
+,998:{name:'Norge',type:ST.DE,seek:0,seek2:0,na:NA.Norge,sg:SG.FastB2}
+,738:{name:'Norge改',type:ST.DE,seek:0,seek2:0,na:NA.Norge,sg:SG.FastB2}
+,999:{name:'Eidsvold',type:ST.DE,seek:0,seek2:0,na:NA.Norge,sg:SG.SlowB}
+,739:{name:'Eidsvold改',type:ST.DE,seek:0,seek2:0,na:NA.Norge,sg:SG.SlowB}
+,1022:{name:'Glorious',type:ST.BB,seek:0,seek2:0,na:NA.Norge,sg:SG.FastB2}
+,1027:{name:'Glorious',type:ST.CV,seek:0,seek2:0,na:NA.Norge,sg:SG.FastB2}
+,740:{name:'Glorious改',type:ST.BB,seek:0,seek2:0,na:NA.Norge,sg:SG.FastB2}
+,741:{name:'Glorious改',type:ST.CV,seek:0,seek2:0,na:NA.Norge,sg:SG.FastB2}
 }; // @expansion
 
 export default SHIP_DATAS;
