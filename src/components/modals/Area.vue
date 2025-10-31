@@ -156,8 +156,18 @@ const NORMAL_AREAS: Area[] = [
 // イベント
 const EVENT_AREAS: Area[] = [ // @expansion
 	{
-		name: '2025春',
+		name: '2025秋',
 		color: "aqua",
+		areas: [
+			{ value: "61-1", label: "E-1" },
+			// { value: "61-2", label: "E-2" },
+			// { value: "61-3", label: "E-3" },
+			// { value: "61-4", label: "E-4" },
+			// { value: "61-5", label: "E-5" },
+		],
+	},
+	{
+		name: '2025春',
 		areas: [
 			{ value: "60-1", label: "E-1" },
 			{ value: "60-2", label: "E-2" },

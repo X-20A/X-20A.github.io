@@ -190,7 +190,8 @@ export const area_id_schema = union([
     literal('58-1'), literal('58-2'), literal('58-3'), literal('58-4'),
     literal('59-1'), literal('59-2'), literal('59-3'), literal('59-4'), literal('59-5'),
     literal('60-1'), literal('60-2'), literal('60-3'), literal('60-4'), literal('60-5'), literal('60-6'),
-]);
+    literal('61-1'), //literal('60-2'), literal('60-3'), literal('60-4'), literal('60-5'),
+]); // @expansion
 
 /**
  * AreaId値を検証・パースする関数

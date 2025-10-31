@@ -308,7 +308,67 @@ export const nomal_mock_datas: MockData[] = [
         },
         deck: 'https://x-20a.github.io/compass/?pdz=N4IgbgpgTgzglgewHYgFwBYA0IAWBHAGzDQEYAmABmwDMS1QkBDAWwjREBpvEwMyDAotJGwAXNGWww6qUHAAmaAKwB2AGzYiaAJwLsEAB6M0gqAFcI2OIIjMY9EHAlTZqMsuxRqGgL5myNmaQAcAMyu7hhetoG%2BjnJkJCGk2MyM1qgK4XDoUWj%2BWiBuaGlmOlmogcF5oRQe4TgADhrlyQDuaFggBEYAxgDWIv7hMD6Sto4k6uVqqOqiILr6qNSMBDCmthZW9DX1qHIqIM1oVO1dvU5VYpHDfjtyE8RT6tp6Bsar5pYpUvYjIupH%2BWFvCUyH94k50pcHKQSP4wW0kilCrZMldHIEyDMASQjgiCuk5CUcmCkXBiqi0GUwVUtgVYfsYC0pqoTq1ziAYCioVMlHTJupHrNnqhDCYzOtPjTSgKDqk5MyegEBgTyTc2nyBXMXqK1h9fN9roEYXD0kMuegecazJCfqUMVTEsk8WZOTayIEBQCcY7UvjCbkASSyVzKRVDtVsHVadgZdijh0FRg2TAlIT-Lz7vynvMRW9xZsI9slI0Ga09vHTugyOGQNRTSAmKx2BwyHwBCBhE4xPrHOa1Rm6ZqFksVmLdZJJYboyXUEpcuXWiQBnXrgpAmX7nIjoPFstc2PgJLnFPGXI5ccE5QBtaDbFVBncoOc6ONuOC61cjLAryWaUky7ruoShxO0GYakKT46i%2BB5vqUbQymm8qnKeSolIo6YaGB2avM%2BEowSG8ETD%2BgRJimKrqKed4YVmWp7lBE7FoyCjfhe6jVtQkLhNQnLVEAA',
     },
+
+    {
+        area: '61-1', routes: ['1-A-B-E'],
+        option: {
+            'phase': '1',
+        },
+        deck: 'https://x-20a.github.io/compass/?pdz=N4IgbgpgTgzglgewHYgFwBYA0IAWBHAGzDQEYAmABmwDMS1QkBDAWwjREBpvEwMyDAotJGwAXNFRAw6qUHAAmpdFhBE0ATmXYIAD0ZpqjAjAjY4giMxj0AvthwAHNAGYS2RjADuaAGxrFAVwDGANZoZGRWYmT0IDJo8gDs2EqoqupaOnoGRiZmltZ2SWTObiIJ-kGoABxhMPaR0ageHuUJxEnemtqouvqGUVnmkmG2aACs9oXuFaIEpaSxVei1sqgkysPNKm2pnek9xqb9wIN59gUgLhMeY76BMRRVw4sxyvGKLckg7Wndmfs5uMdOM5FCpXaY3ZYeKoeR6oWIkUFvTYdLoZXq-Aa5NCxBTnYrXMohCxhagRDEgag1MnUBYDCxAA',
+    },
+    {
+        area: '61-1', routes: ['1-A-B-C-D'],
+        option: {
+            'phase': '1',
+        },
+        deck: 'https://x-20a.github.io/compass/?pdz=N4IgbgpgTgzglgewHYgFwBYA0IAWBHAGzDQEYAmABmwDMS1QkBDAWwjREBpvEwMyDAotJGwAXNFRAw6qUHAAmpdFhBE0ATmXYIAD0ZpqjAjAjY4giMxj0AvthwAHNAGYS2RjADuaAGxrFAVwDGANZoZGRWYmT0IDJoAKwA7E6KxKiq6lo6egZGJmaW1naoABxkzm4i2AT%2BQahk6GEw9pHRqB4ehRXJqSCa2qi6%2BoZROeaSYbax9qXuRaKVgaRx9ehNsqgkyjEdKt49GQPZpiPAYwX2JSAu0x6TvvMYFPUxK2joynFbKTvpfZmDxod5XCnRKXNCFG5zaokDz1DzPVAJCGdL69fpZIYA0b5NBxBSg1CzKrBUJhagRLEgaiNCnUZajCxAA',
+    },
+    {
+        area: '61-1', routes: ['1-A-F-G-I'],
+        option: {
+            'phase': '1',
+        },
+        deck: 'https://x-20a.github.io/compass/?pdz=N4IgbgpgTgzglgewHYgFwBYA0IAWBHAGzDQEYAmABmwDMS1QkBDAWwjREBpvEwMyDAotJGwAXNFRAw6qUHAAmpdFhBE0ATmXYIAD0ZpqjAjAjY4giMxj0AvthwAHNAGYS2RjADuaAGxrFAVwDGANZoZGRWYmT0IDJo8gDs2EqoqupaOnoGRiZmltZ2SWTObiIJ-kGoABxhMPaR0ageHuUJxEnemtqouvqGUVnmkmG2aACs9oXuFaIEpaSxVei1sqgkysPNKm2pnek9xqb9wIN59gUgLhMeY76BMRRVw4sxyvGKLckg7Wndmfs5uMdOM5FCpXaY3ZYeKoeR6oWIkUFvTYdLoZXq-Aa5NCxBTnYrXMohCxhagRDEgag1MnUBYDCxAA',
+    },
+    {
+        area: '61-1', routes: ['1-A-F-J-L-M-N-O'],
+        option: {
+            'phase': '1',
+        },
+        deck: 'https://x-20a.github.io/compass/?pdz=N4IgbgpgTgzglgewHYgFwBYA0IAWBHAGzDQEYAmABmwDMS1QkBDAWwjREBpvEwMyDAotJGwAXNFRAw6qUHAAmpdFhBE0ATmXYIAD0ZpqjAjAjY4giMxj0AvthwAHNAGYS2RjADuaAGxrFAVwDGANZoZGRWYmT0IDJoAKwA7E6KxKiq6lo6egZGJmaW1naoABxkzm4i2AT%2BQahk6GEw9pHRqB4ehRXJqSCa2qi6%2BoZROeaSYbax9qXuRaKVgaRx9ehNsqgkyjEdKt49GQPZpiPAYwX2JSAu0x6TvvMYFPUxK2joynFbKTvpfZmDxod5XCnRKXNCFG5zaokDz1DzPVAJCGdL69fpZIYA0b5NBxBSg1CzKrBUJhagRLEgaiNCnUZajCxAA',
+    },
+    {
+        area: '61-1', routes: ['1-A-F-J-L-M-O'],
+        option: {
+            'phase': '2',
+        },
+        deck: 'https://x-20a.github.io/compass/?pdz=N4IgbgpgTgzglgewHYgFwBYA0IAWBHAGzDQEYAmABmwDMS1QkBDAWwjREBpvEwMyDAotJGwAXNFRAw6qUHAAmpdFhBE0ATmXYIAD0ZpqjAjAjY4giMxj0AvthwAHNAGYS2RjADuaAGxrFAVwDGANZoZGRWYmT0IDJo6AAc3kqoqupaOnoGRiZmltZ2qI7Obp6iBP5BqCSxYTD2kdGoAKwA7LHYickgmtqouvqGUVnmkmG2DvaF7qhNHm1lwVXYMOh1so0eM4rESd5daX2ZpkPAI3n24yAukx5Ns4HBFNUNKyrNbVsduz3p-caHObh5BoNCYxYG%2BO75ZTVDzPRoUDbtHapL77AZ-Ya5TxOC5FVAlOYVBZiJqw%2BQ3TYqJHdXoZNHZDEAlRkEF427lKphagRBnUWo85bDCxAA',
+    },
+    {
+        area: '61-1', routes: ['1-A-F-J-L-P-S-T-V'],
+        option: {
+            'phase': '2',
+        },
+        deck: 'https://x-20a.github.io/compass/?pdz=N4IgbgpgTgzglgewHYgFwBYA0IAWBHAGzDQEYAmABmwDMS1QkBDAWwjREBpvEwMyDAotJGwAXNFRAw6qUHAAmpdFhBE0ATmXYIAD0ZpqjAjAjY4giMxj0AvthwAHNAGYS2RjADuaAGxrFAVwDGANZoZGRWYmT0IDJo6AAc3kqoqupaOnoGRiZmltZ2qI7Obp6iBP5BqCSxYTD2kdGoAKwA7LHYickgmtqouvqGUVnmkmG2DvaF7qhNHm1lwVXYMOh1sknNbcRJ3l1pfZmmQ8AjeQ0NEzFnvoEOytUNK2gNFDOKmx07Pen9xgc5uHkeJwgFyTEpzCoLMQeB4YdAvdrbVKfPYDX7DXIqMjnVBg675CjVJowp6tV4qRHdXoZVHZdH-TxAkEiWZ4kj2CxhagROnUWo85bDCxAA',
+    },
+    {
+        area: '61-1', routes: ['1-A-F-J-K-Q-S-T-V'],
+        option: {
+            'phase': '3',
+        },
+        deck: 'https://x-20a.github.io/compass/?pdz=N4IgbgpgTgzglgewHYgFwBYA0IAWBHAGzDQEYAmABmwDMS1QkBDAWwjREBpvEwMyDAotJGwAXNFRAw6qUHAAmadAA4AnNiJpFykBAAejNNUYEYEbHEERmMegF9sOAA5oAzCWyMYAdzQA2UQQCuAMYA1qTyNmJk9CAyaACsAOzyKsSo6tjauqj6hsbRZhbWtg6ojo6uHmjxXiqBIahkYdgwjlExqLFe1SCqqRoZegZGJvmWkuH2TmUgbp6oXvE1wWiU4TDorbKpXi7dKWmaOgM5w%2BajwOPFjljTFajySd21cbGrsRtx6GTJan2HWYO5UynQq4S5TGaVBaPJaoEiNMRed6wxQPHr7fr-Y55YFjIpOHYQu47fwwkgvJrxJHoLzXNG-TLZIbYgq40H48qzLyop4leJWcLUSKs6gtYXrMZWIA',
+    },
+
 ]; // @expansion
+/*
+{
+    area: '61-1', routes: ['1-A-F-J-L-M-N-O'],
+        option: {
+        'phase': '2',
+        },
+    deck: '',
+},
+*/
 // TODO: 第三艦隊以降にデータがあるとこける。実機では問題なし
 /*
 {
