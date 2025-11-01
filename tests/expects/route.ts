@@ -358,13 +358,61 @@ export const nomal_mock_datas: MockData[] = [
         },
         deck: 'https://x-20a.github.io/compass/?pdz=N4IgbgpgTgzglgewHYgFwBYA0IAWBHAGzDQEYAmABmwDMS1QkBDAWwjREBpvEwMyDAotJGwAXNFRAw6qUHAAmadAA4AnNiJpFykBAAejNNUYEYEbHEERmMegF9sOAA5oAzCWyMYAdzQA2UQQCuAMYA1qTyNmJk9CAyaACsAOzyKsSo6tjauqj6hsbRZhbWtg6ojo6uHmjxXiqBIahkYdgwjlExqLFe1SCqqRoZegZGJvmWkuH2TmUgbp6oXvE1wWiU4TDorbKpXi7dKWmaOgM5w%2BajwOPFjljTFajySd21cbGrsRtx6GTJan2HWYO5UynQq4S5TGaVBaPJaoEiNMRed6wxQPHr7fr-Y55YFjIpOHYQu47fwwkgvJrxJHoLzXNG-TLZIbYgq40H48qzLyop4leJWcLUSKs6gtYXrMZWIA',
     },
-
+    {
+        area: '61-2', routes: ['1-A-B-D-K-L-M'],
+        option: {
+            'phase': '1',
+        },
+        deck: 'https://x-20a.github.io/compass/?pdz=N4IgbgpgTgzglgewHYgFwBYA0IAWBHAGzDQEYAmABmwDMS1QkBDAWwjREBpvEwMyDAotJGwAXNFRAw6qUHAAmpAJwBWbETRy52CAA9GaaowIwI2OIIjMY9AL7YcABzQBmMtkYwA7mgBsD5QFcAxgDWaOgU1mJk9CAyIXIA7MrEqGoa2rr6hsam5lY29qgOJC7uaAAcPiAEAcGoJJ7hMA5RMagK6BUqyeogWjqoegZG0dkWkuF2jhWuHqiepX5BjmHYMOjNshjeiardvemDWWajwOP5hcUzCt1Vi7VxDQrrqgoJlUkpPWn9GUMmR7m4fIKJQgaYhEE3GoOOQNTxPDByTzbLqpPoDTLDf5jPJeZygkqoUSQ0j3FZxeEKTxE967L7o34jAETVrdMEYeaVaohMiWcLUSLYkDUJqC6hrMaWIA',
+    },
+    {
+        area: '61-2', routes: ['1-A-F-I-J-R'],
+        option: {
+            'phase': '1',
+        },
+        deck: 'https://x-20a.github.io/compass/?pdz=N4IgbgpgTgzglgewHYgFwBYA0IAWBHAGzDQEYAmABmwDMS1QkBDAWwjREBpvEwMyDAotJGwAXNFRAw6qUHAAmpAJwBWbETRy52CAA9GaaowIwI2OIIjMY9AL7YcABzQBmMtkYwA7mgBsD5QFcAxgDWaOgU1mJk9CAyIXIA7MrEqGoa2rr6hsam5lY29qgOJC7uaAAcPiAEAcGoJJ7hMA5RMagK6BUqyeogWjqoegZG0dkWkuF2jhWuHqiepX5BjmHYMOjNshjeiardvemDWWajwOP5hcUzCt1Vi7VxDQrrqgoJlUkpPWn9GUMmR7m4fIKJQgaYhEE3GoOOQNTxPDByTzbLqpPoDTLDf5jPJeZygkqoUSQ0j3FZxeEKTxE967L7o34jAETVrdMEYeaVaohMiWcLUSLYkDUJqC6hrMaWIA',
+    },
+    {
+        area: '61-2', routes: ['1-A-B-D-K-E-S'],
+        option: {
+            'phase': '1',
+        },
+        deck: 'https://x-20a.github.io/compass/?pdz=N4IgbgpgTgzglgewHYgFwBYA0IAWBHAGzDQEYAmABmwDMS1QkBDAWwjREBpvEwMyDAotJGwAXNFRAw6qUHAAmpdFhBE0ATmXYIAD0ZpqjAjAjY4giMxj0AvthwAHNAGYS2RjADuaAGxrFAVwDGANZoZGRWYmT0IDIqAKwA7NhKqKrqWjp6BkYmZpbWdqgxMc5uaOhFvoEOymEw9pHRGMoeicTJ3praqLr6hlHZ5pJhtp5kxe6oogT%2BQagkcTXo9bIYJE6KrSkgHek9WaYDwEP5cQkgLuNkAByJ06T2NTFLck0tKu1pXRm9xvu5uPnKNbnEQ3SoYCg1DxPVBxezlJKbbafXZ9X6DPJoS7eYETUEzOY1OLQsgnV5tVKdbqZVE5dH-NCks4lXEVfGhMLUCJ06h1bmLQYWIA',
+    },
+    {
+        area: '61-2', routes: ['2-K-O-P-Q-T-V-W-X'],
+        option: {
+            'phase': '1',
+        },
+        deck: 'https://x-20a.github.io/compass/?pdz=N4IgbgpgTgzglgewHYgFwBYA0IAWBHAGzDQEYAmABmwDMS1QkBDAWwjREBpvEwMyDAotJGwAXNAGZsMOqlBwAJmgCsFAOzYiaAJzrsEAB6M01RgRgRscQRGYx6AX2w4ADgq0hGMAO5oqIAgFcAxgDWpGR2IDBk9CCyaABssQAcqsSomtp6BkYmZhZWtvZOqPJirh5oCd5%2BQaRKYTAiUTGoJOhYPilpILr6qIbGptG51lJhjqIk2G6eqLEuVcGoZKHi6I1yGAlzHS7dmf05lsPAo4UiE6XTsZUBCyQJdfJrCvHJGjsZvVkD5of5uKclKZxFQ%2BG5oSh1WJPIpKJLtN7pHp9bKDX4jAqiQFlVBKWKqMGLe5haiRKQgJisdgcMh8AQgYSoEoSaGxSivVLvJFfA55dH-BRY6boa7VZoiOqk6TreQJOFqDmIvYon6844YxneIGoBJ40GikgUOoNMlNGUg%2BWdXaffao1UncaTbEJMj40UQlbQ9CzdmWj7I75DP5jRnnLWxErzUjqB7Q9QJCPbRXW5WBvnBkSC8oihZLSHQ%2BTe%2BEKrp%2B7m2o72xmZ7XZ8GhYnGtUgairEY2IA',
+    },
+    {
+        area: '61-2', routes: ['2-K-P-Q-T-V-W-X'],
+        option: {
+            'phase': '2',
+        },
+        deck: 'https://x-20a.github.io/compass/?pdz=N4IgbgpgTgzglgewHYgFwBYA0IAWBHAGzDQEYAmABmwDMS1QkBDAWwjREBpvEwMyDAotJGwAXNAGZsMOqlBwAJmgCsFAOzYiaAJzrsEAB6M01RgRgRscQRGYx6AX2w4ADgq0hGMAO5oqIAgFcAxgDWpGR2IDBk9CCyaABssQAcqsSomtp6BkYmZhZWtvZOqPJirh5oCd5%2BQaRKYTAiUTGoJOhYPilpILr6qIbGptG51lJhjqIk2G6eqLEuVcGoZKHi6I1yGAlzHS7dmf05lsPAo4UiE6XTsZUBCyQJdfJrCvHJGjsZvVkD5of5uKclKZxFQ%2BG5oSh1WJPIpKJLtN7pHp9bKDX4jAqiQFlVBKWKqMGLe5haiRKQgJisdgcMh8AQgYSoEoSaGxSivVLvJFfA55dH-BRY6boa7VZoiOqk6TreQJOFqDmIvYon6844YxneIGoBJ40GikgUOoNMlNGUg%2BWdXaffao1UncaTbEJMj40UQlbQ9CzdmWj7I75DP5jRnnLWxErzUjqB7Q9QJCPbRXW5WBvnBkSC8oihZLSHQ%2BTe%2BEKrp%2B7m2o72xmZ7XZ8GhYnGtUgairEY2IA',
+    },
+    {
+        area: '61-2', routes: ['1-A-B-D-K-E-S'],
+        option: {
+            'phase': '2',
+        },
+        deck: 'https://x-20a.github.io/compass/?pdz=N4IgbgpgTgzglgewHYgFwBYA0IAWBHAGzDQEYAmABmwDMS1QkBDAWwjREBpvEwMyDAotJGwAXNFRAw6qUHAAmadAE4S2ImnnzsEAB6M01RgRgRscQRGYx6AX2w4ADnLLZGMAO4jlAVwDGAa1IB2azEyehAZVQBWf2ViVDUNbV19Q2NTcysbe1QIiKdXOVyQAm8-VABmeSCYMtDw1BJ5QpU49RAtHVQ9AyMwtItJILs0MscQZzdUADYyz185Cir0WtkMEiUi2Pi2xM7knpMzfuBBrP9osfzUMgAOWdKSMqqI5dIFSZjVVvak7tTDjNwWUUeQmomKcwwC2wMEmL1Q-jKTU2Xx2XRSvX%2BA0yaGurXG7iKJQCVX8cLIZw%2BLQSHTR%2Bz6AKG8PO%2BNQYKJ9TIliC1BCWJA1BqfOoSwGliAA',
+    },
+    {
+        area: '61-2', routes: ['2-K-O-P-Q-T-V-Y'],
+        option: {
+            'phase': '3',
+        },
+        deck: 'https://x-20a.github.io/compass/?pdz=N4IgbgpgTgzglgewHYgFwBYA0IAWBHAGzDQEYAmABmwDMS1QkBDAWwjREBpvEwMyDAotJGwAXUthh1UoOABM0ATgBss7ETlKQEAB6M01RgRgRscQRGYx6AX2w4ADnJLZGMAO5oqIAgFcAxgGs0ZAAcViAwZPQg0mgA7GRYHsSosmqa2qi6%2BoaRJmaW1naogYGOLm7KPv6oZGQhMADMEVGodbJ1yonJ2Kk6egZGOeYSIbYxDiBOrqjuXn6kdbXojTKoAKwUxQmqXVo9mf2mg8DDBfJjE2UeFXO1K0toa-LtW%2Bo76b1Zxgd5uCdnpVPlWaoEjBUTyO5JFbRJ5JFKvDJ9bJfIb5e4rEqTdDoy5AloWELUcISEBMVjsDhkPgCEDCYGicSSZbRCjYlSw7ZpBEfAbfEarMgYmLQnGVSi1ImM0iyAWbdkvTnvfa5FE-e6Pcb-aZXYGg0INYlNEjoeJszry3aIz7Ko6o5p-SaKQGimqiRYG5boQJqU1whV7JHW45oOr2tDyLVAkE3CFQjY%2BjkW7nIm2q5ptDWTaLqmai3UwcHutXZjq%2BxNKw5BtOC1DyYU5gIUfE0fUp6huo4WIA',
+    },
 ]; // @expansion
 /*
 {
-    area: '61-1', routes: ['1-A-F-J-L-M-N-O'],
+    area: '61-2', routes: ['1-A-F-J-L-M-N-O'],
         option: {
-        'phase': '2',
+        'phase': '3',
         },
     deck: '',
 },
