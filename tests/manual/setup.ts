@@ -1,15 +1,15 @@
-import { derive_adopt_fleet } from "@/models/fleet/AdoptFleet";
-import { derive_FleetComponents_from_DeckBuilder } from "@/logic/deckBuilder";
-import type DeckBuilder from '@/types/DeckBuilder';
+import { derive_adopt_fleet } from "../../src/models/fleet/AdoptFleet";
+import { derive_FleetComponents_from_DeckBuilder } from "../../src/logic/deckBuilder";
+import type DeckBuilder from '../../src/types/DeckBuilder';
 import type {
     DeckBuilderFleet,
     DeckBuilderItem,
     DeckBuilderShip
-} from '@/types/DeckBuilder';
-import type { AreaId } from "@/types";
-import SHIP_DATAS from "@/data/ship";
-import EQUIP_DATAS from "@/data/equip";
-import type { Ft } from "@/core/branch";
+} from '../../src/types/DeckBuilder';
+import type { AreaId } from "../../src/types";
+import SHIP_DATAS from "../../src/data/ship";
+import EQUIP_DATAS from "../../src/data/equip";
+import { Ft } from "../../src/models/fleet/predicate";
 
 const ship_ids = Object.keys(SHIP_DATAS).map(key => Number.parseInt(key));
 const item_ids = Object.keys(EQUIP_DATAS).map(key => Number.parseInt(key));

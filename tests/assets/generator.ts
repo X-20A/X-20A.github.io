@@ -1,7 +1,8 @@
-import SHIP_DATAS from "@/data/ship";
-import { derive_naked_ship, NakedShip } from "@/models/ship/NakedShip";
-import { brandShipLv } from "@/types/brand";
-import { ShipName } from "@/types/shipName";
+
+import SHIP_DATAS from "../../src/data/ship";
+import { derive_naked_ship, NakedShip } from "../../src/models/ship/NakedShip";
+import { brandShipLv } from "../../src/types/brand";
+import { ShipName } from "../../src/types/shipName";
 
 const DEFAULT_LV = brandShipLv(99);
 

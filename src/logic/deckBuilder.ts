@@ -1,20 +1,20 @@
-import { type FleetComponent, derive_fleet_component } from '@/models/fleet/FleetComponent';
-import type { EquippedShip } from '@/models/ship/EquippedShip';
-import { derive_equipped_ship } from '@/models/ship/EquippedShip';
-import type { EquipInDeck, Improvement } from '@/types';
-import type DeckBuilder from '@/types/DeckBuilder';
+import { type FleetComponent, derive_fleet_component } from '../models/fleet/FleetComponent';
+import type { EquippedShip } from '../models/ship/EquippedShip';
+import { derive_equipped_ship } from '../models/ship/EquippedShip';
+import type { EquipInDeck, Improvement } from '../types';
+import type DeckBuilder from '../types/DeckBuilder';
 import type {
     DeckBuilderFleet,
     DeckBuilderShip,
     DeckBuilderItem
-} from '@/types/DeckBuilder';
-import CustomError from "@/errors/CustomError";
-import { is_exists_and_Number } from '@/logic/util';
-import type { AdoptFleet } from '@/models/fleet/AdoptFleet';
-import { brandShipAsw, brandShipHp, brandShipIndex, brandShipLuck, brandShipLv } from '@/types/brand';
-import { derive_equip } from '@/models/Equip';
-import { derive_naked_ship } from '@/models/ship/NakedShip';
-import { derive_fleet_unit } from '@/models/fleet/FleetUnit';
+} from '../types/DeckBuilder';
+import CustomError from "../errors/CustomError";
+import { is_exists_and_Number } from '../logic/util';
+import type { AdoptFleet } from '../models/fleet/AdoptFleet';
+import { brandShipAsw, brandShipHp, brandShipIndex, brandShipLuck, brandShipLv } from '../types/brand';
+import { derive_equip } from '../models/Equip';
+import { derive_naked_ship } from '../models/ship/NakedShip';
+import { derive_fleet_unit } from '../models/fleet/FleetUnit';
 
 /**
  * デッキビルダーからFleetComponent[]を生成    

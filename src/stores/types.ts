@@ -1,8 +1,8 @@
-import type { AdoptFleet } from '@/models/fleet/AdoptFleet';
-import type { CommandEvacuation } from '@/core/CommandEvacuation';
-import type { FleetComponent } from '@/models/fleet/FleetComponent';
-import type { AreaId, ItemIconKey, NodeDatas, EdgeDatas, SelectedType, SimResult, OptionsType, SaveData, BranchLastUpdate, BranchType } from '@/types';
-import type { Node } from '@/types/brand';
+import type { AdoptFleet } from '../models/fleet/AdoptFleet';
+import type { CommandEvacuation } from '../core/CommandEvacuation';
+import type { FleetComponent } from '../models/fleet/FleetComponent';
+import type { AreaId, ItemIconKey, NodeDatas, EdgeDatas, SelectedType, SimResult, OptionsType, SaveData, BranchLastUpdate, BranchType } from '../types';
+import type { Node } from '../types/brand';
 import { LoadDataCommands } from '.';
 
 /**

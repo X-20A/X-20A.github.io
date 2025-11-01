@@ -41,16 +41,16 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue';
-import { useStore, useModalStore } from '@/stores';
+import { useStore, useModalStore } from '../../stores';
 import {
   type CommandEvacuation,
   add_command_evacuation,
   remove_command_evacuation
-} from '@/core/CommandEvacuation';
-import { brandNode } from '@/types/brand';
-import { UnitIndex } from '@/models/fleet/FleetUnit';
-import { ShipId } from '@/types/shipId';
-import { ShipName } from '@/types/shipName';
+} from '../../core/CommandEvacuation';
+import { brandNode } from '../../types/brand';
+import { UnitIndex } from '../../models/fleet/FleetUnit';
+import { ShipId } from '../../types/shipId';
+import { ShipName } from '../../types/shipName';
 
 const store = useStore();
 const cxtTapedNode = computed(() => store.cxtTapedNode);

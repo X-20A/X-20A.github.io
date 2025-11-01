@@ -1,12 +1,12 @@
-import type { Seek } from '@/types';
-import { SG, ST as ShipType } from '@/data/ship';
-import type { Sp as Speed } from '@/core/branch';
+import type { Seek } from '../../types';
+import { SG, ST as ShipType } from '../../data/ship';
 import { calc_fleet_speed } from '../../logic/speed/fleet';
 import { calc_fleet_seek } from '../../logic/seek/fleet';
-import { FleetUnit } from '@/models/fleet/FleetUnit';
+import { FleetUnit } from '../../models/fleet/FleetUnit';
 import { EquippedShip } from '../ship/EquippedShip';
 import { includes_ship_id } from '../ship/NakedShip';
-import { ShipId } from '@/types/shipId';
+import { ShipId } from '../../types/shipId';
+import { Sp as Speed } from '../../logic/speed/predicate';
 
 /**
  * 大和型ID配列    

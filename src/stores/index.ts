@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia';
 
-import CustomError from "@/errors/CustomError";
-import { switch_seek, type AdoptFleet } from '@/models/fleet/AdoptFleet';
-import Const from '@/constants/const';
+import CustomError from "../errors/CustomError";
+import { switch_seek, type AdoptFleet } from '../models/fleet/AdoptFleet';
+import Const from '../constants/const';
 import type {
     SelectedType,
     AreaId,
@@ -14,11 +14,11 @@ import type {
     ItemIconKey,
     NodeDatas,
     EdgeDatas
-} from '@/types';
-import type { FleetComponent } from '@/models/fleet/FleetComponent';
-import { is_battle_node, is_last_stop_node, type CommandEvacuation } from '@/core/CommandEvacuation';
-import type { Node } from '@/types/brand';
-import { parseOptionsType } from '@/models/shemas';
+} from '../types';
+import type { FleetComponent } from '../models/fleet/FleetComponent';
+import { is_battle_node, is_last_stop_node, type CommandEvacuation } from '../core/CommandEvacuation';
+import type { Node } from '../types/brand';
+import { parseOptionsType } from '../models/shemas';
 
 export type LoadDataCommands = {
     /** deck読込をスキップするか */
@@ -145,7 +145,7 @@ export const useStore = defineStore('compass', {
             localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(localSaveData));
         },
         async DYNAMIC_LOAD(): Promise<void> {
-            const module = await import('@/data/branch');
+            const module = await import('../data/branch');
             this.UPDATE_BRANCH_INFO(module.BRANCH_LAST_UPDATES);
             this.UPDATE_BRANCH_DATA(module.default);
 

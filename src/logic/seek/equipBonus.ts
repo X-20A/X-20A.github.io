@@ -1,11 +1,11 @@
 import
 { NA as National, ST as ShipType }
-    from '@/data/ship';
-import { includes_equip_id, type Equip } from '@/models/Equip';
-import { includes_ship_name, some_startsWith_ship_name, startsWith_ship_name } from '@/models/ship/NakedShip';
-import { Brand } from '@/types';
-import { EquipId } from '@/types/equipId';
-import { ShipName } from '@/types/shipName';
+    from '../../data/ship';
+import { includes_equip_id, type Equip } from '../../models/Equip';
+import { includes_ship_name, some_startsWith_ship_name, startsWith_ship_name } from '../../models/ship/NakedShip';
+import { Brand } from '../../types';
+import { EquipId } from '../../types/equipId';
+import { ShipName } from '../../types/shipName';
 
 /**
  * 装備idがまだ重複していないことを判定して返す

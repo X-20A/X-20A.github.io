@@ -1,5 +1,5 @@
-import type { OptionsType } from '@/types'
-import { EquipName } from '@/types/equipName';
+import type { OptionsType } from '../types'
+import { EquipName } from '../types/equipName';
 
 /**
  * 定数系    

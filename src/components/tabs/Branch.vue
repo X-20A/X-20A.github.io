@@ -29,10 +29,10 @@
 
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue';
-import { useStore } from '@/stores';
-import { convert_branch_data_to_HTML } from '@/logic/convert';
-import { sanitize_text } from '@/logic/util';
-import { disassembly_area_id } from '@/logic/area';
+import { useStore } from '../../stores';
+import { convert_branch_data_to_HTML } from '../../logic/convert';
+import { sanitize_text } from '../../logic/util';
+import { disassembly_area_id } from '../../logic/area';
 
 // 分岐条件一覧
 

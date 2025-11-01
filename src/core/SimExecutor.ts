@@ -1,5 +1,5 @@
-import { EDGE_DATAS } from "@/data/map";
-import CustomError from "@/errors/CustomError";
+import { EDGE_DATAS } from "../data/map";
+import CustomError from "../errors/CustomError";
 import type { AdoptFleet } from "../models/fleet/AdoptFleet";
 import {
     type SimFleet,
@@ -8,8 +8,8 @@ import {
     progress_sim_fleet,
     calc_evacuated_fleet,
 } from "../models/fleet/SimFleet";
-import { calcNextNode } from "./branch";
-import type { SimResult, AreaId, OptionsType, EdgeData } from "@/types";
+import { calc_next_node } from "./branch";
+import type { SimResult, AreaId, OptionsType, EdgeData } from "../types";
 import type { CommandEvacuation } from "./CommandEvacuation";
 
 /**
@@ -82,7 +82,7 @@ function advance_sim_fleet(
         area_routes.filter((item: EdgeData) => item[0] === evacuated_sim_fleet.current_node);
     if (next_node.length >= 2 || evacuated_sim_fleet.current_node === null) {
         // 分岐
-        const branched_nodes = calcNextNode(
+        const branched_nodes = calc_next_node(
             executor.area_id,
             evacuated_sim_fleet.current_node,
             evacuated_sim_fleet,

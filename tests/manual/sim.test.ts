@@ -4,17 +4,17 @@ import LZString from 'lz-string';
 import {
     derive_sim_executer,
     start_sim,
-} from '@/core/SimExecutor';
-import Const from '@/constants/const';
-import type { AreaId, OptionsType } from '@/types';
-import { derive_FleetComponents_from_DeckBuilder } from '@/logic/deckBuilder';
-import { derive_adopt_fleet, calc_escort_fleet_ship_names, calc_main_fleet_ship_names } from '@/models/fleet/AdoptFleet';
-import { calc_URL_param } from '@/logic/url';
+} from '../../src/core/SimExecutor';
+import Const from '../../src/constants/const';
+import type { AreaId, OptionsType } from '../../src/types';
+import { derive_FleetComponents_from_DeckBuilder } from '../../src/logic/deckBuilder';
+import { derive_adopt_fleet, calc_escort_fleet_ship_names, calc_main_fleet_ship_names } from '../../src/models/fleet/AdoptFleet';
+import { calc_URL_param } from '../../src/logic/url';
 import { nomal_mock_datas, astray_mock_datas } from '../expects/route';
-import { NODE_DATAS, NT as NodeType } from '@/data/map';
-import type { Ft } from '@/core/branch';
-import type { CommandEvacuation } from '@/core/CommandEvacuation';
+import { NODE_DATAS, NT as NodeType } from '../../src/data/map';
+import type { CommandEvacuation } from '../../src/core/CommandEvacuation';
 import { getSimSet } from './setup';
+import { Ft } from '../../src/models/fleet/predicate';
 
 describe('Simテスト', () => {
     it(`rand-test: ランダムに生成した艦隊をSimクラスに渡してクラス内でエラーが発生しないこと、

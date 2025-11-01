@@ -1,4 +1,5 @@
-import { Sp as Speed } from "@/core/branch";
+import { Sp as Speed } from "../../src/logic/speed/predicate";
+
 
 // 汎用タプル構築ユーティリティ
 export type BuildTuple<T, N extends number, R extends unknown[] = []> =

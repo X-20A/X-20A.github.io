@@ -33,9 +33,9 @@
 
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue';
-import { useStore } from '@/stores';
-import SvgIcon from '@/components/SvgIcon.vue';
-import { NODE_DATAS, NT as NodeType } from '@/data/map';
+import { useStore } from '../../stores';
+import SvgIcon from '../../components/SvgIcon.vue';
+import { NODE_DATAS, NT as NodeType } from '../../data/map';
 
 // 経路一覧
 

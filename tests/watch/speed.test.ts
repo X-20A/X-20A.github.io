@@ -1,11 +1,12 @@
-import { Sp as Speed } from "@/core/branch";
-import { EquipInDeck } from "@/types";
-import { describe, it, expect } from "vitest";
-import { BuildTuple, SPEED_EXPECTS, SpeedExpect, SpeedKey } from "../expects/speed";
+import { describe, expect, it } from "vitest";
+import { EquipInDeck } from "../../src/types";
 import { ASAHI, FLEY, HITOMI, HOSHO_KAI_NI, SAM_MK_2, SHIKINAMI, SHIPMAKAZE_KAI, YAMATO_KAI_NI, YAMATO_KAI_NI_JU } from "../assets/ship";
-import { NakedShip } from "@/models/ship/NakedShip";
-import { derive_equipped_ship } from "@/models/ship/EquippedShip";
-import { derive_equip } from "@/models/Equip";
+import { BuildTuple, SPEED_EXPECTS, SpeedExpect, SpeedKey } from "../expects/speed";
+import { NakedShip } from "../../src/models/ship/NakedShip";
+import { derive_equip } from "../../src/models/Equip";
+import { derive_equipped_ship } from "../../src/models/ship/EquippedShip";
+import { Sp as Speed } from "../../src/logic/speed/predicate";
+
 
 /** 改良型艦本式タービン */
 const TURBINE: EquipInDeck = {

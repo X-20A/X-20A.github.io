@@ -172,7 +172,7 @@
 
 <script setup lang="ts">
 import { onMounted, watch, ref, computed } from 'vue';
-import { useStore, useModalStore } from '@/stores';
+import { useStore, useModalStore } from './stores';
 import Header from './components/Header.vue';
 import Option from './components/Option.vue';
 import Area from './components/modals/Area.vue';
@@ -180,9 +180,8 @@ import Refference from './components/modals/Refference.vue';
 import ErrorView from './components/modals/ErrorView.vue';
 import CommandEvacuation from './components/modals/CommandEvacuation.vue';
 import SvgIcon from './components/SvgIcon.vue';
-import type { SelectedType } from '@/types';
-import CustomError from '@/errors/CustomError';
-import type { Ft as FleetType } from '@/core/branch';
+import type { SelectedType } from './types';
+import CustomError from './errors/CustomError';
 import {
 	derive_FleetComponents_from_DeckBuilder,
 	derive_DeckBuilder_from_AdoptFleet,
@@ -191,15 +190,15 @@ import {
 	getZeroFilledTime,
 	is_exists_and_Number,
 	sanitize_text
-} from '@/logic/util';
+} from './logic/util';
 import { type AdoptFleet, countNotEquipArctic, derive_adopt_fleet, getEscortFleetLength, calc_escort_fleet_ship_names, getMainFleetLength, calc_main_fleet_ship_names } from './models/fleet/AdoptFleet';
 import type { DeckBuilder as GkcoiDeckBuilder } from 'gkcoi/dist/type';
-import do_draw_map from '@/logic/efffects/draw';
+import do_draw_map from './logic/efffects/draw';
 import { EDGE_DATAS, NODE_DATAS } from './data/map';
 import {
 	calc_Gkcoi_Blob,
 	calc_Cytoscape_Blob,
-} from '@/logic/render';
+} from './logic/render';
 import {
 	convert_branch_data_to_HTML,
 } from './logic/convert';
@@ -221,9 +220,10 @@ import { derive_sim_executer, start_sim } from './core/SimExecutor';
 import Const from './constants/const';
 import { clear_command_evacuation } from './core/CommandEvacuation';
 import { parseAreaId, parse_DeckBuilder_String, parseSelectedType } from './models/shemas';
-import { register_Cytoscape_events } from '@/logic/efffects/cytoscapeEvents';
+import { register_Cytoscape_events } from './logic/efffects/cytoscapeEvents';
 import { disassembly_area_id } from './logic/area';
 import lzstring from "lz-string";
+import { Ft as FleetType } from './models/fleet/predicate';
 
 const store = useStore();
 const modalStore = useModalStore();

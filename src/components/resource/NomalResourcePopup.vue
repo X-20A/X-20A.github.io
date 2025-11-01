@@ -40,7 +40,7 @@
 	</div>
 </template>
 <script setup lang="ts">
-import { type NomalResource, ResourceType } from '@/models/resource/NomalResource';
+import { type NomalResource, ResourceType } from '../../models/resource/NomalResource';
 
 defineProps<{ data: NomalResource | null }>();
 </script>

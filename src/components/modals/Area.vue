@@ -50,8 +50,8 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useStore, useModalStore } from '@/stores';
-import type { AreaId } from '@/types';
+import { useStore, useModalStore } from '../../stores';
+import type { AreaId } from '../../types';
 
 // 海域選択モーダル
 

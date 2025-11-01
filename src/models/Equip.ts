@@ -1,8 +1,8 @@
-import type { EquipType } from "@/data/equip";
-import type { Improvement } from "@/types";
-import CustomError from "@/errors/CustomError";
-import EQUIP_DATAS from "@/data/equip";
-import { EquipId } from "@/types/equipId";
+import type { EquipType } from "../data/equip";
+import type { Improvement } from "../types";
+import CustomError from "../errors/CustomError";
+import EQUIP_DATAS from "../data/equip";
+import { EquipId } from "../types/equipId";
 
 /**
  * 装備オブジェクトの型定義

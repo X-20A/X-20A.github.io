@@ -1,4 +1,4 @@
-import type { CyStyle } from "@/types";
+import type { CyStyle } from "../types";
 // ぶっちゃけCDNと速さでは変わらない。ただ、埋め込みなら一斉にパッと点くので採用
 import start from '@/icons/nodes/start.png';
 import port from '@/icons/nodes/port.png';
@@ -16,7 +16,7 @@ import scout from '@/icons/nodes/scout.png';
 import unknown from '@/icons/nodes/unknown.png';
 import airstrikeSupported from '@/icons/nodes/airstrike_supported.png';
 import transportLoadout from '@/icons/nodes/transport_loadout.png';
-import { NT as NodeType } from "@/data/map";
+import { NT as NodeType } from "../data/map";
 
 const nodes: CyStyle[] = [
     {

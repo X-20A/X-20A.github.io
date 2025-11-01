@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useModalStore } from '@/stores/';
+import { useModalStore } from '../../stores/';
 
 // エラーメッセージモーダル
 

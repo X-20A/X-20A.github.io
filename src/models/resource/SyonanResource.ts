@@ -1,8 +1,8 @@
-import { type AdoptFleet, calc_total_drum_count, calc_total_valid_craft_count } from "@/models/fleet/AdoptFleet";
-import type { AreaId, ItemIconKey } from "@/types";
+import { type AdoptFleet, calc_total_drum_count, calc_total_valid_craft_count } from "../../models/fleet/AdoptFleet";
+import type { AreaId, ItemIconKey } from "../../types";
 import { derive_resource_icon_suite, type ResourceIconSuite } from "./ResourceIconSuite";
 import type { Composition } from "../Composition";
-import { calc_formated_craft_names } from "@/logic/resource";
+import { calc_formated_craft_names } from "../../logic/resource";
 
 /**
  * SyonanResourceのプロパティ定義

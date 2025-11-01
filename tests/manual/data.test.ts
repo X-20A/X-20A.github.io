@@ -2,10 +2,10 @@ import { describe, it, expect } from 'vitest';
 import path from 'node:path';
 import fs from 'node:fs';
 import axios from 'axios';
-import SHIP_DATAS, { ST as ShipType } from '@/data/ship';
-import EQUIP_DATAS, { EquipType } from '@/data/equip';
-import { ShipId } from '@/types/shipId';
-import { EquipId } from '@/types/equipId';
+import SHIP_DATAS, { ST as ShipType } from '../../src/data/ship';
+import EQUIP_DATAS, { EquipType } from '../../src/data/equip';
+import { ShipId } from '../../src/types/shipId';
+import { EquipId } from '../../src/types/equipId';
 
 describe('Dataテスト', () => {
     it('data-test: 制空シミュのデータと照合して艦や装備に抜けや不一致が無いか確認', async () => {

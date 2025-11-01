@@ -1,5 +1,5 @@
-import type { ShipData } from '@/types';
-import { ShipId } from '@/types/shipId';
+import type { ShipData } from '../types';
+import { ShipId } from '../types/shipId';
 
 /* http://kancolle-calc.net/deckbuilder.html 様より失敬 */
 

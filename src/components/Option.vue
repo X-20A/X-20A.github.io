@@ -36,8 +36,8 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import { useStore } from '@/stores';
-import type { AreaId } from '@/types';
+import { useStore } from '../stores';
+import type { AreaId } from '../types';
 
 // オプションパネル
 

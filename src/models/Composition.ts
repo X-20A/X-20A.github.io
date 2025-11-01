@@ -1,4 +1,4 @@
-import { ST as ShipType } from "@/data/ship";
+import { ST as ShipType } from "../data/ship";
 import { EquippedShip } from "./ship/EquippedShip";
 
 /**

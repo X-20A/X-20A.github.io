@@ -2,7 +2,7 @@
     http://kancolle-calc.net/deckbuilder.html 様より失敬
 */
 
-import { EquipId } from "@/types/equipId";
+import { EquipId } from "../types/equipId";
 
 // 同一ファイル内に定義しないとバンドル時にインライン化されないので注意
 export const enum EquipType {

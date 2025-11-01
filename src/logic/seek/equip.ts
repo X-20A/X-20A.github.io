@@ -1,5 +1,5 @@
-import { EquipType } from "@/data/equip";
-import type { Equip } from "@/models/Equip";
+import { EquipType } from "../../data/equip";
+import type { Equip } from "../../models/Equip";
 
 /**
  * 装備の装備係数を返す

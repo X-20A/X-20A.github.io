@@ -1,5 +1,5 @@
 import type { EquippedShip } from "../../models/ship/EquippedShip";
-import type { Sp as Speed } from "@/core/branch";
+import { Sp as Speed } from "./predicate";
 
 /**
  * 艦隊速度を判定し、速度IDを返す

@@ -1,10 +1,10 @@
 import
 type { NA as National, SG as SpeedGroup, ST as ShipType }
-    from '@/data/ship';
-import { ShipAsw, ShipHp, ShipLuck, ShipLv } from "@/types/brand";
-import { ShipId } from "@/types/shipId";
-import { ShipName } from "@/types/shipName";
-import SHIP_DATAS from '@/data/ship';
+    from '../../data/ship';
+import { ShipAsw, ShipHp, ShipLuck, ShipLv } from "../../types/brand";
+import { ShipId } from "../../types/shipId";
+import { ShipName } from "../../types/shipName";
+import SHIP_DATAS from '../../data/ship';
 
 /**
  * レベルに応じて変動するステータスを返す

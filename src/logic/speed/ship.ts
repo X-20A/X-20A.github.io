@@ -1,6 +1,6 @@
-import { SG as SpeedGroup } from '@/data/ship';
-import { Sp as Speed } from '@/core/branch';
-import type { Equip } from '@/models/Equip';
+import { SG as SpeedGroup } from '../../data/ship';
+import type { Equip } from '../../models/Equip';
+import { Sp as Speed } from './predicate';
 
 type PreInfo = {
     /** 改良型艦本式タービン 装備フラグ */

@@ -1,4 +1,4 @@
-import type { Seek } from '@/types';
+import type { Seek } from '../../types';
 import type { EquippedShip } from '../../models/ship/EquippedShip';
 
 /**

@@ -1,11 +1,12 @@
-import { ST as ShipType } from "@/data/ship";
-import type { Ft as FleetType, Sp as Speed } from "../../core/branch";
+import { ST as ShipType } from "../../data/ship";
 import type { FleetComponent } from "./FleetComponent";
-import { type Composition, derive_composition } from "@/models/Composition";
-import { Seek } from "@/types";
-import { ShipId } from "@/types/shipId";
+import { type Composition, derive_composition } from "../../models/Composition";
+import { Seek } from "../../types";
+import { ShipId } from "../../types/shipId";
 import { extract_ships_from_fleet_unit } from "./FleetUnit";
-import { ShipName } from "@/types/shipName";
+import { ShipName } from "../../types/shipName";
+import { Ft as FleetType } from "./predicate";
+import { Sp as Speed } from "../../logic/speed/predicate";
 
 /**
  * FleetComponentsからSelectedTypeによって抽出、構成されたシミュに使用される艦隊のデフォルト構造

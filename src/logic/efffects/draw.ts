@@ -1,9 +1,9 @@
 import cytoscape from 'cytoscape';
-import { NODE_DATAS, EDGE_DATAS, NT as NodeType, WARNING_NODE_DATAS } from '@/data/map';
-import styles from '@/styles';
-import type { AreaId, SimResult } from '@/types';
+import { NODE_DATAS, EDGE_DATAS, NT as NodeType, WARNING_NODE_DATAS } from '../../data/map';
+import styles from '../../styles';
+import type { AreaId, SimResult } from '../../types';
 import Big from 'big.js';
-import { type CommandEvacuation, is_evacuation_node } from '@/core/CommandEvacuation';
+import { type CommandEvacuation, is_evacuation_node } from '../../core/CommandEvacuation';
 
 /**
  * シミュ結果からマップを描画

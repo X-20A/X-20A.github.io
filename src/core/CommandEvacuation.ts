@@ -1,5 +1,5 @@
-import { NT } from "@/data/map";
-import type { AreaId, EdgeDatas, NodeDatas } from "@/types";
+import { NT } from "../data/map";
+import type { AreaId, EdgeDatas, NodeDatas } from "../types";
 
 /**
  * 艦隊退避コマンド

@@ -1,16 +1,16 @@
 import
     type { NA as National, SG as SpeedGroup, ST as ShipType }
-from '@/data/ship';
-import { EquipType } from '@/data/equip';
+from '../../data/ship';
+import { EquipType } from '../../data/equip';
 import { calc_equip_bonus } from '../../logic/seek/equipBonus';
 import { calc_ship_speed } from '../../logic/speed/ship';
 import { calc_equip_seek } from '../../logic/seek/equip';
 import { Equip, includes_equip_id } from '../Equip';
-import type { Sp as Speed } from '@/core/branch';
-import { ShipId } from '@/types/shipId';
-import { ShipName } from '@/types/shipName';
+import { ShipId } from '../../types/shipId';
+import { ShipName } from '../../types/shipName';
 import { NakedShip } from './NakedShip';
-import { EquipId } from '@/types/equipId';
+import { EquipId } from '../../types/equipId';
+import { Sp as Speed } from '../../logic/speed/predicate';
 
 type PreInfo = {
     readonly drum_count: number;

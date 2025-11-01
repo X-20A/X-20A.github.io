@@ -14,12 +14,6 @@
 		"outDir": "./build",
 		"strictFunctionTypes": true,
 		"strictNullChecks": true,
-		"baseUrl": ".",
-		"paths": {
-			"@/*": [
-				"src/*"
-			]
-		},
 		"lib": [
 			"esnext",
 			"dom",

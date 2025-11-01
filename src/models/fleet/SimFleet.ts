@@ -1,6 +1,6 @@
 import Big from 'big.js';
-import CustomError from '@/errors/CustomError';
-import { brandPreSailNull, type PreSailNull } from '@/types/brand';
+import CustomError from '../../errors/CustomError';
+import { brandPreSailNull, type PreSailNull } from '../../types/brand';
 import { type AdoptFleet, derive_adopt_fleet } from './AdoptFleet';
 import { type CommandEvacuation, is_evacuation_node } from '../../core/CommandEvacuation';
 import { derive_fleet_component } from './FleetComponent';

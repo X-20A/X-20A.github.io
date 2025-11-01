@@ -1,4 +1,4 @@
-import CustomError from "@/errors/CustomError";
+import CustomError from "../errors/CustomError";
 import {
     object,
     number,
@@ -10,8 +10,8 @@ import {
     parse,
     safeParse
 } from "valibot";
-import type DeckBuilder from "@/types/DeckBuilder";
-import type { OptionsType, SelectedType, AreaId } from "@/types";
+import type DeckBuilder from "../types/DeckBuilder";
+import type { OptionsType, SelectedType, AreaId } from "../types";
 
 /**
  * DeckBuilderItem型のvalibotスキーマ定義

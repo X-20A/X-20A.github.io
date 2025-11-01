@@ -13,9 +13,4 @@ export default defineConfig({
             reporter: ['text', 'json', 'html'], // レポート形式
         },
     },
-    resolve: {
-        alias: {
-            '@': path.resolve(__dirname, 'src'),
-        },
-    },
 });

@@ -1,4 +1,4 @@
-import { AreaId } from "@/types";
+import { AreaId } from "../types";
 
 export type AreaContents = {
     world: number,

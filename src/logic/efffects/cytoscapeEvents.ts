@@ -4,13 +4,13 @@
  */
 import type cytoscape from 'cytoscape';
 import type { Ref } from 'vue';
-import type { AdoptFleet } from '@/models/fleet/AdoptFleet';
-import { derive_Syonan_resource, type SyonanResource } from '@/models/resource/SyonanResource';
-import { derive_normal_resource, type NomalResource } from '@/models/resource/NomalResource';
-import type { AreaId, ItemIconKey, NodeDatas, EdgeDatas } from '@/types';
+import type { AdoptFleet } from '../../models/fleet/AdoptFleet';
+import { derive_Syonan_resource, type SyonanResource } from '../../models/resource/SyonanResource';
+import { derive_normal_resource, type NomalResource } from '../../models/resource/NomalResource';
+import type { AreaId, ItemIconKey, NodeDatas, EdgeDatas } from '../../types';
 import type { StoreType, ModalStoreType } from '../../stores/types';
 import { is_special_resource_node } from '../resource';
-import type { ConstType } from '@/constants/const';
+import type { ConstType } from '../../constants/const';
 
 /**
  * cytoscapeインスタンスにイベントを登録する

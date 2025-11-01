@@ -1,4 +1,4 @@
-import { ResourceType } from "@/models/resource/NomalResource";
+import { ResourceType } from "../models/resource/NomalResource";
 import type { AreaId } from "../types";
 
 // マスごとのデータ

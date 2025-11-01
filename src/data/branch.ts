@@ -1,4 +1,4 @@
-import type { BranchLastUpdate, BranchType } from "@/types";
+import type { BranchLastUpdate, BranchType } from "../types";
 /* date:ソースの最終更新 */
 export const BRANCH_LAST_UPDATES: BranchLastUpdate = {
     "1-1": null,
