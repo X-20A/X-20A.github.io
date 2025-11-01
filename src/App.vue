@@ -741,7 +741,6 @@ onMounted(async () => {
 	font-size: 14px;
 	z-index: 9997;
 	background-color: white;
-	left: 3px;
 	top: 24px;
 	position: absolute;
 	border: 1px solid;
