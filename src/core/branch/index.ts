@@ -13,7 +13,7 @@ import { calc_57_7 } from './world57/57-7';
 import { calc_58_1, calc_58_2, calc_58_3, calc_58_4 } from './world58';
 import { calc_59_1, calc_59_2, calc_59_3, calc_59_4, calc_59_5 } from './world59';
 import { calc_60_1, calc_60_2, calc_60_3, calc_60_4, calc_60_5, calc_60_6 } from './world60';
-import { calc_61_1 } from './world61/61-1';
+import { calc_61_1 } from './world61';
 
 /**
  * 条件が漏れたときのエラースロー
@@ -28,6 +28,10 @@ export function omission_of_conditions(
     console.log('route: ', sim_fleet.route);
     throw new CustomError('条件漏れ');
 }
+
+// NOTE: 能動分岐のハードコーディングをやめてマップデータとオプションから
+// 自動で進行するようにできるかもしれない
+// ただ、三択の能動分岐とかでてきたときに困るかも
 
 /**
  * 艦隊・マップ・ノード情報から次Nodeを判定して返す
