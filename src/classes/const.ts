@@ -21,6 +21,11 @@ export default class Const {
             worlds: [2,4,5,6],
         },
         {
+            mode_id: 61,
+            label: '2025秋',
+            worlds: [1],
+        },
+        {
             mode_id: 60,
             label: '2025春',
             worlds: [1, 2, 3, 4, 5, 6],
@@ -31,7 +36,7 @@ export default class Const {
             worlds: [4],
         },
     ]; // @expansion イベントは新しいのが上に来るように
-    public static get worldInfos(): TworldInfo[] {
+    static get worldInfos(): TworldInfo[] {
         return structuredClone(Const._worldInfos);
     }
 }

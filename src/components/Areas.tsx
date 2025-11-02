@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAtom } from 'jotai';
 import { modeAtom, areaAtom, targetAtom, templateAtom } from '@/classes/stores';
 import '@/App.css';
@@ -7,10 +7,10 @@ import vangards from '@/data/vangard';
 import { Ttemplate } from '@/classes/types';
 
 const Areas: React.FC = () => {
-  const [mode, setMode] = useAtom(modeAtom);
+  const [mode] = useAtom(modeAtom);
   const [area, setArea] = useAtom(areaAtom);
-  const [target, setTarget] = useAtom(targetAtom);
-  const [template, setTemplate] = useAtom(templateAtom);
+  const [target] = useAtom(targetAtom);
+  const [, setTemplate] = useAtom(templateAtom);
 
   const [position, setPosition] = useState({ top: 0, left: 0 });
 
@@ -22,11 +22,11 @@ const Areas: React.FC = () => {
       top: rect.bottom, // targetの下端
       left: rect.left, // targetの左端
     });
-  }, [area, mode]);
+  }, [area, mode, target]);
 
   if (!area) return;
 
-  let items = null;
+  let items = [] as Ttemplate[];
 
   switch (mode) {
     case 'nomal':
@@ -37,9 +37,10 @@ const Areas: React.FC = () => {
       break;
     case 59:
     case 60:
+    case 61:
       items = templates.filter(item => item.world === mode && item.area === area);
       break;
-  }
+  } // @expansion
 
   const openUrl = (template: Ttemplate) => {
     window.open(
@@ -56,7 +57,7 @@ const Areas: React.FC = () => {
         onMouseEnter={() => setArea(area)}
         onMouseLeave={() => setArea(0)}
       >
-        {items.map((item, index) => (
+        {items.map((item) => (
           <p
             className="items"
             onMouseDown={() => setTemplate(item)}

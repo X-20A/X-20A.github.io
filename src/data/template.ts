@@ -902,6 +902,39 @@ const templates: Ttemplate[] = [
         "token": "DJ5mTyVAGJa",
         "memo": "陣形: ネルソンタッチ想定$e煙幕: J$e基地: ボス集中"
     },
+
+    {
+        "title": "61-1_JMO_O削り",
+        "world": 61,
+        "area": 1,
+        "route": "1-A-F-J-L-M-O",
+        "token": "1WqwqOqCLqG",
+        "memo": "基地: ボス集中"
+    },
+    {
+        "title": "61-1_JMO_O破壊",
+        "world": 61,
+        "area": 1,
+        "route": "1-A-F-J-L-M-O",
+        "token": "vwaofu0iPhU",
+        "memo": "基地: ボス集中"
+    },
+    {
+        "title": "61-1_JKQSTV_V削り",
+        "world": 61,
+        "area": 1,
+        "route": "1-A-F-J-K-Q-S-T-V",
+        "token": "yOjCxLfFKq9",
+        "memo": "基地: ボス集中"
+    },
+    {
+        "title": "61-1_JKQSTV_V破壊_破砕無",
+        "world": 61,
+        "area": 1,
+        "route": "1-A-F-J-K-Q-S-T-V",
+        "token": "-iIGY12hVpl",
+        "memo": "基地: ボス集中"
+    },
 ]; // @expansion
 /*
 {
@@ -909,7 +942,7 @@ const templates: Ttemplate[] = [
     "world": ,
     "area": ,
     "route": "",
-    "url": "",
+    "token": "",
     "memo": ""
 },
 

@@ -7,10 +7,6 @@ export default function drawMap(
     area: AreaId,
     route: string,
 ): void {
-    console.log('draw');
-    console.log('area: ', area);
-    console.log('route: ', route);
-
     type TempNodeType = NodeType | 'alert'
 
     interface Node {
@@ -75,7 +71,7 @@ export default function drawMap(
     };
 
     // 無理にcomponentsに持ってこうとするとややこいのでここでやっちゃう
-    const cy = cytoscape({
+    cytoscape({
         // #cyに生成
         container: document.getElementById('cy'),
         elements: elements,

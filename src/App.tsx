@@ -11,8 +11,8 @@ import Sidebar from './components/Header';
 const App: React.FC = () => {
   const [mode, setMode] = useAtom(modeAtom);
   const [area, setArea] = useAtom(areaAtom);
-  const [target, setTarget] = useAtom(targetAtom);
-  const [template, setTemplate] = useAtom(templateAtom);
+  const [, setTarget] = useAtom(targetAtom);
+  const [template] = useAtom(templateAtom);
   const worldInfos = Const.worldInfos;
   const worlds = worldInfos.find(item => item.mode_id === mode)!.worlds;
 
