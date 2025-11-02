@@ -44,6 +44,8 @@ const branchInfo = computed(() => store.branchInfo);
 
 const branchData = computed(() => store.branchData);
 
+const options = computed(() => store.options);
+
 interface Source {
 	label: string,
 	url: string,
@@ -65,12 +67,30 @@ watch(selectedArea, () => {
 		|| !branchInfo.value
 	) return;
 
-	const area_branch = branchData.value[selectedArea.value];
+	// 7-3だけはphaseで分岐条件が二つあるので調整
+	const branch_key = computed(() => {
+		if (
+			selectedArea.value !== '7-3' ||
+			!options.value
+		) return selectedArea.value;
+
+		const option_for_selected_area = options.value?.[selectedArea.value];
+		if (!option_for_selected_area) return selectedArea.value;
+
+		return selectedArea.value + '-' + option_for_selected_area.phase;
+	});
+
+	const branch_data_value = branchData.value;
+	const branch_key_value = branch_key.value;
+	if (!branch_data_value || !branch_key_value) return;
+	const area_conditions = branch_data_value[branch_key_value];
 
 	formated_branch.value = Object.fromEntries(
-    Object.entries(area_branch).map(([key, node_branch]) => {
-			const topic = sanitize_text(`${selectedArea.value}-${node_branch}`);
-			let html = convert_branch_data_to_HTML(node_branch, topic);
+		Object.entries(area_conditions).map(([key, node_branch]) => {
+			const node_branch_string = node_branch;
+			const topic =
+				sanitize_text(`${selectedArea.value}-${node_branch_string}`);
+			let html = convert_branch_data_to_HTML(node_branch_string, topic);
 			
 			if (html === '$sw') html = '能動分岐';
 			
@@ -134,11 +154,9 @@ watch(selectedArea, () => {
 	}
 	source.value.url = url;
 
-	last_update.value = 
-		branchInfo.value[selectedArea.value] !== null
-		? branchInfo.value[selectedArea.value]!
-		: '情報なし'
-	;
+	// Safely read branchInfo for the selected area. Avoid non-null assertion.
+	const info_for_area = branchInfo.value[selectedArea.value];
+	last_update.value = info_for_area != null ? info_for_area : '情報なし';
 }, { immediate: true });
 </script>
 
