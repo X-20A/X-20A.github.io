@@ -13,7 +13,7 @@ import { calc_57_7 } from './world57/57-7';
 import { calc_58_1, calc_58_2, calc_58_3, calc_58_4 } from './world58';
 import { calc_59_1, calc_59_2, calc_59_3, calc_59_4, calc_59_5 } from './world59';
 import { calc_60_1, calc_60_2, calc_60_3, calc_60_4, calc_60_5, calc_60_6 } from './world60';
-import { calc_61_1, calc_61_2 } from './world61';
+import { calc_61_1, calc_61_2, calc_61_3 } from './world61';
 
 /**
  * 条件が漏れたときのエラースロー
@@ -157,6 +157,14 @@ export function calc_next_node(
             return calc_61_1(node, sim_fleet, option);
         case '61-2':
             return calc_61_2(node, sim_fleet, option);
+        case '61-3':
+            return calc_61_3(node, sim_fleet, option);
+        //case '61-4':
+            //return calc_61_4(node, sim_fleet, option);
+        //case '61-5':
+            //return calc_61_5(node, sim_fleet, option);
+        //case '61-6':
+            //return calc_61_6(node, sim_fleet, option);
         // case '':
             // return calc_6_(node, sim_fleet, option);
     } // @expansion
