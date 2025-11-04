@@ -1,7 +1,7 @@
 import { SimFleet } from "../../../models/fleet/SimFleet";
 import { PreSailNull } from "../../../types/brand";
 import { BranchResponse } from "../../../types";
-import { omission_of_conditions } from "..";
+import { destructuring_assignment_helper, omission_of_conditions } from "..";
 import { is_fleet_speed_faster_or_more, is_fleet_speed_fastest } from "../../../logic/speed/predicate";
 
 export function calc_5_5(
@@ -10,48 +10,12 @@ export function calc_5_5(
     option: Record<string, string>,
 ): BranchResponse[] | string {
     const {
-        adopt_fleet: fleet,
-    } = sim_fleet;
-
-    const {
-        speed,
-        is_faster: isFaster,
-        seek,
-        drum_carrier_count: drum,
-        craft_carrier_count: craft,
-    } = fleet;
-
-    const track = sim_fleet.route;
-
-    const {
-        BB,
-        BBV,
-        CV,
-        // CVB, // 単体で要求されることが無い
-        CVL,
-        CA,
-        CAV,
-        CL,
-        CLT,
-        CT,
-        DD,
-        DE,
-        // SS, // 単体で要求されることが無い
-        // SSV, // 単体で要求されることが無い
-        AV,
-        AO,
-        LHA,
-        AS,
-        // AR, // 使う機会が無い
-        BBs,
-        CVH,
-        CVs,
-        BBCVs,
-        CAs,
-        CLE,
-        Ds,
-        Ss,
-    } = fleet.composition;
+        fleet, fleet_type, ships_length, speed, seek, route,
+        drum_carrier_count, craft_carrier_count, radar_carrier_count,
+        arBulge_carrier_count, SBB_count,
+        BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,
+        AV, AO, LHA, AS, BBs, CVH, CVs, BBCVs, CAs, CLE, Ds, Ss,
+    } = destructuring_assignment_helper(sim_fleet);
 
     switch (node) {
         case null:
@@ -60,10 +24,10 @@ export function calc_5_5(
             if (DD > 3) {
                 return 'A';
             }
-            if (drum > 3) {
+            if (drum_carrier_count > 3) {
                 return 'A';
             }
-            if (craft > 3) {
+            if (craft_carrier_count > 3) {
                 return 'A';
             }
             return 'B';
@@ -110,7 +74,7 @@ export function calc_5_5(
             }
             return 'M';
         case 'M':
-            if (track.includes('N')) {
+            if (route.includes('N')) {
                 return 'O';
             }
             if (BBCVs > 3) {
@@ -121,10 +85,10 @@ export function calc_5_5(
             }
             return 'O';
         case 'N':
-            if (track.includes('M')) {
+            if (route.includes('M')) {
                 return 'O';
             }
-            if (isFaster) {
+            if (is_fleet_speed_faster_or_more(speed)) {
                 return 'O';
             }
             if (AO > 0) {
@@ -141,7 +105,7 @@ export function calc_5_5(
             }
             return 'O';
         case 'O':
-            if (isFaster) {
+            if (is_fleet_speed_faster_or_more(speed)) {
                 return 'S';
             }
             if (seek[1] < 63) {

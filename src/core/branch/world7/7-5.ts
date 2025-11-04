@@ -1,7 +1,7 @@
 import { SimFleet } from "../../../models/fleet/SimFleet";
 import { PreSailNull } from "../../../types/brand";
 import { BranchResponse } from "../../../types";
-import { omission_of_conditions } from "..";
+import { destructuring_assignment_helper, omission_of_conditions } from "..";
 import { is_fleet_speed_fast_or_more, is_fleet_speed_faster_or_more, is_fleet_speed_fastest, is_fleet_speed_slow } from "../../../logic/speed/predicate";
 
 export function calc_7_5(
@@ -10,54 +10,26 @@ export function calc_7_5(
     option: Record<string, string>,
 ): BranchResponse[] | string {
     const {
-        adopt_fleet: fleet,
-    } = sim_fleet;
-
-    const {
-        speed,
-        is_faster: isFaster,
-        seek,
-        SBB_count,
-    } = fleet;
-
-    const {
-        BB,
-        BBV,
-        CV,
-        // CVB, // 単体で要求されることが無い
-        CVL,
-        CA,
-        CAV,
-        CL,
-        CLT,
-        CT,
-        DD,
-        DE,
-        // SS, // 単体で要求されることが無い
-        // SSV, // 単体で要求されることが無い
-        AV,
-        AO,
-        LHA,
-        AS,
-        // AR, // 使う機会が無い
-        BBs,
-        CVH,
-        CVs,
-        BBCVs,
-        CAs,
-        CLE,
-        Ds,
-        Ss,
-    } = fleet.composition;
+            fleet, fleet_type, ships_length, speed, seek, route,
+            arBulge_carrier_count, SBB_count,
+            BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,
+            AV, AO, LHA, AS, BBs, CVH, CVs, BBCVs, CAs, CLE, Ds, Ss,
+        } = destructuring_assignment_helper(sim_fleet);
 
     switch (node) {
         case null:
             return '1';
         case 'B':
-            if (isFaster) {
+            if (is_fleet_speed_faster_or_more(speed)) {
                 return 'D';
             }
-            if (CVH > 1 || SBB_count > 1 || Ss > 0 || CL === 0 || Ds < 2) {
+            if (
+                CVH > 1 ||
+                SBB_count > 1 ||
+                Ss > 0 ||
+                CL === 0 ||
+                Ds < 2
+            ) {
                 return 'C';
             }
             if (Ds > 2) {
@@ -122,10 +94,19 @@ export function calc_7_5(
             }
             break; // LoSより例外なし
         case 'J':
-            if ((CVL === 1 && CAs === 2 && CL === 1 && Ds === 2) || isFaster) {
+            if (
+                (CVL === 1 && CAs === 2 && CL === 1 && Ds === 2) ||
+                is_fleet_speed_faster_or_more(speed)
+            ) {
                 return 'O';
             }
-            if (CVH > 0 || CVL > 2 || SBB_count > 1 || BBs + CAs > 2 || Ds < 2) {
+            if (
+                CVH > 0 ||
+                CVL > 2 ||
+                SBB_count > 1 ||
+                BBs + CAs > 2 ||
+                Ds < 2
+            ) {
                 return 'N';
             }
             if (Ds > 2 || is_fleet_speed_fast_or_more(speed)) {
@@ -147,7 +128,12 @@ export function calc_7_5(
                         { node: 'T', rate: 0.667 },
                     ];
                 }
-                if (CV > 0 || BBs + CVL > 1 || BBs + CAs > 2 || CL === 0) {
+                if (
+                    CV > 0 ||
+                    BBs + CVL > 1 ||
+                    BBs + CAs > 2 ||
+                    CL === 0
+                ) {
                     return [
                         { node: 'R', rate: 0.667 },
                         { node: 'S', rate: 0.333 },
@@ -161,7 +147,12 @@ export function calc_7_5(
                 if (is_fleet_speed_fastest(speed)) {
                     return 'T';
                 }
-                if (CV > 0 || BBs + CVL > 1 || BBs + CAs > 2 || CL === 0) {
+                if (
+                    CV > 0 ||
+                    BBs + CVL > 1 ||
+                    BBs + CAs > 2 ||
+                    CL === 0
+                ) {
                     return 'R';
                 }
                 return 'T';

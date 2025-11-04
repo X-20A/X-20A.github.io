@@ -1,8 +1,9 @@
 import { SimFleet } from "../../../models/fleet/SimFleet";
 import { PreSailNull } from "../../../types/brand";
 import { BranchResponse } from "../../../types";
-import { omission_of_conditions } from "..";
-import { countShip, countTaiyo, isInclude } from "../../../models/fleet/AdoptFleet";
+import { destructuring_assignment_helper, omission_of_conditions } from "..";
+import { count_ship, count_Taiyo_class, include_ship_names } from "../../../models/fleet/AdoptFleet";
+import { is_fleet_speed_faster_or_more } from "../../../logic/speed/predicate";
 
 export function calc_7_4(
     node: string | PreSailNull,
@@ -10,47 +11,12 @@ export function calc_7_4(
     option: Record<string, string>,
 ): BranchResponse[] | string {
     const {
-        adopt_fleet: fleet,
-    } = sim_fleet;
-
-    const {
-        fleet_length: f_length,
-        is_faster: isFaster,
-        seek,
-        SBB_count,
-    } = fleet;
-
-    const track = sim_fleet.route;
-
-    const {
-        BB,
-        BBV,
-        CV,
-        // CVB, // 単体で要求されることが無い
-        CVL,
-        CA,
-        CAV,
-        CL,
-        CLT,
-        CT,
-        DD,
-        DE,
-        // SS, // 単体で要求されることが無い
-        // SSV, // 単体で要求されることが無い
-        AV,
-        AO,
-        LHA,
-        AS,
-        // AR, // 使う機会が無い
-        BBs,
-        CVH,
-        CVs,
-        BBCVs,
-        CAs,
-        CLE,
-        Ds,
-        Ss,
-    } = fleet.composition;
+        fleet, fleet_type, ships_length, speed, seek, route,
+        drum_carrier_count, craft_carrier_count, radar_carrier_count,
+        arBulge_carrier_count, SBB_count,
+        BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,
+        AV, AO, LHA, AS, BBs, CVH, CVs, BBCVs, CAs, CLE, Ds, Ss,
+    } = destructuring_assignment_helper(sim_fleet);
 
     switch (node) {
         case null:
@@ -59,10 +25,14 @@ export function calc_7_4(
             if (BB + CVH + Ss > 0 || CAs > 1 || CLE + CLT > 1) {
                 return 'C';
             }
-            if (isInclude(fleet, 'あきつ丸') && DE >= 2 && (DD > 0 || DE > 3)) {
+            if (
+                include_ship_names(fleet, 'あきつ丸') &&
+                DE >= 2 &&
+                (DD > 0 || DE > 3)
+            ) {
                 return 'A';
             }
-            if (BBV + CVL + countShip(fleet, 'あきつ丸') > 2) {
+            if (BBV + CVL + count_ship(fleet, 'あきつ丸') > 2) {
                 return 'C';
             }
             if (Ds > 2 || DE > 1) {
@@ -70,15 +40,26 @@ export function calc_7_4(
             }
             return 'C';
         case 'C':
-            if (BB + CVH + Ss > 0 || CVL + countShip(fleet, 'あきつ丸') > 2) {
+            if (
+                BB + CVH + Ss > 0 ||
+                CVL + count_ship(fleet, 'あきつ丸') > 2
+            ) {
                 return 'D';
             }
-            if (Ds > 3 || (CT > 0 && Ds > 2) || DE > 2 || (isFaster && DD > 1)) {
+            if (
+                Ds > 3 ||
+                (CT > 0 && Ds > 2) ||
+                DE > 2 ||
+                (is_fleet_speed_faster_or_more(speed) && DD > 1)
+            ) {
                 return 'E';
             }
             return 'D';
         case 'E':
-            if (AO + LHA > 0 && DE > 3 && countTaiyo(fleet) + AO + LHA + DD + DE === 6) {
+            if (
+                AO + LHA > 0 && DE > 3 &&
+                count_Taiyo_class(fleet) + AO + LHA + DD + DE === 6
+            ) {
                 return 'G';
             }
             return 'J';
@@ -89,15 +70,20 @@ export function calc_7_4(
         case 'G': // 索敵で分岐するようだが不明 とりあえず素通りで実装
             return 'L';
         case 'J': // ややこひ～
-            if (track.includes('D')) {
+            if (route.includes('D')) {
                 return 'K';
             }
-            if (track.includes('E')) {
+            if (route.includes('E')) {
                 if (seek[3] < 33) {
                     return 'K';
                 }
                 if (seek[3] < 37 && seek[3] >= 33) {
-                    if (CT > 0 && DE > 2 && countTaiyo(fleet) + CT + Ds === 5 && f_length === 5) {
+                    if (
+                        CT > 0 &&
+                        DE > 2 &&
+                        count_Taiyo_class(fleet) + CT + Ds === 5 &&
+                        ships_length === 5
+                    ) {
                         return [
                             { node: 'K', rate: 0.5 },
                             { node: 'P', rate: 0.5 },
@@ -109,7 +95,12 @@ export function calc_7_4(
                     ];
                 }
                 if (seek[3] >= 37) {
-                    if (CT > 0 && DE > 2 && countTaiyo(fleet) + CT + Ds === 5 && f_length === 5) {
+                    if (
+                        CT > 0 &&
+                        DE > 2 &&
+                        count_Taiyo_class(fleet) + CT + Ds === 5 &&
+                        ships_length === 5
+                    ) {
                         return 'P';
                     }
                     return 'L';
@@ -123,8 +114,8 @@ export function calc_7_4(
                 (SBB_count > 0 && CVH > 0)
                 || (BBs - SBB_count > 1)
                 || (BBV > 1)
-                || (CVL + countShip(fleet, 'あきつ丸') > 1)
-                || (BBs - SBB_count + BBV + CVL + countShip(fleet, 'あきつ丸') > 2)
+                || (CVL + count_ship(fleet, 'あきつ丸') > 1)
+                || (BBs - SBB_count + BBV + CVL + count_ship(fleet, 'あきつ丸') > 2)
                 || (Ds < 2);
             if (seek[3] < 45) {
                 return 'N';

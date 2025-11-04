@@ -1,53 +1,21 @@
 import { SimFleet } from "../../../models/fleet/SimFleet";
 import { PreSailNull } from "../../../types/brand";
 import { BranchResponse } from "../../../types";
-import { omission_of_conditions } from "..";
+import { destructuring_assignment_helper, omission_of_conditions } from "..";
 import { is_fleet_speed_faster_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
-import { isInclude } from "../../../models/fleet/AdoptFleet";
+import { include_ship_names } from "../../../models/fleet/AdoptFleet";
 
 export function calc_5_2(
     node: string | PreSailNull,
     sim_fleet: SimFleet,
 ): BranchResponse[] | string {
     const {
-        adopt_fleet: fleet,
-    } = sim_fleet;
-
-    const {
-        speed,
-        is_faster: isFaster,
-        seek,
-    } = fleet;
-
-    const {
-        BB,
-        BBV,
-        CV,
-        // CVB, // 単体で要求されることが無い
-        CVL,
-        CA,
-        CAV,
-        CL,
-        CLT,
-        CT,
-        DD,
-        DE,
-        // SS, // 単体で要求されることが無い
-        // SSV, // 単体で要求されることが無い
-        AV,
-        AO,
-        LHA,
-        AS,
-        // AR, // 使う機会が無い
-        BBs,
-        CVH,
-        CVs,
-        BBCVs,
-        CAs,
-        CLE,
-        Ds,
-        Ss,
-    } = fleet.composition;
+        fleet, fleet_type, ships_length, speed, seek, route,
+        drum_carrier_count, craft_carrier_count, radar_carrier_count,
+        arBulge_carrier_count, SBB_count,
+        BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,
+        AV, AO, LHA, AS, BBs, CVH, CVs, BBCVs, CAs, CLE, Ds, Ss,
+    } = destructuring_assignment_helper(sim_fleet);
 
     switch (node) {
         case null:
@@ -88,16 +56,26 @@ export function calc_5_2(
             if (CVs === 2 && CAs === 2 && DD === 2) {
                 return 'D';
             }
-            if (isInclude(fleet, '夕張') && CVL + CAs + DD + AO === 5) {
+            if (
+                include_ship_names(fleet, '夕張') &&
+                CVL + CAs + DD + AO === 5
+            ) {
                 return 'D';
             }
-            if (isInclude(fleet, '祥鳳') && CAs + CLE + DD + AO === 5) {
+            if (
+                include_ship_names(fleet, '祥鳳') &&
+                CAs + CLE + DD + AO === 5
+            ) {
                 return 'D';
             }
             if (is_fleet_speed_slow(speed)) {
                 return 'E';
             }
-            if (isInclude(fleet, '翔鶴') && isInclude(fleet, '瑞鶴') && DD > 1) {
+            if (
+                include_ship_names(fleet, '翔鶴') &&
+                include_ship_names(fleet, '瑞鶴') &&
+                DD > 1
+            ) {
                 return 'D';
             }
             if (BBs + CVH > 0) {
@@ -112,15 +90,15 @@ export function calc_5_2(
             return 'E';
         case 'D':
             if (
-                (isInclude(fleet, '祥鳳') && DD === 3)
+                (include_ship_names(fleet, '祥鳳') && DD === 3)
                 && (((CA === 1 && (CL === 1 || AO === 1))
                     || AO === 2))
             ) return 'G';
-            if (isInclude(fleet, '夕張') && DD >= 2) {
+            if (include_ship_names(fleet, '夕張') && DD >= 2) {
                 if (DD === 3
                     || (AO === 1 && (DD === 2 || CA === 2))
                     || (AO === 2 && (DD === 1 || CA === 2))
-                    || (isInclude(fleet, '祥鳳') && (CA === 2 || AO === 2))
+                    || (include_ship_names(fleet, '祥鳳') && (CA === 2 || AO === 2))
                 ) {
                     return 'G';
                 }
@@ -164,7 +142,10 @@ export function calc_5_2(
             }
             break; // LoSより例外なし
         case 'G':
-            if (isInclude(fleet, '祥鳳') && isInclude(fleet, '夕張')) {
+            if (
+                include_ship_names(fleet, '祥鳳') &&
+                include_ship_names(fleet, '夕張')
+            ) {
                 return [
                     { node: 'J', rate: 0.55 },
                     { node: 'L', rate: 0.45 },
@@ -175,7 +156,10 @@ export function calc_5_2(
                 { node: 'L', rate: 0.15 },
             ];
         case 'L':
-            if (!isInclude(fleet, '祥鳳') && !isInclude(fleet, '夕張')) {
+            if (
+                !include_ship_names(fleet, '祥鳳') &&
+                !include_ship_names(fleet, '夕張')
+            ) {
                 if (is_fleet_speed_faster_or_more(speed)) {
                     return [
                         { node: 'K', rate: 0.5 },

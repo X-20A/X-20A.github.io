@@ -1,7 +1,7 @@
 import { SimFleet } from "../../../models/fleet/SimFleet";
 import { PreSailNull } from "../../../types/brand";
 import { BranchResponse } from "../../../types";
-import { omission_of_conditions } from "..";
+import { destructuring_assignment_helper, omission_of_conditions } from "..";
 import { is_fleet_speed_fast_or_more, is_fleet_speed_faster_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
 
 export function calc_59_1(
@@ -10,52 +10,21 @@ export function calc_59_1(
     option: Record<string, string>,
 ): BranchResponse[] | string {
     const {
-        adopt_fleet: fleet,
-    } = sim_fleet;
+        fleet, fleet_type, ships_length, speed, seek, route,
+        drum_carrier_count, craft_carrier_count, radar_carrier_count,
+        arBulge_carrier_count, SBB_count,
+        BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,
+        AV, AO, LHA, AS, BBs, CVH, CVs, BBCVs, CAs, CLE, Ds, Ss,
+    } = destructuring_assignment_helper(sim_fleet);
 
     const {
-        speed,
-    } = fleet;
-
-    const track = sim_fleet.route;
-
-    const {
-        BB,
-        BBV,
-        CV,
-        // CVB, // 単体で要求されることが無い
-        CVL,
-        CA,
-        CAV,
-        CL,
-        CLT,
-        CT,
-        DD,
-        DE,
-        // SS, // 単体で要求されることが無い
-        // SSV, // 単体で要求されることが無い
-        AV,
-        AO,
-        LHA,
-        AS,
-        // AR, // 使う機会が無い
-        BBs,
-        CVH,
-        CVs,
-        BBCVs,
-        CAs,
-        CLE,
-        Ds,
-        Ss,
-    } = fleet.composition;
-
-    const {
-        phase,
+        phase: phase_string,
     } = option;
+    const phase = Number(phase_string);
 
     switch (node) {
         case null:
-            if (phase === '1') {
+            if (phase === 1) {
                 return '1';
             }
             if (CVH > 0) {
@@ -164,10 +133,10 @@ export function calc_59_1(
             }
             return 'C1';
         case 'G':
-            if (track.includes('1')) {
+            if (route.includes('1')) {
                 return 'H';
             }
-            if (Number(phase) < 3) {
+            if (phase < 3) {
                 return 'K';
             }
             if (BBCVs > 1) {

@@ -1,10 +1,10 @@
 import { SimFleet } from "../../../models/fleet/SimFleet";
 import { PreSailNull } from "../../../types/brand";
 import { BranchResponse } from "../../../types";
-import { omission_of_conditions } from "..";
-import { countAktmrPlusCVs } from "../../../models/fleet/AdoptFleet";
-import { is_fleet_speed_fast_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
-import { is_fleet_transport } from "../../../models/fleet/predicate";
+import { destructuring_assignment_helper, omission_of_conditions } from "..";
+import { count_carriers } from "../../../models/fleet/AdoptFleet";
+import { is_fleet_speed_fast_or_more, is_fleet_speed_faster_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
+import { is_fleet_combined, is_fleet_transport } from "../../../models/fleet/predicate";
 
 export function calc_59_2(
     node: string | PreSailNull,
@@ -12,55 +12,21 @@ export function calc_59_2(
     option: Record<string, string>,
 ): BranchResponse[] | string {
     const {
-        adopt_fleet: fleet,
-    } = sim_fleet;
-
-    const {
-        fleet_type: f_type,
-        is_union: isUnion,
-        speed,
-        is_faster: isFaster,
-        seek,
-    } = fleet;
-
-    const {
-        BB,
-        BBV,
-        CV,
-        // CVB, // 単体で要求されることが無い
-        CVL,
-        CA,
-        CAV,
-        CL,
-        CLT,
-        CT,
-        DD,
-        DE,
-        // SS, // 単体で要求されることが無い
-        // SSV, // 単体で要求されることが無い
-        AV,
-        AO,
-        LHA,
-        AS,
-        // AR, // 使う機会が無い
-        BBs,
-        CVH,
-        CVs,
-        BBCVs,
-        CAs,
-        CLE,
-        Ds,
-        Ss,
-    } = fleet.composition;
+        fleet, fleet_type, ships_length, speed, seek, route,
+        drum_carrier_count, craft_carrier_count, radar_carrier_count,
+        arBulge_carrier_count, SBB_count,
+        BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,
+        AV, AO, LHA, AS, BBs, CVH, CVs, BBCVs, CAs, CLE, Ds, Ss,
+    } = destructuring_assignment_helper(sim_fleet);
 
     switch (node) {
         case null:
-            if (!isUnion) {
+            if (!is_fleet_combined(fleet_type)) {
                 return 'A';
             }
             return 'F';
         case 'A':
-            if (isFaster) {
+            if (is_fleet_speed_faster_or_more(speed)) {
                 return 'A2';
             }
             if (DD > 3) {
@@ -76,10 +42,10 @@ export function calc_59_2(
             }
             return 'D';
         case 'G':
-            if (is_fleet_transport(f_type)) {
+            if (is_fleet_transport(fleet_type)) {
                 return 'I';
             }
-            if (countAktmrPlusCVs(fleet) > 4) {
+            if (count_carriers(fleet) > 4) {
                 return 'H';
             }
             if (BBs > 3) {
@@ -138,7 +104,7 @@ export function calc_59_2(
             if (BBs < 2) {
                 return 'L';
             }
-            if (countAktmrPlusCVs(fleet) < 2) {
+            if (count_carriers(fleet) < 2) {
                 return 'L';
             }
             return 'J';

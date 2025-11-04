@@ -12,7 +12,7 @@ export function calc_6_1(
     } = sim_fleet;
 
     const {
-        fleet_length: f_length,
+        ships_length,
         seek,
     } = fleet;
 
@@ -53,10 +53,10 @@ export function calc_6_1(
             if (BBCVs + CAs > 2 || BBs > 1) {
                 return 'B';
             }
-            if (Ss > 2 && Ss === f_length) {
+            if (Ss > 2 && Ss === ships_length) {
                 return 'A';
             }
-            if (AS === 1 && Ss > 2 && AS + Ss === f_length) {
+            if (AS === 1 && Ss > 2 && AS + Ss === ships_length) {
                 return 'A';
             }
             if (AS === 1 && Ss === 3 && DD === 2) {

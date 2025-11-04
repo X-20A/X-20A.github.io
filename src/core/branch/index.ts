@@ -29,6 +29,42 @@ export function omission_of_conditions(
     throw new CustomError('条件漏れ');
 }
 
+export function destructuring_assignment_helper(
+    fleet: SimFleet,
+) {
+    const {
+        adopt_fleet,
+        route,
+    } = fleet;
+    const {
+        composition,
+        fleet_type,
+        ships_length,
+        speed,
+        seek,
+        drum_carrier_count,
+        craft_carrier_count,
+        radar_carrier_count,
+        arBulge_carrier_count,
+        SBB_count,
+    } = adopt_fleet;
+
+    return {
+        route,
+        fleet: adopt_fleet,
+        fleet_type,
+        ships_length,
+        speed,
+        seek,
+        drum_carrier_count,
+        craft_carrier_count,
+        radar_carrier_count,
+        arBulge_carrier_count,
+        SBB_count,
+        ...composition,
+    };
+}
+
 // NOTE: 能動分岐のハードコーディングをやめてマップデータとオプションから
 // 自動で進行するようにできるかもしれない
 // ただ、三択の能動分岐とかでてきたときに困るかも

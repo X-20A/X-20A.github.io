@@ -1,7 +1,7 @@
 import { SimFleet } from "../../../models/fleet/SimFleet";
 import { PreSailNull } from "../../../types/brand";
 import { BranchResponse } from "../../../types";
-import { omission_of_conditions } from "..";
+import { destructuring_assignment_helper, omission_of_conditions } from "..";
 import { is_fleet_speed_fast_or_more, is_fleet_speed_faster_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
 
 export function calc_61_1(
@@ -10,47 +10,17 @@ export function calc_61_1(
     option: Record<string, string>,
 ): BranchResponse[] | string {
     const {
-        adopt_fleet: fleet,
-    } = sim_fleet;
+        fleet, fleet_type, ships_length, speed, seek, route,
+        drum_carrier_count, craft_carrier_count, radar_carrier_count,
+        arBulge_carrier_count, SBB_count,
+        BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,
+        AV, AO, LHA, AS, BBs, CVH, CVs, BBCVs, CAs, CLE, Ds, Ss,
+    } = destructuring_assignment_helper(sim_fleet);
 
     const {
-        speed,
-        seek,
-    } = fleet;
-
-    const {
-        BB,
-        BBV,
-        CV,
-        // CVB, // 単体で要求されることが無い
-        CVL,
-        CA,
-        CAV,
-        CL,
-        CLT,
-        CT,
-        DD,
-        DE,
-        // SS, // 単体で要求されることが無い
-        // SSV, // 単体で要求されることが無い
-        AV,
-        AO,
-        LHA,
-        AS,
-        // AR, // 使う機会が無い
-        BBs,
-        CVH,
-        CVs,
-        BBCVs,
-        CAs,
-        CLE,
-        Ds,
-        Ss,
-    } = fleet.composition;
-
-    const {
-        phase,
+        phase: phase_string,
     } = option;
+    const phase = Number(phase_string);
 
     switch (node) {
         case null:
@@ -93,7 +63,7 @@ export function calc_61_1(
             if (BBs >= 3) {
                 return 'K';
             }
-            if (Number(phase) === 3 && DD === 7) {
+            if (phase === 3 && DD === 7) {
                 return 'K';
             }
             if (CL >= 1 && DD >= 2) {
@@ -104,7 +74,7 @@ export function calc_61_1(
             }
             return 'K';
         case 'K':
-            if (Number(phase) <= 2) {
+            if (phase <= 2) {
                 return 'L';
             }
             if (is_fleet_speed_faster_or_more(speed)) {
@@ -115,7 +85,7 @@ export function calc_61_1(
             }
             return 'L';
         case 'M':
-            if (Number(phase) === 1) {
+            if (phase === 1) {
                 return 'N';
             }
             if (BBs >= 2) {

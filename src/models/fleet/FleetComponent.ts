@@ -4,39 +4,7 @@ import { calc_fleet_speed } from '../../logic/speed/fleet';
 import { calc_fleet_seek } from '../../logic/seek/fleet';
 import { FleetUnit } from '../../models/fleet/FleetUnit';
 import { EquippedShip } from '../ship/EquippedShip';
-import { includes_ship_id } from '../ship/NakedShip';
-import { ShipId } from '../../types/shipId';
 import { Sp as Speed } from '../../logic/speed/predicate';
-
-/**
- * 大和型ID配列    
- * 大和    
- * 武蔵
- */
-const YAMATO_CLASS_IDS: ShipId[] =
-    [
-        131, 136, 911, 916,
-        143, 148, 546,
-    ] as const;
-
-/**
- * 松型駆逐艦ID配列    
- * 松    
- * 竹    
- * 梅    
- * 桃    
- * 杉    
- * 榧
- */
-const MATSU_CLASS_IDS: ShipId[] =
-    [
-        641, 702,
-        642, 706,
-        643, 716,
-        644, 708,
-        992, 997,
-        994, 736,
-    ] as const;
 
 /** これ以上は低速 */
 const SLOW_THRESHOLD = SG.SlowA;
@@ -58,10 +26,6 @@ type PreInfo = {
     readonly total_drum_count: number;
     /** 総大発系装備数 */
     readonly total_valid_craft_count: number;
-    /** 大和型艦数 */
-    readonly yamato_class_count: number;
-    /** 松型駆逐艦数 */
-    readonly matsu_count: number;
 }
 const INITIAL: PreInfo = {
     drum_carrier_count: 0,
@@ -72,8 +36,6 @@ const INITIAL: PreInfo = {
     SBB_count: 0,
     total_drum_count: 0,
     total_valid_craft_count: 0,
-    yamato_class_count: 0,
-    matsu_count: 0,
 } as const;
 
 const calc_pre_info = (
@@ -99,8 +61,6 @@ const calc_pre_info = (
             ship.type === ShipType.BB
             && ship.speed_group >= SLOW_THRESHOLD
         ) acc.SBB_count++;
-        if (includes_ship_id(YAMATO_CLASS_IDS, ship.id)) acc.yamato_class_count++;
-        if (includes_ship_id(MATSU_CLASS_IDS, ship.id)) acc.matsu_count++;
 
         acc.total_drum_count += drum_count;
         acc.total_valid_craft_count += valid_craft_count;

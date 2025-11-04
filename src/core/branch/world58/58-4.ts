@@ -1,10 +1,10 @@
 import { SimFleet } from "../../../models/fleet/SimFleet";
 import { PreSailNull } from "../../../types/brand";
 import { BranchResponse } from "../../../types";
-import { omission_of_conditions } from "..";
-import { countAktmrPlusCVs, isInclude } from "../../../models/fleet/AdoptFleet";
+import { destructuring_assignment_helper, omission_of_conditions } from "..";
+import { count_carriers, count_Yamato_class, include_ship_names } from "../../../models/fleet/AdoptFleet";
 import { is_fleet_speed_fast_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
-import { is_fleet_carrier, is_fleet_surface, is_fleet_transport } from "../../../models/fleet/predicate";
+import { is_fleet_carrier, is_fleet_combined, is_fleet_surface, is_fleet_transport } from "../../../models/fleet/predicate";
 
 export function calc_58_4(
     node: string | PreSailNull,
@@ -12,106 +12,77 @@ export function calc_58_4(
     option: Record<string, string>,
 ): BranchResponse[] | string {
     const {
-        adopt_fleet: fleet,
-    } = sim_fleet;
+        fleet, fleet_type, ships_length, speed, seek, route,
+        drum_carrier_count, craft_carrier_count, radar_carrier_count,
+        arBulge_carrier_count, SBB_count,
+        BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,
+        AV, AO, LHA, AS, BBs, CVH, CVs, BBCVs, CAs, CLE, Ds, Ss,
+    } = destructuring_assignment_helper(sim_fleet);
 
     const {
-        fleet_type: f_type,
-        is_union: isUnion,
-        speed,
-        seek,
-        yamato_class_count: yamato,
-    } = fleet;
-
-    const track = sim_fleet.route;
-
-    const {
-        phase,
-        difficulty,
-        tag,
+        phase: phase_string,
+        difficulty: difficulty_string,
+        tag: tag_string,
     } = option;
-
-    const {
-        BB,
-        BBV,
-        CV,
-        // CVB, // 単体で要求されることが無い
-        CVL,
-        CA,
-        CAV,
-        CL,
-        CLT,
-        CT,
-        DD,
-        DE,
-        // SS, // 単体で要求されることが無い
-        // SSV, // 単体で要求されることが無い
-        AV,
-        AO,
-        LHA,
-        AS,
-        // AR, // 使う機会が無い
-        BBs,
-        CVH,
-        CVs,
-        BBCVs,
-        CAs,
-        CLE,
-        Ds,
-        Ss,
-    } = fleet.composition;
+    const phase = Number(phase_string);
+    const difficulty = Number(difficulty_string);
+    const tag = Number(tag_string);
 
     switch (node) {
         case null:
-            if (phase === '1') {
+            if (phase === 1) {
                 return '1';
             }
-            if (Number(phase) > 1) {
-                if (!isUnion) {
+            if (phase > 1) {
+                if (!is_fleet_combined(fleet_type)) {
                     return '1';
                 }
-                if (is_fleet_transport(f_type)) {
+                if (is_fleet_transport(fleet_type)) {
                     return '2';
                 }
-                if (is_fleet_surface(f_type)) {
+                if (is_fleet_surface(fleet_type)) {
                     if (BBV + CAV === 2 && CL === 1 && BBV + CL + Ds + AO + AS + LHA === 12) {
                         return '2';
                     }
-                    if (((BBV + CAV === 1) || (BBV + CAV === 2)) && CLE === 2 && BBV + CAV + CLE + Ds + AO + AS + LHA === 12) {
+                    if (
+                        ((BBV + CAV === 1) || (BBV + CAV === 2)) &&
+                        CLE === 2 &&
+                        BBV + CAV + CLE + Ds + AO + AS + LHA === 12
+                    ) {
                         return '2';
                     }
-                    if (Number(phase) < 3) {
+                    if (phase < 3) {
                         return '1';
                     }
                     if (option.phase === '3') {
                         return '3';
                     }
                 }
-                if (is_fleet_carrier(f_type)) {
+                if (is_fleet_carrier(fleet_type)) {
                     return '1';
                 }
             }
             break;
         case '1':
-            if (Number(phase) < 2 && Ss > 0) {
+            if (phase < 2 && Ss > 0) {
                 return 'A1';
             }
             if (CVH > 3) {
                 return 'A';
             }
-            if (yamato > 1 && is_fleet_speed_slow(speed)) {
+            if (count_Yamato_class(fleet) > 1 && is_fleet_speed_slow(speed)) {
                 return 'A';
             }
-            if (Number(phase) > 1 && tag === '1') {
+            if (phase > 1 && tag === 1) {
                 return 'P';
             }
             if (AS + Ss > 0) {
                 return 'A1';
             }
-            if (isUnion) {
+            if (is_fleet_combined(fleet_type)) {
                 return 'A1';
             }
-            if (difficulty === '1') {
+            if (difficulty === 1) {
                 return 'A1';
             }
             return 'A'; // Number(difficulty) > 1
@@ -125,12 +96,12 @@ export function calc_58_4(
             if (CVs > 2) {
                 return 'F';
             }
-            if (yamato === 1) {
+            if (count_Yamato_class(fleet) === 1) {
                 return 'F';
             }
             return 'T';
         case 'A':
-            if (!isUnion) {
+            if (!is_fleet_combined(fleet_type)) {
                 return 'A1';
             }
             if (CVH > 3) {
@@ -141,7 +112,7 @@ export function calc_58_4(
             }
             return 'A1';
         case 'A1':
-            if (!isUnion) {
+            if (!is_fleet_combined(fleet_type)) {
                 return 'A2';
             }
             return 'B';
@@ -169,7 +140,12 @@ export function calc_58_4(
             if (CVL > 0 && Ds > 3) {
                 return 'D1';
             }
-            if (CVL === 0 && BBV === 0 && CLE > 1 && is_fleet_speed_slow(speed)) {
+            if (
+                CVL === 0 &&
+                BBV === 0 &&
+                CLE > 1 &&
+                is_fleet_speed_slow(speed)
+            ) {
                 return 'D1';
             }
             if (CVL === 0 && CLE === 2 && Ds > 3) {
@@ -177,13 +153,13 @@ export function calc_58_4(
             }
             return 'D2';
         case 'E':
-            if (yamato === 2 && DD < 5) {
+            if (count_Yamato_class(fleet) === 2 && DD < 5) {
                 return 'F';
             }
-            if (yamato === 1 && DD < 4) {
+            if (count_Yamato_class(fleet) === 1 && DD < 4) {
                 return 'F';
             }
-            if (yamato === 0 && DD < 3) {
+            if (count_Yamato_class(fleet) === 0 && DD < 3) {
                 return 'F';
             }
             if (BBCVs < 5) {
@@ -200,22 +176,22 @@ export function calc_58_4(
             }
             return 'F';
         case 'F':
-            if (!isUnion) {
+            if (!is_fleet_combined(fleet_type)) {
                 return 'J1';
             }
-            if (is_fleet_transport(f_type)) {
+            if (is_fleet_transport(fleet_type)) {
                 return 'J1';
             }
-            if (track.includes('P')) {
+            if (route.includes('P')) {
                 return 'J1';
             }
-            if (track.includes('1')) {
+            if (route.includes('1')) {
                 return 'F1';
             }
-            if (track.includes('2')) {
+            if (route.includes('2')) {
                 return 'J1';
             }
-            if (track.includes('3')) {
+            if (route.includes('3')) {
                 return 'U';
             }
             break; // 出撃地点網羅により例外なし
@@ -232,30 +208,30 @@ export function calc_58_4(
             }
             return 'I2';
         case 'J':
-            if (phase === '1') {
+            if (phase === 1) {
                 return 'J1';
             }
-            if (BBs + countAktmrPlusCVs(fleet) > 0) {
+            if (BBs + count_carriers(fleet) > 0) {
                 return 'F';
             }
-            if (difficulty === '4' && Ss > 3 && CAs < 2) {
+            if (difficulty === 4 && Ss > 3 && CAs < 2) {
                 return 'J1';
             }
-            if (Number(difficulty) < 4 && Ss > 2) {
+            if (difficulty < 4 && Ss > 2) {
                 return 'J1';
             }
             return 'F';
         case 'J1':
-            if (isUnion) {
+            if (is_fleet_combined(fleet_type)) {
                 return 'J2';
             }
-            if (BBs + countAktmrPlusCVs(fleet) > 0) {
+            if (BBs + count_carriers(fleet) > 0) {
                 return 'Q';
             }
             if (CL === 1 && DD === 2 && AS === 1 && Ss === 3) {
                 return 'R';
             }
-            if (difficulty === '1' && CL > 0 && DD > 2) {
+            if (difficulty === 1 && CL > 0 && DD > 2) {
                 return 'R';
             }
             if (AS === 0) {
@@ -278,13 +254,13 @@ export function calc_58_4(
             }
             return 'Q';
         case 'J2':
-            if (track.includes('2')) {
+            if (route.includes('2')) {
                 if (DD > 7) {
                     return 'M';
                 } else {
                     return 'L';
                 }
-            } // track.includes('3')
+            } // route.includes('3')
             if (CVs > 2) {
                 return 'L';
             }
@@ -297,18 +273,33 @@ export function calc_58_4(
             }
             return 'N';
         case 'U':
-            if (BBs < 4 && CVH === 0 && CVL < 2 && CL > 1 && Ds > 3) {
+            if (
+                BBs < 4 &&
+                CVH === 0 &&
+                CVL < 2 &&
+                CL > 1 &&
+                Ds > 3
+            ) {
                 return 'V';
             }
-            if (yamato < 2 && CVH < 2 && DD > 3 && is_fleet_speed_fast_or_more(speed)) {
+            if (
+                count_Yamato_class(fleet) < 2 &&
+                CVH < 2 &&
+                DD > 3 &&
+                is_fleet_speed_fast_or_more(speed)
+            ) {
                 return 'V';
             }
-            if (yamato < 2 && CL > 1 && is_fleet_speed_fast_or_more(speed)) {
+            if (
+                count_Yamato_class(fleet) < 2 &&
+                CL > 1 &&
+                is_fleet_speed_fast_or_more(speed)
+            ) {
                 return 'V';
             }
             return 'J2';
         case 'V':
-            if (isInclude(fleet, ['明石改', '朝日改', '秋津洲改'])) {
+            if (include_ship_names(fleet, ['明石改', '朝日改', '秋津洲改'])) {
                 return 'W';
             }
             return 'X';

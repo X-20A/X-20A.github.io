@@ -1,79 +1,49 @@
 import { SimFleet } from "../../../models/fleet/SimFleet";
 import { PreSailNull } from "../../../types/brand";
 import { BranchResponse } from "../../../types";
-import { omission_of_conditions } from "..";
+import { destructuring_assignment_helper, omission_of_conditions } from "..";
 
 export function calc_7_1(
     node: string | PreSailNull,
     sim_fleet: SimFleet,
 ): BranchResponse[] | string {
     const {
-        adopt_fleet: fleet,
-    } = sim_fleet;
-
-    const {
-        fleet_length: f_length,
-    } = fleet;
-
-    const {
-        BB,
-        BBV,
-        CV,
-        // CVB, // 単体で要求されることが無い
-        CVL,
-        CA,
-        CAV,
-        CL,
-        CLT,
-        CT,
-        DD,
-        DE,
-        // SS, // 単体で要求されることが無い
-        // SSV, // 単体で要求されることが無い
-        AV,
-        AO,
-        LHA,
-        AS,
-        // AR, // 使う機会が無い
-        BBs,
-        CVH,
-        CVs,
-        BBCVs,
-        CAs,
-        CLE,
-        Ds,
-        Ss,
-    } = fleet.composition;
+        fleet, fleet_type, ships_length, speed, seek, route,
+        drum_carrier_count, craft_carrier_count, radar_carrier_count,
+        arBulge_carrier_count, SBB_count,
+        BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,
+        AV, AO, LHA, AS, BBs, CVH, CVs, BBCVs, CAs, CLE, Ds, Ss,
+    } = destructuring_assignment_helper(sim_fleet);
 
     switch (node) {
         case null:
             return '1';
         case '1':
             if (Ss > 0) {
-                if (BBCVs > 0 || f_length > 4) {
+                if (BBCVs > 0 || ships_length > 4) {
                     return [
                         { node: 'B', rate: 0.5 },
                         { node: 'D', rate: 0.5 },
                     ];
                 }
-                if (f_length < 5) {
+                if (ships_length < 5) {
                     return [
                         { node: 'B', rate: 0.333 },
                         { node: 'D', rate: 0.333 },
                         { node: 'F', rate: 0.334 },
                     ];
-                } // f_lengthより例外なし
+                } // ships_lengthより例外なし
             }
-            if (BBCVs > 0 || f_length > 5) {
+            if (BBCVs > 0 || ships_length > 5) {
                 return 'B';
             }
-            if (f_length === 5 || AO > 0) {
+            if (ships_length === 5 || AO > 0) {
                 return 'D';
             }
-            if (f_length < 5) {
+            if (ships_length < 5) {
                 return 'F';
             }
-            break; // f_lengthより例外なし
+            break; // ships_lengthより例外なし
         case 'B':
             if (BBs + CVH > 0 || CVL > 1 || CAs > 2) {
                 return 'A';

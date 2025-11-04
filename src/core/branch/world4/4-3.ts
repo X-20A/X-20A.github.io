@@ -1,7 +1,7 @@
 import { SimFleet } from "../../../models/fleet/SimFleet";
 import { PreSailNull } from "../../../types/brand";
 import { BranchResponse } from "../../../types";
-import { omission_of_conditions } from "..";
+import { destructuring_assignment_helper, omission_of_conditions } from "..";
 import { is_fleet_speed_fast_or_more } from "../../../logic/speed/predicate";
 
 export function calc_4_3(
@@ -9,44 +9,12 @@ export function calc_4_3(
     sim_fleet: SimFleet,
 ): BranchResponse[] | string {
     const {
-        adopt_fleet: fleet,
-    } = sim_fleet;
-
-    const {
-        speed,
-    } = fleet;
-
-    const track = sim_fleet.route;
-
-    const {
-        BB,
-        BBV,
-        CV,
-        // CVB, // 単体で要求されることが無い
-        CVL,
-        CA,
-        CAV,
-        CL,
-        CLT,
-        CT,
-        DD,
-        DE,
-        // SS, // 単体で要求されることが無い
-        // SSV, // 単体で要求されることが無い
-        AV,
-        AO,
-        LHA,
-        AS,
-        // AR, // 使う機会が無い
-        BBs,
-        CVH,
-        CVs,
-        BBCVs,
-        CAs,
-        CLE,
-        Ds,
-        Ss,
-    } = fleet.composition;
+        fleet, fleet_type, ships_length, speed, seek, route,
+        drum_carrier_count, craft_carrier_count, radar_carrier_count,
+        arBulge_carrier_count, SBB_count,
+        BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,
+        AV, AO, LHA, AS, BBs, CVH, CVs, BBCVs, CAs, CLE, Ds, Ss,
+    } = destructuring_assignment_helper(sim_fleet);
 
     switch (node) {
         case null:
@@ -55,7 +23,13 @@ export function calc_4_3(
             if (CVH > 0) {
                 return 'C';
             }
-            if (Ds > 3 && (is_fleet_speed_fast_or_more(speed) || BBs + CVL === 0)) {
+            if (
+                Ds > 3 &&
+                (
+                    is_fleet_speed_fast_or_more(speed) ||
+                    BBs + CVL === 0
+                )
+            ) {
                 return 'D';
             }
             if (Ds > 2 && CL > 0) {
@@ -108,7 +82,11 @@ export function calc_4_3(
             if (Ss > 0 || DD === 0 || CVs === 0) {
                 return 'K';
             }
-            if (is_fleet_speed_fast_or_more(speed) && BBCVs < 3 && DD > 1) {
+            if (
+                is_fleet_speed_fast_or_more(speed) &&
+                BBCVs < 3 &&
+                DD > 1
+            ) {
                 return 'H';
             }
             return [
@@ -141,7 +119,11 @@ export function calc_4_3(
                 { node: 'N', rate: 0.7 },
             ];
         case 'K':
-            if (Ss > 0 || (CVs > 2 || CVs === 0) || Ds < 2) {
+            if (
+                Ss > 0 ||
+                (CVs > 2 || CVs === 0) ||
+                Ds < 2
+            ) {
                 return 'L';
             }
             if (CVH === 1 && AV + CVL === 1) {

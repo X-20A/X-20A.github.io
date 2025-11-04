@@ -1,4 +1,4 @@
-import { type AdoptFleet, calc_total_drum_count, calc_total_valid_craft_count } from "../../models/fleet/AdoptFleet";
+import { type AdoptFleet, count_total_drum, count_total_valid_craft } from "../../models/fleet/AdoptFleet";
 import type { AreaId, ItemIconKey } from "../../types";
 import { derive_resource_icon_suite, type ResourceIconSuite } from "./ResourceIconSuite";
 import type { Composition } from "../Composition";
@@ -71,8 +71,8 @@ const derive_Syonan_resource_Object = (
     craft_names: ReadonlyArray<string> = [],
 ): SyonanResource => {
     const { composition } = fleet;
-    const fleet_total_drum = calc_total_drum_count(fleet);
-    const fleet_total_craft = calc_total_valid_craft_count(fleet);
+    const fleet_total_drum = count_total_drum(fleet);
+    const fleet_total_craft = count_total_valid_craft(fleet);
     const icon_suite = derive_resource_icon_suite(icons, drum, craft);
 
     const add_fuel =

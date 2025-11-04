@@ -1,8 +1,9 @@
 import { SimFleet } from "../../../models/fleet/SimFleet";
 import { PreSailNull } from "../../../types/brand";
 import { BranchResponse } from "../../../types";
-import { omission_of_conditions } from "..";
-import { is_fleet_speed_fast_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
+import { destructuring_assignment_helper, omission_of_conditions } from "..";
+import { is_fleet_speed_fast_or_more, is_fleet_speed_faster_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
+import { is_fleet_combined } from "../../../models/fleet/predicate";
 
 export function calc_60_1(
     node: string | PreSailNull,
@@ -10,71 +11,26 @@ export function calc_60_1(
     option: Record<string, string>,
 ): BranchResponse[] | string {
     const {
-        adopt_fleet: fleet,
-    } = sim_fleet;
+        fleet, fleet_type, ships_length, speed, seek, route,
+        drum_carrier_count, craft_carrier_count, radar_carrier_count,
+        arBulge_carrier_count, SBB_count,
+        BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,
+        AV, AO, LHA, AS, BBs, CVH, CVs, BBCVs, CAs, CLE, Ds, Ss,
+    } = destructuring_assignment_helper(sim_fleet);
 
     const {
-        fleet_length: f_length,
-        fleet_type: f_type,
-        is_union: isUnion,
-        speed,
-        is_faster: isFaster,
-        seek,
-        drum_carrier_count: drum,
-        radar_carrier_count: radar,
-        // radar5_carrier_count: radar5,
-        craft_carrier_count: craft,
-        arBulge_carrier_count: arBulge,
-        SBB_count,
-        yamato_class_count: yamato,
-        matsu_count: matsu,
-        daigo_count: daigo,
-        reigo_count: reigo,
-    } = fleet;
-
-    const track = sim_fleet.route;
-
-    const {
-        phase,
-        is_third,
+        phase: phase_string,
+        is_third: is_third_string,
     } = option;
-
-    const {
-        BB,
-        BBV,
-        CV,
-        // CVB, // 単体で要求されることが無い
-        CVL,
-        CA,
-        CAV,
-        CL,
-        CLT,
-        CT,
-        DD,
-        DE,
-        // SS, // 単体で要求されることが無い
-        // SSV, // 単体で要求されることが無い
-        AV,
-        AO,
-        LHA,
-        AS,
-        // AR, // 使う機会が無い
-        BBs,
-        CVH,
-        CVs,
-        BBCVs,
-        CAs,
-        CLE,
-        Ds,
-        Ss,
-    } = fleet.composition;
+    const phase = Number(phase_string);
+    const is_third = Number(is_third_string);
 
     switch (node) {
         case null:
-            if (phase === '1') {
+            if (phase === 1) {
                 return '1';
             }
-            if ((!isUnion && f_length === 7) || is_third === '1') {
+            if ((!is_fleet_combined(fleet_type) && ships_length === 7) || is_third === 1) {
                 return '2';
             }
             if (BB > 0) {
@@ -91,7 +47,7 @@ export function calc_60_1(
             }
             return '1';
         case '2':
-            if (isFaster) {
+            if (is_fleet_speed_faster_or_more(speed)) {
                 return 'F';
             }
             if (CLE > 0 && Ds > 2 && BBCVs < 3) {
@@ -107,13 +63,13 @@ export function calc_60_1(
             }
             return 'B1';
         case 'B1':
-            if (track.includes('1')) {
+            if (route.includes('1')) {
                 return 'B2';
             }
             if (BBCVs > 3) {
                 return 'B2';
             }
-            return 'F'; // track.includes('2')
+            return 'F'; // route.includes('2')
         case 'B2':
             if (is_fleet_speed_slow(speed)) {
                 if (DE > 1) {
@@ -134,18 +90,18 @@ export function calc_60_1(
             if (Ds === 2 && BBCVs === 1) {
                 return 'C1';
             }
-            if (Ds === 2 && f_length < 6) {
+            if (Ds === 2 && ships_length < 6) {
                 return 'C1';
             }
-            if (CL + Ds > 2 && f_length === 5) {
+            if (CL + Ds > 2 && ships_length === 5) {
                 return 'C1';
             }
-            if (f_length < 5) {
+            if (ships_length < 5) {
                 return 'C1';
             }
             return 'C';
         case 'C':
-            if (Number(phase) < 3) {
+            if (phase < 3) {
                 return 'G';
             }
             if (BBs === 0 && CVs < 2 && CLE > 0 && Ds > 2 && is_fleet_speed_fast_or_more(speed)) {
@@ -153,7 +109,7 @@ export function calc_60_1(
             }
             return 'G';
         case 'C1':
-            if (Number(phase) < 3) {
+            if (phase < 3) {
                 return 'C2';
             }
             if (Ss > 0) {
@@ -164,7 +120,7 @@ export function calc_60_1(
             }
             return 'K';
         case 'D':
-            if (f_length === 6) {
+            if (ships_length === 6) {
                 return 'D1';
             }
             if (Ss > 0) {
@@ -179,7 +135,7 @@ export function calc_60_1(
             if (DE > 2) {
                 return 'D3';
             }
-            if (CL + CVL === 1 && Ds === 3 && f_length === 4) {
+            if (CL + CVL === 1 && Ds === 3 && ships_length === 4) {
                 return 'D3';
             }
             if (CL === 1 && Ds === 4 && is_fleet_speed_fast_or_more(speed)) {
@@ -190,7 +146,7 @@ export function calc_60_1(
             }
             return 'D2';
         case 'G':
-            if (isFaster) {
+            if (is_fleet_speed_faster_or_more(speed)) {
                 return 'M';
             }
             if (CL > 0 && Ds > 1 && BBs < 2) {

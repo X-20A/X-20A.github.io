@@ -1,53 +1,20 @@
 import { SimFleet } from "../../../models/fleet/SimFleet";
 import { PreSailNull } from "../../../types/brand";
 import { BranchResponse } from "../../../types";
-import { omission_of_conditions } from "..";
-import { is_fleet_speed_fast_or_more } from "../../../logic/speed/predicate";
+import { destructuring_assignment_helper, omission_of_conditions } from "..";
+import { is_fleet_speed_fast_or_more, is_fleet_speed_faster_or_more } from "../../../logic/speed/predicate";
 
 export function calc_7_2(
     node: string | PreSailNull,
     sim_fleet: SimFleet,
 ): BranchResponse[] | string {
     const {
-        adopt_fleet: fleet,
-    } = sim_fleet;
-
-    const {
-        fleet_length: f_length,
-        speed,
-        is_faster: isFaster,
-        seek,
-    } = fleet;
-
-    const {
-        BB,
-        BBV,
-        CV,
-        // CVB, // 単体で要求されることが無い
-        CVL,
-        CA,
-        CAV,
-        CL,
-        CLT,
-        CT,
-        DD,
-        DE,
-        // SS, // 単体で要求されることが無い
-        // SSV, // 単体で要求されることが無い
-        AV,
-        AO,
-        LHA,
-        AS,
-        // AR, // 使う機会が無い
-        BBs,
-        CVH,
-        CVs,
-        BBCVs,
-        CAs,
-        CLE,
-        Ds,
-        Ss,
-    } = fleet.composition;
+        fleet, fleet_type, ships_length, speed, seek, route,
+        drum_carrier_count, craft_carrier_count, radar_carrier_count,
+        arBulge_carrier_count, SBB_count,
+        BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,
+        AV, AO, LHA, AS, BBs, CVH, CVs, BBCVs, CAs, CLE, Ds, Ss,
+    } = destructuring_assignment_helper(sim_fleet);
 
     switch (node) {
         case null:
@@ -56,13 +23,13 @@ export function calc_7_2(
             if (Ds < 2 || Ss > 0) {
                 return 'A';
             }
-            if (f_length > 5) {
+            if (ships_length > 5) {
                 if (CVH > 1 || BBs + CVH > 3 || CLE > 2) {
                     return 'A';
                 }
                 return 'B';
             }
-            if (f_length === 5) {
+            if (ships_length === 5) {
                 if (CVH > 2) {
                     return 'A';
                 }
@@ -71,18 +38,18 @@ export function calc_7_2(
                 }
                 return 'C';
             }
-            if (f_length < 5) {
+            if (ships_length < 5) {
                 if (BBs + CVH > 0 || Ds < 3) {
                     return 'B';
                 }
                 return 'C';
             }
-            break; // f_lengthより例外なし
+            break; // ships_lengthより例外なし
         case 'C':
             if (AO + Ss > 0) {
                 return 'D';
             }
-            if (f_length > 5) {
+            if (ships_length > 5) {
                 if (BBs + CVH > 0) {
                     return 'D';
                 }
@@ -91,7 +58,7 @@ export function calc_7_2(
                 }
                 return 'D';
             }
-            if (f_length === 5) {
+            if (ships_length === 5) {
                 if (BBs + CVH > 1) {
                     return 'D';
                 }
@@ -100,7 +67,7 @@ export function calc_7_2(
                 }
                 return 'D';
             }
-            if (f_length < 5) {
+            if (ships_length < 5) {
                 if (BBs + CVH > 1) {
                     return 'D';
                 }
@@ -109,9 +76,9 @@ export function calc_7_2(
                 }
                 return 'D';
             }
-            break; // f_lengthより例外なし
+            break; // ships_lengthより例外なし
         case 'D':
-            if (isFaster) {
+            if (is_fleet_speed_faster_or_more(speed)) {
                 return 'I';
             }
             if (BBCVs > 3) {
@@ -134,7 +101,7 @@ export function calc_7_2(
             } // BBCVsより例外なし
             break;
         case 'E':
-            if (f_length < 6 || Ds > 4 || (DD > 0 && DE > 2)) {
+            if (ships_length < 6 || Ds > 4 || (DD > 0 && DE > 2)) {
                 return 'G';
             }
             if (seek[3] < 46) {

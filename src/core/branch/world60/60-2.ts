@@ -1,10 +1,10 @@
 import { SimFleet } from "../../../models/fleet/SimFleet";
 import { PreSailNull } from "../../../types/brand";
 import { BranchResponse } from "../../../types";
-import { omission_of_conditions } from "..";
-import { is_fleet_transport } from "../../../models/fleet/predicate";
+import { destructuring_assignment_helper, omission_of_conditions } from "..";
+import { is_fleet_combined, is_fleet_transport } from "../../../models/fleet/predicate";
 import { is_fleet_speed_fast_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
-import { countShip } from "../../../models/fleet/AdoptFleet";
+import { count_Daigo_ships, count_ship, count_ship_exact } from "../../../models/fleet/AdoptFleet";
 
 export function calc_60_2(
     node: string | PreSailNull,
@@ -12,65 +12,30 @@ export function calc_60_2(
     option: Record<string, string>,
 ): BranchResponse[] | string {
     const {
-        adopt_fleet: fleet,
-    } = sim_fleet;
+        fleet, fleet_type, ships_length, speed, seek, route,
+        drum_carrier_count, craft_carrier_count, radar_carrier_count,
+        arBulge_carrier_count, SBB_count,
+        BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,
+        AV, AO, LHA, AS, BBs, CVH, CVs, BBCVs, CAs, CLE, Ds, Ss,
+    } = destructuring_assignment_helper(sim_fleet);
 
     const {
-        fleet_type: f_type,
-        is_union: isUnion,
-        speed,
-        seek,
-        daigo_count: daigo,
-    } = fleet;
-
-    const track = sim_fleet.route;
-
-    const {
-        phase,
+        phase: phase_string,
     } = option;
-
-    const {
-        BB,
-        BBV,
-        CV,
-        // CVB, // 単体で要求されることが無い
-        CVL,
-        CA,
-        CAV,
-        CL,
-        CLT,
-        CT,
-        DD,
-        DE,
-        // SS, // 単体で要求されることが無い
-        // SSV, // 単体で要求されることが無い
-        AV,
-        AO,
-        LHA,
-        AS,
-        // AR, // 使う機会が無い
-        BBs,
-        CVH,
-        CVs,
-        BBCVs,
-        CAs,
-        CLE,
-        Ds,
-        Ss,
-    } = fleet.composition;
+    const phase = Number(phase_string);
 
     switch (node) {
         case null:
             if (option.phase === '1') {
                 return '1';
             }
-            if (!isUnion) {
+            if (!is_fleet_combined(fleet_type)) {
                 return '1';
             }
-            // isUnion
+            // is_fleet_combined(fleet_type)
             return '2';
         case '2':
-            if (is_fleet_transport(f_type)) {
+            if (is_fleet_transport(fleet_type)) {
                 return 'L';
             }
             if (CL > 1 && Ds > 3) {
@@ -98,7 +63,7 @@ export function calc_60_2(
             }
             return 'A2';
         case 'C':
-            if (countShip(fleet, '大泊') > 0) {
+            if (count_ship(fleet, '大泊') > 0) {
                 return 'H';
             }
             if (CL > 0 && Ds > 1) {
@@ -109,7 +74,7 @@ export function calc_60_2(
             }
             return 'G';
         case 'F':
-            if (track.includes('D')) {
+            if (route.includes('D')) {
                 return 'F2';
             }
             if (CVH > 0) {
@@ -117,16 +82,16 @@ export function calc_60_2(
             }
             return 'R';
         case 'H':
-            if (track.includes('1')) {
+            if (route.includes('1')) {
                 return 'I';
             }
-            if (option.difficulty === '4' && daigo > 4) {
+            if (option.difficulty === '4' && count_Daigo_ships(fleet) > 4) {
                 return 'L';
             }
-            if (option.difficulty === '3' && daigo > 2) {
+            if (option.difficulty === '3' && count_Daigo_ships(fleet) > 2) {
                 return 'L';
             }
-            if (option.difficulty === '2' && daigo > 1) {
+            if (option.difficulty === '2' && count_Daigo_ships(fleet) > 1) {
                 return 'L';
             }
             if (option.difficulty === '1') {
@@ -148,12 +113,12 @@ export function calc_60_2(
             if (CVH > 0 && is_fleet_speed_slow(speed)) {
                 return 'D';
             }
-            if (countShip(fleet, '大泊') + CA > 1 && CLE > 1 && Ds > 2) {
+            if (count_ship(fleet, '大泊') + CA > 1 && CLE > 1 && Ds > 2) {
                 return 'N';
             }
             return 'D';
         case 'P':
-            if (is_fleet_transport(f_type)) {
+            if (is_fleet_transport(fleet_type)) {
                 return 'R';
             }
             if (BB + CVH === 0 && BBV + CVL < 2 && is_fleet_speed_fast_or_more(speed)) {
@@ -161,7 +126,7 @@ export function calc_60_2(
             }
             return 'F';
         case 'Q':
-            if (Number(phase) < 3) {
+            if (phase < 3) {
                 return 'S';
             }
             if (BBs > 0 && CVH > 0) {
@@ -170,7 +135,7 @@ export function calc_60_2(
             if (CVs > 1) {
                 return 'S';
             }
-            if (countShip(fleet, '大泊') > 0) {
+            if (count_ship(fleet, '大泊') > 0) {
                 return 'V';
             }
             if (CL < 3 && is_fleet_speed_slow(speed)) {
@@ -179,17 +144,17 @@ export function calc_60_2(
             if (Ds > 5) {
                 return 'V';
             }
-            if (daigo > 7) {
+            if (count_Daigo_ships(fleet) > 7) {
                 return 'V';
             }
-            if (countShip(fleet, ['那智', '足柄']) + CLE === 5) {
+            if (count_ship(fleet, ['那智', '足柄']) + CLE === 5) {
                 return 'V';
             }
             if (
-                countShip(fleet, ['那智', '足柄']) === 2
-                && countShip(fleet, ['阿武隈', '多摩', '木曾']) === 2
-                && countShip(fleet, ['霞', '不知火', '薄雲', '曙', '初霜', '初春', '若葉'])
-                + (fleet.ship_names.find(ship_name => ['潮', '潮改', '潮改二'].includes(ship_name)) ? 1 : 0)
+                count_ship(fleet, ['那智', '足柄']) === 2
+                && count_ship(fleet, ['阿武隈', '多摩', '木曾']) === 2
+                && count_ship(fleet, ['霞', '不知火', '薄雲', '曙', '初霜', '初春', '若葉'])
+                + count_ship_exact(fleet, ['潮', '潮改', '潮改二'])
                 > 1
                 && DD === 5
             ) {

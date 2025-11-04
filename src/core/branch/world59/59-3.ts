@@ -1,10 +1,10 @@
 import { SimFleet } from "../../../models/fleet/SimFleet";
 import { PreSailNull } from "../../../types/brand";
 import { BranchResponse } from "../../../types";
-import { omission_of_conditions } from "..";
+import { destructuring_assignment_helper, omission_of_conditions } from "..";
 import { is_fleet_speed_fast_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
-import { is_fleet_carrier, is_fleet_normal, is_fleet_striking, is_fleet_surface, is_fleet_transport } from "../../../models/fleet/predicate";
-import { countAktmrPlusCVs } from "../../../models/fleet/AdoptFleet";
+import { is_fleet_carrier, is_fleet_combined, is_fleet_normal, is_fleet_striking, is_fleet_surface, is_fleet_transport } from "../../../models/fleet/predicate";
+import { count_carriers, count_Yamato_class } from "../../../models/fleet/AdoptFleet";
 
 export function calc_59_3(
     node: string | PreSailNull,
@@ -12,74 +12,38 @@ export function calc_59_3(
     option: Record<string, string>,
 ): BranchResponse[] | string {
     const {
-        adopt_fleet: fleet,
-    } = sim_fleet;
+        fleet, fleet_type, ships_length, speed, seek, route,
+        drum_carrier_count, craft_carrier_count, radar_carrier_count,
+        arBulge_carrier_count, SBB_count,
+        BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,
+        AV, AO, LHA, AS, BBs, CVH, CVs, BBCVs, CAs, CLE, Ds, Ss,
+    } = destructuring_assignment_helper(sim_fleet);
 
     const {
-        fleet_length: f_length,
-        fleet_type: f_type,
-        is_union: isUnion,
-        speed,
-        seek,
-        yamato_class_count: yamato,
-    } = fleet;
-
-    const track = sim_fleet.route;
-
-    const {
-        phase,
+        phase: phase_string,
     } = option;
-
-    const {
-        BB,
-        BBV,
-        CV,
-        // CVB, // 単体で要求されることが無い
-        CVL,
-        CA,
-        CAV,
-        CL,
-        CLT,
-        CT,
-        DD,
-        DE,
-        // SS, // 単体で要求されることが無い
-        // SSV, // 単体で要求されることが無い
-        AV,
-        AO,
-        LHA,
-        AS,
-        // AR, // 使う機会が無い
-        BBs,
-        CVH,
-        CVs,
-        BBCVs,
-        CAs,
-        CLE,
-        Ds,
-        Ss,
-    } = fleet.composition;
+    const phase = Number(phase_string);
 
     switch (node) {
         case null:
-            if (is_fleet_normal(f_type, f_length)) {
+            if (is_fleet_normal(fleet_type, ships_length)) {
                 return '1';
             }
-            if (is_fleet_striking(f_type, f_length)) {
+            if (is_fleet_striking(fleet_type, ships_length)) {
                 return '2';
             }
-            if (is_fleet_transport(f_type)) {
+            if (is_fleet_transport(fleet_type)) {
                 return '1';
             }
-            if (phase === '1' && (is_fleet_surface(f_type) || is_fleet_carrier(f_type))) {
+            if (phase === 1 && (is_fleet_surface(fleet_type) || is_fleet_carrier(fleet_type))) {
                 return '1';
             }
-            if (Number(phase) > 1 && (is_fleet_surface(f_type) || is_fleet_carrier(f_type))) {
+            if (phase > 1 && (is_fleet_surface(fleet_type) || is_fleet_carrier(fleet_type))) {
                 return '3';
             }
             break; // 艦隊種別より例外なし
         case '1':
-            if (!isUnion) {
+            if (!is_fleet_combined(fleet_type)) {
                 return 'A';
             }
             return 'L';
@@ -106,17 +70,17 @@ export function calc_59_3(
             }
             return 'B1';
         case 'B1':
-            if (!isUnion) {
+            if (!is_fleet_combined(fleet_type)) {
                 return 'C';
             }
-            if (is_fleet_transport(f_type)) {
+            if (is_fleet_transport(fleet_type)) {
                 return 'P';
             }
-            if (is_fleet_surface(f_type)) {
+            if (is_fleet_surface(fleet_type)) {
                 return 'N';
             }
-            if (is_fleet_carrier(f_type)) {
-                if (countAktmrPlusCVs(fleet) > 3) {
+            if (is_fleet_carrier(fleet_type)) {
+                if (count_carriers(fleet) > 3) {
                     return 'N';
                 }
                 if (CVH > 1) {
@@ -153,10 +117,10 @@ export function calc_59_3(
             }
             return 'J';
         case 'N':
-            if (is_fleet_surface(f_type)) {
+            if (is_fleet_surface(fleet_type)) {
                 return 'O';
             }
-            if (is_fleet_carrier(f_type)) {
+            if (is_fleet_carrier(fleet_type)) {
                 if (is_fleet_speed_slow(speed)) {
                     return 'O';
                 }
@@ -164,11 +128,11 @@ export function calc_59_3(
             }
             return 'P'; // 通常艦隊が来られないこともなさそう。保険
         case 'P':
-            if (track.includes('1')) {
+            if (route.includes('1')) {
                 return 'Q';
             }
-            if (track.includes('3')) {
-                if (yamato > 1) {
+            if (route.includes('3')) {
+                if (count_Yamato_class(fleet) > 1) {
                     return 'T';
                 }
                 if (CVH > 2) {
@@ -177,7 +141,7 @@ export function calc_59_3(
                 if (Ss > 0 && AS === 0) {
                     return 'T';
                 }
-                if (is_fleet_surface(f_type) && is_fleet_speed_slow(speed)) {
+                if (is_fleet_surface(fleet_type) && is_fleet_speed_slow(speed)) {
                     return 'T';
                 }
                 return 'U';
@@ -213,10 +177,10 @@ export function calc_59_3(
             if (Ss > 0 && AS === 0) {
                 return 'V2';
             }
-            if (yamato > 1 && is_fleet_speed_slow(speed)) {
+            if (count_Yamato_class(fleet) > 1 && is_fleet_speed_slow(speed)) {
                 return 'V2';
             }
-            if (Number(phase) < 3) {
+            if (phase < 3) {
                 return 'V3';
             }
             if (Ds < 4) {

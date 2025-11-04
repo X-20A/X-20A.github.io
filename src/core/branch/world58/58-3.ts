@@ -1,9 +1,10 @@
 import { SimFleet } from "../../../models/fleet/SimFleet";
 import { PreSailNull } from "../../../types/brand";
 import { BranchResponse } from "../../../types";
-import { omission_of_conditions } from "..";
-import { is_fleet_speed_fast_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
-import { countAktmrPlusCVs } from "../../../models/fleet/AdoptFleet";
+import { destructuring_assignment_helper, omission_of_conditions } from "..";
+import { is_fleet_speed_fast_or_more, is_fleet_speed_faster_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
+import { count_carriers } from "../../../models/fleet/AdoptFleet";
+import { is_fleet_combined } from "../../../models/fleet/predicate";
 
 export function calc_58_3(
     node: string | PreSailNull,
@@ -11,66 +12,39 @@ export function calc_58_3(
     option: Record<string, string>,
 ): BranchResponse[] | string {
     const {
-        adopt_fleet: fleet,
-    } = sim_fleet;
+        fleet, fleet_type, ships_length, speed, seek, route,
+        drum_carrier_count, craft_carrier_count, radar_carrier_count,
+        arBulge_carrier_count, SBB_count,
+        BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,
+        AV, AO, LHA, AS, BBs, CVH, CVs, BBCVs, CAs, CLE, Ds, Ss,
+    } = destructuring_assignment_helper(sim_fleet);
 
     const {
-        is_union: isUnion,
-        speed,
-        is_faster: isFaster,
-        seek,
-    } = fleet;
-
-    const {
-        BB,
-        BBV,
-        CV,
-        // CVB, // 単体で要求されることが無い
-        CVL,
-        CA,
-        CAV,
-        CL,
-        CLT,
-        CT,
-        DD,
-        DE,
-        // SS, // 単体で要求されることが無い
-        // SSV, // 単体で要求されることが無い
-        AV,
-        AO,
-        LHA,
-        AS,
-        // AR, // 使う機会が無い
-        BBs,
-        CVH,
-        CVs,
-        BBCVs,
-        CAs,
-        CLE,
-        Ds,
-        Ss,
-    } = fleet.composition;
-
-    const {
-        phase,
-        difficulty,
+        phase: phase_string,
+        difficulty: difficulty_string,
     } = option;
+    const phase = Number(phase_string);
+    const difficulty = Number(difficulty_string);
 
     switch (node) {
         case null:
-            if (isUnion) {
+            if (is_fleet_combined(fleet_type)) {
                 return '1';
             } else {
-                if (option.phase === '1') {
+                if (phase === 1) {
                     return '2';
                 } else { // Number(option.phase) > 1
                     if (AO > 0) {
                         return '3';
                     }
-                    if (CL > 0 && DD > 2 && is_fleet_speed_fast_or_more(speed)) {
+                    if (
+                        CL > 0 &&
+                        DD > 2 &&
+                        is_fleet_speed_fast_or_more(speed)
+                    ) {
                         return '3';
                     }
-                    if (countAktmrPlusCVs(fleet) > 0) {
+                    if (count_carriers(fleet) > 0) {
                         return '2';
                     }
                     if (BBs > 0) {
@@ -79,22 +53,22 @@ export function calc_58_3(
                     if (AO + LHA + AV > 1) {
                         return '2';
                     }
-                    if (Number(phase) < 3) {
+                    if (phase < 3) {
                         return '3';
                     } // option.phase === '3'else 
-                    if (difficulty === '4' && AS > 0 && Ss > 2) {
+                    if (difficulty === 4 && AS > 0 && Ss > 2) {
                         return '4';
                     }
-                    if (difficulty === '3' && Ss > 2) {
+                    if (difficulty === 3 && Ss > 2) {
                         return '4';
                     }
-                    if (difficulty === '2' && Ss > 1) {
+                    if (difficulty === 2 && Ss > 1) {
                         return '4';
                     }
-                    if (difficulty === '1' && Ss > 0) {
+                    if (difficulty === 1 && Ss > 0) {
                         return '4';
                     }
-                    if (difficulty === '1' && Ds > 2) {
+                    if (difficulty === 1 && Ds > 2) {
                         return '4';
                     }
                     return '2';
@@ -171,7 +145,7 @@ export function calc_58_3(
             }
             return 'Q';
         case 'R':
-            if (isFaster) {
+            if (is_fleet_speed_faster_or_more(speed)) {
                 return 'U';
             }
             return 'S';
@@ -184,13 +158,13 @@ export function calc_58_3(
             if (AV + LHA > 0) {
                 return 'X';
             }
-            if (difficulty === '4' && AS > 0 && Ss > 3) {
+            if (difficulty === 4 && AS > 0 && Ss > 3) {
                 return 'Y';
             }
-            if (difficulty === '4' && DD > 1) {
+            if (difficulty === 4 && DD > 1) {
                 return 'Y';
             }
-            if (Number(difficulty) < 4) {
+            if (difficulty < 4) {
                 return 'Y';
             } return 'X';
         case 'Y':

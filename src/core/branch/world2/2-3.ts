@@ -1,55 +1,25 @@
 import { SimFleet } from "../../../models/fleet/SimFleet";
 import { PreSailNull } from "../../../types/brand";
 import { BranchResponse } from "../../../types";
-import { omission_of_conditions } from "..";
+import { destructuring_assignment_helper, omission_of_conditions } from "..";
 
 export function calc_2_3(
     node: string | PreSailNull,
     sim_fleet: SimFleet,
 ): BranchResponse[] | string {
     const {
-        adopt_fleet: fleet,
-    } = sim_fleet;
-
-    const {
-        fleet_length: f_length,
-    } = fleet;
-
-    const {
-        BB,
-        BBV,
-        CV,
-        // CVB, // 単体で要求されることが無い
-        CVL,
-        CA,
-        CAV,
-        CL,
-        CLT,
-        CT,
-        DD,
-        DE,
-        // SS, // 単体で要求されることが無い
-        // SSV, // 単体で要求されることが無い
-        AV,
-        AO,
-        LHA,
-        AS,
-        // AR, // 使う機会が無い
-        BBs,
-        CVH,
-        CVs,
-        BBCVs,
-        CAs,
-        CLE,
-        Ds,
-        Ss,
-    } = fleet.composition;
+        fleet, fleet_type, ships_length, speed, seek, route,
+        drum_carrier_count, craft_carrier_count, radar_carrier_count,
+        arBulge_carrier_count, SBB_count,
+        BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,
+        AV, AO, LHA, AS, BBs, CVH, CVs, BBCVs, CAs, CLE, Ds, Ss,
+    } = destructuring_assignment_helper(sim_fleet);
 
     switch (node) {
         case null:
             return '1';
         case '1':
-            if (Ss + AS === f_length) {
+            if (Ss + AS === ships_length) {
                 return 'C';
             }
             return [
@@ -68,7 +38,7 @@ export function calc_2_3(
             if (Ss > 1 && AS > 0) {
                 return 'G';
             }
-            if (Ss === f_length) {
+            if (Ss === ships_length) {
                 return [
                     { node: 'F', rate: 0.35 },
                     { node: 'G', rate: 0.65 },
@@ -127,7 +97,7 @@ export function calc_2_3(
                     { node: 'K', rate: 0.4 },
                 ];
             }
-            if (Ss === f_length) {
+            if (Ss === ships_length) {
                 return [
                     { node: 'I', rate: 0.55 },
                     { node: 'K', rate: 0.45 },
@@ -165,7 +135,7 @@ export function calc_2_3(
             if (CL === 1 && CA === 5) {
                 return 'N';
             }
-            if (Ss === f_length) {
+            if (Ss === ships_length) {
                 return [
                     { node: 'M', rate: 0.1 },
                     { node: 'N', rate: 0.9 },

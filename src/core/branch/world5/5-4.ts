@@ -1,55 +1,20 @@
 import { SimFleet } from "../../../models/fleet/SimFleet";
 import { PreSailNull } from "../../../types/brand";
 import { BranchResponse } from "../../../types";
-import { omission_of_conditions } from "..";
-import { is_fleet_speed_slow } from "../../../logic/speed/predicate";
+import { destructuring_assignment_helper, omission_of_conditions } from "..";
+import { is_fleet_speed_faster_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
 
 export function calc_5_4(
     node: string | PreSailNull,
     sim_fleet: SimFleet,
 ): BranchResponse[] | string {
     const {
-        adopt_fleet: fleet,
-    } = sim_fleet;
-
-    const {
-        speed,
-        is_faster: isFaster,
-        seek,
-        drum_carrier_count: drum,
-        craft_carrier_count: craft,
-        SBB_count,
-    } = fleet;
-
-    const {
-        BB,
-        BBV,
-        CV,
-        // CVB, // 単体で要求されることが無い
-        CVL,
-        CA,
-        CAV,
-        CL,
-        CLT,
-        CT,
-        DD,
-        DE,
-        // SS, // 単体で要求されることが無い
-        // SSV, // 単体で要求されることが無い
-        AV,
-        AO,
-        LHA,
-        AS,
-        // AR, // 使う機会が無い
-        BBs,
-        CVH,
-        CVs,
-        BBCVs,
-        CAs,
-        CLE,
-        Ds,
-        Ss,
-    } = fleet.composition;
+        fleet, fleet_type, ships_length, speed, seek, route,
+        drum_carrier_count, craft_carrier_count, radar_carrier_count,
+        arBulge_carrier_count, SBB_count,
+        BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,
+        AV, AO, LHA, AS, BBs, CVH, CVs, BBCVs, CAs, CLE, Ds, Ss,
+    } = destructuring_assignment_helper(sim_fleet);
 
     switch (node) {
         case null:
@@ -61,7 +26,10 @@ export function calc_5_4(
             if (BBs > 2 || CAs > 4) {
                 return 'A';
             }
-            if (drum + craft > 4 || DD > 3) {
+            if (
+                drum_carrier_count + craft_carrier_count > 4 ||
+                DD > 3
+            ) {
                 return 'B';
             }
             if (CL === 1 && DD > 2) {
@@ -83,7 +51,11 @@ export function calc_5_4(
             if (BBV + SBB_count > 1) {
                 return 'D';
             }
-            if (isFaster || (CL === 1 && DD > 2) || DD > 3) {
+            if (
+                is_fleet_speed_faster_or_more(speed) ||
+                (CL === 1 && DD > 2) ||
+                DD > 3
+            ) {
                 return 'E';
             }
             if (DD === 0) {
@@ -113,7 +85,7 @@ export function calc_5_4(
                 { node: 'L', rate: 0.7 },
             ];
         case 'L':
-            if (isFaster) {
+            if (is_fleet_speed_faster_or_more(speed)) {
                 return 'P';
             }
             if (seek[1] < 56) {
@@ -130,7 +102,7 @@ export function calc_5_4(
             }
             break; // LoSより例外なし
         case 'M':
-            if (isFaster) {
+            if (is_fleet_speed_faster_or_more(speed)) {
                 return 'P';
             }
             if (seek[1] < 41) {

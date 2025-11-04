@@ -1,7 +1,7 @@
 import { SimFleet } from "../../../models/fleet/SimFleet";
 import { PreSailNull } from "../../../types/brand";
 import { BranchResponse } from "../../../types";
-import { omission_of_conditions } from "..";
+import { destructuring_assignment_helper, omission_of_conditions } from "..";
 import { is_fleet_speed_fast_or_more } from "../../../logic/speed/predicate";
 
 export function calc_2_1(
@@ -9,43 +9,12 @@ export function calc_2_1(
     sim_fleet: SimFleet,
 ): BranchResponse[] | string {
     const {
-        adopt_fleet: fleet,
-    } = sim_fleet;
-
-    const {
-        fleet_length: f_length,
-        speed,
-    } = fleet;
-
-    const {
-        BB,
-        BBV,
-        CV,
-        // CVB, // 単体で要求されることが無い
-        CVL,
-        CA,
-        CAV,
-        CL,
-        CLT,
-        CT,
-        DD,
-        DE,
-        // SS, // 単体で要求されることが無い
-        // SSV, // 単体で要求されることが無い
-        AV,
-        AO,
-        LHA,
-        AS,
-        // AR, // 使う機会が無い
-        BBs,
-        CVH,
-        CVs,
-        BBCVs,
-        CAs,
-        CLE,
-        Ds,
-        Ss,
-    } = fleet.composition;
+        fleet, fleet_type, ships_length, speed, seek, route,
+        drum_carrier_count, craft_carrier_count, radar_carrier_count,
+        arBulge_carrier_count, SBB_count,
+        BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,
+        AV, AO, LHA, AS, BBs, CVH, CVs, BBCVs, CAs, CLE, Ds, Ss,
+    } = destructuring_assignment_helper(sim_fleet);
 
     switch (node) {
         case null:
@@ -80,7 +49,7 @@ export function calc_2_1(
             if (BBCVs > 4) {
                 return 'F';
             }
-            if (f_length > 5) {
+            if (ships_length > 5) {
                 if (BBCVs > 0) {
                     return 'D';
                 }
@@ -90,19 +59,27 @@ export function calc_2_1(
                 if (CL === 1 && Ds === 5) {
                     return 'H';
                 }
-                if (is_fleet_speed_fast_or_more(speed) && CL === 1 && DD === 4) {
+                if (
+                    is_fleet_speed_fast_or_more(speed) &&
+                    CL === 1 &&
+                    DD === 4
+                ) {
                     return 'H';
                 }
                 return 'D';
             }
-            // f_length <= 5
+            // ships_length <= 5
             if (Ds === 5) {
                 return 'H';
             }
             if (CL === 1 && Ds === 4) {
                 return 'H';
             }
-            if (is_fleet_speed_fast_or_more(speed) && CL === 1 && DD === 3) {
+            if (
+                is_fleet_speed_fast_or_more(speed) &&
+                CL === 1 &&
+                DD === 3
+            ) {
                 return 'H';
             }
             return [

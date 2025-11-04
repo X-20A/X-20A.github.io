@@ -3,7 +3,7 @@ import { PreSailNull } from "../../../types/brand";
 import { BranchResponse } from "../../../types";
 import { omission_of_conditions } from "..";
 import { is_fleet_speed_fast_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
-import { isFCL, isInclude } from "../../../models/fleet/AdoptFleet";
+import { is_flagship_CL, include_ship_names } from "../../../models/fleet/AdoptFleet";
 
 export function calc_6_4(
     node: string | PreSailNull,
@@ -52,14 +52,14 @@ export function calc_6_4(
             if (LHA + CVs > 0) {
                 return '2';
             }
-            if (!isInclude(fleet, '長門改二') && !isInclude(fleet, '陸奥改二') && BBs === 2) {
+            if (!include_ship_names(fleet, '長門改二') && !include_ship_names(fleet, '陸奥改二') && BBs === 2) {
                 return '2';
             }
             if (CAV > 2) {
                 return '2';
             } 
             if (is_fleet_speed_fast_or_more(speed) &&
-                ((isFCL(fleet) && DD === 3)
+                ((is_flagship_CL(fleet) && DD === 3)
                     || DD > 3)) {
                 return '1';
             }
@@ -69,7 +69,7 @@ export function calc_6_4(
             return '2';
         case '1':
             if (is_fleet_speed_fast_or_more(speed) &&
-                ((isFCL(fleet) && DD === 3)
+                ((is_flagship_CL(fleet) && DD === 3)
                     || DD > 3)) {
                 return 'B';
             }
@@ -78,7 +78,7 @@ export function calc_6_4(
             }
             break; // これ以外は既に2へ行ってるので例外なし。でもちょっとヤだね
         case 'A':
-            if (isInclude(fleet, '秋津洲') &&
+            if (include_ship_names(fleet, '秋津洲') &&
                 (CAV === 1
                     || CL > 0
                     || DD > 2)) {
@@ -87,12 +87,12 @@ export function calc_6_4(
             if (BBs > 0 || is_fleet_speed_slow(speed)) {
                 return 'E';
             }
-            if (isFCL(fleet) || DD > 2) {
+            if (is_flagship_CL(fleet) || DD > 2) {
                 return 'D';
             }
             return 'E';
         case 'E':
-            if (isInclude(fleet, '秋津洲') || isInclude(fleet, '如月')) {
+            if (include_ship_names(fleet, '秋津洲') || include_ship_names(fleet, '如月')) {
                 return 'D';
             }
             if (CAs < 2 && CL > 0 && is_fleet_speed_fast_or_more(speed)) {

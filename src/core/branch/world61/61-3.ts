@@ -1,9 +1,10 @@
 import { SimFleet } from "../../../models/fleet/SimFleet";
 import { PreSailNull } from "../../../types/brand";
 import { BranchResponse } from "../../../types";
-import { omission_of_conditions } from "..";
+import { destructuring_assignment_helper, omission_of_conditions } from "..";
 import { is_fleet_speed_fast_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
 import { is_fleet_carrier, is_fleet_combined } from "../../../models/fleet/predicate";
+import { count_Yamato_class } from "../../../models/fleet/AdoptFleet";
 
 export function calc_61_3(
     node: string | PreSailNull,
@@ -11,50 +12,16 @@ export function calc_61_3(
     option: Record<string, string>,
 ): BranchResponse[] | string {
     const {
-        adopt_fleet: fleet,
-    } = sim_fleet;
-
-    const {
-        speed,
-        seek,
-        fleet_type,
-        yamato_class_count,
-    } = fleet;
-
-    const {
-        BB,
-        BBV,
-        CV,
-        // CVB, // 単体で要求されることが無い
-        CVL,
-        CA,
-        CAV,
-        CL,
-        CLT,
-        CT,
-        DD,
-        DE,
-        // SS, // 単体で要求されることが無い
-        // SSV, // 単体で要求されることが無い
-        AV,
-        AO,
-        LHA,
-        AS,
-        // AR, // 使う機会が無い
-        BBs,
-        CVH,
-        CVs,
-        BBCVs,
-        CAs,
-        CLE,
-        Ds,
-        Ss,
-    } = fleet.composition;
+        fleet, fleet_type, ships_length, speed, seek, route,
+        drum_carrier_count, craft_carrier_count, radar_carrier_count,
+        arBulge_carrier_count, SBB_count,
+        BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,
+        AV, AO, LHA, AS, BBs, CVH, CVs, BBCVs, CAs, CLE, Ds, Ss,
+    } = destructuring_assignment_helper(sim_fleet);
 
     const {
         phase: phase_string,
     } = option;
-
     const phase = Number(phase_string);
 
     switch (node) {
@@ -126,7 +93,7 @@ export function calc_61_3(
             if (phase <= 2) {
                 return 'D';
             }
-            if (yamato_class_count >= 2) {
+            if (count_Yamato_class(fleet) >= 2) {
                 return 'Y';
             }
             if (Ds <= 2) {
@@ -149,7 +116,12 @@ export function calc_61_3(
             }
             return 'W';
         case 'X':
-            if (yamato_class_count === 0 && CL >= 2 && Ds >= 4 &&is_fleet_speed_fast_or_more(speed)) {
+            if (
+                count_Yamato_class(fleet) === 0 &&
+                CL >= 2 &&
+                Ds >= 4 &&
+                is_fleet_speed_fast_or_more(speed)
+            ) {
                 return 'Z';
             }
             return 'O';

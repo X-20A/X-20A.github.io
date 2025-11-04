@@ -1,8 +1,10 @@
 import { SimFleet } from "../../../models/fleet/SimFleet";
 import { PreSailNull } from "../../../types/brand";
 import { BranchResponse } from "../../../types";
-import { omission_of_conditions } from "..";
-import { is_fleet_speed_fast_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
+import { destructuring_assignment_helper, omission_of_conditions } from "..";
+import { is_fleet_speed_fast_or_more, is_fleet_speed_faster_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
+import { count_Matsu_class, count_Yamato_class } from "../../../models/fleet/AdoptFleet";
+import { is_fleet_combined } from "../../../models/fleet/predicate";
 
 export function calc_60_4(
     node: string | PreSailNull,
@@ -10,64 +12,29 @@ export function calc_60_4(
     option: Record<string, string>,
 ): BranchResponse[] | string {
     const {
-        adopt_fleet: fleet,
-    } = sim_fleet;
+        fleet, fleet_type, ships_length, speed, seek, route,
+        drum_carrier_count, craft_carrier_count, radar_carrier_count,
+        arBulge_carrier_count, SBB_count,
+        BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,
+        AV, AO, LHA, AS, BBs, CVH, CVs, BBCVs, CAs, CLE, Ds, Ss,
+    } = destructuring_assignment_helper(sim_fleet);
 
     const {
-        is_union: isUnion,
-        speed,
-        is_faster: isFaster,
-        seek,
-        yamato_class_count: yamato,
-        matsu_count: matsu,
-    } = fleet;
-
-
-    const {
-        BB,
-        BBV,
-        CV,
-        // CVB, // 単体で要求されることが無い
-        CVL,
-        CA,
-        CAV,
-        CL,
-        CLT,
-        CT,
-        DD,
-        DE,
-        // SS, // 単体で要求されることが無い
-        // SSV, // 単体で要求されることが無い
-        AV,
-        AO,
-        LHA,
-        AS,
-        // AR, // 使う機会が無い
-        BBs,
-        CVH,
-        CVs,
-        BBCVs,
-        CAs,
-        CLE,
-        Ds,
-        Ss,
-    } = fleet.composition;
-
-    const {
-        phase,
+        phase: phase_string,
     } = option;
+    const phase = Number(phase_string);
 
     switch (node) {
         case null:
             return '1';
         case 'B':
-            if (Number(phase) < 3) {
+            if (phase < 3) {
                 return 'C';
             }
             if (Ss > 0 && AS === 0) {
                 return 'S';
             }
-            if (isFaster) {
+            if (is_fleet_speed_faster_or_more(speed)) {
                 return 'C';
             }
             if (Ss > 0 && Ds < 6) {
@@ -93,7 +60,7 @@ export function calc_60_4(
                 return 'U';
             }
             if (is_fleet_speed_fast_or_more(speed)) {
-                if (yamato > 0) {
+                if (count_Yamato_class(fleet) > 0) {
                     return 'U';
                 }
                 if (Ds > 5) {
@@ -102,18 +69,18 @@ export function calc_60_4(
                 return 'U';
             }
             // isFaster
-            if (yamato > 1) {
+            if (count_Yamato_class(fleet) > 1) {
                 return 'U';
             }
             if (Ds > 4) {
                 return 'W';
             }
-            if (matsu > 0 && Ds === 4) {
+            if (count_Matsu_class(fleet) > 0 && Ds === 4) {
                 return 'W';
             }
             return 'U';
         case 'D':
-            if (!isUnion) {
+            if (!is_fleet_combined(fleet_type)) {
                 if (is_fleet_speed_slow(speed)) {
                     return 'E';
                 }
@@ -130,17 +97,17 @@ export function calc_60_4(
                     return 'E';
                 }
                 return 'F';
-            } // isUnion
+            } // is_fleet_combined(fleet_type)
             return 'S';
         case 'G1':
-            if (Number(phase) > 1 && CL + CT > 0 && Ds > 1 && BBs + CVH < 3 && is_fleet_speed_fast_or_more(speed)) {
+            if (phase > 1 && CL + CT > 0 && Ds > 1 && BBs + CVH < 3 && is_fleet_speed_fast_or_more(speed)) {
                 return 'I';
             }
             return 'G2';
         case 'I':
             if (seek[3] < 70) {
                 return 'K';
-            } if (yamato > 0) {
+            } if (count_Yamato_class(fleet) > 0) {
                 return 'J';
             }
             if (CVH > 1) {
@@ -154,7 +121,7 @@ export function calc_60_4(
             }
             return 'L';
         case 'M':
-            if (yamato > 0) {
+            if (count_Yamato_class(fleet) > 0) {
                 return 'N';
             }
             if (CL + Ds > 4 && Ds > 1) {
@@ -170,7 +137,7 @@ export function calc_60_4(
             }
             return 'Q';
         case 'T':
-            if (isFaster) {
+            if (is_fleet_speed_faster_or_more(speed)) {
                 return 'U';
             }
             if (Ds > 5 && BBs + CVH < 3 && is_fleet_speed_fast_or_more(speed)) {
