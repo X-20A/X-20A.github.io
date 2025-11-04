@@ -1,49 +1,19 @@
 import { SimFleet } from "../../../models/fleet/SimFleet";
 import { PreSailNull } from "../../../types/brand";
 import { BranchResponse } from "../../../types";
-import { omission_of_conditions } from "..";
+import { destructuring_assignment_helper, omission_of_conditions } from "..";
 
 export function calc_6_5(
     node: string | PreSailNull,
     sim_fleet: SimFleet,
 ): BranchResponse[] | string {
     const {
-        adopt_fleet: fleet,
-    } = sim_fleet;
-
-    const {
-        seek,
-    } = fleet;
-
-    const {
-        BB,
-        BBV,
-        CV,
-        // CVB, // 単体で要求されることが無い
-        CVL,
-        CA,
-        CAV,
-        CL,
-        CLT,
-        CT,
-        DD,
-        DE,
-        // SS, // 単体で要求されることが無い
-        // SSV, // 単体で要求されることが無い
-        AV,
-        AO,
-        LHA,
-        AS,
-        // AR, // 使う機会が無い
-        BBs,
-        CVH,
-        CVs,
-        BBCVs,
-        CAs,
-        CLE,
-        Ds,
-        Ss,
-    } = fleet.composition;
+        fleet, fleet_type, ships_length, speed, seek, route,
+        drum_carrier_count, craft_carrier_count, radar_carrier_count,
+        arBulge_carrier_count, SBB_count,
+        BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,
+        AV, AO, LHA, AS, BBs, CVH, CVs, BBCVs, CAs, CLE, Ds, Ss,
+    } = destructuring_assignment_helper(sim_fleet);
 
     switch (node) {
         case null:
@@ -57,7 +27,12 @@ export function calc_6_5(
             }
             return 'F';
         case 'C':
-            if (DD === 0 || CLT > 1 || BBCVs > 3 || BBCVs + CAs > 4) {
+            if (
+                DD === 0 ||
+                CLT > 1 ||
+                BBCVs > 3 ||
+                BBCVs + CAs > 4
+            ) {
                 return 'E';
             }
             return 'D';
@@ -78,7 +53,12 @@ export function calc_6_5(
             if (DD > 1) {
                 return 'J';
             }
-            if (BBs === 0 && CVs + CAs < 5 && CVs < 3 && CAs < 5) {
+            if (
+                BBs === 0 &&
+                CVs + CAs < 5 &&
+                CVs < 3 &&
+                CAs < 5
+            ) {
                 return 'J';
             }
             return 'H';

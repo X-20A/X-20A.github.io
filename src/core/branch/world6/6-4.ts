@@ -1,7 +1,7 @@
 import { SimFleet } from "../../../models/fleet/SimFleet";
 import { PreSailNull } from "../../../types/brand";
 import { BranchResponse } from "../../../types";
-import { omission_of_conditions } from "..";
+import { destructuring_assignment_helper, omission_of_conditions } from "..";
 import { is_fleet_speed_fast_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
 import { is_flagship_CL, include_ship_names } from "../../../models/fleet/AdoptFleet";
 
@@ -10,49 +10,23 @@ export function calc_6_4(
     sim_fleet: SimFleet,
 ): BranchResponse[] | string {
     const {
-        adopt_fleet: fleet,
-    } = sim_fleet;
-
-    const {
-        speed,
-    } = fleet;
-
-    const {
-        BB,
-        BBV,
-        CV,
-        // CVB, // 単体で要求されることが無い
-        CVL,
-        CA,
-        CAV,
-        CL,
-        CLT,
-        CT,
-        DD,
-        DE,
-        // SS, // 単体で要求されることが無い
-        // SSV, // 単体で要求されることが無い
-        AV,
-        AO,
-        LHA,
-        AS,
-        // AR, // 使う機会が無い
-        BBs,
-        CVH,
-        CVs,
-        BBCVs,
-        CAs,
-        CLE,
-        Ds,
-        Ss,
-    } = fleet.composition;
+        fleet, fleet_type, ships_length, speed, seek, route,
+        drum_carrier_count, craft_carrier_count, radar_carrier_count,
+        arBulge_carrier_count, SBB_count,
+        BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,
+        AV, AO, LHA, AS, BBs, CVH, CVs, BBCVs, CAs, CLE, Ds, Ss,
+    } = destructuring_assignment_helper(sim_fleet);
 
     switch (node) {
         case null:
             if (LHA + CVs > 0) {
                 return '2';
             }
-            if (!include_ship_names(fleet, '長門改二') && !include_ship_names(fleet, '陸奥改二') && BBs === 2) {
+            if (
+                !include_ship_names(fleet, '長門改二') &&
+                !include_ship_names(fleet, '陸奥改二') &&
+                BBs === 2
+            ) {
                 return '2';
             }
             if (CAV > 2) {
@@ -92,10 +66,17 @@ export function calc_6_4(
             }
             return 'E';
         case 'E':
-            if (include_ship_names(fleet, '秋津洲') || include_ship_names(fleet, '如月')) {
+            if (
+                include_ship_names(fleet, '秋津洲') ||
+                include_ship_names(fleet, '如月')
+            ) {
                 return 'D';
             }
-            if (CAs < 2 && CL > 0 && is_fleet_speed_fast_or_more(speed)) {
+            if (
+                CAs < 2 &&
+                CL > 0 &&
+                is_fleet_speed_fast_or_more(speed)
+            ) {
                 return 'D';
             }
             return 'G';
