@@ -447,7 +447,7 @@ export const nomal_mock_datas: MockData[] = [
         option: {
             'phase': '2',
         },
-        deck: 'https://x-20a.github.io/compass/?pdz=N4IgbgpgTgzglgewHYgFwBYA0IAWBHAGzDQEYAmABmwDMS1QkBDAWwjREBpvEwMyDAotJGwAXNFRAw6qUHAAmpAKwBObETQKAbNggAPRmmqMCMCNjiCIzGPQC%2B2HAAc0cktkYwA7mgDsADmUBXAGMAa1IAZhsxMnoQGTR0NQ0QFVQFJRBtXVR9Q2MYswtrWwdUHxd3EX9gtEoImFDo2NQSdWViFN90nT0DIxN8y0kI%2BzQ1TzKPVFECQJDUOXDsGHQG2TmKROTUzS7UQSg-XNNzAeAh4rVnEFcJqZnHElq5FZGFLCS2rc7M7N6848LcMVvHJxhUkncmmpampnnNPBsPokMt0cn1-oMiqpQqDJpVZmRvLVPLCSOg3ps0sjdvtDv0AcNUKFLtcvLcqqgyAorBFqFEMSBqPV%2BdRloMrEA',
+        deck: 'https://x-20a.github.io/compass/?pdz=N4IgbgpgTgzglgewHYgFwBYA0IAWBHAGzDQEYAmABmwDMS1QkBDAWwjREBpvEwMyDAotJGwAXNFRAw6qUHAAmpAKwBObETQKAbNggAPRmmqMCMCNjiCIzGPQC%2B2HAAc0cktkYwA7mgDsADmUBXAGMAa1IAZhsxMnoQGTR0NQ0QFVQFJRBtXVR9Q2MYswtrWwdUHxd3EX9gtEoImFDo2NQSdWViFN90nT0DIxN8y0kI%2BzQ1TzKPVFECQJDUOXDsGHQG2TmKROTUzS7UQSg-XNNzAeAh4rVnEFcJqZnHElq5FZGFLCS2rc7M7N6848LcMVvHJxhUkncmmpampnnNPBsPokMt0cn1-pIYhIpKtQqFsFBqCIInAohjGt4xiACUSzqo8VdypNKrMyN5ap5YSR0G9Nmlkbt9od%2BgDhqhQpdrl5blVUGQFFYItRSacaPVBjRloMrEA',
     },
     {
         area: '61-3', routes: ['1-A-A1-A2-Q'],
