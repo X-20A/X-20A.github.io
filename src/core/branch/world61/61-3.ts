@@ -60,7 +60,11 @@ export function calc_61_3(
             }
             return 'C2';
         case 'G':
-            if (CVH <= 1 && CL >= 2 && is_fleet_speed_fast_or_more(speed)) {
+            if (
+                CVH <= 1 &&
+                CL >= 2 &&
+                is_fleet_speed_fast_or_more(speed)
+            ) {
                 return 'G2';
             }
             return 'G1';
@@ -73,7 +77,11 @@ export function calc_61_3(
             }
             return 'U';
         case 'H':
-            if (CL >= 2 && Ds >= 5 && is_fleet_speed_fast_or_more(speed)) {
+            if (
+                CL >= 2 &&
+                Ds >= 5 &&
+                is_fleet_speed_fast_or_more(speed)
+            ) {
                 return 'J';
             }
             return 'I';

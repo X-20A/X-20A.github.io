@@ -32,7 +32,7 @@ export function calc_61_1(
             if (Ds >= 3) {
                 return 'E';
             }
-            if (CL >= 1 && DD >= 2) {
+            if (BBs <= 1 && CL >= 1 && Ds >= 2) {
                 return 'E';
             }
             return 'C';
@@ -47,7 +47,7 @@ export function calc_61_1(
                 if (CL >= 1 && Ds >= 2) {
                     return 'I';
                 }
-                if (BB + CVs <= 1 && Ds >= 2) {
+                if (CVs <= 1 && Ds >= 2) {
                     return 'I';
                 }
                 return 'H';
@@ -83,9 +83,15 @@ export function calc_61_1(
             if (Ds >= 6) {
                 return 'Q';
             }
+            if (Ds === 5&& ships_length <= 6) {
+                return 'Q';
+            }
             return 'L';
         case 'M':
             if (phase === 1) {
+                return 'N';
+            }
+            if (BBCVs >= 3) {
                 return 'N';
             }
             if (BBs >= 2) {
@@ -94,7 +100,13 @@ export function calc_61_1(
             if (CVH >= 1) {
                 return 'N';
             }
-            if (CL + Ds >= 4) {
+            if (Ds >= 4) {
+                return 'O';
+            }
+            if (CL >= 1 && Ds === 3) {
+                return 'O';
+            }
+            if (CL >= 1 && Ds === 2 && is_fleet_speed_fast_or_more(speed)) {
                 return 'O';
             }
             return 'N';
@@ -108,8 +120,20 @@ export function calc_61_1(
             if (CVs >= 3) {
                 return 'Q';
             }
+            if (CAs >= 3) {
+                return 'Q';
+            }
+            if (Ds === 0) {
+                return 'Q';
+            }
             if (CVs === 2) {
                 return 'R';
+            }
+            if (CAs === 2) {
+                return 'R';
+            }
+            if (CL >= 1 && Ds >= 5) {
+                return 'S';
             }
             if (CL >= 1 && Ds >= 3 && is_fleet_speed_fast_or_more(speed)) {
                 return 'S';
@@ -124,10 +148,10 @@ export function calc_61_1(
             }
             return 'R';
         case 'T':
-            if (DD === 7 && seek[3] >= 75) {
+            if (DD === 7 && seek[3] >= 70) {
                 return 'V';
             }
-            if (DD <= 6 && seek[3] >= 85) {
+            if (DD <= 6 && seek[3] >= 82) {
                 return 'V';
             }
             return 'U';

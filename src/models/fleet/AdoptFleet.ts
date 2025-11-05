@@ -2,7 +2,6 @@ import { ST as ShipType } from "../../data/ship";
 import type { FleetComponent } from "./FleetComponent";
 import { type Composition, derive_composition } from "../../models/Composition";
 import { Seek } from "../../types";
-import { ShipId } from "../../types/shipId";
 import { extract_ships_from_fleet_unit } from "./FleetUnit";
 import { ShipName } from "../../types/shipName";
 import { Ft as FleetType } from "./predicate";

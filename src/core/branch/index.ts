@@ -29,6 +29,11 @@ export function omission_of_conditions(
     throw new CustomError('条件漏れ');
 }
 
+/**
+ * 分割代入支援
+ * @param fleet 
+ * @returns 
+ */
 export function destructuring_assignment_helper(
     fleet: SimFleet,
 ) {
