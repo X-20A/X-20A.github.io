@@ -31,20 +31,40 @@ export function calc_61_2(
             return '2' // is_fleet_combined(fleet_type)
         case '2':
             if (is_fleet_transport(fleet_type)) {
+                if (BBV === 2) {
+                    return 'N';
+                }
                 return 'K';
             }
+            // 空母機動部隊, 水上打撃部隊
+            // 通常艦隊は出撃地点で除かれる
+            if (is_fleet_speed_faster_or_more(speed)) {
+                return 'K';
+            }
+            if (BBCVs >= 5) {
+                return 'N';
+            }
             if (BBs + CVH >= 4) {
+                return 'N';
+            }
+            if (BBs >= 3) {
                 return 'N';
             }
             if (CVH >= 3) {
                 return 'N';
             }
-            if (DD <= 4 && is_fleet_speed_slow(speed)) {
-                return 'N';
+            if (Ds >= 5) {
+                return 'K';
             }
-            return 'K';
+            if (CL + Ds >= 5 && is_fleet_speed_fast_or_more(speed)) {
+                return 'K';
+            }
+            return 'N';
         case 'B':
-            return 'D';
+            if (seek[3] >= 85) {
+                return 'D';
+            }
+            return 'C';
         case 'D':
             if (is_fleet_speed_fast_or_more(speed)) {
                 return 'K';
@@ -55,32 +75,67 @@ export function calc_61_2(
             if (CVH >= 1) {
                 return 'K';
             }
+            if (AV >= 2) {
+                return 'K';
+            }
             return 'E';
         case 'F':
-            return 'I';
+            if (CVs >= 3) {
+                return 'G';
+            }
+            if (Ds <= 2) {
+                return 'G';
+            }
+            if (Ds >= 5) {
+                return 'I';
+            }
+            if (seek[3] >= 85) {
+                return 'I';
+            }
+            return 'G';
         case 'G':
-            return 'I';
+            if (seek[3] >= 85) {
+                return 'I';
+            }
+            return 'H';
         case 'K':
-            if (!is_fleet_combined(fleet_type)) {
-                if (is_fleet_speed_fast_or_more(speed)) {
+            if(!is_fleet_combined(fleet_type)) {
+                if (is_fleet_speed_slow(speed)) {
+                    return 'E';
+                }
+                if (CL >= 1) {
                     return 'L';
                 }
-                return 'E'; // 低速
-            }
-            // 連合艦隊
-            if (phase === 1) {
-                return 'O';
-            }
-            if (is_fleet_transport(fleet_type)) {
-                return 'P';
-            }
-            if (is_fleet_speed_faster_or_more(speed)) {
-                return 'P';
+                if (Ds >= 2) {
+                    return 'L';
+                }
+                return 'E';
             }
             if (is_fleet_surface(fleet_type)) {
                 return 'L';
             }
-            if (BBs <= 1 && CVH <= 1 && CVs <= 2 && Ds >= 4 &&
+            if (is_fleet_transport(fleet_type)) {
+                if (phase === 1) {
+                    return 'O';
+                }
+                if (BBV === 0) {
+                    return 'P';
+                }
+                return 'O';
+            }
+            // 空母機動部隊
+            if (phase <= 2) {
+                return 'O';
+            }
+            if (is_fleet_speed_faster_or_more(speed)) {
+                return 'P';
+            }
+            if (
+                BBs <= 1 &&
+                CVH <= 1 &&
+                CVs <= 2 &&
+                CAs <= 2 &&
+                Ds >= 4 &&
                 is_fleet_speed_fast_or_more(speed)
             ) {
                 return 'P';
@@ -92,12 +147,12 @@ export function calc_61_2(
             }
             return 'O'; // 聯合艦隊
         case 'T':
-            if (is_fleet_transport(fleet_type) && seek[1] >= 36) {
+            if (is_fleet_transport(fleet_type) && seek[1] >= 32) {
                 return 'V';
             }
             if (
                 (is_fleet_carrier(fleet_type) || is_fleet_surface(fleet_type)) &&
-                seek[1] >= 76
+                seek[1] >= 63
             ) {
                 return 'V';
             }
@@ -106,10 +161,25 @@ export function calc_61_2(
             if (phase <= 2) {
                 return 'W';
             }
+            if (BBs >= 4) {
+                return 'W';
+            }
+            if (CVs >= 4) {
+                return 'W';
+            }
+            if (
+                (is_fleet_carrier(fleet_type) || is_fleet_surface(fleet_type)) &&
+                Ds >= 5
+            ) {
+                return 'Y';
+            }
             if (AV >= 2) {
                 return 'W';
             }
-            if (CVs >= 3 && Ds <= 4) {
+            if (BBs >= 3) {
+                return 'W';
+            }
+            if (CVs >= 3) {
                 return 'W';
             }
             return 'Y';

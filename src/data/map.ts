@@ -165,7 +165,6 @@ export const WARNING_NODE_DATAS: Record<string, string[] > = {
     "60-4": ["U"],
     "60-5": ["F", "V"],
     "60-6": ["D", "N", "O1", "S", "T", "X"],
-    "61-2": ["B", "F", "G"],
     "61-3": ["C1", "I", "K", "R", "R2", "Y"],
 }; // @expansion
 // "": ["", "", "", "", "", "", "", ""],
