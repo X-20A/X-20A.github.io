@@ -975,6 +975,54 @@ const templates: Ttemplate[] = [
         "token": "nOrajB5FBjQ",
         "memo": "基地: 2部隊ボス集中$e第二警戒タッチ想定"
     },
+    {
+        "title": "61-3_EHIJKM_M削り",
+        "world": 61,
+        "area": 3,
+        "route": "2-E-F-H-I-J-K-M",
+        "token": "m3pozuLtA9I",
+        "memo": "基地: 2部隊ボス集中$e第四警戒タッチ想定"
+    },
+    {
+        "title": "61-3_EHIJKM_M破壊",
+        "world": 61,
+        "area": 3,
+        "route": "2-E-F-H-I-J-K-M",
+        "token": "pGc6_b2XZ8a",
+        "memo": "基地: 2部隊ボス集中$e第四警戒タッチ想定"
+    },
+    {
+        "title": "61-3_ABCTW_W削り",
+        "world": 61,
+        "area": 3,
+        "route": "1-A-A1-B-C-T-W",
+        "token": "N1jgDX3oxo6",
+        "memo": "基地: 2部隊ボス集中"
+    },
+    {
+        "title": "61-3_ABCTW_W破壊",
+        "world": 61,
+        "area": 3,
+        "route": "1-A-A1-B-C-T-W",
+        "token": "rfhCD0rlyeu",
+        "memo": "基地: 2部隊ボス集中"
+    },
+    {
+        "title": "61-3_NVXOZ_Z削り",
+        "world": 61,
+        "area": 3,
+        "route": "1-N-V-X-O-Z",
+        "token": "w36ezN3MpOA",
+        "memo": "基地: 2部隊ボス集中$e第二警戒タッチ想定"
+    },
+    {
+        "title": "61-3_NVXOZ_Z破壊_破砕無",
+        "world": 61,
+        "area": 3,
+        "route": "1-N-V-X-O-Z",
+        "token": "siYbIZu0yM1",
+        "memo": "基地: 2部隊ボス集中$e第二警戒タッチ想定"
+    },
 ]; // @expansion
 /*
 {
