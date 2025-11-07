@@ -59,16 +59,19 @@ export function calc_61_3(
             if (phase === 1) {
                 return 'C1';
             }
-            if (BBs >= 2 && is_fleet_speed_slow(speed)) {
+            if (CL + AV === 0) {
                 return 'C1';
             }
             if (Ds <= 1) {
                 return 'C1';
             }
-            if (CL + AV === 0) {
-                return 'C1';
+            if (is_fleet_speed_fast_or_more(speed)) {
+                return 'T';
             }
-            return 'T';
+            if (BBs <= 1 && Ds >= 3) {
+                return 'T';
+            }
+            return 'C1';
         case 'C1':
             if (phase === 1) {
                 return 'C2';
