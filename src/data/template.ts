@@ -935,6 +935,46 @@ const templates: Ttemplate[] = [
         "token": "-iIGY12hVpl",
         "memo": "基地: ボス集中"
     },
+    {
+        "title": "61-2_BDKLM_M削り",
+        "world": 61,
+        "area": 2,
+        "route": "1-A-B-D-K-L-M",
+        "token": "tJhx21O7K64",
+        "memo": "基地: 2部隊ボス集中"
+    },
+    {
+        "title": "61-2_BDKLM_M破壊",
+        "world": 61,
+        "area": 2,
+        "route": "1-A-B-D-K-L-M",
+        "token": "vDlAKUNS3LH",
+        "memo": "基地: 2部隊ボス集中"
+    },
+    {
+        "title": "61-2_KQTVX_X輸送",
+        "world": 61,
+        "area": 2,
+        "route": "2-K-P-Q-T-V-W-X",
+        "token": "-eGdwaeOOje",
+        "memo": "基地: 2部隊ボス集中"
+    },
+    {
+        "title": "61-2_KOQTVY_Y削り",
+        "world": 61,
+        "area": 2,
+        "route": "2-K-O-P-Q-T-V-Y",
+        "token": "8DP-0URMwcK",
+        "memo": "基地: 2部隊ボス集中$e第二警戒タッチ想定"
+    },
+    {
+        "title": "61-2_KOQTVY_Y破壊_破砕なし",
+        "world": 61,
+        "area": 2,
+        "route": "2-K-O-P-Q-T-V-Y",
+        "token": "nOrajB5FBjQ",
+        "memo": "基地: 2部隊ボス集中$e第二警戒タッチ想定"
+    },
 ]; // @expansion
 /*
 {
