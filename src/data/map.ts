@@ -1,6 +1,7 @@
 import type {
     NodeDatas,
     EdgeDatas,
+    AreaId,
 } from '../types';
 
 /** Node種別ID */
@@ -153,12 +154,10 @@ export const NODE_DATAS: NodeDatas = {
     // "61-4":
 
     // "61-5":
-
-    // "61-6":
 }; // @expansion
 
 /** 暫定度が高いNode 「!」を表示する */
-export const WARNING_NODE_DATAS: Record<string, string[] > = {
+export const WARNING_NODE_DATAS: Partial<Record<AreaId, string[]>> = {
     "7-4": ["G"],
     "59-4": ["F", "G", "J"],
     "59-5": ["J", "Z1"],
@@ -281,6 +280,4 @@ export const EDGE_DATAS: EdgeDatas = {
     // "61-4":
 
     // "61-5":
-
-    // "61-6":
 }; // @expansion
