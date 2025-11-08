@@ -129,6 +129,16 @@
 					<span>{{ adoptFleet.seek[3] }}</span>
 				</p>
 			</div>
+			<p v-if="is_target_world([61])" style="color: red;font-size: 15px;">
+				イベント海域の分岐条件は暫定的で随時更新されます
+				<a
+					href="https://x.com/momemi_kc/status/1985248128975671483"
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					更新履歴
+				</a>
+			</p>
 		</div>
 		<div class="result-container">
 			<template v-if="simResult.length > 0">
