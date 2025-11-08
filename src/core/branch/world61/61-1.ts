@@ -53,7 +53,7 @@ export function calc_61_1(
                 return 'H';
             }
             if (is_fleet_speed_slow(speed)) {
-                if (CL >= 1 && Ds >= 3) {
+                if (BBs <= 2 && CL >= 1 && Ds >= 3) {
                     return 'I';
                 }
                 return 'H';
@@ -66,10 +66,10 @@ export function calc_61_1(
             if (phase === 3 && DD === 7) {
                 return 'K';
             }
-            if (CL >= 1 && DD >= 2) {
+            if (CL >= 1 && Ds >= 2) {
                 return 'L';
             }
-            if (DD >= 2 && is_fleet_speed_fast_or_more(speed)) {
+            if (Ds >= 2 && is_fleet_speed_fast_or_more(speed)) {
                 return 'L';
             }
             return 'K';
@@ -83,7 +83,10 @@ export function calc_61_1(
             if (Ds >= 6) {
                 return 'Q';
             }
-            if (Ds === 5&& ships_length <= 6) {
+            if (Ds === 5 && ships_length <= 6) {
+                return 'Q';
+            }
+            if (Ds === 4 && ships_length <= 5) {
                 return 'Q';
             }
             return 'L';
@@ -140,13 +143,16 @@ export function calc_61_1(
             }
             return 'R';
         case 'Q':
-            if (BBs >= 3) {
-                return 'S';
+            if (BBCVs >= 4) {
+                return 'R';
             }
-            if (Ds >= 6) {
-                return 'S';
+            if (CVs >= 2) {
+                return 'R';
             }
-            return 'R';
+            if (BBs >= 3 && is_fleet_speed_slow(speed)) {
+                return 'R';
+            }
+            return 'S';
         case 'T':
             if (DD === 7 && seek[3] >= 70) {
                 return 'V';
