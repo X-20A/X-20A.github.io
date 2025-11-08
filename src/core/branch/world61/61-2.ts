@@ -89,17 +89,20 @@ export function calc_61_2(
             if (Ds >= 5) {
                 return 'I';
             }
-            if (seek[3] >= 85) {
+            if (seek[3] >= 89) {
                 return 'I';
             }
             return 'G';
         case 'G':
-            if (seek[3] >= 85) {
+            if (seek[3] >= 83) {
                 return 'I';
             }
             return 'H';
         case 'K':
             if(!is_fleet_combined(fleet_type)) {
+                if (BBs <= 1 && CVH === 0 && CL >= 1 && Ds >= 3) {
+                    return 'L';
+                }
                 if (is_fleet_speed_slow(speed)) {
                     return 'E';
                 }
@@ -164,16 +167,13 @@ export function calc_61_2(
             if (BBs >= 4) {
                 return 'W';
             }
-            if (CVs >= 4) {
-                return 'W';
-            }
             if (
                 (is_fleet_carrier(fleet_type) || is_fleet_surface(fleet_type)) &&
                 Ds >= 5
             ) {
                 return 'Y';
             }
-            if (AV >= 2) {
+            if (AV + AO + LHA >= 2) {
                 return 'W';
             }
             if (BBs >= 3) {
