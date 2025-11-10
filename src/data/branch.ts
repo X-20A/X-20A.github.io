@@ -698,7 +698,7 @@ const BRANCH_TEXTS: BranchType = {
         "A1": ACTIVE_PROGRESS,
         "F": ACTIVE_PROGRESS,
     },
-}; // @expansion
+} as const; // @expansion
 /*
 '': {
     "": "",
