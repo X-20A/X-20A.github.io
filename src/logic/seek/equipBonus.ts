@@ -2,7 +2,8 @@ import
 { NA as National, ST as ShipType }
     from '../../data/ship';
 import { includes_equip_id, type Equip } from '../../models/Equip';
-import { includes_ship_name, some_startsWith_ship_name, startsWith_ship_name } from '../../models/ship/NakedShip';
+import { some_startsWith_ship_name, startsWith_ship_name } from '../../models/ship/NakedShip';
+import { includes_ship_name } from '../../models/ship/predicate';
 import { Brand } from '../../types';
 import { EquipId } from '../../types/equipId';
 import { ShipName } from '../../types/shipName';

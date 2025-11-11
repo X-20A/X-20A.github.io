@@ -76,32 +76,6 @@ export function derive_naked_ship(
 }
 
 /**
- * 艦IDが含まれるか判定して返す
- * @param match_ids 
- * @param search_id 
- * @returns 
- */
-export function includes_ship_id(
-    match_ids: ShipId[],
-    search_id: ShipId
-): boolean {
-    return match_ids.includes(search_id);
-}
-
-/**
- * 艦名が含まれるか判定して返す
- * @param match_names 
- * @param search_name 
- * @returns 
- */
-export function includes_ship_name(
-    match_names: ShipName[],
-    search_name: ShipName,
-): boolean {
-    return match_names.includes(search_name);
-}
-
-/**
  * 艦名の前方一致
  * @param match_name 
  * @param search_name 
