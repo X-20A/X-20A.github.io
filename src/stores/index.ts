@@ -113,18 +113,18 @@ export const useStore = defineStore('compass', {
                     if (json.options) {
                         // Const.OPTIONS に json.options をマージ
                         const parsed_options = parseOptionsType(json.options);
-                        this.UPDATE_OPTIONS({ ...Const.OPTIONS, ...(parsed_options ?? {}) });
+                        this.UPDATE_OPTIONS({ ...Const.DEFAULT_OPTIONS, ...(parsed_options ?? {}) });
                     } else {
                         // Const.OPTIONS をそのまま渡す
-                        this.UPDATE_OPTIONS(Const.OPTIONS);
+                        this.UPDATE_OPTIONS(Const.DEFAULT_OPTIONS);
                     }
                 } catch (e) {
                     // エラーが発生した場合も Const.OPTIONS をそのまま渡す
-                    this.UPDATE_OPTIONS(Const.OPTIONS);
+                    this.UPDATE_OPTIONS(Const.DEFAULT_OPTIONS);
                 }
             } else {
                 // データがない場合も Const.OPTIONS をそのまま渡す
-                this.UPDATE_OPTIONS(Const.OPTIONS);
+                this.UPDATE_OPTIONS(Const.DEFAULT_OPTIONS);
             }
         },
         /**

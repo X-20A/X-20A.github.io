@@ -47,7 +47,7 @@ export type AreaId = // @expansion
     | '58-1' | '58-2' | '58-3' | '58-4'
     | '59-1' | '59-2' | '59-3' | '59-4' | '59-5'
     | '60-1' | '60-2' | '60-3' | '60-4' | '60-5' | '60-6'
-    | '61-1' | '61-2' | '61-3' //| '61-4' //| '61-5'
+    | '61-1' | '61-2' | '61-3' | '61-4' //| '61-5'
 
 export type BranchResponse = {
     node: string;
@@ -59,21 +59,19 @@ export type SimResult = {
     rate: Big;
 }
 
-export type NodeData = [
+export type NodeData = Record<string, [
+    /** x座標 */
     number,
+    /** y座標 */
     number,
-    NodeType,
-];
-export type NodeDatas = {
-    [key: string]: {
-        [innerKey: string]: NodeData;
-    }
-}
+    /** ノードの種類 */
+    NodeType
+]>
+
+export type NodeDatas = Record<AreaId, NodeData>
 
 export type EdgeData = [string, string];
-export type EdgeDatas = {
-    [key: string]: EdgeData[];
-};
+export type EdgeDatas = Record<AreaId, EdgeData[]>
 
 export type CyStyle = {
     selector: string;

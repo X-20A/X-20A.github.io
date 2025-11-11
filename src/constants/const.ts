@@ -24,7 +24,7 @@ export default class Const {
     /**
      * getterからコピーを取得できる
      */
-    private static readonly _OPTIONS: OptionsType = {
+    private static readonly _DEFAULT_OPTIONS: OptionsType = {
         '4-5': { 'A': 'D', 'C': 'F', 'I': 'J' },
         '5-3': { 'O': 'K' },
         '5-5': { 'F': 'D' },
@@ -52,15 +52,15 @@ export default class Const {
         '61-1': { 'phase': '1', 'A': 'B', 'F': 'G', 'L': 'M' },
         '61-2': { 'phase': '1', 'A': 'B' },
         '61-3': { 'phase': '1', 'A1': 'A2', 'F': 'G' },
-        //'61-4': {},
+        '61-4': { 'phase': '1', 'C': 'D' },
         //'61-5': {},
     };  // @expansion
 
     /**
      * オプションの初期値
      */
-    static get OPTIONS() {
-        return structuredClone(Const._OPTIONS);
+    static get DEFAULT_OPTIONS() {
+        return structuredClone(Const._DEFAULT_OPTIONS);
     }
 }
 

@@ -26,7 +26,7 @@ describe('Simテスト', () => {
             const adoptFleet = simSet.adoptFleet;
             const areaIds = simSet.areaIds;
             const selectableOptions = simSet.options;
-            const defaultOptions = Const.OPTIONS;
+            const defaultOptions = Const.DEFAULT_OPTIONS;
 
             // 各シミュレーション実行用関数
             const runSim = async (
@@ -143,7 +143,7 @@ describe('Simテスト', () => {
                         mock_option[node] = nodes[index + 1];
                     }
                 }
-                const options = Const.OPTIONS;
+                const options = Const.DEFAULT_OPTIONS;
                 options[area_id] = { ...options[area_id], ...mock_option };
 
                 const command_evacuations: CommandEvacuation[] = []; // 退避設定はなし

@@ -915,6 +915,17 @@ const SHIP_DATAS: ShipDatas = {
 ,1027:{name:'Glorious',type:ST.CV,seek:0,seek2:0,na:NA.Norge,sg:SG.FastB2}
 ,740:{name:'Glorious改',type:ST.BB,seek:0,seek2:0,na:NA.Norge,sg:SG.FastB2}
 ,741:{name:'Glorious改',type:ST.CV,seek:0,seek2:0,na:NA.Norge,sg:SG.FastB2}
-}; // @expansion
 
+,993:{name:'樫',type:ST.DD,seek:0,seek2:0,na:NA.Japan,sg:SG.FastB2}
+,742:{name:'樫改',type:ST.DD,seek:0,seek2:0,na:NA.Japan,sg:SG.FastB2}
+,985:{name:'Dace',type:ST.SS,seek:0,seek2:0,na:NA.USA,sg:SG.SlowC}
+,990:{name:'Dace改',type:ST.SS,seek:0,seek2:0,na:NA.USA,sg:SG.SlowC}
+,1007:{name:'Leonardo da Vinci',type:ST.SS,seek:0,seek2:0,na:NA.USA,sg:SG.SlowC}
+,988:{name:'南海',type:ST.AO,seek:0,seek2:0,na:NA.Japan,sg:SG.SlowB}
+,996:{name:'野埼',type:ST.AO,seek:0,seek2:0,na:NA.Japan,sg:SG.SlowB}
+,1002:{name:'野埼改',type:ST.AO,seek:0,seek2:0,na:NA.Japan,sg:SG.SlowB}
+,1025:{name:'Wasp',type:ST.CV,seek:0,seek2:0,na:NA.USA,sg:SG.FastB2}
+,1030:{name:'Wasp改',type:ST.CV,seek:0,seek2:0,na:NA.USA,sg:SG.FastB2}
+}; // @expansion
+//,_:{name:'',type:ST.,seek:0,seek2:0,na:NA.,sg:SG.}
 export default SHIP_DATAS;
