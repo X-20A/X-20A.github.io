@@ -177,7 +177,7 @@ export const useStore = defineStore('compass', {
             this.commandEvacuations = evacuations;
         },
         CLEAR_ROUTES(): void {
-            this.simResult = [Const.EMPTY_SIM_RESULT];
+            this.UPDATE_SIM_RESULT([Const.EMPTY_SIM_RESULT]);
         }
 	},
 });
