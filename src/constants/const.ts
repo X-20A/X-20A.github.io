@@ -1,4 +1,5 @@
-import type { OptionsType } from '../types'
+import Big from 'big.js';
+import type { OptionsType, SimResult } from '../types'
 import { EquipName } from '../types/equipName';
 
 /**
@@ -59,8 +60,15 @@ export default class Const {
     /**
      * オプションの初期値
      */
-    static get DEFAULT_OPTIONS() {
+    static get DEFAULT_OPTIONS(): OptionsType {
         return structuredClone(Const._DEFAULT_OPTIONS);
+    }
+
+    static get EMPTY_SIM_RESULT(): SimResult {
+        return {
+            route: [],
+            rate: new Big(0),
+        };
     }
 }
 

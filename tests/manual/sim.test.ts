@@ -15,6 +15,7 @@ import { NODE_DATAS, NT as NodeType } from '../../src/data/map';
 import type { CommandEvacuation } from '../../src/core/CommandEvacuation';
 import { getSimSet } from './setup';
 import { Ft } from '../../src/models/fleet/predicate';
+import { DisallowToSortie } from '../../src/errors/CustomError';
 
 describe('Simテスト', () => {
     it(`rand-test: ランダムに生成した艦隊をSimクラスに渡してクラス内でエラーが発生しないこと、
@@ -55,53 +56,57 @@ describe('Simテスト', () => {
             let debug_area_id: AreaId = '1-1';
             let debug_option: Record<string, string> | undefined;
 
-            try {
-                for (const area_id of areaIds) { // area_idは任意に再設定できるように
+            // TODO: きたな～い！
+            for (const area_id of areaIds) { // area_idは任意に再設定できるように
+                try {
                     // area_id = '60-1';
                     debug_area_id = area_id;
                     // console.log('テスト海域: ', area_id);
                     // if (adoptFleet.fleet_type_id > 0 && Number(area_id.split('-')[0]) > 7) continue; // 連合艦隊なら通常海域除外
-                    if (selectableOptions[area_id]) {
-                        // 該当海域に選択肢がある場合、キーごとに全組み合わせを生成する
-                        const area_option = selectableOptions[area_id];
-                        const keys = Object.keys(area_option);
-                        // 各キーに対して、{ key, value }の形で配列を作成
-                        const optionsPerKey = keys.map(key =>
-                            area_option[key].map(value => ({ key, value }))
-                        );
-                        // キーごとの全組み合わせを生成
-                        const combinations = cartesian(optionsPerKey);
-
-                        // 各組み合わせごとにシミュレーションを実行
-                        for (const combination of combinations) {
-                            // defaultOptionsをコピーして更新
-                            const updatedOptions = { ...defaultOptions };
-                            if (!updatedOptions[area_id]) {
-                                updatedOptions[area_id] = {};
-                            }
-                            for (const { key, value } of combination) {
-                                updatedOptions[area_id]![key] = value;
-                            }
-                            debug_option = updatedOptions[area_id];
-                            // console.log('option: ', updatedOptions[area_id]);
-                            await runSim(area_id, updatedOptions);
-
-                            // throw new Error('エラー時処理テスト');
-                        }
-                    } else {
+                    if (!selectableOptions[area_id]) {
                         // 選択肢がなければデフォルトで実行
                         await runSim(area_id, defaultOptions);
+                        continue;
                     }
+
+                    // 該当海域にオプションがある場合、キーごとに全組み合わせを生成する
+                    const area_option = selectableOptions[area_id];
+                    const keys = Object.keys(area_option);
+                    // 各キーに対して、{ key, value }の形で配列を作成
+                    const optionsPerKey = keys.map(key =>
+                        area_option[key].map(value => ({ key, value }))
+                    );
+                    // キーごとの全組み合わせを生成
+                    const combinations = cartesian(optionsPerKey);
+
+                    // 各組み合わせごとにシミュレーションを実行
+                    for (const combination of combinations) {
+                        // defaultOptionsをコピーして更新
+                        const updatedOptions = { ...defaultOptions };
+                        if (!updatedOptions[area_id]) {
+                            updatedOptions[area_id] = {};
+                        }
+                        for (const { key, value } of combination) {
+                            updatedOptions[area_id]![key] = value;
+                        }
+                        debug_option = updatedOptions[area_id];
+                        // console.log('option: ', updatedOptions[area_id]);
+                        await runSim(area_id, updatedOptions);
+
+                        // throw new Error('エラー時処理テスト');
+                    }
+                } catch (error) {
+                    if (error instanceof DisallowToSortie) continue;
+                    
+                    console.error('Error occurred:', error);
+                    console.log('area: ', debug_area_id);
+                    console.log('option: ', debug_option);
+                    console.log(calc_main_fleet_ship_names(adoptFleet));
+                    if (adoptFleet.fleet_type > 0) console.log(calc_escort_fleet_ship_names(adoptFleet));
+                    console.log(adoptFleet.fleet_type);
+                    console.log(JSON.stringify(simSet.deck));
+                    throw error;
                 }
-            } catch (error) {
-                console.error('Error occurred:', error);
-                console.log('area: ', debug_area_id);
-                console.log('option: ', debug_option);
-                console.log(calc_main_fleet_ship_names(adoptFleet));
-                if (adoptFleet.fleet_type > 0) console.log(calc_escort_fleet_ship_names(adoptFleet));
-                console.log(adoptFleet.fleet_type);
-                console.log(JSON.stringify(simSet.deck));
-                throw error;
             }
 
             limit++;
@@ -147,7 +152,7 @@ describe('Simテスト', () => {
                 options[area_id] = { ...options[area_id], ...mock_option };
 
                 const command_evacuations: CommandEvacuation[] = []; // 退避設定はなし
-                
+
                 const executor = derive_sim_executer(adoptFleet, area_id, options, command_evacuations);
                 const result = start_sim(executor, adoptFleet, command_evacuations);
                 const actual_route = result[0].route.join('-');

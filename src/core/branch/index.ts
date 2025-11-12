@@ -1,7 +1,7 @@
 import type { PreSailNull } from '../../types/brand';
 import type { SimFleet } from '../../models/fleet/SimFleet';
 import type { AreaId, BranchResponse } from '../../types';
-import CustomError from '../../errors/CustomError';
+import { OmissionOfConditions } from '../../errors/CustomError';
 import { calc_1_1, calc_1_2, calc_1_3, calc_1_4, calc_1_5, calc_1_6 } from './world1/';
 import { calc_2_1, calc_2_2, calc_2_3, calc_2_4, calc_2_5 } from './world2';
 import { calc_3_1, calc_3_2, calc_3_3, calc_3_4, calc_3_5 } from './world3';
@@ -148,7 +148,7 @@ export function omission_of_conditions(
 ): never {
     console.log('node: ', node);
     console.log('route: ', sim_fleet.route);
-    throw new CustomError('条件漏れ');
+    throw new OmissionOfConditions('条件漏れ');
 }
 
 /**

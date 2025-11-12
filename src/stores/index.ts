@@ -176,6 +176,9 @@ export const useStore = defineStore('compass', {
         UPDATE_COMMAND_EVACUATIONS(evacuations: CommandEvacuation[]): void {
             this.commandEvacuations = evacuations;
         },
+        CLEAR_ROUTES(): void {
+            this.simResult = [Const.EMPTY_SIM_RESULT];
+        }
 	},
 });
 

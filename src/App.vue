@@ -2,7 +2,7 @@
 	<Header />
 	<div class="container">
 		<button class="design-button area-select-button" @pointerdown="showArea">
-			{{ selectedArea ? '海域: ' + selectedArea : '海域'}}
+			{{ selectedArea ? '海域: ' + selectedArea : '海域' }}
 		</button>
 		<div class="upper-container">
 			<div class="input-container">
@@ -131,11 +131,7 @@
 			</div>
 			<p v-if="is_target_world([61])" style="color: red;font-size: 15px;">
 				イベント海域の分岐条件は暫定的で随時更新されます
-				<a
-					href="https://x.com/momemi_kc/status/1985248128975671483"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
+				<a href="https://x.com/momemi_kc/status/1985248128975671483" target="_blank" rel="noopener noreferrer">
 					更新履歴
 				</a>
 			</p>
@@ -152,9 +148,9 @@
 		</div>
 	</div>
 	<div v-if="isAreaVisible
-			|| isRefferenceVisible
-			|| isErrorVisible
-			|| isCommandEvacuationVisible" class="modal-overlay" @pointerdown="closeModals">
+		|| isRefferenceVisible
+		|| isErrorVisible
+		|| isCommandEvacuationVisible" class="modal-overlay" @pointerdown="closeModals">
 		<Area />
 		<Refference />
 		<ErrorView />
@@ -191,7 +187,7 @@ import ErrorView from './components/modals/ErrorView.vue';
 import CommandEvacuation from './components/modals/CommandEvacuation.vue';
 import SvgIcon from './components/SvgIcon.vue';
 import type { SelectedType } from './types';
-import CustomError from './errors/CustomError';
+import CustomError, { DisallowToSortie } from './errors/CustomError';
 import {
 	derive_FleetComponents_from_DeckBuilder,
 	derive_DeckBuilder_from_AdoptFleet,
@@ -339,6 +335,7 @@ watch(fleetInput, (text) => {
 	try {
 		load_fleet(text);
 	} catch (e: unknown) {
+		store.CLEAR_ROUTES();
 		modalStore.SHOW_ERROR(e);
 		console.error(e);
 		return;
@@ -380,6 +377,7 @@ const load_fleet = (deck_string: string): void => {
 		}
 		adjustFleetType(selected_type);
 	} catch (e) {
+		store.CLEAR_ROUTES();
 		modalStore.SHOW_ERROR(e);
 		console.error(e);
 		return;
@@ -406,6 +404,7 @@ const adjustFleetType = (selected_type_number: number) => { // 入力系とimpor
 		store.UPDATE_SELECTED_TYPE(selected_type);
 		store.SAVE_DATA();
 	} catch (e: unknown) {
+		store.CLEAR_ROUTES();
 		modalStore.SHOW_ERROR(e);
 		console.error(e);
 		return;
@@ -437,10 +436,11 @@ watch([fleetComponents, selectedType], () => {
 
 		store.UPDATE_ADOPT_FLEET(adopt_fleet);
 	} catch (e: unknown) {
-			modalStore.SHOW_ERROR(e);
-			console.error(e);
-			return;
-		}
+		store.CLEAR_ROUTES();
+		modalStore.SHOW_ERROR(e);
+		console.error(e);
+		return;
+	}
 });
 
 watch([adoptFleet, selectedArea], () => {
@@ -474,7 +474,10 @@ watch([adoptFleet, selectedArea, options, commandEvacuations], async () => {
 		// console.timeEnd('シミュ計測');
 		store.UPDATE_SIM_RESULT(result);
 	} catch (e: unknown) {
+		store.CLEAR_ROUTES();
 		modalStore.SHOW_ERROR(e);
+		if (e instanceof DisallowToSortie) return;
+
 		console.error(e);
 		return;
 	}
@@ -533,8 +536,8 @@ async function draw_map() {
 const branchHtml = ref<string | null>(null);
 
 const popupStyle = ref({
-  top: '0px',
-  left: '0px',
+	top: '0px',
+	left: '0px',
 });
 
 const node = ref<string | null>(null);
@@ -553,7 +556,7 @@ const generarteBranchHtml = (node_name: string): string | null => {
 	node.value = node_name;
 
 	let key = selectedArea.value!;
-	
+
 	if (options.value && selectedArea.value === '7-3') {
 		const option = options.value['7-3']!;
 		if (option.phase) {
@@ -570,7 +573,7 @@ const generarteBranchHtml = (node_name: string): string | null => {
 	node_data = convert_branch_data_to_HTML(node_data, topic);
 
 	node_data = `<p>${node_data}</p>`;
-	
+
 	return node_data;
 };
 
@@ -588,17 +591,17 @@ const adjustPopupPosition = (
 	let left: number;
 
 	if (position.x >= 650) {
-			left = position.x + cyContainer.left - 260;
-			top = position.y + cyContainer.top + 20;
+		left = position.x + cyContainer.left - 260;
+		top = position.y + cyContainer.top + 20;
 	} else {
-			left = position.x + cyContainer.left + 20;
-			top = position.y + cyContainer.top - 10;
+		left = position.x + cyContainer.left + 20;
+		top = position.y + cyContainer.top - 10;
 	}
 
 	popupStyle.value.top = top + 'px';
 	popupStyle.value.left = left + 'px';
 };
-	
+
 const switchActive = (event: Event) => {
 	if (options.value && drewArea.value && options.value[drewArea.value]) {
 		const target = event.target as HTMLButtonElement;
@@ -613,7 +616,7 @@ const switchActive = (event: Event) => {
 
 		const new_value =
 			possible_edges
-			.find(item => item[1] !== current_selectted)![1];
+				.find(item => item[1] !== current_selectted)![1];
 
 		store.UPDATE_OPTION_WITH_KEY(drewArea.value, node_name, new_value);
 		store.SAVE_DATA();
@@ -625,7 +628,7 @@ const switchSeek = () => {
 };
 
 const screenShot = async () => {
-	if (!adoptFleet.value || !cytoscape_core)  return;
+	if (!adoptFleet.value || !cytoscape_core) return;
 
 	const gkcoi = await import('gkcoi'); // 動的import
 	const time = getZeroFilledTime(new Date());
@@ -673,12 +676,12 @@ watch([isAreaVisible, isRefferenceVisible, isErrorVisible, isCommandEvacuationVi
 		|| isCommandEvacuationVisible.value
 	) { // DOMはあんまし触りたくないけどしゃあないかな
 		save_y = window.scrollY;
-  	style.top = `-${window.scrollY}px`;
+		style.top = `-${window.scrollY}px`;
 		style.left = `${window.scrollX}px`;
 		style.position = "fixed";
 		style.minWidth = '100%';
 	} else {
-  	style.top = "";
+		style.top = "";
 		style.left = "";
 		style.position = "";
 		window.scrollTo({ top: save_y });
@@ -711,10 +714,10 @@ onMounted(async () => {
 
 <style scoped>
 .container {
-  margin: auto;
-  margin-top: 40px;
+	margin: auto;
+	margin-top: 40px;
 	padding-bottom: 8px;
-  max-width:960px;
+	max-width: 960px;
 }
 .area-select-button {
 	position: absolute;
@@ -739,7 +742,7 @@ onMounted(async () => {
 	padding-bottom: 20px;
 }
 .type-select {
-	width:119px;
+	width: 119px;
 	border: solid 1px;
 	font-size: 14px;
 	padding-left: 2px;
@@ -779,17 +782,18 @@ onMounted(async () => {
 	display: block;
 	user-select: none;
 }
-.fleet-type:hover{
-  background-color: rgb(0 0 0 / 8%);
+
+.fleet-type:hover {
+	background-color: rgb(0 0 0 / 8%);
 }
 .inputs {
 	flex: 1;
 	text-align: left;
-	flex:1;
+	flex: 1;
 	display: flex;
 }
 .import {
-  margin:0px 10px 0px 0px;
+	margin: 0px 10px 0px 0px;
 	max-width: 115px;
 }
 .non-margin {
@@ -824,25 +828,25 @@ onMounted(async () => {
 	background-color: #cccccc;
 }
 .cy {
-	display:flex;
-	position:relative;
-	top:0;
-	left:0;
+	display: flex;
+	position: relative;
+	top: 0;
+	left: 0;
 	width: 100%;
 	max-width: 960px;
 	height: auto;
 	aspect-ratio: 3 / 2;
 	max-height: 640px;
-	z-index:999;
+	z-index: 999;
 	background: blanchedalmond !important;
 }
 .cy-context-menus-cxt-menu {
-	display:none;
+	display: none;
 	z-index: 1000;
-	position:absolute;
+	position: absolute;
 	padding: 0;
 	margin: 0;
-	width:auto;
+	width: auto;
 }
 .cy-context-menus-cxt-menuitem {
 	width: 80px;

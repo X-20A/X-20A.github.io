@@ -4,7 +4,7 @@ import { BranchResponse } from "../../../types";
 import { destructuring_assignment_helper, omission_of_conditions } from "..";
 import { is_fleet_speed_faster_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
 import { is_fleet_combined, is_fleet_surface, is_fleet_transport } from "../../../models/fleet/predicate";
-import CustomError from "../../../errors/CustomError";
+import { DisallowToSortie } from "../../../errors/CustomError";
 import { count_Yamato_class } from "../../../models/fleet/AdoptFleet";
 
 export function calc_61_4(
@@ -32,7 +32,7 @@ export function calc_61_4(
                     return '1';
                 }
                 if (phase === 2) {
-                    throw new CustomError('phase2では通常艦隊は出撃できません');
+                    throw new DisallowToSortie('phase2では通常艦隊は出撃できません');
                 }
                 if (phase === 3) {
                     return '1';
