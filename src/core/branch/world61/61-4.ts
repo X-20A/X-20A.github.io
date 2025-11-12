@@ -2,7 +2,7 @@ import { SimFleet } from "../../../models/fleet/SimFleet";
 import { PreSailNull } from "../../../types/brand";
 import { BranchResponse } from "../../../types";
 import { destructuring_assignment_helper, omission_of_conditions } from "..";
-import { is_fleet_speed_faster_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
+import { is_fleet_speed_fast_or_more, is_fleet_speed_faster_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
 import { is_fleet_combined, is_fleet_surface, is_fleet_transport } from "../../../models/fleet/predicate";
 import { DisallowToSortie } from "../../../errors/CustomError";
 import { count_Yamato_class } from "../../../models/fleet/AdoptFleet";
@@ -28,18 +28,11 @@ export function calc_61_4(
     switch (node) {
         case null:
             if (!is_fleet_combined(fleet_type)) {
-                if (phase === 1) {
-                    return '1';
+                if (phase <= 3) {
+                    throw new DisallowToSortie('出撃地点4解放前は通常艦隊は出撃できません');
                 }
-                if (phase === 2) {
-                    throw new DisallowToSortie('phase2では通常艦隊は出撃できません');
-                }
-                if (phase === 3) {
-                    return '1';
-                }
-                if (phase === 4) {
-                    return '4';
-                }
+                // phase === 4
+                return '4';
             }
             // 連合艦隊
             if (phase === 1) {
@@ -92,16 +85,22 @@ export function calc_61_4(
             }
             return 'F';
         case '3':
+            if (is_fleet_speed_faster_or_more(speed)) {
+                return 'O';
+            }
             if (count_Yamato_class(fleet) >= 1) {
                 return 'O';
             }
             if (BBs + CVH >= 5) {
                 return'O';
             }
-            if (Ds <= 3) {
-                return 'O';
+            if (CL >= 2) {
+                return 'G'
             }
-            return 'G';
+            if (Ds >= 4) {
+                return 'G';
+            }
+            return 'O';
         case 'A':
             if (is_fleet_transport(fleet_type)) {
                 return 'B';
@@ -138,13 +137,10 @@ export function calc_61_4(
             if (CVH >= 2) {
                 return 'D1';
             }
-            if (CL <= 1) {
-                return 'D1';
-            }
             if (BBs <= 1) {
                 return 'D2';
             }
-            if (Ds >= 4) {
+            if (CL >= 2 && Ds >= 5 && is_fleet_speed_fast_or_more(speed)) {
                 return 'D2';
             }
             return 'D1';
@@ -172,7 +168,10 @@ export function calc_61_4(
                 if (count_Yamato_class(fleet) >= 2) {
                     return 'L';
                 }
-                return 'N';
+                if (seek[1] >= 80) {
+                    return 'N';
+                }
+                return 'L';
             }
             // route.includes('3')
             return 'R';
@@ -182,15 +181,15 @@ export function calc_61_4(
             }
             return 'B3';
         case 'L':
-            return 'N'
+            if (seek[1] >= 75) {
+                return 'N';
+            }
+            return 'M';
         case 'O':
             if (count_Yamato_class(fleet) >= 2) {
                 return 'P';
             }
-            if (is_fleet_speed_slow(speed)) {
-                return 'P';
-            }
-            if (CAs >= 2) {
+            if (CAs >= 2 && Ds >= 3) {
                 return 'Q';
             }
             return 'P';
@@ -208,15 +207,18 @@ export function calc_61_4(
             }
             return 'R2';
         case 'S':
-            return 'T';
+            if (seek[1] >= 80) {
+                return 'T';
+            }
+            return 'M';
         case 'U':
             if (is_fleet_speed_faster_or_more(speed)) {
                 return 'X';
             }
-            if (CL === 0) {
-                return 'B1';
+            if (CL >= 1 && Ds >= 3) {
+                return 'V';
             }
-            return 'V';
+            return 'B1';
         case 'V':
             if (CA >= 2) {
                 return 'W';
@@ -226,7 +228,7 @@ export function calc_61_4(
             }
             return 'X';
         case 'X':
-            if (seek[1] >= 110) {
+            if (seek[3] >= 115) {
                 return 'Z';
             }
             return 'Y';
