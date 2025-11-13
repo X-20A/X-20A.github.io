@@ -13,7 +13,7 @@ import { calc_57_7 } from './world57/57-7';
 import { calc_58_1, calc_58_2, calc_58_3, calc_58_4 } from './world58';
 import { calc_59_1, calc_59_2, calc_59_3, calc_59_4, calc_59_5 } from './world59';
 import { calc_60_1, calc_60_2, calc_60_3, calc_60_4, calc_60_5, calc_60_6 } from './world60';
-import { calc_61_1, calc_61_2, calc_61_3, calc_61_4 } from './world61';
+import { calc_61_1, calc_61_2, calc_61_3, calc_61_4, calc_61_5 } from './world61';
 
 // NOTE: 能動分岐のハードコーディングをやめてマップデータとオプションから
 // 自動で進行するようにできるかもしれない
@@ -92,7 +92,7 @@ const CALC_TABLE = {
     '61-2': calc_61_2,
     '61-3': calc_61_3,
     '61-4': calc_61_4,
-    // '61-5': calc_61_5,
+    '61-5': calc_61_5,
     // @expansion
 } satisfies Record<AreaId, BranchConditionFn>;
 

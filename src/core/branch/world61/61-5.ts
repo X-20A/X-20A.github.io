@@ -2,13 +2,11 @@ import { SimFleet } from "../../../models/fleet/SimFleet";
 import { PreSailNull } from "../../../types/brand";
 import { BranchResponse } from "../../../types";
 import { destructuring_assignment_helper, omission_of_conditions } from "..";
-import { is_fleet_speed_faster_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
-import { is_fleet_combined, is_fleet_surface, is_fleet_transport } from "../../../models/fleet/predicate";
-import CustomError from "../../../errors/CustomError";
+import { is_fleet_speed_fast_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
+import { is_fleet_carrier, is_fleet_combined } from "../../../models/fleet/predicate";
 import { AdoptFleet, count_Yamato_class } from "../../../models/fleet/AdoptFleet";
 import { EquippedShip } from "../../../models/ship/EquippedShip";
-import { includes_ship_name, includes_ship_type, is_CVs } from "../../../models/ship/predicate";
-import { ST as ShipType } from "../../../data/ship";
+import { includes_ship_name, is_CVs } from "../../../models/ship/predicate";
 import { ShipName } from "../../../types/shipName";
 
 const TARGET_SHIP_NAMES: ShipName[] = [
@@ -70,7 +68,154 @@ export function calc_61_5(
 
     switch (node) {
         case null:
-        
+            if (!is_fleet_combined(fleet_type)) {
+                if (phase >= 2 && every_carriers_has_rench(fleet)) {
+                    return '2';
+                }
+                return '1';
+            }
+            // 連合艦隊
+            if (phase === 5 && is_fleet_carrier(fleet_type)) {
+                return '3';
+            }
+            return '1';
+        case '1':
+            if (!is_fleet_combined(fleet_type)) {
+                return 'A';
+            }
+            if (count_Yamato_class(fleet) >= 1) {
+                return 'A';
+            }
+            if (BBs >= 4) {
+                return 'A';
+            }
+            if (CVH >= 4) {
+                return 'A';
+            }
+            return 'A1';
+        case '2':
+            if (Ds <= 2) {
+                return 'C';
+            }
+            if (is_fleet_speed_slow(speed)) {
+                return 'J';
+            }
+            if (Ds === 3) {
+                return 'C';
+            }
+            if (BBCVs >= 3) {
+                return 'C';
+            }
+            return 'J';
+        case '3':
+            return 'B2';
+        case 'A':
+            if (!is_fleet_combined(fleet_type)) {
+                return 'B';
+            }
+            if (phase <= 3) {
+                return 'A1'
+            }
+            return 'E';
+        case 'B':
+            if (count_Yamato_class(fleet) >= 2) {
+                return 'A1';
+            }
+            return 'B1';
+        case 'B1':
+            if (!is_fleet_combined(fleet_type)) {
+                return 'C';
+            }
+            return 'B2';
+        case 'B2':
+            if (phase <= 4) {
+                return 'F';
+            }
+            if (is_fleet_speed_slow(speed)) {
+                return 'F';
+            }
+            return 'X1';
+        case 'C':
+            if (phase >= 3 && Ds >= 3) {
+                return 'R';
+            }
+            if (CL === 0) {
+                return 'C1';
+            }
+            return 'C2';
+        case 'C2':
+            return 'D';
+        case 'D':
+            return 'U';
+        case 'E':
+            if (Ds >= 4) {
+                return 'I';
+            }
+            if (BBs <= 2 && Ds >= 3) {
+                return 'I';
+            }
+            return 'G';
+        case 'F':
+            if (route.includes('3')) {
+                return 'X1';
+            }
+            if (BBs <= 2 && CAs >= 2 && Ds >= 4) {
+                return 'H';
+            }
+            return 'G';
+        case 'G':
+            if (Ds >= 4) {
+                return 'H';
+            }
+            return 'I';
+        case 'I':
+            if (phase <= 3) {
+                return 'Q';
+            }
+            if (AV >= 1) {
+                return 'Q';
+            }
+            if (CVH >= 1) {
+                return 'V';
+            }
+            if (BBs >= 4 && is_fleet_speed_slow(speed)) {
+                return 'V';
+            }
+            return 'W';
+        case 'J':
+            if (is_fleet_speed_slow(speed)) {
+                return 'K';
+            }
+            return 'M';
+        case 'K':
+            if (is_fleet_speed_fast_or_more(speed)) {
+                return 'M';
+            }
+            if (CL >= 1) {
+                return 'M';
+            }
+            return 'L';
+        case 'N':
+            if (seek[3] >= 105) {
+                return 'P';
+            }
+            return 'O';
+        case 'R':
+            if (BBs + CVH >= 3) {
+                return 'S';
+            }
+            return 'D';
+        case 'W':
+            return 'X';
+        case 'Z':
+            if (CVH >= 2 && is_fleet_speed_slow(speed)) {
+                return 'Z2';
+            }
+            return 'ZZ';
+        case 'A2':
+            return option.A2 === 'B2'
+                ? 'B2'
+                : 'E';
     }
 
     omission_of_conditions(node, sim_fleet);

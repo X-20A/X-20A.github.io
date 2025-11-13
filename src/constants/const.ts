@@ -54,7 +54,7 @@ export default class Const {
         '61-2': { 'phase': '1', 'A': 'B' },
         '61-3': { 'phase': '1', 'A1': 'A2', 'F': 'G' },
         '61-4': { 'phase': '1', 'C': 'D' },
-        //'61-5': {},
+        '61-5': { 'phase': '1', 'A2': 'B2' },
     };  // @expansion
 
     /**

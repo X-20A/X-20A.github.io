@@ -336,6 +336,18 @@ const OPTION_DATA: OptionSelector = {
 			]
 		},
 	},
+	'61-5': {
+		'phase': {
+			label: 'Phase',
+			options: [
+				{ value: '1', label: '開始時点' },
+				{ value: '2', label: 'Pボス出現後' },
+				{ value: '3', label: 'Uボス出現後' },
+				{ value: '4', label: 'Xボス出現後' },
+				{ value: '5', label: 'ZZボス出現後' },
+			]
+		},
+	},
 } as const; // @expansion
 
 // 海域絞り込み
