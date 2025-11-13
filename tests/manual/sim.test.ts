@@ -62,7 +62,9 @@ describe('Simテスト', () => {
                     (sum, item) => sum.plus(item.rate),
                     new Big(0)
                 );
-                expect(1).toBe(total_rate.toNumber());
+                if (
+                    Number(total_rate) !== 1
+                ) throw new Error('確率指定ミスを検知');
                 if (
                     !is_route_not_warp(result[0].route, area_id)
                 ) throw new Error('ルートワープ検知');
