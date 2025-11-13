@@ -113,10 +113,16 @@ export function calc_61_5(
             if (!is_fleet_combined(fleet_type)) {
                 return 'B';
             }
-            if (phase <= 3) {
-                return 'A1'
+            if (is_fleet_carrier(fleet_type)) {
+                return 'B';
             }
-            return 'E';
+            if (count_Yamato_class(fleet) >= 2) {
+                return 'B';
+            }
+            if (phase >= 4 && BBs + CVH <= 4) {
+                return 'E'
+            }
+            return 'A1';
         case 'B':
             if (count_Yamato_class(fleet) >= 2) {
                 return 'A1';
