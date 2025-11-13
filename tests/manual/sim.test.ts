@@ -11,18 +11,38 @@ import { derive_FleetComponents_from_DeckBuilder } from '../../src/logic/deckBui
 import { derive_adopt_fleet, calc_escort_fleet_ship_names, calc_main_fleet_ship_names } from '../../src/models/fleet/AdoptFleet';
 import { calc_URL_param } from '../../src/logic/url';
 import { nomal_mock_datas, astray_mock_datas } from '../expects/route';
-import { NODE_DATAS, NT as NodeType } from '../../src/data/map';
+import { EDGE_DATAS, NODE_DATAS, NT as NodeType } from '../../src/data/map';
 import type { CommandEvacuation } from '../../src/core/CommandEvacuation';
-import { getSimSet } from './setup';
+import { generate_sim_set } from './setup';
 import { Ft } from '../../src/models/fleet/predicate';
 import { DisallowToSortie } from '../../src/errors/CustomError';
 
+const is_route_not_warp = (
+    route: string[],
+    area_id: AreaId,
+): boolean => {
+    const edges = EDGE_DATAS[area_id];
+    return route.every((node, index) => {
+        if (index === route.length - 1) return true;
+
+        const start = node;
+        const target = route[index + 1];
+        return edges.find(edge =>
+            edge[0] === start &&
+            edge[1] === target
+        );
+    });
+}
+
 describe('Simテスト', () => {
-    it(`rand-test: ランダムに生成した艦隊をSimクラスに渡してクラス内でエラーが発生しないこと、
-        SimResult.rateが 1 と等しいことを確認`, async () => {
+    it(`rand-test:
+        ランダムに生成した艦隊をSimクラスに渡してクラス内でエラーが発生しないこと、
+        SimResult.rateが 1 と等しいこと、
+        ルートがワープしないこと
+        を確認`, async () => {
         let limit = 0;
         while (limit < 1000) {
-            const simSet = getSimSet();
+            const simSet = generate_sim_set();
 
             const adoptFleet = simSet.adoptFleet;
             const areaIds = simSet.areaIds;
@@ -30,19 +50,22 @@ describe('Simテスト', () => {
             const defaultOptions = Const.DEFAULT_OPTIONS;
 
             // 各シミュレーション実行用関数
-            const runSim = async (
-                areaId: AreaId,
+            const run_sim = async (
+                area_id: AreaId,
                 options: OptionsType,
                 command_evacuations: CommandEvacuation[] = [],
             ) => {
-                const executor = derive_sim_executer(adoptFleet, areaId, options, command_evacuations);
+                const executor = derive_sim_executer(adoptFleet, area_id, options, command_evacuations);
                 const result = await start_sim(executor, adoptFleet, command_evacuations);
                 // console.log(result);
-                const totalRate = result.reduce(
+                const total_rate = result.reduce(
                     (sum, item) => sum.plus(item.rate),
                     new Big(0)
                 );
-                expect(1).toBe(totalRate.toNumber());
+                expect(1).toBe(total_rate.toNumber());
+                if (
+                    !is_route_not_warp(result[0].route, area_id)
+                ) throw new Error('ルートワープ検知');
             };
 
             // 配列の配列から全組み合わせを生成するヘルパー関数 デカルト積っていうらしいよ
@@ -65,7 +88,7 @@ describe('Simテスト', () => {
                     // if (adoptFleet.fleet_type_id > 0 && Number(area_id.split('-')[0]) > 7) continue; // 連合艦隊なら通常海域除外
                     if (!selectableOptions[area_id]) {
                         // 選択肢がなければデフォルトで実行
-                        await runSim(area_id, defaultOptions);
+                        await run_sim(area_id, defaultOptions);
                         continue;
                     }
 
@@ -91,7 +114,7 @@ describe('Simテスト', () => {
                         }
                         debug_option = updatedOptions[area_id];
                         // console.log('option: ', updatedOptions[area_id]);
-                        await runSim(area_id, updatedOptions);
+                        await run_sim(area_id, updatedOptions);
 
                         // throw new Error('エラー時処理テスト');
                     }

@@ -14,8 +14,8 @@ import { Ft } from "../../src/models/fleet/predicate";
 const ship_ids = Object.keys(SHIP_DATAS).map(key => Number.parseInt(key));
 const item_ids = Object.keys(EQUIP_DATAS).map(key => Number.parseInt(key));
 
-export const getSimSet = () => {
-    const deck = generateRandomDeck();
+export const generate_sim_set = () => {
+    const deck = generate_random_deck();
     const fleet_components = derive_FleetComponents_from_DeckBuilder(
         deck,
     );
@@ -81,23 +81,23 @@ export const getSimSet = () => {
     }
 };
 
-const generateRandomDeck = () => {
+const generate_random_deck = () => {
     const deck = {} as DeckBuilder;
 
     const fleet_type = Math.floor(Math.random() * 4); // 0 1 2 3
     if (fleet_type === 0) {
-        deck.f1 = generateRandomFleetDeck(Math.floor(Math.random() * 7) + 1);
+        deck.f1 = generate_random_fleet_deck(Math.floor(Math.random() * 7) + 1);
         deck.f1.t = fleet_type;
     } else {
-        deck.f1 = generateRandomFleetDeck(Math.floor(Math.random() * 6) + 1);
-        deck.f2 = generateRandomFleetDeck(Math.floor(Math.random() * 6) + 1);
+        deck.f1 = generate_random_fleet_deck(Math.floor(Math.random() * 6) + 1);
+        deck.f2 = generate_random_fleet_deck(Math.floor(Math.random() * 6) + 1);
         deck.f1.t = fleet_type;
     }
 
     return deck;
 };
 
-const generateRandomFleetDeck = (ship_length: number): DeckBuilderFleet => {
+const generate_random_fleet_deck = (ship_length: number): DeckBuilderFleet => {
     const fleet = {} as DeckBuilderFleet;
     for (let i = 1; i <= ship_length; i++) {
         const random_ship_index = Math.floor(Math.random() * ship_ids.length);

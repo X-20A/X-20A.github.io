@@ -79,7 +79,7 @@ export function calc_60_5(
             if (seek[3] >= 91) {
                 return 'K';
             }
-            return 'K2';
+            return 'J2';
         case 'M':
             if (phase < 3) {
                 return 'N';
@@ -231,7 +231,7 @@ export function calc_60_5(
             if (count_Yamato_class(fleet) === 0) {
                 return 'U3';
             }
-            return 'Y';
+            return 'V';
         case 'V':
             return 'U3';
         case 'B':
