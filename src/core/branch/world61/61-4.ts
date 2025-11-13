@@ -2,7 +2,7 @@ import { SimFleet } from "../../../models/fleet/SimFleet";
 import { PreSailNull } from "../../../types/brand";
 import { BranchResponse } from "../../../types";
 import { destructuring_assignment_helper, omission_of_conditions } from "..";
-import { is_fleet_speed_fast_or_more, is_fleet_speed_faster_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
+import { is_fleet_speed_fast_or_more, is_fleet_speed_faster_or_more, is_fleet_speed_fastest, is_fleet_speed_slow } from "../../../logic/speed/predicate";
 import { is_fleet_combined, is_fleet_surface, is_fleet_transport } from "../../../models/fleet/predicate";
 import { DisallowToSortie } from "../../../errors/CustomError";
 import { count_Yamato_class } from "../../../models/fleet/AdoptFleet";
@@ -45,7 +45,7 @@ export function calc_61_4(
                 if (AV >= 2 && Ds >= 4) {
                     return '1';
                 }
-                if (CL >= 2 && Ds >= 5) {
+                if (CL + CT >= 2 && Ds >= 5) {
                     return '1';
                 }
                 if (is_fleet_transport(fleet_type)) {
@@ -66,33 +66,33 @@ export function calc_61_4(
             if (Ds <= 3) {
                 return 'A';
             }
-            if (BBs + CVL <= 1) {
-                return 'A';
-            }
             if (Ds >= 6) {
                 return 'A';
             }
             return 'B1';
         case '2':
-            if (is_fleet_speed_slow(speed)) {
-                return 'J';
+            if (is_fleet_speed_fastest(speed)) {
+                return 'F2';
             }
-            if (CL === 1) {
-                return 'J';
+            if (is_fleet_speed_faster_or_more(speed)) {
+                return 'F';
             }
-            if (Ds <= 3) {
-                return 'J';
+            if (CL >= 2 && Ds >= 4 && is_fleet_speed_fast_or_more(speed)) {
+                return 'F';
             }
-            return 'F';
+            return 'J';
         case '3':
+            if (is_fleet_speed_fastest(speed) && CL >= 2) {
+                return 'Q';
+            }
+            if (is_fleet_speed_fastest(speed) && DD >= 4) {
+                return 'Q';
+            }
             if (is_fleet_speed_faster_or_more(speed)) {
                 return 'O';
             }
             if (count_Yamato_class(fleet) >= 1) {
                 return 'O';
-            }
-            if (BBs + CVH >= 5) {
-                return'O';
             }
             if (CL >= 2) {
                 return 'G'
@@ -105,13 +105,10 @@ export function calc_61_4(
             if (is_fleet_transport(fleet_type)) {
                 return 'B';
             }
-            if (CVH >= 1) {
-                return 'B1';
+            if (CVH === 0 && Ds >= 4) {
+                return 'B';
             }
-            if (Ds <= 3) {
-                return 'B1';
-            }
-            return 'B';
+            return 'B1';
         case 'B':
             if (route.includes('1')) {
                 return 'H';
@@ -192,6 +189,9 @@ export function calc_61_4(
             if (CAs >= 2 && Ds >= 3) {
                 return 'Q';
             }
+            if (CAs >= 2 && BBs + CVH <= 5) {
+                return 'Q';
+            }
             return 'P';
         case 'Q':
             if (is_fleet_speed_faster_or_more(speed)) {
@@ -199,10 +199,10 @@ export function calc_61_4(
             }
             return 'R';
         case 'R':
-            if (CVH >= 3) {
+            if (count_Yamato_class(fleet) >= 2) {
                 return 'R1';
             }
-            if (count_Yamato_class(fleet) >= 2) {
+            if (CVH >= 3) {
                 return 'R1';
             }
             return 'R2';
@@ -215,11 +215,14 @@ export function calc_61_4(
             if (is_fleet_speed_faster_or_more(speed)) {
                 return 'X';
             }
-            if (CL >= 1 && Ds >= 3) {
+            if (BBs === 0 && CL >= 1 && Ds >= 3) {
                 return 'V';
             }
             return 'B1';
         case 'V':
+            if (count_Yamato_class(fleet) >= 2) {
+                return 'W';
+            }
             if (CA >= 2) {
                 return 'W';
             }
