@@ -42,16 +42,19 @@ export function calc_61_3(
             if (CVH >= 3) {
                 return 'R';
             }
-            if (Ds <= 2 && CA <= 1) {
+            if (Ds >= 6) {
+                return 'N';
+            }
+            if (BBs >= 3) {
                 return 'R';
             }
-            if (is_fleet_speed_fast_or_more(speed)) {
-                return 'N';
+            if (CVs >= 4) {
+                return 'R';
             }
             if (CL >= 2) {
                 return 'N';
             }
-            if (Ds >= 6) {
+            if (Ds >= 4 && is_fleet_speed_fast_or_more(speed)) {
                 return 'N';
             }
             return 'R';
@@ -171,7 +174,10 @@ export function calc_61_3(
             if (is_fleet_speed_slow(speed)) {
                 return 'G1';
             }
-            if (BBCVs >= 3) {
+            if (BBs >= 2) {
+                return 'G1';
+            }
+            if (CVs >= 2) {
                 return 'G1';
             }
             if (CL === 0) {
