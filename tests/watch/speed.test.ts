@@ -44,87 +44,87 @@ const POWER_KAN: EquipInDeck = {
 describe('艦速度テスト', () => {
     it('speed-test: 速度グループごとに想定される速度(装備込)になることを確認', async () => {
         // 高速A群
-        cartesianEquipPattern(
+        cartesian_equip_pattern(
             SHIPMAKAZE_KAI,
             SPEED_EXPECTS.FastA,
             'FastA',
         );
         // 高速B1群
-        cartesianEquipPattern(
+        cartesian_equip_pattern(
             YAMATO_KAI_NI,
             SPEED_EXPECTS.FastB1,
             'FastB1',
         );
         // 高速B2群
-        cartesianEquipPattern(
+        cartesian_equip_pattern(
             SHIKINAMI,
             SPEED_EXPECTS.FastB2,
             'FastB2',
         );
         // 高速C群
-        cartesianEquipPattern(
+        cartesian_equip_pattern(
             SAM_MK_2,
             SPEED_EXPECTS.FastC,
             'FastC',
         );
         // 低速A群
-        cartesianEquipPattern(
+        cartesian_equip_pattern(
             YAMATO_KAI_NI_JU,
             SPEED_EXPECTS.SlowA,
             'SlowA',
         );
         // 低速B群
-        cartesianEquipPattern(
+        cartesian_equip_pattern(
             ASAHI,
             SPEED_EXPECTS.SlowB,
             'SlowB',
         );
         // 低速C群
-        cartesianEquipPattern(
+        cartesian_equip_pattern(
             HITOMI,
             SPEED_EXPECTS.SlowC,
             'SlowC',
         );
         // 低速D群
-        cartesianEquipPattern(
+        cartesian_equip_pattern(
             FLEY,
             SPEED_EXPECTS.SlowD,
             'SlowD',
         );
         // 低速E群
-        cartesianEquipPattern(
+        cartesian_equip_pattern(
             HOSHO_KAI_NI,
             SPEED_EXPECTS.SlowE,
             'SlowE',
         );
-        
-        function cartesianEquipPattern (
+
+        function cartesian_equip_pattern(
             ship: NakedShip,
             expects: SpeedExpect,
             key: SpeedKey,
         ): void {
-            const getSpeed = curryGetSpeed(ship);
+            const get_speed = curry_get_speed(ship);
             const result: BuildTuple<Speed, 19> = [
-                getSpeed([]), // すっぴん
+                get_speed([]), // すっぴん
 
-                getSpeed([POWER_KAN]),
-                getSpeed([POWER_KAN, POWER_KAN]),
-                getSpeed([TURBINE, NORMAL_KAN]),
-                getSpeed([TURBINE, NORMAL_KAN, NORMAL_KAN]),
-                getSpeed([TURBINE, NORMAL_KAN, NORMAL_KAN, NORMAL_KAN]),
-                getSpeed([TURBINE, NORMAL_KAN, NORMAL_KAN, NORMAL_KAN, NORMAL_KAN]),
-                getSpeed([TURBINE, POWER_KAN]),
-                getSpeed([TURBINE, NEW_KAN]),
-                getSpeed([TURBINE, NEW_KAN, NORMAL_KAN]),
-                getSpeed([TURBINE, NEW_KAN, NORMAL_KAN, NORMAL_KAN]),
-                getSpeed([TURBINE, NEW_KAN, NORMAL_KAN, NORMAL_KAN, NORMAL_KAN]),
-                getSpeed([TURBINE, POWER_KAN, POWER_KAN]),
-                getSpeed([TURBINE, NEW_KAN, NEW_KAN]),
-                getSpeed([TURBINE, NEW_KAN, NEW_KAN, NORMAL_KAN]),
-                getSpeed([TURBINE, NEW_KAN, NEW_KAN, NORMAL_KAN, NORMAL_KAN]),
-                getSpeed([TURBINE, NEW_KAN, NEW_KAN, NEW_KAN]),
-                getSpeed([TURBINE, NEW_KAN, NEW_KAN, NEW_KAN, NORMAL_KAN]),
-                getSpeed([TURBINE, NEW_KAN, NEW_KAN, NEW_KAN, NEW_KAN]),
+                get_speed([POWER_KAN]),
+                get_speed([POWER_KAN, POWER_KAN]),
+                get_speed([TURBINE, NORMAL_KAN]),
+                get_speed([TURBINE, NORMAL_KAN, NORMAL_KAN]),
+                get_speed([TURBINE, NORMAL_KAN, NORMAL_KAN, NORMAL_KAN]),
+                get_speed([TURBINE, NORMAL_KAN, NORMAL_KAN, NORMAL_KAN, NORMAL_KAN]),
+                get_speed([TURBINE, POWER_KAN]),
+                get_speed([TURBINE, NEW_KAN]),
+                get_speed([TURBINE, NEW_KAN, NORMAL_KAN]),
+                get_speed([TURBINE, NEW_KAN, NORMAL_KAN, NORMAL_KAN]),
+                get_speed([TURBINE, NEW_KAN, NORMAL_KAN, NORMAL_KAN, NORMAL_KAN]),
+                get_speed([TURBINE, POWER_KAN, POWER_KAN]),
+                get_speed([TURBINE, NEW_KAN, NEW_KAN]),
+                get_speed([TURBINE, NEW_KAN, NEW_KAN, NORMAL_KAN]),
+                get_speed([TURBINE, NEW_KAN, NEW_KAN, NORMAL_KAN, NORMAL_KAN]),
+                get_speed([TURBINE, NEW_KAN, NEW_KAN, NEW_KAN]),
+                get_speed([TURBINE, NEW_KAN, NEW_KAN, NEW_KAN, NORMAL_KAN]),
+                get_speed([TURBINE, NEW_KAN, NEW_KAN, NEW_KAN, NEW_KAN]),
             ];
 
             console.log('check at ', key);
@@ -153,16 +153,18 @@ describe('艦速度テスト', () => {
             if (is_not_SlowD) expect(expects[17]).toBe(result[17]);
             if (is_not_SlowD) expect(expects[18]).toBe(result[18]);
         }
-        function curryGetSpeed(ship: NakedShip): (equip_in_decks: EquipInDeck[]) => Speed {
+        function curry_get_speed(
+            ship: NakedShip
+        ): (equip_in_decks: EquipInDeck[]) => Speed {
             return function (equip_in_decks: EquipInDeck[]): Speed {
-                const equips = equip_in_decks.map(deck => 
+                const equips = equip_in_decks.map(deck =>
                     derive_equip(
                         deck.id,
                         deck.improvement,
                         deck.is_ex,
                     )
                 );
-                const equipped_ship =  derive_equipped_ship(
+                const equipped_ship = derive_equipped_ship(
                     ship,
                     equips,
                 );
@@ -175,6 +177,10 @@ describe('艦速度テスト', () => {
         const master = await get_ACSim_master_data();
         const master_ships: any[] = master.ships;
 
+        /**
+         * 速度グループが等しいか判定    
+         * 一致しなければエラースロー
+         */
         const verification = (
             expected_group: SG,
             data: ShipData,
@@ -188,6 +194,7 @@ describe('艦速度テスト', () => {
             `);
         }
 
+        /** 同じ改造樹に属するか判定して返す */
         const is_both_base = (
             target_base_name: ShipName,
             search_name: ShipName,
@@ -198,11 +205,12 @@ describe('艦速度テスト', () => {
 
             const search_ship =
                 master_ships.find(master_ship => master_ship.name === search_name);
-            if (!search_ship) throw new Error(`指定された艦が見つかりません: ${search_name}`);         
+            if (!search_ship) throw new Error(`指定された艦が見つかりません: ${search_name}`);
 
             return target_ship.orig === search_ship.orig;
         }
-        
+
+        /** 艦名から艦型IDを返す */
         const extract_class_id_from_name = (
             name: ShipName,
         ): number => {
@@ -211,6 +219,16 @@ describe('艦速度テスト', () => {
             if (!target_ship) throw new Error(`指定された艦が見つかりません: ${name}`);
 
             return target_ship.type2;
+        }
+
+        /**
+         * 艦名から同型艦であるか判定して返す
+         */
+        const equal_class_id_with_name = (
+            class_id: number,
+            name: ShipName,
+        ): boolean => {
+            return extract_class_id_from_name(name) === class_id;
         }
 
         const IOWA_CLASS_ID = extract_class_id_from_name('Iowa');
@@ -227,184 +245,195 @@ describe('艦速度テスト', () => {
         const MOGAMI_CLASS_ID = extract_class_id_from_name('最上');
         const AGANO_CLASS_ID = extract_class_id_from_name('阿賀野');
 
-        const equal_class_id_with_name = (
-            class_id: number,
-            name: ShipName,
-        ): boolean => {
-            return extract_class_id_from_name(name) === class_id;
-        }
-
-        const assign_to_group = (
-            data: ShipData,
-        ): void => {
-            const {
-                name,
-                type,
-            } = data;
-
-            // 艦名
+        /** 艦名判定 */
+        const check_by_name = (d: ShipData): boolean => {
             if (
-                includes_ship_name(['天津風改二'], name) ||
-                is_both_base('大鳳', name) ||
-                is_both_base('島風', name) ||
-                is_both_base('Ташкент', name)
+                includes_ship_name(['天津風改二'], d.name) ||
+                is_both_base('大鳳', d.name) ||
+                is_both_base('島風', d.name) ||
+                is_both_base('Ташкент', d.name)
             ) {
-                verification(SG.FastA, data);
-                return;
+                verification(SG.FastA, d);
+                return true;
             }
+
             if (
-                includes_ship_name(['大和改二', '天津風', '天津風改'], name) ||
-                is_both_base('蒼龍', name) ||
-                is_both_base('飛龍', name) ||
-                is_both_base('雲龍', name) ||
-                is_both_base('天城', name)
+                includes_ship_name(['大和改二', '天津風', '天津風改'], d.name) ||
+                is_both_base('蒼龍', d.name) ||
+                is_both_base('飛龍', d.name) ||
+                is_both_base('雲龍', d.name) ||
+                is_both_base('天城', d.name)
             ) {
-                verification(SG.FastB1, data);
-                return;
+                verification(SG.FastB1, d);
+                return true;
             }
+
             if (
                 includes_ship_name([
                     '龍鳳改二',
                     '千歳航', '千歳航改', '千歳航改二',
                     '千代田航', '千代田航改', '千代田航改二',
                     'Conte di Cavour改', 'Conte di Cavour nuovo',
-                ], name) ||
-                is_both_base('Bismarck', name) ||
-                is_both_base('Littorio', name) ||
-                is_both_base('赤城', name) ||
-                is_both_base('葛城', name) ||
-                is_both_base('龍驤', name)
+                ], d.name) ||
+                is_both_base('Bismarck', d.name) ||
+                is_both_base('Littorio', d.name) ||
+                is_both_base('赤城', d.name) ||
+                is_both_base('葛城', d.name) ||
+                is_both_base('龍驤', d.name)
             ) {
-                verification(SG.FastB2, data);
-                return;
+                verification(SG.FastB2, d);
+                return true;
             }
+
             if (
-                is_both_base('加賀', name) ||
-                includes_ship_name(['夕張', '夕張改', 'Samuel B.Roberts Mk.II'], name)
+                is_both_base('加賀', d.name) ||
+                includes_ship_name(['夕張', '夕張改', 'Samuel B.Roberts Mk.II'], d.name)
             ) {
-                verification(SG.FastC, data);
-                return;
+                verification(SG.FastC, d);
+                return true;
             }
+
             if (
                 includes_ship_name([
                     '長門改二', '陸奥改二',
                     '大和', '大和改', '大和改二重', '武蔵', '武蔵改', '武蔵改二',
-                ], name)
+                ], d.name)
             ) {
-                verification(SG.SlowA, data);
-                return;
-            }
-            if (
-                is_both_base('瑞穂', name) ||
-                is_both_base('秋津洲', name) ||
-                is_both_base('Commandant Teste', name) ||
-                is_both_base('神威', name) ||
-                is_both_base('神州丸', name) ||
-                is_both_base('朝日', name) ||
-                is_both_base('宗谷', name) ||
-                is_both_base('山汐丸', name) ||
-                is_both_base('熊野丸', name) ||
-                is_both_base('しまね丸', name) ||
-                is_both_base('南海', name) ||
-                is_both_base('大泊', name) ||
-                is_both_base('第百一号輸送艦', name)
-            ) {
-                verification(SG.SlowB, data);
-                return;
-            }
-            if (
-                includes_ship_name(['Samuel B.Roberts', 'Samuel B.Roberts改', '夕張改二特'], name)
-            ) {
-                verification(SG.SlowB2, data);
-                return;
-            }
-            if (
-                is_both_base('加賀', name) ||
-                is_both_base('あきつ丸', name) ||
-                is_both_base('速吸', name) ||
-                is_both_base('明石', name)
-            ) {
-                verification(SG.SlowC, data);
-                return;
-            }
-            if (
-                is_both_base('伊201', name) ||
-                is_both_base('伊203', name) ||
-                name === '稲木改二'
-            ) {
-                verification(SG.SlowD, data);
-                return;
-            }
-            if (
-                includes_ship_name(['鳳翔改二', '鳳翔改二戦'], name)
-            ) {
-                verification(SG.SlowE, data);
-                return;
+                verification(SG.SlowA, d);
+                return true;
             }
 
-            // 艦型
             if (
-                equal_class_id_with_name(SHOKAKU_CLASS_ID, name) ||
-                equal_class_id_with_name(TONE_CLASS_ID, name) ||
-                equal_class_id_with_name(MOGAMI_CLASS_ID, name)
+                is_both_base('瑞穂', d.name) ||
+                is_both_base('秋津洲', d.name) ||
+                is_both_base('Commandant Teste', d.name) ||
+                is_both_base('神威', d.name) ||
+                is_both_base('神州丸', d.name) ||
+                is_both_base('朝日', d.name) ||
+                is_both_base('宗谷', d.name) ||
+                is_both_base('山汐丸', d.name) ||
+                is_both_base('熊野丸', d.name) ||
+                is_both_base('しまね丸', d.name) ||
+                is_both_base('南海', d.name) ||
+                is_both_base('大泊', d.name) ||
+                is_both_base('第百一号輸送艦', d.name)
             ) {
-                verification(SG.FastA, data);
-                return;
-            }
-            if (
-                equal_class_id_with_name(IOWA_CLASS_ID, name) ||
-                equal_class_id_with_name(KONGOU_CLASS_ID, name) ||
-                equal_class_id_with_name(AGANO_CLASS_ID, name)
-            ) {
-                verification(SG.FastB1, data);
-                return;
-            }
-            if ( // データでBBとSBBを区別してないのでここで吸収
-                equal_class_id_with_name(SOUTH_DAKOTA_CLASS_ID, name) ||
-                equal_class_id_with_name(NORTH_CAROLINA_CLASS_ID, name) ||
-                equal_class_id_with_name(GRORIOUS_CLASS_ID, name) ||
-                equal_class_id_with_name(RICHELIEU_CLASS_ID, name) ||
-                equal_class_id_with_name(V_VENETO_CLASS_ID, name) ||
-                equal_class_id_with_name(SHOHO_CLASS_ID, name) ||
-                equal_class_id_with_name(INDEPENDENCE_CLASS_ID, name)
-            ) {
-                verification(SG.FastB2, data);
-                return;
+                verification(SG.SlowB, d);
+                return true;
             }
 
-            // 艦種
             if (
-                includes_ship_type([ST.CV, ST.CVB, ST.CA, ST.CL, ST.CLT, ST.DD], type)
+                includes_ship_name(['Samuel B.Roberts', 'Samuel B.Roberts改', '夕張改二特'], d.name)
             ) {
-                verification(SG.FastB2, data);
-                return;
-            }
-            if (type === ST.AV) {
-                verification(SG.FastC, data);
-                return;
-            }
-            if (
-                // 稲木改二以外の海防艦はそもそも速力グループが割り振られていないが便宜上ここ
-                includes_ship_type([ST.BB, ST.BBV, ST.CVL, ST.AV, ST.CT, ST.AS, ST.DE], type)
-            ) {
-                verification(SG.SlowB, data);
-                return;
-            }
-            if (
-                includes_ship_type([ST.SS, ST.SSV, ST.AR], type)
-            ) {
-                verification(SG.SlowC, data);
-                return;
+                verification(SG.SlowB2, d);
+                return true;
             }
 
-            throw new Error(`速度振り分けに漏れ: ${name}`);
-        }
+            if (
+                is_both_base('加賀', d.name) ||
+                is_both_base('あきつ丸', d.name) ||
+                is_both_base('速吸', d.name) ||
+                is_both_base('明石', d.name)
+            ) {
+                verification(SG.SlowC, d);
+                return true;
+            }
+
+            if (
+                is_both_base('伊201', d.name) ||
+                is_both_base('伊203', d.name) ||
+                d.name === '稲木改二'
+            ) {
+                verification(SG.SlowD, d);
+                return true;
+            }
+
+            if (
+                includes_ship_name(['鳳翔改二', '鳳翔改二戦'], d.name)
+            ) {
+                verification(SG.SlowE, d);
+                return true;
+            }
+
+            return false;
+        };
+
+        /** 艦型判定 */
+        const check_by_class = (d: ShipData): boolean => {
+            if (
+                equal_class_id_with_name(SHOKAKU_CLASS_ID, d.name) ||
+                equal_class_id_with_name(TONE_CLASS_ID, d.name) ||
+                equal_class_id_with_name(MOGAMI_CLASS_ID, d.name)
+            ) {
+                verification(SG.FastA, d);
+                return true;
+            }
+
+            if (
+                equal_class_id_with_name(IOWA_CLASS_ID, d.name) ||
+                equal_class_id_with_name(KONGOU_CLASS_ID, d.name) ||
+                equal_class_id_with_name(AGANO_CLASS_ID, d.name)
+            ) {
+                verification(SG.FastB1, d);
+                return true;
+            }
+
+            if (
+                equal_class_id_with_name(SOUTH_DAKOTA_CLASS_ID, d.name) ||
+                equal_class_id_with_name(NORTH_CAROLINA_CLASS_ID, d.name) ||
+                equal_class_id_with_name(GRORIOUS_CLASS_ID, d.name) ||
+                equal_class_id_with_name(RICHELIEU_CLASS_ID, d.name) ||
+                equal_class_id_with_name(V_VENETO_CLASS_ID, d.name) ||
+                equal_class_id_with_name(SHOHO_CLASS_ID, d.name) ||
+                equal_class_id_with_name(INDEPENDENCE_CLASS_ID, d.name)
+            ) {
+                verification(SG.FastB2, d);
+                return true;
+            }
+
+            return false;
+        };
+
+        /** 艦種判定 */
+        const check_by_type = (d: ShipData): boolean => {
+            if (
+                includes_ship_type([ST.CV, ST.CVB, ST.CA, ST.CL, ST.CLT, ST.DD], d.type)
+            ) {
+                verification(SG.FastB2, d);
+                return true;
+            }
+
+            if (d.type === ST.AV) {
+                verification(SG.FastC, d);
+                return true;
+            }
+
+            if (
+                includes_ship_type([ST.BB, ST.BBV, ST.CVL, ST.AV, ST.CT, ST.AS, ST.DE], d.type)
+            ) {
+                verification(SG.SlowB, d);
+                return true;
+            }
+
+            if (includes_ship_type([ST.SS, ST.SSV, ST.AR], d.type)) {
+                verification(SG.SlowC, d);
+                return true;
+            }
+
+            return false;
+        };
+
+        const checks = [check_by_name, check_by_class, check_by_type] as const;
 
         Object.keys(SHIP_DATAS).forEach(id_string => {
             const id = id_string as unknown as ShipId;
             const data = SHIP_DATAS[id];
 
-            assign_to_group(data);
-        })
+            for (const check of checks) {
+                if (check(data)) return;
+            }
+
+            throw new Error(`速度振り分けに漏れ: ${name}`);
+        });
     });
 });
