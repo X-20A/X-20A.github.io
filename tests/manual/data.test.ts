@@ -1,20 +1,14 @@
 import { describe, it, expect } from 'vitest';
 import path from 'node:path';
 import fs from 'node:fs';
-import axios from 'axios';
 import SHIP_DATAS, { ST as ShipType } from '../../src/data/ship';
 import EQUIP_DATAS, { EquipType } from '../../src/data/equip';
 import { ShipId } from '../../src/types/shipId';
 import { EquipId } from '../../src/types/equipId';
+import { get_ACSim_master_data } from '../gateway';
 
 describe('Dataテスト', () => {
     it('data-test: 制空シミュのデータと照合して艦や装備に抜けや不一致が無いか確認', async () => {
-        // Cors回避のために別途プロキシサーバを起動してから
-        const response = await axios.get(
-            'http://localhost:3000/proxy'
-        );
-        expect(200).toBe(response.status); // 通信成功確認
-
         type MasterShip = {
             id: number,
             name: string,
@@ -28,7 +22,7 @@ describe('Dataテスト', () => {
             type: EquipType,
             scout: number,
         }
-        const master = response.data;
+        const master = await get_ACSim_master_data();
         const ac_ships: MasterShip[] = master.ships;
         const ac_items: MasterItem[] = master.items;
 
