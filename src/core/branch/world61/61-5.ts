@@ -137,7 +137,7 @@ export function calc_61_5(
             if (phase <= 4) {
                 return 'F';
             }
-            if (is_fleet_speed_slow(speed)) {
+            if (BBs + CVH >= 3 && is_fleet_speed_slow(speed)) {
                 return 'F';
             }
             return 'X1';
@@ -145,22 +145,22 @@ export function calc_61_5(
             if (phase >= 3 && Ds >= 3) {
                 return 'R';
             }
-            if (CL === 0) {
+            if (CL === 0 && Ds >= 3) {
                 return 'C1';
             }
             return 'C2';
         case 'C2':
             return 'D';
         case 'D':
+            if (seek[3] >= 115) {
+                return 'U';
+            }
             return 'U';
         case 'E':
-            if (Ds >= 4) {
-                return 'I';
+            if (CL === 0 && Ds <= 3) {
+                return 'G';
             }
-            if (BBs <= 2 && Ds >= 3) {
-                return 'I';
-            }
-            return 'G';
+            return 'I';
         case 'F':
             if (route.includes('3')) {
                 return 'X1';
@@ -170,6 +170,9 @@ export function calc_61_5(
             }
             return 'G';
         case 'G':
+            if (CA >= 1) {
+                return 'H';
+            }
             if (Ds >= 4) {
                 return 'H';
             }
@@ -178,18 +181,21 @@ export function calc_61_5(
             if (phase <= 3) {
                 return 'Q';
             }
-            if (AV >= 1) {
+            if (AV >= 1 && is_fleet_speed_slow(speed)) {
                 return 'Q';
             }
-            if (CVH >= 1) {
+            if (BBs >= 4 && is_fleet_speed_slow(speed)) {
                 return 'V';
             }
-            if (BBs >= 4 && is_fleet_speed_slow(speed)) {
+            if (CVH >= 1) {
                 return 'V';
             }
             return 'W';
         case 'J':
             if (is_fleet_speed_slow(speed)) {
+                return 'K';
+            }
+            if (BBs + CVH >= 1) {
                 return 'K';
             }
             return 'M';
@@ -207,7 +213,10 @@ export function calc_61_5(
             }
             return 'O';
         case 'R':
-            if (BBs + CVH >= 3) {
+            if (count_Yamato_class(fleet) >= 1) {
+                return 'S';
+            }
+            if (BBs >= 2) {
                 return 'S';
             }
             return 'D';
