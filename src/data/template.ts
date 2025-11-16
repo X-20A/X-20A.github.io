@@ -1011,7 +1011,7 @@ const templates: Ttemplate[] = [
         "title": "61-3_NVXOZ_Z削り",
         "world": 61,
         "area": 3,
-        "route": "1-N-V-X-O-Z",
+        "route": "3-N-V-X-O-Z",
         "token": "w36ezN3MpOA",
         "memo": "基地: 2部隊ボス集中$e第二警戒タッチ想定"
     },
@@ -1019,9 +1019,65 @@ const templates: Ttemplate[] = [
         "title": "61-3_NVXOZ_Z破壊_破砕無",
         "world": 61,
         "area": 3,
-        "route": "1-N-V-X-O-Z",
+        "route": "3-N-V-X-O-Z",
         "token": "siYbIZu0yM1",
         "memo": "基地: 2部隊ボス集中$e第二警戒タッチ想定"
+    },
+    {
+        "title": "61-4_ABI_I輸送",
+        "world": 61,
+        "area": 4,
+        "route": "1-A-B-H-I",
+        "token": "QSYAwqSUrmu",
+        "memo": "基地: 2部隊ボス集中$eTP計算式: 通常？$eTP: 960"
+    },
+    {
+        "title": "61-4_FF2GN_N削り",
+        "world": 61,
+        "area": 4,
+        "route": "2-F-F2-G-N",
+        "token": "H96G4DvjpF7",
+        "memo": "基地: 2部隊ボス集中"
+    },
+    {
+        "title": "61-4_FF2GN_N破壊",
+        "world": 61,
+        "area": 4,
+        "route": "2-F-F2-G-N",
+        "token": "9WE3t2KDVP_",
+        "memo": "基地: 2部隊ボス集中"
+    },
+    {
+        "title": "61-4_GRR2ST_T削り",
+        "world": 61,
+        "area": 4,
+        "route": "3-G-R-R2-S-T",
+        "token": "v80_EFjiStT",
+        "memo": "基地: 2部隊ボス集中"
+    },
+    {
+        "title": "61-4_GRR2ST_T破壊",
+        "world": 61,
+        "area": 4,
+        "route": "3-G-R-R2-S-T",
+        "token": "CWgI19l0WlQ",
+        "memo": "基地: 2部隊ボス集中"
+    },
+    {
+        "title": "61-4_BUVXZ_Z削り",
+        "world": 61,
+        "area": 4,
+        "route": "4-B-U-V-X-Z",
+        "token": "NFUfevYmU91",
+        "memo": "基地: 2部隊ボス集中"
+    },
+    {
+        "title": "61-4_BUVXZ_Z破壊",
+        "world": 61,
+        "area": 4,
+        "route": "4-B-U-V-X-Z",
+        "token": "RmDuSfiQgW2",
+        "memo": "基地: 2部隊ボス集中"
     },
 ]; // @expansion
 /*
