@@ -2,7 +2,7 @@ import { SimFleet } from "../../../models/fleet/SimFleet";
 import { PreSailNull } from "../../../types/brand";
 import { BranchResponse } from "../../../types";
 import { destructuring_assignment_helper, omission_of_conditions } from "..";
-import { is_fleet_speed_fast_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
+import { is_fleet_speed_fast_or_more, is_fleet_speed_faster_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
 import { is_fleet_carrier, is_fleet_combined } from "../../../models/fleet/predicate";
 import { AdoptFleet, count_Yamato_class } from "../../../models/fleet/AdoptFleet";
 import { EquippedShip } from "../../../models/ship/EquippedShip";
@@ -86,10 +86,10 @@ export function calc_61_5(
             if (count_Yamato_class(fleet) >= 1) {
                 return 'A';
             }
-            if (BBs >= 4) {
+            if (BBCVs >= 6) {
                 return 'A';
             }
-            if (CVH >= 4) {
+            if (BBs + CVH >= 5) {
                 return 'A';
             }
             return 'A1';
@@ -113,10 +113,10 @@ export function calc_61_5(
             if (!is_fleet_combined(fleet_type)) {
                 return 'B';
             }
-            if (is_fleet_carrier(fleet_type)) {
+            if (count_Yamato_class(fleet) >= 2) {
                 return 'B';
             }
-            if (count_Yamato_class(fleet) >= 2) {
+            if (BBs + CVH >= 6) {
                 return 'B';
             }
             if (phase >= 4 && BBs + CVH <= 4) {
@@ -124,10 +124,16 @@ export function calc_61_5(
             }
             return 'A1';
         case 'B':
-            if (count_Yamato_class(fleet) >= 2) {
-                return 'A1';
+            if (!is_fleet_combined(fleet_type)) {
+                if (CL >= 2 && Ds >= 3) {
+                    return 'C';
+                }
+                return 'B1';
             }
-            return 'B1';
+            if (BBs + CVH >= 6) {
+                return 'B1';
+            }
+            return 'A1';
         case 'B1':
             if (!is_fleet_combined(fleet_type)) {
                 return 'C';
@@ -137,12 +143,26 @@ export function calc_61_5(
             if (phase <= 4) {
                 return 'F';
             }
-            if (BBs + CVH >= 3 && is_fleet_speed_slow(speed)) {
+            if (is_fleet_speed_fast_or_more(speed)) {
+                return 'X1';
+            }
+            if (count_Yamato_class(fleet) >= 2) {
+                return 'F';
+            }
+            if (BBs >= 3) {
                 return 'F';
             }
             return 'X1';
         case 'C':
-            if (phase >= 3 && Ds >= 3) {
+            if (CVH >= 2) {
+                return 'C1';
+            }
+            if (
+                phase >= 3 &&
+                CVH <= 1 &&
+                Ds >= 3 &&
+                is_fleet_speed_fast_or_more(speed)
+            ) {
                 return 'R';
             }
             if (CL === 0 && Ds >= 3) {
@@ -152,7 +172,7 @@ export function calc_61_5(
         case 'C2':
             return 'D';
         case 'D':
-            if (seek[3] >= 115) {
+            if (seek[3] >= 105) {
                 return 'U';
             }
             return 'U';
@@ -170,12 +190,10 @@ export function calc_61_5(
             }
             return 'G';
         case 'G':
-            if (CA >= 1) {
+            if (route.includes('B2')) {
                 return 'H';
             }
-            if (Ds >= 4) {
-                return 'H';
-            }
+            // route.includes('E')
             return 'I';
         case 'I':
             if (phase <= 3) {
@@ -195,6 +213,14 @@ export function calc_61_5(
             if (is_fleet_speed_slow(speed)) {
                 return 'K';
             }
+            // 処理の都合で高速+から
+            if (is_fleet_speed_faster_or_more(speed)) {
+                if (Ds >= 6) {
+                    return 'N';
+                }
+                return 'M';
+            }
+            // 高速艦隊
             if (BBs + CVH >= 1) {
                 return 'K';
             }
@@ -204,6 +230,9 @@ export function calc_61_5(
                 return 'M';
             }
             if (CL >= 1) {
+                return 'M';
+            }
+            if (Ds >= 6) {
                 return 'M';
             }
             return 'L';
@@ -219,11 +248,17 @@ export function calc_61_5(
             if (BBs >= 2) {
                 return 'S';
             }
+            if (CL === 0) {
+                return 'S';
+            }
             return 'D';
         case 'W':
             return 'X';
         case 'Z':
-            if (CVH >= 2 && is_fleet_speed_slow(speed)) {
+            if (
+                count_Yamato_class(fleet) >= 2 &&
+                is_fleet_speed_slow(speed)
+            ) {
                 return 'Z2';
             }
             return 'ZZ';
