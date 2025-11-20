@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { useAtom } from 'jotai';
 import { modeAtom, areaAtom, targetAtom, templateAtom } from '@/classes/stores';
 import '@/App.css';
-import templates from '@/data/template';
 import vangards from '@/data/vangard';
 import { Ttemplate } from '@/classes/types';
+import { TEMPLATES } from '@/data/templates';
 
 const Areas: React.FC = () => {
   const [mode] = useAtom(modeAtom);
@@ -30,7 +30,7 @@ const Areas: React.FC = () => {
 
   switch (mode) {
     case 'nomal':
-      items = templates.filter(item => item.world === area);
+      items = TEMPLATES.filter(item => item.world === area);
       break;
     case 'vanguard':
       items = vangards.filter(item => item.world === area);
@@ -38,7 +38,7 @@ const Areas: React.FC = () => {
     case 59:
     case 60:
     case 61:
-      items = templates.filter(item => item.world === mode && item.area === area);
+      items = TEMPLATES.filter(item => item.world === mode && item.area === area);
       break;
   } // @expansion
 

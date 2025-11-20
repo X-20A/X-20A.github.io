@@ -1,11 +1,11 @@
 import { AreaId } from '@/classes/types';
 import { edge_datas } from '@/data/map';
-import templates from '@/data/template';
+import { TEMPLATES } from '@/data/templates';
 import vangards from '@/data/vangard';
 import { test, expect } from 'vitest';
 
 test('data: templateのデータに不備がないか確認', () => {
-    const datas = templates.concat(vangards);
+    const datas = TEMPLATES.concat(vangards);
 
     const urlSet = new Set<string>();
 
