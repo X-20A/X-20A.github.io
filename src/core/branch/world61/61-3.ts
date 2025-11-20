@@ -76,6 +76,9 @@ export function calc_61_3(
             }
             return 'C1';
         case 'C1':
+            if (seek[3] < 90) {
+                return 'D';
+            }
             if (phase === 1) {
                 return 'C2';
             }
@@ -114,14 +117,19 @@ export function calc_61_3(
             if (is_fleet_speed_faster_or_more(speed)) {
                 return 'I';
             }
-            if (
-                CL >= 2 &&
-                Ds >= 4 &&
-                is_fleet_speed_fast_or_more(speed)
-            ) {
+            if (CVs === 0) {
                 return 'J';
             }
-            if (CVs <= 1 && Ds >= 4) {
+            if (is_fleet_speed_slow(speed)) {
+                return 'I';
+            }
+            if (CVs === 1 && Ds >= 4) {
+                return 'J';
+            }
+            if (CL >= 2 && Ds >= 4) {
+                return 'J';
+            }
+            if (CL >= 3 && Ds >= 3) {
                 return 'J';
             }
             return 'I';
@@ -131,10 +139,16 @@ export function calc_61_3(
             }
             return 'J';
         case 'K':
-            return 'M';
+            if (seek[1] >= 72) {
+                return 'M';
+            }
+            return 'L';
         case 'N':
             if (phase <= 2) {
                 return 'O';
+            }
+            if (count_Yamato_class(fleet) >= 2 && Ds <= 4) {
+                return 'V';
             }
             if (CVs >= 3) {
                 return 'V';
@@ -147,10 +161,16 @@ export function calc_61_3(
             if (phase <= 2) {
                 return 'D';
             }
+            if (seek[1] < 80) {
+                return 'D';
+            }
+            if (Ss >= 1) {
+                return 'Y';
+            }
             if (count_Yamato_class(fleet) >= 2) {
                 return 'Y';
             }
-            if (Ss >= 1) {
+            if (BBs >= 3) {
                 return 'Y';
             }
             if (CVH >= 3) {
@@ -159,18 +179,18 @@ export function calc_61_3(
             if (Ds <= 2 && is_fleet_speed_slow(speed)) {
                 return 'Y';
             }
-            if (Ds <= 1) {
-                return 'Y';
-            }
             return 'Z';
         case 'R':
-            if (CVs <= 2) {
+            if (CVs <= 2 && Ds >= 5) {
                 return 'R2';
             }
             return 'R1';
         case 'R2':
             return 'R3';
         case 'T':
+            if (seek[3] < 100) {
+                return 'R3';
+            }
             if (is_fleet_speed_slow(speed)) {
                 return 'G1';
             }
@@ -185,6 +205,9 @@ export function calc_61_3(
             }
             return 'W';
         case 'X':
+            if (seek[1] < 80) {
+                return 'O';
+            }
             if (
                 count_Yamato_class(fleet) === 0 &&
                 CL >= 2 &&
@@ -195,7 +218,10 @@ export function calc_61_3(
             }
             return 'O';
         case 'Y':
-            return 'Z';
+            if (seek[1] >= 80) {
+                return 'Z';
+            }
+            return 'L';
         case 'A1':
             return option.A1 === 'A2'
                 ? 'A2'
