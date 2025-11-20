@@ -103,12 +103,24 @@ export function calc_61_5(
             if (Ds === 3) {
                 return 'C';
             }
-            if (BBCVs >= 3) {
+            if (BBs + CVH >= 3) {
                 return 'C';
             }
             return 'J';
         case '3':
-            return 'B2';
+            if (count_Yamato_class(fleet) >= 1) {
+                return 'B2';
+            }
+            if (BBs + CVH >= 5) {
+                return 'B2';
+            }
+            if (Ds <= 2) {
+                return 'B2';
+            }
+            if (is_fleet_speed_slow(speed)) {
+                return 'B2';
+            }
+            return 'X1';
         case 'A':
             if (!is_fleet_combined(fleet_type)) {
                 return 'B';
@@ -130,10 +142,11 @@ export function calc_61_5(
                 }
                 return 'B1';
             }
-            if (BBs + CVH >= 6) {
+            if (is_fleet_carrier(fleet_type)) {
                 return 'B1';
             }
-            return 'A1';
+            // 水上打撃部隊
+            return 'A1'; // 輸送護衛部隊はデータなし
         case 'B1':
             if (!is_fleet_combined(fleet_type)) {
                 return 'C';
@@ -159,20 +172,25 @@ export function calc_61_5(
             }
             if (
                 phase >= 3 &&
-                CVH <= 1 &&
                 Ds >= 3 &&
                 is_fleet_speed_fast_or_more(speed)
             ) {
                 return 'R';
             }
-            if (CL === 0 && Ds >= 3) {
+            if (Ds <= 1) {
                 return 'C1';
             }
-            return 'C2';
+            if (CL >= 1) {
+                return 'C2';
+            }
+            if (route.includes('2')) {
+                return 'C2';
+            }
+            return 'C1';
         case 'C2':
             return 'D';
         case 'D':
-            if (seek[3] >= 105) {
+            if (seek[3] >= 106) {
                 return 'U';
             }
             return 'U';
@@ -190,11 +208,10 @@ export function calc_61_5(
             }
             return 'G';
         case 'G':
-            if (route.includes('B2')) {
-                return 'H';
+            if (route.includes('E')) {
+                return 'I';
             }
-            // route.includes('E')
-            return 'I';
+            return 'H';
         case 'I':
             if (phase <= 3) {
                 return 'Q';
@@ -237,7 +254,7 @@ export function calc_61_5(
             }
             return 'L';
         case 'N':
-            if (seek[3] >= 105) {
+            if (seek[3] >= 108) {
                 return 'P';
             }
             return 'O';
@@ -253,11 +270,20 @@ export function calc_61_5(
             }
             return 'D';
         case 'W':
-            return 'X';
+            if (seek[1] >= 85) {
+                return 'X';
+            }
+            return 'T';
         case 'Z':
             if (
                 count_Yamato_class(fleet) >= 2 &&
                 is_fleet_speed_slow(speed)
+            ) {
+                return 'Z2';
+            }
+            if (
+                count_Yamato_class(fleet) >= 2 &&
+                Ds === 2
             ) {
                 return 'Z2';
             }
