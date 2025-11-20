@@ -22,15 +22,15 @@ export const WORLD_61: Ttemplate[] = [
         "world": 61,
         "area": 1,
         "route": "1-A-F-J-K-Q-S-T-V",
-        "token": "yOjCxLfFKq9",
-        "memo": "基地: ボス集中"
+        "token": "xCayehjYN4v",
+        "memo": "基地: ボス集中$e退避条件: 最終Nodeで索敵値70以上(係数4)"
     },
     {
         "title": "61-1_JKQSTV_V破壊_破砕無",
         "world": 61,
         "area": 1,
         "route": "1-A-F-J-K-Q-S-T-V",
-        "token": "-iIGY12hVpl",
+        "token": "6E3AdbUcPIf",
         "memo": "基地: ボス集中"
     },
     {
@@ -55,6 +55,14 @@ export const WORLD_61: Ttemplate[] = [
         "area": 2,
         "route": "2-K-P-Q-T-V-W-X",
         "token": "-eGdwaeOOje",
+        "memo": "基地: 2部隊ボス集中"
+    },
+    {
+        "title": "61-2_BDES_ギミックS",
+        "world": 61,
+        "area": 2,
+        "route": "1-A-B-D-E-S",
+        "token": "s3QhnLRRGsW",
         "memo": "基地: 2部隊ボス集中"
     },
     {
@@ -94,7 +102,7 @@ export const WORLD_61: Ttemplate[] = [
         "world": 61,
         "area": 3,
         "route": "1-A-A1-B-C-T-W",
-        "token": "N1jgDX3oxo6",
+        "token": "nnLdsR1qCBQ",
         "memo": "基地: 2部隊ボス集中"
     },
     {
@@ -102,24 +110,24 @@ export const WORLD_61: Ttemplate[] = [
         "world": 61,
         "area": 3,
         "route": "1-A-A1-B-C-T-W",
-        "token": "rfhCD0rlyeu",
+        "token": "V_y4Qp8iif8",
         "memo": "基地: 2部隊ボス集中"
     },
     {
-        "title": "61-3_NVXOZ_Z削り",
+        "title": "61-3_NXOZ_Z削り",
         "world": 61,
         "area": 3,
-        "route": "3-N-V-X-O-Z",
-        "token": "w36ezN3MpOA",
-        "memo": "基地: 2部隊ボス集中$e第二警戒タッチ想定"
+        "route": "3-N-X-O-Z",
+        "token": "i52NY759vr3",
+        "memo": "基地: 2部隊ボス集中$e第二警戒タッチ想定$e煙幕: X"
     },
     {
-        "title": "61-3_NVXOZ_Z破壊_破砕無",
+        "title": "61-3_NXOZ_Z破壊_破砕無",
         "world": 61,
         "area": 3,
-        "route": "3-N-V-X-O-Z",
-        "token": "siYbIZu0yM1",
-        "memo": "基地: 2部隊ボス集中$e第二警戒タッチ想定"
+        "route": "3-N-X-O-Z",
+        "token": "TARKeV79zsZ",
+        "memo": "基地: 2部隊ボス集中$e第二警戒タッチ想定$e煙幕: X"
     },
     {
         "title": "61-4_ABI_I輸送",
