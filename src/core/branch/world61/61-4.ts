@@ -57,6 +57,9 @@ export function calc_61_4(
                 return '3' // 空母機動部隊
             }
         case '1':
+            if (BBV >= 2) {
+                return 'B1';
+            }
             if (is_fleet_transport(fleet_type)) {
                 return 'A';
             }
@@ -157,7 +160,7 @@ export function calc_61_4(
             if (BBs + CVH <= 3) {
                 return 'F2';
             }
-            if (Ds >= 4) {
+            if (Ds >= 4 && is_fleet_speed_fast_or_more(speed)) {
                 return 'F2';
             }
             return 'F1';
@@ -244,7 +247,7 @@ export function calc_61_4(
             if (CVH >= 1) {
                 return 'W';
             }
-            if (CA >= 2) {
+            if (CAs >= 2) {
                 return 'W';
             }
             if (CL === 0) {
