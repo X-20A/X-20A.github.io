@@ -185,4 +185,84 @@ export const WORLD_61: Ttemplate[] = [
         "token": "RmDuSfiQgW2",
         "memo": "基地: 2部隊ボス集中"
     },
+    {
+        "title": "61-5_JKMNP_P削り",
+        "world": 61,
+        "area": 5,
+        "route": "2-J-K-M-N-P",
+        "token": "l0_SekQPaca",
+        "memo": "基地: ボス ボス N"
+    },
+    {
+        "title": "61-5_JKMNP_P破壊",
+        "world": 61,
+        "area": 5,
+        "route": "2-J-K-M-N-P",
+        "token": "epBLZbH55_J",
+        "memo": "基地: ボス ボス N"
+    },
+    {
+        "title": "61-5_CRSDU_U削り",
+        "world": 61,
+        "area": 5,
+        "route": "2-C-R-S-D-U",
+        "token": "Tbl_TEWEnp_",
+        "memo": "基地: ボス集中"
+    },
+    {
+        "title": "61-5_CRSDU_U破壊",
+        "world": 61,
+        "area": 5,
+        "route": "2-C-R-S-D-U",
+        "token": "UZzcMGJHSFE",
+        "memo": "基地: ボス集中"
+    },
+    {
+        "title": "61-5_AEIWX_X削り",
+        "world": 61,
+        "area": 5,
+        "route": "1-A-E-I-W-X",
+        "token": "n3vn-m9UG0s",
+        "memo": "基地: ボス集中"
+    },
+    {
+        "title": "61-5_AEIWX_X破壊",
+        "world": 61,
+        "area": 5,
+        "route": "1-A-E-I-W-X",
+        "token": "Zh5YpslDp6",
+        "memo": "基地: ボス集中"
+    },
+    {
+        "title": "61-5_AEIQYZZZ_ZZ削り_水上打撃部隊",
+        "world": 61,
+        "area": 5,
+        "route": "1-A-E-I-Q-Y-Z-ZZ",
+        "token": "GqoMNuWhIN0",
+        "memo": "基地: ボス集中"
+    },
+    {
+        "title": "61-5_AEIQYZZZ_ZZ破壊_水上打撃部隊_破砕有",
+        "world": 61,
+        "area": 5,
+        "route": "1-A-E-I-Q-Y-Z-ZZ",
+        "token": "S7iNL4Kzf6q",
+        "memo": "基地: ボス集中"
+    },
+    {
+        "title": "61-5_B2X1X2YZZZ_ZZ削り_空母機動部隊",
+        "world": 61,
+        "area": 5,
+        "route": "3-B2-X1-X2-Y-Z-ZZ",
+        "token": "yDkcX2sCYu0",
+        "memo": "基地: ボス集中$e煙幕: X2"
+    },
+    {
+        "title": "61-5_B2X1X2YZZZ_ZZ破壊_空母機動部隊_破砕有",
+        "world": 61,
+        "area": 5,
+        "route": "3-B2-X1-X2-Y-Z-ZZ",
+        "token": "GZhoQfa-Ao0",
+        "memo": "基地: ボス集中$e煙幕: X2"
+    },
 ] as const;

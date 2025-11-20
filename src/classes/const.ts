@@ -23,7 +23,7 @@ export default class Const {
         {
             mode_id: 61,
             label: '2025秋',
-            worlds: [1, 2, 3, 4],
+            worlds: [1, 2, 3, 4, 5],
         },
         {
             mode_id: 60,
