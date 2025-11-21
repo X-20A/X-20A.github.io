@@ -56,7 +56,10 @@ export function calc_61_2(
             if (Ds >= 5) {
                 return 'K';
             }
-            if (CL + Ds >= 5 && is_fleet_speed_fast_or_more(speed)) {
+            if (Ds >= 4 && is_fleet_speed_fast_or_more(speed)) {
+                return 'K';
+            }
+            if (CL >= 2 && is_fleet_speed_fast_or_more(speed)) {
                 return 'K';
             }
             return 'N';
@@ -78,9 +81,12 @@ export function calc_61_2(
             if (AV >= 2) {
                 return 'K';
             }
+            if (Ss >= 1) {
+                return 'K';
+            }
             return 'E';
         case 'F':
-            if (CVs >= 3) {
+            if (BBCVs >= 4) {
                 return 'G';
             }
             if (Ds <= 2) {
@@ -100,16 +106,24 @@ export function calc_61_2(
             return 'H';
         case 'K':
             if(!is_fleet_combined(fleet_type)) {
-                if (BBs <= 1 && CVH === 0 && CL >= 1 && Ds >= 3) {
-                    return 'L';
-                }
-                if (is_fleet_speed_slow(speed)) {
+                if (is_fleet_speed_fast_or_more(speed)) {
+                    if (CL >= 1) {
+                        return 'L';
+                    }
+                    if (Ds >= 2) {
+                        return 'L';
+                    }
                     return 'E';
                 }
-                if (CL >= 1) {
-                    return 'L';
-                }
-                if (Ds >= 2) {
+                // 低速
+                if (
+                    BBs <= 1 &&
+                    CVH === 0 &&
+                    AV <= 1 &&
+                    Ss === 0 &&
+                    CL >= 1 &&
+                    Ds >= 3
+                ) {
                     return 'L';
                 }
                 return 'E';
@@ -118,10 +132,7 @@ export function calc_61_2(
                 return 'L';
             }
             if (is_fleet_transport(fleet_type)) {
-                if (phase === 1) {
-                    return 'O';
-                }
-                if (BBV === 0) {
+                if (phase >= 2 && BBV === 0) {
                     return 'P';
                 }
                 return 'O';
@@ -130,15 +141,19 @@ export function calc_61_2(
             if (phase <= 2) {
                 return 'O';
             }
+            if (CVH >= 2) {
+                return 'O';
+            }
+            if (Ds <= 3) {
+                return 'O';
+            }
             if (is_fleet_speed_faster_or_more(speed)) {
                 return 'P';
             }
             if (
                 BBs <= 1 &&
-                CVH <= 1 &&
                 CVs <= 2 &&
                 CAs <= 2 &&
-                Ds >= 4 &&
                 is_fleet_speed_fast_or_more(speed)
             ) {
                 return 'P';
@@ -150,12 +165,12 @@ export function calc_61_2(
             }
             return 'O'; // 聯合艦隊
         case 'T':
-            if (is_fleet_transport(fleet_type) && seek[1] >= 32) {
+            if (is_fleet_transport(fleet_type) && seek[1] >= 35) {
                 return 'V';
             }
             if (
                 (is_fleet_carrier(fleet_type) || is_fleet_surface(fleet_type)) &&
-                seek[1] >= 63
+                seek[1] >= 68
             ) {
                 return 'V';
             }
@@ -164,25 +179,39 @@ export function calc_61_2(
             if (phase <= 2) {
                 return 'W';
             }
-            if (BBs >= 4) {
-                return 'W';
-            }
-            if (
-                (is_fleet_carrier(fleet_type) || is_fleet_surface(fleet_type)) &&
-                Ds >= 5
-            ) {
+            if (is_fleet_carrier(fleet_type)) {
+                if (Ds >= 5) {
+                    return 'Y';
+                }
+                if (BBs >= 3) {
+                    return 'W';
+                }
+                if (CVs >= 3) {
+                    return 'W';
+                }
+                if (AV + AO + LHA >= 2) {
+                    return 'W';
+                }
                 return 'Y';
             }
-            if (AV + AO + LHA >= 2) {
+            if (is_fleet_surface(fleet_type)) {
+                if (BBs >= 3) {
+                    return 'W';
+                }
+                if (Ds >= 5) {
+                    return 'Y';
+                }
+                if (AV + AO + LHA >= 2) {
+                    return 'W';
+                }
                 return 'W';
             }
-            if (BBs >= 3) {
-                return 'W';
+            if (is_fleet_transport(fleet_type)) {
+                if (AV + AO + LHA >= 2) {
+                    return 'W';
+                }
+                return 'Y';
             }
-            if (CVs >= 3) {
-                return 'W';
-            }
-            return 'Y';
         case 'A':
             return option.A === 'B'
                 ? 'B'
