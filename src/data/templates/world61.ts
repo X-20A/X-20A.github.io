@@ -134,24 +134,24 @@ export const WORLD_61: Ttemplate[] = [
         "world": 61,
         "area": 4,
         "route": "1-A-B-H-I",
-        "token": "QSYAwqSUrmu",
-        "memo": "基地: 2部隊ボス集中$eTP計算式: 通常？$eTP: 960"
+        "token": "G56-u6IiyKD",
+        "memo": "基地: 2部隊ボス集中$e煙幕: B$eTP計算式: 通常？$eTP: 960"
     },
     {
         "title": "61-4_FF2GN_N削り",
         "world": 61,
         "area": 4,
         "route": "2-F-F2-G-N",
-        "token": "H96G4DvjpF7",
-        "memo": "基地: 2部隊ボス集中"
+        "token": "9uOJ6tOL-Jl",
+        "memo": "基地: 2部隊ボス集中$e煙幕: G"
     },
     {
         "title": "61-4_FF2GN_N破壊",
         "world": 61,
         "area": 4,
         "route": "2-F-F2-G-N",
-        "token": "9WE3t2KDVP_",
-        "memo": "基地: 2部隊ボス集中"
+        "token": "fRUmIKk5p0e",
+        "memo": "基地: 2部隊ボス集中$e煙幕: G"
     },
     {
         "title": "61-4_GRR2ST_T削り",
@@ -254,7 +254,7 @@ export const WORLD_61: Ttemplate[] = [
         "world": 61,
         "area": 5,
         "route": "3-B2-X1-X2-Y-Z-ZZ",
-        "token": "yDkcX2sCYu0",
+        "token": "Ulk7_I9--8y",
         "memo": "基地: ボス集中$e煙幕: X2"
     },
     {
