@@ -41,13 +41,16 @@ export function calc_61_1(
                 return 'H';
             }
             if (is_fleet_speed_fast_or_more(speed)) {
-                if (Ds >= 3) {
+                if (Ds <= 1) {
+                    return 'H';
+                }
+                if (CL >= 1) {
                     return 'I';
                 }
-                if (CL >= 1 && Ds >= 2) {
+                if (CVH === 0) {
                     return 'I';
                 }
-                if (CVs <= 1 && Ds >= 2) {
+                if (CVs <= 1) {
                     return 'I';
                 }
                 return 'H';
@@ -128,6 +131,9 @@ export function calc_61_1(
             }
             if (Ds === 0) {
                 return 'Q';
+            }
+            if (Ss >= 1) {
+                return 'R';
             }
             if (CVs === 2) {
                 return 'R';
