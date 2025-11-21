@@ -230,7 +230,7 @@ export const WORLD_61: Ttemplate[] = [
         "world": 61,
         "area": 5,
         "route": "1-A-E-I-W-X",
-        "token": "Zh5YpslDp6",
+        "token": "Iq6W_hunItR",
         "memo": "基地: ボス集中"
     },
     {
