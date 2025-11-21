@@ -186,7 +186,7 @@ export function calc_61_3(
             }
             return 'R1';
         case 'R2':
-            return 'R3';
+            return 'V';
         case 'T':
             if (seek[3] < 100) {
                 return 'R3';
