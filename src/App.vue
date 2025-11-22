@@ -1,7 +1,8 @@
 <template>
 	<Header />
 	<div class="container">
-		<input v-model="current_data.project_name" placeholder="計画名" @input="handleProjectNameUpdate" />
+		<input v-model="current_data.project_name" placeholder="計画名" @input="handle_project_name_update" />
+		<button @pointerdown="handle_sort_rows">上詰め</button>
 		<div class="sheet-container">
 			<div class="table-wrapper">
 				<table class="spread-sheet">
@@ -109,9 +110,16 @@ const sum = computed(() => {
 });
 
 // プロジェクト名更新
-const handleProjectNameUpdate = () => {
+const handle_project_name_update = () => {
 	store.UPDATE_CURRENT_DATA({
 		...current_data.value,
+	});
+};
+
+const handle_sort_rows = () => {
+	store.UPDATE_CURRENT_DATA({
+		...current_data.value,
+		row_datas: sort_row_datas(current_data.value.row_datas),
 	});
 };
 
