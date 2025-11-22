@@ -14,7 +14,7 @@ export const useStore = defineStore('datas', {
             this.SAVE_DATA();
         },
         UPDATE_ROW_DATA(new_data: RowData, row_index: number): void {
-            const updatedDatas = [...this.current_data.datas];
+            const updatedDatas = [...this.current_data.row_datas];
             updatedDatas[row_index] = {
                 ...updatedDatas[row_index],
                 ...new_data,
@@ -22,7 +22,7 @@ export const useStore = defineStore('datas', {
 
             this.UPDATE_CURRENT_DATA({
                 ...this.current_data,
-                datas: updatedDatas,
+                row_datas: updatedDatas,
             });
         },
         UNDO_DATA(history_index: number): void {

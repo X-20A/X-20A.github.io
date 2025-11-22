@@ -32,9 +32,9 @@ export const INITIAL_SUM_DATA: SumData = {
 
 export type SaveData = {
     project_name: string,
-    datas: RowData[],
+    row_datas: RowData[],
 }
 export const INITIAL_SAVE_DATA: SaveData = {
     project_name: '',
-    datas: Array(80).fill(null).map(() => ({ ...INITIAL_ROW_DATA })),
+    row_datas: Array(80).fill(null).map(() => ({ ...INITIAL_ROW_DATA })),
 } as const;

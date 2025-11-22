@@ -20,7 +20,7 @@
 						</tr>
 					</thead>
 					<tbody class="table-body">
-						<tr v-for="(row, index) in current_data.datas" :key="index" class="data-row">
+						<tr v-for="(row, index) in current_data.row_datas" :key="index" class="data-row">
 							<td class="drag-handle">⋮⋮</td>
 							<td>
 								<input @paste="handle_paste($event, index)" type="text" class="cell import-cell" />
@@ -99,7 +99,7 @@ const current_data = computed(() => store.current_data);
 const sum = computed(() => {
 	if (!current_data.value) return { ...INITIAL_SUM_DATA };
 
-	const sumed_data = calc_sum_data(current_data.value.datas);
+	const sumed_data = calc_sum_data(current_data.value.row_datas);
 	return floor_sum_data(sumed_data);
 });
 
@@ -114,7 +114,7 @@ const handleProjectNameUpdate = () => {
 const handleRowUpdate = (rowIndex: number) => {
 	store.UPDATE_CURRENT_DATA({
 		...current_data.value,
-		datas: [...current_data.value.datas] // 配列を新しく作成してリアクティブをトリガー
+		row_datas: [...current_data.value.row_datas] // 配列を新しく作成してリアクティブをトリガー
 	});
 };
 
@@ -126,7 +126,7 @@ const handle_paste = (event: ClipboardEvent, row_index: number) => {
 
 	try {
 		const extracted_data =
-			extract_data_from_text(pasted_text, current_data.value.datas[row_index]);
+			extract_data_from_text(pasted_text, current_data.value.row_datas[row_index]);
 
 		store.UPDATE_ROW_DATA(extracted_data, row_index);
 	} catch (error) {
