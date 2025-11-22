@@ -1,0 +1,268 @@
+@charset "UTF-8";
+
+body {
+	margin: 0;
+	overflow-x: hidden;
+	overflow-y: scroll;
+	scrollbar-width: none;
+}
+
+a {
+	text-decoration: none;
+	color: #0000EE;
+}
+
+::-webkit-scrollbar {
+	width: 8px;
+}
+
+::-webkit-scrollbar:horizontal {
+	height: 8px;
+}
+
+::-webkit-scrollbar-track {
+	background: rgba(128, 128, 128, 0.2);
+}
+
+::-webkit-scrollbar-thumb {
+	border-radius: 1px;
+	background: rgb(128, 128, 128, 0.7);
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: rgb(177, 177, 177);
+}
+
+/* Firefox ScrollBar */
+* {
+	scrollbar-width: thin;
+}
+
+input[type="radio"] {
+	width: 10px;
+}
+
+p {
+	margin: 0px;
+}
+
+details {
+	list-style: none;
+	user-select: none;
+}
+
+li {
+	padding: 1px;
+}
+
+.tooltip-container {
+	position: relative;
+	display: inline-block;
+}
+
+.tooltip-text {
+	position: absolute;
+	/* 上に表示 */
+	bottom: 70%;
+	left: 50%;
+	transform: translateX(-50%) translateY(-5px);
+	background-color: rgba(0, 0, 0, 0.75);
+	color: white;
+	padding: 5px 10px;
+	border-radius: 4px;
+	white-space: nowrap;
+	font-size: 12px;
+	opacity: 0;
+	transition: opacity 0.2s, transform 0.02s;
+	pointer-events: none;
+	z-index: 9999;
+}
+
+.tooltip-container:hover .tooltip-text {
+	opacity: 1;
+	transform: translateX(-50%) translateY(-10px);
+}
+
+#cy-ct-no {
+	width: 200px;
+	text-align: left;
+}
+
+#conf-container {
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	width: 100%;
+	z-index: 999999999;
+	position: fixed;
+	display: none;
+	top: 0;
+}
+
+#conf-box {
+	background-color: #202129;
+	position: fixed;
+	width: 400px;
+	height: 500px;
+	display: none;
+	opacity: 1;
+	color: white;
+}
+
+#mask {
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background-color: black;
+	opacity: 0.4;
+	display: none;
+	position: fixed;
+	z-index: 999999998;
+}
+
+#conf-icon-box {
+	cursor: pointer;
+	opacity: 0.2;
+	top: 40px;
+	right: 5px;
+	position: fixed;
+	display: inline-block;
+	width: 28px;
+	height: 28px;
+	background-color: black;
+	border-radius: 14px;
+}
+
+#conf-icon {
+	left: 2px;
+	top: 2px;
+	fill: white;
+	width: 24px;
+	position: absolute;
+}
+
+#fold {
+	position: absolute;
+	top: 2px;
+	right: -28px;
+	z-index: 1;
+	cursor: pointer;
+}
+
+#fold:hover {
+	background-color: #d3d3d3;
+}
+
+#seek-info {
+	position: relative;
+}
+
+#asterisk {
+	position: absolute;
+	color: red;
+	top: -4px;
+	left: -6px;
+	cursor: default;
+	height: 12px;
+	user-select: none;
+}
+
+#seek-message {
+	padding: 0px 4px;
+	border: 1px solid black;
+	font-size: 12px;
+	position: absolute;
+	background-color: white;
+	top: -10px;
+	left: 10px;
+	color: red;
+	display: none;
+}
+
+#infomation {
+	right: 37px;
+}
+
+#screen-shot {
+	right: 4px;
+}
+
+.popup-info {
+	font-size: 13px;
+	max-width: 450px;
+	min-width: 210px;
+	position: absolute;
+	background: #fff;
+	padding: 6px;
+	border: 1px solid #000;
+	border-radius: 4px;
+	box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+	z-index: 1000;
+}
+
+.add-font {
+	font-weight: 600;
+	color: #1e00ff;
+}
+
+.remote-active {
+	padding: 3px 15px !important;
+	margin-left: 5px;
+}
+
+.item-icon {
+	margin-right: 3px;
+}
+
+.drum-icon {
+	vertical-align: -4px;
+}
+
+.craft-icon {
+	vertical-align: -6px;
+}
+
+/* v-htmlなんかはstyle scopedが効かないのでこっちに書く */
+/*デザインボタン*/
+.design-button {
+	user-select: none;
+	border: 0;
+	cursor: pointer;
+	overflow: hidden;
+	text-decoration: none;
+	background: #2196F3;
+	color: #fff;
+	padding: 7px 20px;
+	border-radius: 4px;
+	outline: none;
+	line-height: 19px;
+}
+
+.design-button:hover {
+	text-decoration: none;
+	background-color: rgb(25, 118, 210);
+	box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 4px -1px, rgba(0, 0, 0, 0.14) 0px 4px 5px 0px, rgba(0, 0, 0, 0.12) 0px 1px 10px 0px;
+}
+
+.design-button:after {
+	content: "";
+	/* 絶対配置で波紋位置を決める */
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	/* 波紋の形状 */
+	background: radial-gradient(circle, #fff 10%, transparent 10%) no-repeat 50%;
+	transform: scale(0, 0);
+	/* はじめは透過0に */
+	opacity: 0;
+	/* アニメーションの設定 */
+	transition: transform 0.01s, opacity 0.1s;
+}
+
+.design-button:active:after {
+	transform: scale(10, 10);
+	opacity: 0.3;
+	transition: transform 0.1s, opacity 0.3s;
+}
