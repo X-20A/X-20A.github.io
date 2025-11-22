@@ -2,10 +2,15 @@
 	<Header />
 	<div class="container">
 		<p style="color:magenta;">β版</p>
-		<input v-model="current_data.project_name" placeholder="計画名" @input="handle_project_name_update" />
-		<button @pointerdown="handle_sort_rows">上詰め</button>
-		<button @pointerdown="handle_issue_url">URL発行</button>
-		<button @pointerdown="handle_initialize">初期化</button>
+		<div class="header-controls">
+			<input v-model="current_data.project_name" placeholder="計画名" @input="handle_project_name_update"
+				class="project-name-input" />
+			<div class="button-group">
+				<button @pointerdown="handle_sort_rows" class="action-btn">上詰め</button>
+				<button @pointerdown="handle_copy_url" class="action-btn">URL発行</button>
+				<button @pointerdown="handle_initialize" class="action-btn danger">初期化</button>
+			</div>
+		</div>
 		<div class="sheet-container">
 			<div class="table-wrapper">
 				<table class="spread-sheet">
@@ -88,6 +93,15 @@
 			</div>
 		</div>
 	</div>
+
+	<transition name="notification">
+		<div v-if="is_show_notice" class="notification">
+			<div class="notification-content">
+				<p>{{ notice_message }}</p>
+			</div>
+		</div>
+	</transition>
+
 	<Footer />
 </template>
 
@@ -95,17 +109,19 @@
 import Footer from './components/Footer.vue';
 import Header from './components/Header.vue';
 import { useStore } from './stores';
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { INITIAL_SUM_DATA, INITIAL_ROW_DATA, INITIAL_SAVE_DATA, SaveData } from './types';
 import { calc_sum_data } from './logics/sum';
-import { extract_data_from_text } from './logics/extract';
 import { floor_sum_data } from './logics/floor';
 import { sort_row_datas } from './logics/sort';
 import { calc_URL_param, do_delete_URL_param, do_create_shorten_url } from './logics/url';
 import lzstring from "lz-string";
+import { extract_data_from_text } from './logics/extract';
 
 const store = useStore();
 const current_data = computed(() => store.current_data);
+const is_show_notice = ref(false);
+const notice_message = ref('');
 
 const sum = computed(() => {
 	if (!current_data.value) return { ...INITIAL_SUM_DATA };
@@ -128,9 +144,30 @@ const handle_sort_rows = () => {
 	});
 };
 
-const handle_issue_url = async () => {
-	const shorten_url = await do_create_shorten_url(current_data.value);
-	console.log('shorten_url: ', shorten_url);
+const handle_copy_url = async () => {
+	try {
+		console.log('handle_copy_url');
+		const shorten_url = await do_create_shorten_url(current_data.value);
+		// console.log('shorten_url: ', shorten_url);
+
+		const textArea = document.createElement('textarea');
+		textArea.value = shorten_url;
+		document.body.appendChild(textArea);
+		textArea.select();
+		document.execCommand('copy');
+		document.body.removeChild(textArea);
+		// 通知を表示
+		notice_message.value = `copied: ${shorten_url}`;
+		is_show_notice.value = true;
+		
+	} catch (err) {
+		notice_message.value = '共有URLの発行に失敗しました';
+		console.error(err);
+	}
+	// 5秒後に自動的に非表示
+	setTimeout(() => {
+		is_show_notice.value = false;
+	}, 5000);
 };
 
 const handle_initialize = () => {
@@ -174,7 +211,7 @@ onMounted(() => {
 	if (share_data) {
 		const decompressed_data =
 			lzstring.decompressFromEncodedURIComponent(share_data);
-			
+
 		store.UPDATE_CURRENT_DATA(JSON.parse(decompressed_data) as SaveData);
 		do_delete_URL_param();
 		return;
@@ -190,6 +227,56 @@ onMounted(() => {
 	margin: auto;
 	margin-top: 50px;
 	padding: 0 20px;
+}
+
+.header-controls {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 10px;
+	flex-wrap: wrap;
+	gap: 15px;
+}
+
+.project-name-input {
+	flex: 1;
+	min-width: 200px;
+	padding: 8px 12px;
+	border: 1px solid #ced4da;
+	border-radius: 4px;
+	font-size: 14px;
+}
+
+.button-group {
+	display: flex;
+	gap: 10px;
+}
+
+.action-btn {
+	padding: 6px 14px;
+	border: none;
+	border-radius: 4px;
+	background-color: #4dabf7;
+	color: white;
+	font-size: 14px;
+	cursor: pointer;
+	transition: background-color 0.2s, transform 0.1s;
+}
+
+.action-btn:hover {
+	background-color: #339af0;
+}
+
+.action-btn:active {
+	transform: translateY(1px);
+}
+
+.action-btn.danger {
+	background-color: #fa5252;
+}
+
+.action-btn.danger:hover {
+	background-color: #e03131;
 }
 
 .sheet-container {
@@ -315,6 +402,7 @@ onMounted(() => {
 	min-width: 50px;
 	text-align: right;
 }
+
 .action-column {
 	width: 24px;
 }
@@ -328,7 +416,7 @@ onMounted(() => {
 	padding: 0px;
 	color: #c9c9c9;
 	border: none;
-	
+
 	font-size: 12px;
 }
 
@@ -393,8 +481,79 @@ input[type="number"] {
 	color: #1971c2;
 	background-color: #e7f3ff;
 }
+
 .empty-cell {
 	width: 161px;
+}
+
+/* 通知スタイル */
+.notification {
+	position: fixed;
+	top: 40px;
+	right: 20px;
+	background-color: white;
+	border-radius: 8px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+	padding: 12px 16px;
+	z-index: 1000;
+	max-width: 300px;
+	border-left: 4px solid #4dabf7;
+}
+
+.notification-content {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.notification-content p {
+	margin: 0;
+	font-weight: 500;
+	color: #333;
+}
+
+.copy-btn,
+.close-btn {
+	padding: 6px 12px;
+	border: none;
+	border-radius: 4px;
+	font-size: 14px;
+	cursor: pointer;
+	transition: background-color 0.2s;
+}
+
+.copy-btn {
+	background-color: #4dabf7;
+	color: white;
+}
+
+.copy-btn:hover {
+	background-color: #339af0;
+}
+
+.close-btn {
+	background-color: #f8f9fa;
+	color: #495057;
+}
+
+.close-btn:hover {
+	background-color: #e9ecef;
+}
+
+/* 通知のトランジション */
+.notification-enter-active,
+.notification-leave-active {
+	transition: all 0.1s ease;
+}
+
+.notification-enter-from {
+	opacity: 0;
+	transform: translateX(100%);
+}
+
+.notification-leave-to {
+	opacity: 0;
+	transform: translateX(100%);
 }
 
 /* スクロール可能なテーブルの場合 */
@@ -405,6 +564,22 @@ input[type="number"] {
 
 	.spread-sheet {
 		min-width: 900px;
+	}
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+	.header-controls {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.button-group {
+		justify-content: space-between;
+	}
+
+	.project-name-input {
+		min-width: 100%;
 	}
 }
 </style>
