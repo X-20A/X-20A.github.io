@@ -17,6 +17,7 @@
 							<th class="resource-column">バケツ</th>
 							<th class="resource-column">ダメコン</th>
 							<th class="resource-column">洋上補給</th>
+							<th class="action-column">削除</th>
 						</tr>
 					</thead>
 					<tbody class="table-body">
@@ -56,6 +57,9 @@
 								<input v-model.number="row.underway_replenishment" @input="handleRowUpdate(index)"
 									class="cell resource-cell" type="number" />
 							</td>
+							<td @click="clearRow(index)" class="action-cell">
+								<span class="clear-btn">X</span>
+								</td>
 						</tr>
 					</tbody>
 				</table>
@@ -73,7 +77,7 @@
 							<td class="total-cell">{{ sum.bucket }}</td>
 							<td class="total-cell">{{ sum.damecon }}</td>
 							<td class="total-cell">{{ sum.underway_replenishment }}</td>
-							<td style="width:9px;"></td>
+							<td style="width:37px;"></td>
 						</tr>
 					</tbody>
 				</table>
@@ -88,10 +92,11 @@ import Footer from './components/Footer.vue';
 import Header from './components/Header.vue';
 import { useStore } from './stores';
 import { computed, onMounted } from 'vue';
-import { INITIAL_SUM_DATA } from './types';
+import { INITIAL_SUM_DATA, INITIAL_ROW_DATA } from './types';
 import { calc_sum_data } from './logics/sum';
 import { extract_data_from_text } from './logics/extract';
 import { floor_sum_data } from './logics/floor';
+import { sort_row_datas } from './logics/sort';
 
 const store = useStore();
 const current_data = computed(() => store.current_data);
@@ -132,6 +137,11 @@ const handle_paste = (event: ClipboardEvent, row_index: number) => {
 	} catch (error) {
 		console.error(error);
 	}
+};
+
+// 行をクリアしてソート
+const clearRow = (row_index: number) => {
+	store.UPDATE_ROW_DATA(INITIAL_ROW_DATA, row_index);
 };
 
 onMounted(() => {
@@ -271,6 +281,26 @@ onMounted(() => {
 	min-width: 50px;
 	text-align: right;
 }
+.action-column {
+	width: 24px;
+}
+
+.action-cell {
+	text-align: center;
+	cursor: pointer;
+}
+
+.clear-btn {
+	padding: 0px;
+	color: #c9c9c9;
+	border: none;
+	
+	font-size: 12px;
+}
+
+.action-cell:hover {
+	background-color: #e95353;
+}
 
 input[type="number"] {
 	text-align: right;
@@ -321,7 +351,7 @@ input[type="number"] {
 	color: white;
 	font-weight: 600;
 	text-align: center;
-	width: 47px;
+	width: 46px;
 }
 
 .total-cell {
@@ -330,7 +360,7 @@ input[type="number"] {
 	background-color: #e7f3ff;
 }
 .empty-cell {
-	width: 168px;
+	width: 161px;
 }
 
 /* スクロール可能なテーブルの場合 */
