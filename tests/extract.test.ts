@@ -1,7 +1,7 @@
 // extract_data_from_text.test.ts
 import { describe, it, expect } from 'vitest';
 import { extract_data_from_text } from '../src/logics/extract';
-import { DataComponent } from '../src/types';
+import { RowData } from '../src/types';
 
 describe('extract_data_from_text', () => {
     it('通常のテキストからデータを正しく抽出する', () => {
@@ -17,7 +17,7 @@ describe('extract_data_from_text', () => {
 洋上補給: 12.345
     `;
 
-        const expected: DataComponent = {
+        const expected: RowData = {
             row_name: "",
             fuel: 85286.579,
             ammo: 84482.052,
@@ -75,7 +75,7 @@ describe('extract_data_from_text', () => {
 洋上補給: abc
     `;
 
-        const expected: DataComponent = {
+        const expected: RowData = {
             row_name: "",
             fuel: 0,
             ammo: 99999,

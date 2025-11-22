@@ -1,7 +1,7 @@
-import { DataComponent, INITIAL_SUM_DATA, SumData } from "../types";
+import { RowData, INITIAL_SUM_DATA, SumData } from "../types";
 
 export function calc_sum_data(
-    datas: DataComponent[],
+    datas: RowData[],
 ): SumData {
     return datas.reduce((total, current) => {
         const fuel = total.fuel + current.fuel;

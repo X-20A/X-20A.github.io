@@ -103,14 +103,14 @@ const sum = computed(() => {
 	return floor_sum_data(sumed_data);
 });
 
-// プロジェクト名更新ハンドラー
+// プロジェクト名更新
 const handleProjectNameUpdate = () => {
 	store.UPDATE_CURRENT_DATA({
 		...current_data.value,
 	});
 };
 
-// 行データ更新ハンドラー
+// 行データ更新
 const handleRowUpdate = (rowIndex: number) => {
 	store.UPDATE_CURRENT_DATA({
 		...current_data.value,
@@ -125,7 +125,8 @@ const handle_paste = (event: ClipboardEvent, row_index: number) => {
 	event.preventDefault();
 
 	try {
-		const extracted_data = extract_data_from_text(pasted_text);
+		const extracted_data =
+			extract_data_from_text(pasted_text, current_data.value.datas[row_index]);
 
 		store.UPDATE_ROW_DATA(extracted_data, row_index);
 	} catch (error) {

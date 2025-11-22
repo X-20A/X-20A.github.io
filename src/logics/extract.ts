@@ -1,4 +1,4 @@
-import { DataComponent } from "../types";
+import { RowData } from "../types";
 
 /**
  * 数値以外の値を数値にして返す
@@ -39,18 +39,20 @@ export function parse_abnormal_value(value: string): number {
  */
 export function extract_data_from_text(
     text: string,
-): DataComponent {
+    current_data: RowData,
+): RowData {
     const lines = text.split('\n');
 
-    const result: DataComponent = {
-        row_name: "",
-        fuel: 0,
-        ammo: 0,
-        steel: 0,
-        baux: 0,
-        bucket: 0,
-        damecon: 0,
-        underway_replenishment: 0
+    // TODO: 抽出とマージを分離する
+    const result: RowData = {
+        row_name: current_data.row_name,
+        fuel: current_data.fuel,
+        ammo: current_data.ammo,
+        steel: current_data.steel,
+        baux: current_data.baux,
+        bucket: current_data.bucket,
+        damecon: current_data.damecon,
+        underway_replenishment: current_data.underway_replenishment,
     };
 
     const patterns = [

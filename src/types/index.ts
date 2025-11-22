@@ -1,13 +1,4 @@
-export type ResourceKey =
-    | 'fuel'
-    | 'ammo'
-    | 'steel'
-    | 'baux'
-    | 'bucket'
-    | 'damecon'
-    | 'underway_replenishment'
-
-export type DataComponent = {
+export type RowData = {
     row_name: string,
     fuel: number,
     ammo: number,
@@ -17,7 +8,7 @@ export type DataComponent = {
     damecon: number,
     underway_replenishment: number,
 }
-export const INITIAL_DATA_COMPONENT: DataComponent = {
+export const INITIAL_ROW_DATA: RowData = {
     row_name: '',
     fuel: 0,
     ammo: 0,
@@ -28,7 +19,7 @@ export const INITIAL_DATA_COMPONENT: DataComponent = {
     underway_replenishment: 0,
 } as const;
 
-export type SumData = Omit<DataComponent, "row_name">
+export type SumData = Omit<RowData, "row_name">
 export const INITIAL_SUM_DATA: SumData = {
     fuel: 0,
     ammo: 0,
@@ -41,9 +32,9 @@ export const INITIAL_SUM_DATA: SumData = {
 
 export type SaveData = {
     project_name: string,
-    datas: DataComponent[],
+    datas: RowData[],
 }
 export const INITIAL_SAVE_DATA: SaveData = {
     project_name: '',
-    datas: Array(80).fill(null).map(() => ({ ...INITIAL_DATA_COMPONENT })),
+    datas: Array(80).fill(null).map(() => ({ ...INITIAL_ROW_DATA })),
 } as const;
