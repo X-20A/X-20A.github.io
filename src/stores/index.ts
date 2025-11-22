@@ -3,7 +3,7 @@ import { DEFAULT_SAVE_DATA, SaveData } from "../types";
 
 const LOCAL_STORAGE_KEY = 'cost-manager';
 
-export const useStore = defineStore('compass', {
+export const useStore = defineStore('datas', {
     state: () => ({
         current_data: null as null | SaveData,
         data_history: [] as SaveData[],
