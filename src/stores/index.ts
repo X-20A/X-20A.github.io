@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { INITIAL_SAVE_DATA, SaveData } from "../types";
+import { DataComponent, INITIAL_SAVE_DATA, SaveData } from "../types";
 
 const LOCAL_STORAGE_KEY = 'cost-manager';
 
@@ -12,6 +12,16 @@ export const useStore = defineStore('datas', {
         UPDATE_CURRENT_DATA(new_data: SaveData): void {
             this.current_data = new_data;
             this.SAVE_DATA();
+        },
+        UPDATE_ROW_DATA(new_data: DataComponent, row_index: number): void {
+            this.UPDATE_CURRENT_DATA({
+                ...this.current_data,
+                datas: this.current_data.datas.map((row, index) =>
+                    index === row_index
+                        ? { ...row, ...new_data }
+                        : row
+                ),
+            });
         },
         UNDO_DATA(history_index: number): void {
             const previous_data = this.data_history[history_index - 1];

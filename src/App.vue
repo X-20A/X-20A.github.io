@@ -1,7 +1,7 @@
 <template>
 	<Header />
 	<div class="container">
-		<input :value="current_data.project_name" placeholder="計画名"></input>
+		<input v-model="current_data.project_name" placeholder="計画名" @input="handleProjectNameUpdate" />
 		<div class="sheet-container">
 			<div class="table-wrapper">
 				<table class="spread-sheet">
@@ -25,14 +25,37 @@
 							<td>
 								<input @paste="handle_paste($event, index)" type="text" class="cell import-cell" />
 							</td>
-							<td><input type="text" class="cell name-cell" :value="row.row_name" /></td>
-							<td><input :value="row.fuel" class="cell resource-cell" type="number" /></td>
-							<td><input :value="row.ammo" class="cell resource-cell" type="number" /></td>
-							<td><input :value="row.steel" class="cell resource-cell" type="number" /></td>
-							<td><input :value="row.baux" class="cell resource-cell" type="number" /></td>
-							<td><input :value="row.bucket" class="cell resource-cell" type="number" /></td>
-							<td><input :value="row.damecon" class="cell resource-cell" type="number" /></td>
-							<td><input :value="row.underway_replenishment" class="cell resource-cell" type="number" /></td>
+							<td>
+								<input v-model="row.row_name" @input="handleRowUpdate(index)" type="text" class="cell name-cell" />
+							</td>
+							<td>
+								<input v-model.number="row.fuel" @input="handleRowUpdate(index)" class="cell resource-cell"
+									type="number" />
+							</td>
+							<td>
+								<input v-model.number="row.ammo" @input="handleRowUpdate(index)" class="cell resource-cell"
+									type="number" />
+							</td>
+							<td>
+								<input v-model.number="row.steel" @input="handleRowUpdate(index)" class="cell resource-cell"
+									type="number" />
+							</td>
+							<td>
+								<input v-model.number="row.baux" @input="handleRowUpdate(index)" class="cell resource-cell"
+									type="number" />
+							</td>
+							<td>
+								<input v-model.number="row.bucket" @input="handleRowUpdate(index)" class="cell resource-cell"
+									type="number" />
+							</td>
+							<td>
+								<input v-model.number="row.damecon" @input="handleRowUpdate(index)" class="cell resource-cell"
+									type="number" />
+							</td>
+							<td>
+								<input v-model.number="row.underway_replenishment" @input="handleRowUpdate(index)"
+									class="cell resource-cell" type="number" />
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -80,10 +103,22 @@ const sum = computed(() => {
 	return floor_sum_data(sumed_data);
 });
 
-const handle_paste = (
-	event: ClipboardEvent,
-	row_index: number,
-) => {
+// プロジェクト名更新ハンドラー
+const handleProjectNameUpdate = () => {
+	store.UPDATE_CURRENT_DATA({
+		...current_data.value,
+	});
+};
+
+// 行データ更新ハンドラー
+const handleRowUpdate = (rowIndex: number) => {
+	store.UPDATE_CURRENT_DATA({
+		...current_data.value,
+		datas: [...current_data.value.datas] // 配列を新しく作成してリアクティブをトリガー
+	});
+};
+
+const handle_paste = (event: ClipboardEvent, row_index: number) => {
 	const pasted_text = event.clipboardData?.getData('text');
 	if (!pasted_text) return;
 
@@ -92,14 +127,7 @@ const handle_paste = (
 	try {
 		const extracted_data = extract_data_from_text(pasted_text);
 
-		store.UPDATE_CURRENT_DATA({
-			...current_data.value,
-			datas: current_data.value.datas.map((row, index) =>
-				index === row_index
-					? { ...row, ...extracted_data }
-					: row
-			)
-		});
+		store.UPDATE_ROW_DATA(extracted_data, row_index);
 	} catch (error) {
 		console.error(error);
 	}
