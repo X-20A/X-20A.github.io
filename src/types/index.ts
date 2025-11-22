@@ -32,3 +32,7 @@ export type SaveData = {
     name: string,
     datas: DataComponent[],
 }
+export const DEFAULT_SAVE_DATA: SaveData = {
+    name: '名前が空だよ',
+    datas: [],
+} as const;
