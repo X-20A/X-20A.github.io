@@ -1,8 +1,10 @@
 <template>
 	<Header />
 	<div class="container">
+		<p style="color:magenta;">β版</p>
 		<input v-model="current_data.project_name" placeholder="計画名" @input="handle_project_name_update" />
 		<button @pointerdown="handle_sort_rows">上詰め</button>
+		<button @pointerdown="handle_issue_url">URL発行</button>
 		<button @pointerdown="handle_initialize">初期化</button>
 		<div class="sheet-container">
 			<div class="table-wrapper">
@@ -61,7 +63,7 @@
 							</td>
 							<td @pointerdown="clearRow(index)" class="action-cell">
 								<span class="clear-btn">X</span>
-								</td>
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -94,11 +96,13 @@ import Footer from './components/Footer.vue';
 import Header from './components/Header.vue';
 import { useStore } from './stores';
 import { computed, onMounted } from 'vue';
-import { INITIAL_SUM_DATA, INITIAL_ROW_DATA, INITIAL_SAVE_DATA } from './types';
+import { INITIAL_SUM_DATA, INITIAL_ROW_DATA, INITIAL_SAVE_DATA, SaveData } from './types';
 import { calc_sum_data } from './logics/sum';
 import { extract_data_from_text } from './logics/extract';
 import { floor_sum_data } from './logics/floor';
 import { sort_row_datas } from './logics/sort';
+import { calc_URL_param, do_delete_URL_param, do_create_shorten_url } from './logics/url';
+import lzstring from "lz-string";
 
 const store = useStore();
 const current_data = computed(() => store.current_data);
@@ -124,12 +128,17 @@ const handle_sort_rows = () => {
 	});
 };
 
+const handle_issue_url = async () => {
+	const shorten_url = await do_create_shorten_url(current_data.value);
+	console.log('shorten_url: ', shorten_url);
+};
+
 const handle_initialize = () => {
 	const is_permission = confirm('データを削除しますか?');
 	if (!is_permission) return;
-	
+
 	store.UPDATE_CURRENT_DATA({ ...INITIAL_SAVE_DATA });
-}
+};
 
 // 行データ更新
 const handleRowUpdate = (rowIndex: number) => {
@@ -161,6 +170,15 @@ const clearRow = (row_index: number) => {
 };
 
 onMounted(() => {
+	const share_data = calc_URL_param('share');
+	if (share_data) {
+		const decompressed_data =
+			lzstring.decompressFromEncodedURIComponent(share_data);
+			
+		store.UPDATE_CURRENT_DATA(JSON.parse(decompressed_data) as SaveData);
+		do_delete_URL_param();
+		return;
+	}
 	store.LOAD_DATA();
 });
 </script>
