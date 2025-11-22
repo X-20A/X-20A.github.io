@@ -1,7 +1,7 @@
 <template>
 	<Header />
 	<div class="container">
-		<input v-if="current_data" :value="current_data.project_name"></input>
+		<input :value="current_data.project_name" placeholder="計画名"></input>
 		<div class="sheet-container">
 			<div class="table-wrapper">
 				<table class="spread-sheet">
@@ -20,35 +20,37 @@
 						</tr>
 					</thead>
 					<tbody class="table-body">
-							<tr v-for="(row, index) in current_data.datas" :key="index" class="data-row">
-								<td class="drag-handle">⋮⋮</td>
-								<td><input type="text" class="cell import-cell" /></td>
-								<td><input type="text" class="cell name-cell" :value="row.row_name" /></td>
-								<td><input class="cell resource-cell" :value="row.fuel" type="number" /></td>
-								<td><input class="cell resource-cell" :value="row.ammo" type="number" /></td>
-								<td><input class="cell resource-cell" :value="row.steel" type="number" /></td>
-								<td><input class="cell resource-cell" :value="row.baux" type="number" /></td>
-								<td><input class="cell resource-cell" :value="row.bucket" type="number" /></td>
-								<td><input class="cell resource-cell" :value="row.damecon" type="number" /></td>
-								<td><input class="cell resource-cell" :value="row.underway_replenishment" type="number" /></td>
-							</tr>
+						<tr v-for="(row, index) in current_data.datas" :key="index" class="data-row">
+							<td class="drag-handle">⋮⋮</td>
+							<td>
+								<input @paste="handle_paste($event, index)" type="text" class="cell import-cell" />
+							</td>
+							<td><input type="text" class="cell name-cell" :value="row.row_name" /></td>
+							<td><input :value="row.fuel" class="cell resource-cell" type="number" /></td>
+							<td><input :value="row.ammo" class="cell resource-cell" type="number" /></td>
+							<td><input :value="row.steel" class="cell resource-cell" type="number" /></td>
+							<td><input :value="row.baux" class="cell resource-cell" type="number" /></td>
+							<td><input :value="row.bucket" class="cell resource-cell" type="number" /></td>
+							<td><input :value="row.damecon" class="cell resource-cell" type="number" /></td>
+							<td><input :value="row.underway_replenishment" class="cell resource-cell" type="number" /></td>
+						</tr>
 					</tbody>
 				</table>
 			</div>
 			<div class="total-row-container">
-				<table class="spread-sheet">
+				<table class="spread-sheet total-table">
 					<tbody>
 						<tr class="total-row">
 							<td class="total-label">sum</td>
-							<td class="total-cell empty-cell"></td>
-							<td class="total-cell">{{ sum_data.fuel }}</td>
-							<td class="total-cell">{{ sum_data.ammo }}</td>
-							<td class="total-cell">{{ sum_data.steel }}</td>
-							<td class="total-cell">{{ sum_data.baux }}</td>
-							<td class="total-cell">{{ sum_data.bucket }}</td>
-							<td class="total-cell">{{ sum_data.damecon }}</td>
-							<td class="total-cell">{{ sum_data.underway_replenishment }}</td>
-							<td style="width: 9px;"></td>
+							<td class="empty-cell"></td>
+							<td class="total-cell">{{ sum.fuel }}</td>
+							<td class="total-cell">{{ sum.ammo }}</td>
+							<td class="total-cell">{{ sum.steel }}</td>
+							<td class="total-cell">{{ sum.baux }}</td>
+							<td class="total-cell">{{ sum.bucket }}</td>
+							<td class="total-cell">{{ sum.damecon }}</td>
+							<td class="total-cell">{{ sum.underway_replenishment }}</td>
+							<td style="width:9px;"></td>
 						</tr>
 					</tbody>
 				</table>
@@ -65,15 +67,43 @@ import { useStore } from './stores';
 import { computed, onMounted } from 'vue';
 import { INITIAL_SUM_DATA } from './types';
 import { calc_sum_data } from './logics/sum';
+import { extract_data_from_text } from './logics/extract';
+import { floor_sum_data } from './logics/floor';
 
 const store = useStore();
 const current_data = computed(() => store.current_data);
 
-const sum_data = computed(() => {
+const sum = computed(() => {
 	if (!current_data.value) return { ...INITIAL_SUM_DATA };
 
-	return calc_sum_data(current_data.value.datas);
+	const sumed_data = calc_sum_data(current_data.value.datas);
+	return floor_sum_data(sumed_data);
 });
+
+const handle_paste = (
+	event: ClipboardEvent,
+	row_index: number,
+) => {
+	const pasted_text = event.clipboardData?.getData('text');
+	if (!pasted_text) return;
+
+	event.preventDefault();
+
+	try {
+		const extracted_data = extract_data_from_text(pasted_text);
+
+		store.UPDATE_CURRENT_DATA({
+			...current_data.value,
+			datas: current_data.value.datas.map((row, index) =>
+				index === row_index
+					? { ...row, ...extracted_data }
+					: row
+			)
+		});
+	} catch (error) {
+		console.error(error);
+	}
+};
 
 onMounted(() => {
 	store.LOAD_DATA();
@@ -98,7 +128,6 @@ onMounted(() => {
 	display: flex;
 	flex-direction: column;
 	height: 82vh;
-	/* ビューポートの高さに合わせて調整 */
 }
 
 .table-wrapper {
@@ -112,6 +141,7 @@ onMounted(() => {
 	border-collapse: collapse;
 	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 	font-size: 14px;
+	table-layout: fixed;
 }
 
 .table-header {
@@ -165,6 +195,7 @@ onMounted(() => {
 	border-bottom: 1px solid #e9ecef;
 	border-right: 1px solid #e9ecef;
 	vertical-align: middle;
+	padding: 0;
 }
 
 .data-row td:last-child {
@@ -188,7 +219,7 @@ onMounted(() => {
 .cell {
 	width: 100%;
 	border: 1px solid #ced4da;
-	border-radius: 3px;
+	border-radius: 2px;
 	padding: 3px 4px;
 	font-size: 13px;
 	background: white;
@@ -234,6 +265,11 @@ input[type="number"] {
 	z-index: 5;
 }
 
+.total-table {
+	margin-top: -1px;
+	/* ボーダーの重なりを防ぐ */
+}
+
 .total-row {
 	background-color: #e7f3ff;
 	font-weight: 500;
@@ -244,6 +280,7 @@ input[type="number"] {
 	border-bottom: none;
 	border-right: 1px solid #dee2e6;
 	text-align: center;
+	vertical-align: middle;
 }
 
 .total-row td:last-child {
