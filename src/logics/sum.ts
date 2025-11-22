@@ -1,4 +1,4 @@
-import { DataComponent, DEFAULT_SUM_DATA, SumData } from "../types";
+import { DataComponent, INITIAL_SUM_DATA, SumData } from "../types";
 
 export function calc_sum_data(
     datas: DataComponent[],
@@ -13,7 +13,7 @@ export function calc_sum_data(
         const underway_replenishment =
             total.underway_replenishment + current.underway_replenishment;
 
-        return {
+        const sum_data: SumData = {
             fuel,
             ammo,
             steel,
@@ -21,6 +21,8 @@ export function calc_sum_data(
             bucket,
             damecon,
             underway_replenishment,
-        }
-    }, { ...DEFAULT_SUM_DATA });
+        };
+
+        return sum_data;
+    }, { ...INITIAL_SUM_DATA });
 }

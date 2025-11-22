@@ -18,7 +18,7 @@ describe('extract_data_from_text', () => {
     `;
 
         const expected: DataComponent = {
-            name: "",
+            row_name: "",
             fuel: 85286.579,
             ammo: 84482.052,
             steel: 42943.833,
@@ -76,7 +76,7 @@ describe('extract_data_from_text', () => {
     `;
 
         const expected: DataComponent = {
-            name: "",
+            row_name: "",
             fuel: 0,
             ammo: 99999,
             steel: -99999,

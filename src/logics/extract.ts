@@ -43,7 +43,7 @@ export function extract_data_from_text(
     const lines = text.split('\n');
 
     const result: DataComponent = {
-        name: "",
+        row_name: "",
         fuel: 0,
         ammo: 0,
         steel: 0,

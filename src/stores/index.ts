@@ -1,11 +1,11 @@
 import { defineStore } from "pinia";
-import { DEFAULT_SAVE_DATA, SaveData } from "../types";
+import { INITIAL_SAVE_DATA, SaveData } from "../types";
 
 const LOCAL_STORAGE_KEY = 'cost-manager';
 
 export const useStore = defineStore('datas', {
     state: () => ({
-        current_data: null as null | SaveData,
+        current_data: INITIAL_SAVE_DATA as SaveData,
         data_history: [] as SaveData[],
     }),
     actions: {
@@ -33,17 +33,13 @@ export const useStore = defineStore('datas', {
         },
         LOAD_DATA(): void {
             const data = localStorage.getItem(LOCAL_STORAGE_KEY);
-            if (!data) {
-                this.UPDATE_CURRENT_DATA({ ...DEFAULT_SAVE_DATA });
-                return;
-            }
+            if (!data) return;
 
             try {
                 const save_data = JSON.parse(data) as SaveData;
                 // TODO: parse
                 this.UPDATE_CURRENT_DATA(save_data);
             } catch (e) {
-                this.UPDATE_CURRENT_DATA({ ...DEFAULT_SAVE_DATA });
                 console.error(e);
             }
         }

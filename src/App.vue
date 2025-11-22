@@ -1,7 +1,7 @@
 <template>
 	<Header />
 	<div class="container">
-		<input v-if="current_data" :value="current_data.name"></input>
+		<input v-if="current_data" :value="current_data.project_name"></input>
 		<div class="sheet-container">
 			<div class="table-wrapper">
 				<table class="spread-sheet">
@@ -20,18 +20,18 @@
 						</tr>
 					</thead>
 					<tbody class="table-body">
-						<tr v-for="(row, index) in rows" :key="index" class="data-row">
-							<td class="drag-handle">⋮⋮</td>
-							<td><input type="text" class="cell import-cell" /></td>
-							<td><input type="text" class="cell name-cell" /></td>
-							<td><input type="number" class="cell resource-cell" /></td>
-							<td><input type="number" class="cell resource-cell" /></td>
-							<td><input type="number" class="cell resource-cell" /></td>
-							<td><input type="number" class="cell resource-cell" /></td>
-							<td><input type="number" class="cell resource-cell" /></td>
-							<td><input type="number" class="cell resource-cell" /></td>
-							<td><input type="number" class="cell resource-cell" /></td>
-						</tr>
+							<tr v-for="(row, index) in current_data.datas" :key="index" class="data-row">
+								<td class="drag-handle">⋮⋮</td>
+								<td><input type="text" class="cell import-cell" /></td>
+								<td><input type="text" class="cell name-cell" :value="row.row_name" /></td>
+								<td><input class="cell resource-cell" :value="row.fuel" type="number" /></td>
+								<td><input class="cell resource-cell" :value="row.ammo" type="number" /></td>
+								<td><input class="cell resource-cell" :value="row.steel" type="number" /></td>
+								<td><input class="cell resource-cell" :value="row.baux" type="number" /></td>
+								<td><input class="cell resource-cell" :value="row.bucket" type="number" /></td>
+								<td><input class="cell resource-cell" :value="row.damecon" type="number" /></td>
+								<td><input class="cell resource-cell" :value="row.underway_replenishment" type="number" /></td>
+							</tr>
 					</tbody>
 				</table>
 			</div>
@@ -41,13 +41,13 @@
 						<tr class="total-row">
 							<td class="total-label">sum</td>
 							<td class="total-cell empty-cell"></td>
-							<td class="total-cell">999999</td>
-							<td class="total-cell">999999</td>
-							<td class="total-cell">999999</td>
-							<td class="total-cell">999999</td>
-							<td class="total-cell">999999</td>
-							<td class="total-cell">999999</td>
-							<td class="total-cell">999999</td>
+							<td class="total-cell">{{ sum_data.fuel }}</td>
+							<td class="total-cell">{{ sum_data.ammo }}</td>
+							<td class="total-cell">{{ sum_data.steel }}</td>
+							<td class="total-cell">{{ sum_data.baux }}</td>
+							<td class="total-cell">{{ sum_data.bucket }}</td>
+							<td class="total-cell">{{ sum_data.damecon }}</td>
+							<td class="total-cell">{{ sum_data.underway_replenishment }}</td>
 							<td style="width: 9px;"></td>
 						</tr>
 					</tbody>
@@ -58,17 +58,22 @@
 	<Footer />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import Footer from './components/Footer.vue';
 import Header from './components/Header.vue';
 import { useStore } from './stores';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted } from 'vue';
+import { INITIAL_SUM_DATA } from './types';
+import { calc_sum_data } from './logics/sum';
 
 const store = useStore();
 const current_data = computed(() => store.current_data);
 
-// サンプルデータ
-const rows = ref(Array(100).fill(0));
+const sum_data = computed(() => {
+	if (!current_data.value) return { ...INITIAL_SUM_DATA };
+
+	return calc_sum_data(current_data.value.datas);
+});
 
 onMounted(() => {
 	store.LOAD_DATA();
@@ -169,7 +174,7 @@ onMounted(() => {
 .drag-handle {
 	text-align: center;
 	color: #6c757d;
-	cursor: grab;
+	cursor: ns-resize;
 	font-size: 12px;
 	padding: 5px 4px;
 	user-select: none;
