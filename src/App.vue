@@ -3,48 +3,56 @@
 	<div class="container">
 		<input v-if="current_data" :value="current_data.name"></input>
 		<div class="sheet-container">
-			<table class="spread-sheet">
-				<thead>
-					<tr>
-						<th class="drag-column"></th>
-						<th class="import-column">Import</th>
-						<th class="name-column">name</th>
-						<th class="resource-column">燃料</th>
-						<th class="resource-column">弾薬</th>
-						<th class="resource-column">鋼材</th>
-						<th class="resource-column">ボーキ</th>
-						<th class="resource-column">バケツ</th>
-						<th class="resource-column">ダメコン</th>
-						<th class="resource-column">洋上補給</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr v-for="(row, index) in rows" :key="index" class="data-row">
-						<td class="drag-handle">⋮⋮</td>
-						<td><input type="text" class="cell import-cell" /></td>
-						<td><input type="text" class="cell name-cell" /></td>
-						<td><input type="number" class="cell resource-cell" /></td>
-						<td><input type="number" class="cell resource-cell" /></td>
-						<td><input type="number" class="cell resource-cell" /></td>
-						<td><input type="number" class="cell resource-cell" /></td>
-						<td><input type="number" class="cell resource-cell" /></td>
-						<td><input type="number" class="cell resource-cell" /></td>
-						<td><input type="number" class="cell resource-cell" /></td>
-					</tr>
-					<tr class="total-row">
-						<td class="total-label">sum</td>
-						<td class="total-cell">-</td>
-						<td class="total-cell">-</td>
-						<td class="total-cell">999999</td>
-						<td class="total-cell">999999</td>
-						<td class="total-cell">999999</td>
-						<td class="total-cell">999999</td>
-						<td class="total-cell">999999</td>
-						<td class="total-cell">999999</td>
-						<td class="total-cell">999999</td>
-					</tr>
-				</tbody>
-			</table>
+			<div class="table-wrapper">
+				<table class="spread-sheet">
+					<thead class="table-header">
+						<tr>
+							<th class="drag-column"></th>
+							<th class="import-column">Import</th>
+							<th class="name-column">name</th>
+							<th class="resource-column">燃料</th>
+							<th class="resource-column">弾薬</th>
+							<th class="resource-column">鋼材</th>
+							<th class="resource-column">ボーキ</th>
+							<th class="resource-column">バケツ</th>
+							<th class="resource-column">ダメコン</th>
+							<th class="resource-column">洋上補給</th>
+						</tr>
+					</thead>
+					<tbody class="table-body">
+						<tr v-for="(row, index) in rows" :key="index" class="data-row">
+							<td class="drag-handle">⋮⋮</td>
+							<td><input type="text" class="cell import-cell" /></td>
+							<td><input type="text" class="cell name-cell" /></td>
+							<td><input type="number" class="cell resource-cell" /></td>
+							<td><input type="number" class="cell resource-cell" /></td>
+							<td><input type="number" class="cell resource-cell" /></td>
+							<td><input type="number" class="cell resource-cell" /></td>
+							<td><input type="number" class="cell resource-cell" /></td>
+							<td><input type="number" class="cell resource-cell" /></td>
+							<td><input type="number" class="cell resource-cell" /></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="total-row-container">
+				<table class="spread-sheet">
+					<tbody>
+						<tr class="total-row">
+							<td class="total-label">sum</td>
+							<td class="total-cell empty-cell"></td>
+							<td class="total-cell">999999</td>
+							<td class="total-cell">999999</td>
+							<td class="total-cell">999999</td>
+							<td class="total-cell">999999</td>
+							<td class="total-cell">999999</td>
+							<td class="total-cell">999999</td>
+							<td class="total-cell">999999</td>
+							<td style="width: 9px;"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 	<Footer />
@@ -82,6 +90,16 @@ onMounted(() => {
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 	overflow: hidden;
 	border: 1px solid #e0e0e0;
+	display: flex;
+	flex-direction: column;
+	height: 82vh;
+	/* ビューポートの高さに合わせて調整 */
+}
+
+.table-wrapper {
+	flex: 1;
+	overflow: auto;
+	position: relative;
 }
 
 .spread-sheet {
@@ -91,19 +109,28 @@ onMounted(() => {
 	font-size: 14px;
 }
 
-th {
+.table-header {
+	position: sticky;
+	top: 0;
+	z-index: 10;
+	background-color: white;
+}
+
+.table-header th {
 	font-weight: 500;
 	font-size: 13px;
 	background-color: #f8f9fa;
 	color: #495057;
-	padding: 8px 8px;
+	padding: 8px 0px;
 	border-bottom: 2px solid #e9ecef;
 	border-right: 1px solid #e9ecef;
 	text-align: center;
 	white-space: nowrap;
+	position: sticky;
+	top: 0;
 }
 
-th:last-child {
+.table-header th:last-child {
 	border-right: none;
 }
 
@@ -122,6 +149,7 @@ th:last-child {
 
 .resource-column {
 	width: 65px;
+	padding: 0px;
 }
 
 .data-row:hover {
@@ -193,14 +221,21 @@ input[type="number"] {
 	-moz-appearance: textfield;
 }
 
+.total-row-container {
+	border-top: 2px solid #4dabf7;
+	position: sticky;
+	bottom: 0;
+	background-color: white;
+	z-index: 5;
+}
+
 .total-row {
 	background-color: #e7f3ff;
 	font-weight: 500;
 }
 
 .total-row td {
-	padding: 10px 6px;
-	border-top: 2px solid #4dabf7;
+	padding: 10px 0px;
 	border-bottom: none;
 	border-right: 1px solid #dee2e6;
 	text-align: center;
@@ -215,12 +250,16 @@ input[type="number"] {
 	color: white;
 	font-weight: 600;
 	text-align: center;
+	width: 47px;
 }
 
 .total-cell {
 	font-weight: 600;
 	color: #1971c2;
 	background-color: #e7f3ff;
+}
+.empty-cell {
+	width: 168px;
 }
 
 /* スクロール可能なテーブルの場合 */
