@@ -1,6 +1,7 @@
 <template>
 	<Header />
 	<div class="container">
+		<input v-if="current_data" :value="current_data.name"></input>
 		<div class="sheet-container">
 			<table class="spread-sheet">
 				<thead>
@@ -53,13 +54,17 @@
 import Footer from './components/Footer.vue';
 import Header from './components/Header.vue';
 import { useStore } from './stores';
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
 const store = useStore();
 const current_data = computed(() => store.current_data);
 
 // サンプルデータ
-const rows = ref(Array(10).fill(0));
+const rows = ref(Array(100).fill(0));
+
+onMounted(() => {
+	store.LOAD_DATA();
+});
 </script>
 
 <style scoped>
@@ -91,7 +96,7 @@ th {
 	font-size: 13px;
 	background-color: #f8f9fa;
 	color: #495057;
-	padding: 12px 8px;
+	padding: 8px 8px;
 	border-bottom: 2px solid #e9ecef;
 	border-right: 1px solid #e9ecef;
 	text-align: center;
@@ -138,7 +143,7 @@ th:last-child {
 	color: #6c757d;
 	cursor: grab;
 	font-size: 12px;
-	padding: 8px 4px;
+	padding: 5px 4px;
 	user-select: none;
 }
 
@@ -151,7 +156,7 @@ th:last-child {
 	width: 100%;
 	border: 1px solid #ced4da;
 	border-radius: 3px;
-	padding: 6px 4px;
+	padding: 3px 4px;
 	font-size: 13px;
 	background: white;
 	box-sizing: border-box;

@@ -33,6 +33,6 @@ export type SaveData = {
     datas: DataComponent[],
 }
 export const DEFAULT_SAVE_DATA: SaveData = {
-    name: '名前が空だよ',
+    name: '計画名が空だよ',
     datas: [],
 } as const;
