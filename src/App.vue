@@ -3,6 +3,7 @@
 	<div class="container">
 		<input v-model="current_data.project_name" placeholder="計画名" @input="handle_project_name_update" />
 		<button @pointerdown="handle_sort_rows">上詰め</button>
+		<button @pointerdown="handle_initialize">初期化</button>
 		<div class="sheet-container">
 			<div class="table-wrapper">
 				<table class="spread-sheet">
@@ -58,7 +59,7 @@
 								<input v-model.number="row.underway_replenishment" @input="handleRowUpdate(index)"
 									class="cell resource-cell" type="number" />
 							</td>
-							<td @click="clearRow(index)" class="action-cell">
+							<td @pointerdown="clearRow(index)" class="action-cell">
 								<span class="clear-btn">X</span>
 								</td>
 						</tr>
@@ -93,7 +94,7 @@ import Footer from './components/Footer.vue';
 import Header from './components/Header.vue';
 import { useStore } from './stores';
 import { computed, onMounted } from 'vue';
-import { INITIAL_SUM_DATA, INITIAL_ROW_DATA } from './types';
+import { INITIAL_SUM_DATA, INITIAL_ROW_DATA, INITIAL_SAVE_DATA } from './types';
 import { calc_sum_data } from './logics/sum';
 import { extract_data_from_text } from './logics/extract';
 import { floor_sum_data } from './logics/floor';
@@ -122,6 +123,13 @@ const handle_sort_rows = () => {
 		row_datas: sort_row_datas(current_data.value.row_datas),
 	});
 };
+
+const handle_initialize = () => {
+	const is_permission = confirm('データを削除しますか?');
+	if (!is_permission) return;
+	
+	store.UPDATE_CURRENT_DATA({ ...INITIAL_SAVE_DATA });
+}
 
 // 行データ更新
 const handleRowUpdate = (rowIndex: number) => {
