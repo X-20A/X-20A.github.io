@@ -1,5 +1,7 @@
 import { defineStore } from "pinia";
 import { RowData, INITIAL_SAVE_DATA, SaveData } from "../types";
+import { parse, ValiError } from "valibot";
+import { SaveDataSchema } from "../logics/sheme";
 
 const LOCAL_STORAGE_KEY = 'cost-manager';
 
@@ -48,12 +50,22 @@ export const useStore = defineStore('datas', {
             if (!data) return;
 
             try {
-                const save_data = JSON.parse(data) as SaveData;
-                // TODO: parse
-                this.UPDATE_CURRENT_DATA(save_data);
-            } catch (e) {
-                console.error(e);
+                const parsedData = JSON.parse(data);
+                // バリデーション実行
+                const validatedData = parse(SaveDataSchema, parsedData);
+                this.UPDATE_CURRENT_DATA(validatedData);
+            } catch (error) {
+                console.error('ローカルストレージデータの読み込みに失敗しました:', error);
+
+                if (error instanceof ValiError) {
+                    console.error('データ形式が不正です');
+                    // オプション: 不正なデータを削除
+                    localStorage.removeItem(LOCAL_STORAGE_KEY);
+                } else if (error instanceof SyntaxError) {
+                    console.error('JSON形式が不正です');
+                    localStorage.removeItem(LOCAL_STORAGE_KEY);
+                }
             }
-        }
+        },
     },
 });
