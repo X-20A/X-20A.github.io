@@ -7,7 +7,9 @@
 				class="project-name-input" />
 			<div class="button-group">
 				<button @pointerdown="handle_sort_rows" class="action-btn">上詰め</button>
-				<button @pointerdown="handle_copy_url" class="action-btn">URL発行</button>
+				<button @pointerdown="handle_copy_url" class="action-btn" :disabled="is_copying">
+					{{ is_copying ? '処理中...' : 'URL発行' }}
+				</button>
 				<button @pointerdown="handle_initialize" class="action-btn danger">初期化</button>
 			</div>
 		</div>
@@ -129,6 +131,7 @@ const store = useStore();
 const current_data = computed(() => store.current_data);
 const is_show_notice = ref(false);
 const notice_message = ref('');
+const is_copying = ref(false);
 
 const sum = computed(() => {
 	if (!current_data.value) return { ...INITIAL_SUM_DATA };
@@ -152,6 +155,10 @@ const handle_sort_rows = () => {
 };
 
 const handle_copy_url = async () => {
+	if (is_copying.value) return;
+
+	is_copying.value = true;
+
 	try {
 		console.log('handle_copy_url');
 		const shorten_url = await do_create_shorten_url(current_data.value);
@@ -169,6 +176,8 @@ const handle_copy_url = async () => {
 	} catch (err) {
 		notice_message.value = '共有URLの発行に失敗しました';
 		console.error(err);
+	} finally {
+		is_copying.value = false;
 	}
 	// 5秒後に自動的に非表示
 	setTimeout(() => {
@@ -388,6 +397,16 @@ onMounted(() => {
 
 .action-btn:active {
 	transform: translateY(1px);
+}
+
+.action-btn:disabled {
+	background-color: #adb5bd;
+	cursor: not-allowed;
+	transform: none;
+}
+
+.action-btn:disabled:hover {
+	background-color: #adb5bd;
 }
 
 .action-btn.danger {
