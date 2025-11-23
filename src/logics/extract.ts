@@ -13,11 +13,11 @@ export function parse_abnormal_value(value: string): number {
     }
 
     if (trimmed === 'infinite' || trimmed === 'infinity' || trimmed === '+infinity') {
-        return 99999;
+        return 999999;
     }
 
     if (trimmed === '-infinite' || trimmed === '-infinity') {
-        return -99999;
+        return -999999;
     }
 
     // 数値のみの文字列かどうかをチェック
@@ -46,6 +46,7 @@ export function extract_data_from_text(
     // TODO: 抽出とマージを分離する
     const result: RowData = {
         row_name: current_data.row_name,
+        multiplier: current_data.multiplier,
         fuel: current_data.fuel,
         ammo: current_data.ammo,
         steel: current_data.steel,
@@ -56,13 +57,34 @@ export function extract_data_from_text(
     };
 
     const patterns = [
-        { regex: /燃料:\s*(\S+)/, setter: (val: string) => result.fuel = parse_abnormal_value(val) },
-        { regex: /弾薬:\s*(\S+)/, setter: (val: string) => result.ammo = parse_abnormal_value(val) },
-        { regex: /鋼材:\s*(\S+)/, setter: (val: string) => result.steel = parse_abnormal_value(val) },
-        { regex: /ボーキ:\s*(\S+)/, setter: (val: string) => result.baux = parse_abnormal_value(val) },
-        { regex: /バケツ:\s*(\S+)/, setter: (val: string) => result.bucket = parse_abnormal_value(val) },
-        { regex: /ダメコン:\s*(\S+)/, setter: (val: string) => result.damecon = parse_abnormal_value(val) },
-        { regex: /洋上補給:\s*(\S+)/, setter: (val: string) => result.underway_replenishment = parse_abnormal_value(val) },
+        {
+            regex: /(?:燃料|Fuel):\s*(\S+)/i,
+            setter: (val: string) => result.fuel = parse_abnormal_value(val)
+        },
+        {
+            regex: /(?:弾薬|Ammo):\s*(\S+)/i,
+            setter: (val: string) => result.ammo = parse_abnormal_value(val)
+        },
+        {
+            regex: /(?:鋼材|Steel):\s*(\S+)/i,
+            setter: (val: string) => result.steel = parse_abnormal_value(val)
+        },
+        {
+            regex: /(?:ボーキ|Bauxite):\s*(\S+)/i,
+            setter: (val: string) => result.baux = parse_abnormal_value(val)
+        },
+        {
+            regex: /(?:バケツ|Buckets):\s*(\S+)/i,
+            setter: (val: string) => result.bucket = parse_abnormal_value(val)
+        },
+        {
+            regex: /(?:ダメコン|Repair Teams):\s*(\S+)/i,
+            setter: (val: string) => result.damecon = parse_abnormal_value(val)
+        },
+        {
+            regex: /(?:洋上補給|Underway Replenishment):\s*(\S+)/i,
+            setter: (val: string) => result.underway_replenishment = parse_abnormal_value(val)
+        },
     ] as const;
 
     let matchFound = false;
