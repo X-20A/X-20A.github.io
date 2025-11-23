@@ -66,7 +66,7 @@
 								<input v-model.number="row.underway_replenishment" @input="handleRowUpdate(index)"
 									class="cell resource-cell" type="number" />
 							</td>
-							<td @pointerdown="clearRow(index)" class="action-cell">
+							<td @pointerup="clearRow(index)" class="action-cell">
 								<span class="clear-btn">X</span>
 							</td>
 						</tr>
@@ -410,18 +410,18 @@ onMounted(() => {
 .action-cell {
 	text-align: center;
 	cursor: pointer;
+	color: #c9c9c9;
 }
 
 .clear-btn {
 	padding: 0px;
-	color: #c9c9c9;
 	border: none;
-
 	font-size: 12px;
 }
 
 .action-cell:hover {
 	background-color: #e95353;
+	color: white;
 }
 
 input[type="number"] {
