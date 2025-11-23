@@ -79,6 +79,11 @@
 								<span class="clear-btn">X</span>
 							</td>
 						</tr>
+						<tr class="add-row-row">
+							<td colspan="12" class="add-row-cell">
+								<button @click="handle_add_rows" class="add-row-btn">行を追加</button>
+							</td>
+						</tr>
 					</tbody>
 				</table>
 			</div>
@@ -221,6 +226,11 @@ const handle_paste = (event: ClipboardEvent, row_index: number) => {
 // 行をクリアしてソート
 const clearRow = (row_index: number) => {
 	store.UPDATE_ROW_DATA(INITIAL_ROW_DATA, row_index);
+};
+
+// 行を追加
+const handle_add_rows = () => {
+	store.ADD_ROWS();
 };
 
 const tableBody = ref<HTMLElement>();
@@ -598,6 +608,35 @@ onMounted(() => {
 .action-cell:hover {
 	background-color: #e95353;
 	color: white;
+}
+
+.add-row-row {
+	background-color: #f8f9fa;
+}
+
+.add-row-cell {
+	text-align: center;
+	padding: 12px;
+	border-bottom: 1px solid #e9ecef;
+}
+
+.add-row-btn {
+	padding: 8px 16px;
+	border: 1px solid #4dabf7;
+	border-radius: 4px;
+	background-color: white;
+	color: #4dabf7;
+	font-size: 14px;
+	cursor: pointer;
+	transition: background-color 0.2s, transform 0.1s;
+}
+
+.add-row-btn:hover {
+	background-color: #e7f3ff;
+}
+
+.add-row-btn:active {
+	transform: translateY(1px);
 }
 
 input[type="number"] {

@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { RowData, INITIAL_SAVE_DATA, SaveData } from "../types";
+import { RowData, INITIAL_SAVE_DATA, SaveData, INITIAL_ROW_DATA } from "../types";
 import { parse, ValiError } from "valibot";
 import { SaveDataSchema } from "../logics/sheme";
 
@@ -38,6 +38,18 @@ export const useStore = defineStore('datas', {
             if (!next_data) return;
 
             this.UPDATE_CURRENT_DATA(next_data);
+        },
+        ADD_ROWS(): void {
+            const new_row_datas: RowData[] =
+                this.current_data.row_datas
+                    .concat(Array(80)
+                    .fill(null)
+                    .map(() => ({ ...INITIAL_ROW_DATA })));
+                    
+            this.UPDATE_CURRENT_DATA({
+                ...this.current_data,
+                row_datas: new_row_datas,
+            });
         },
         SAVE_DATA(): void {
             localStorage.setItem(
