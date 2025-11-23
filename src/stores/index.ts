@@ -42,10 +42,10 @@ export const useStore = defineStore('datas', {
         ADD_ROWS(): void {
             const new_row_datas: RowData[] =
                 this.current_data.row_datas
-                    .concat(Array(80)
+                    .concat(Array(20)
                     .fill(null)
                     .map(() => ({ ...INITIAL_ROW_DATA })));
-                    
+
             this.UPDATE_CURRENT_DATA({
                 ...this.current_data,
                 row_datas: new_row_datas,
