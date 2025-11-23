@@ -307,12 +307,16 @@ const resetDragState = () => {
 
 onMounted(() => {
 	const share_data = calc_URL_param('share');
+	do_delete_URL_param();
 	if (share_data) {
+		const is_permission =
+			confirm('現在のデータを共有URLのデータによって上書きします\n続行しますか?');
+		if (!is_permission) return;
+
 		const decompressed_data =
 			lzstring.decompressFromEncodedURIComponent(share_data);
 
 		store.UPDATE_CURRENT_DATA(JSON.parse(decompressed_data) as SaveData);
-		do_delete_URL_param();
 		return;
 	}
 	store.LOAD_DATA();
