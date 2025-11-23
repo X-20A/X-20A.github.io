@@ -30,12 +30,12 @@
 							<th class="action-column"></th>
 						</tr>
 					</thead>
-					<tbody class="table-body">
+					<tbody class="table-body" ref="tableBody">
 						<tr v-for="(row, index) in current_data.row_datas" :key="index" class="data-row" :data-index="index"
 							:draggable="true" @dragstart="handleDragStart($event, index)" @dragover="handleDragOver($event)"
 							@dragenter="handleDragEnter($event)" @dragleave="handleDragLeave($event)"
 							@drop="handleDrop($event, index)" @dragend="handleDragEnd">
-							<td class="drag-handle" draggable="false">⋮⋮</td>
+							<td class="drag-handle" draggable="false" @mousedown="handleMouseDown">⋮⋮</td>
 							<td>
 								<input @paste="handle_paste($event, index)" type="text" class="cell import-cell" />
 							</td>
@@ -166,7 +166,6 @@ const handle_copy_url = async () => {
 		// 通知を表示
 		notice_message.value = `copied: ${shorten_url}`;
 		is_show_notice.value = true;
-		
 	} catch (err) {
 		notice_message.value = '共有URLの発行に失敗しました';
 		console.error(err);
@@ -217,9 +216,21 @@ const tableBody = ref<HTMLElement>();
 const dragStartIndex = ref<number | null>(null);
 const dragOverIndex = ref<number | null>(null);
 const isDragging = ref(false);
+const isDragHandle = ref(false);
+
+// マウスダウンイベントでドラッグハンドルかどうかを判定
+const handleMouseDown = (event: MouseEvent) => {
+	isDragHandle.value = true;
+};
 
 // ドラッグ開始
 const handleDragStart = (event: DragEvent, index: number) => {
+	// ドラッグハンドル以外からのドラッグ開始を防止
+	if (!isDragHandle.value) {
+		event.preventDefault();
+		return;
+	}
+
 	if (!event.dataTransfer) return;
 
 	dragStartIndex.value = index;
@@ -307,6 +318,7 @@ const resetDragState = () => {
 	dragStartIndex.value = null;
 	dragOverIndex.value = null;
 	isDragging.value = false;
+	isDragHandle.value = false;
 };
 
 onMounted(() => {
@@ -476,15 +488,20 @@ onMounted(() => {
 .drag-handle {
 	text-align: center;
 	color: #6c757d;
-	cursor: ns-resize;
+	cursor: grab;
 	font-size: 12px;
 	padding: 5px 4px;
 	user-select: none;
+	touch-action: none;
 }
 
 .drag-handle:hover {
 	color: #495057;
 	background-color: #e9ecef;
+}
+
+.drag-handle:active {
+	cursor: grabbing;
 }
 
 .cell {
@@ -600,8 +617,9 @@ input[type="number"] {
 .empty-cell {
 	width: 204px;
 }
+
 .leftover-cell {
-	width: 36px;;
+	width: 36px;
 }
 
 /* 通知スタイル */
@@ -699,26 +717,6 @@ input[type="number"] {
 	.project-name-input {
 		min-width: 100%;
 	}
-}
-
-.drag-handle {
-	text-align: center;
-	color: #6c757d;
-	cursor: grab;
-	font-size: 12px;
-	padding: 5px 4px;
-	user-select: none;
-	touch-action: none;
-	/* モバイルでのタッチ操作を改善 */
-}
-
-.drag-handle:active {
-	cursor: grabbing;
-}
-
-.drag-handle:hover {
-	color: #495057;
-	background-color: #e9ecef;
 }
 
 /* ドラッグ中の行スタイル */
