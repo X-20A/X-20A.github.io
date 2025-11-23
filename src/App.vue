@@ -30,8 +30,17 @@
 						</tr>
 					</thead>
 					<tbody class="table-body">
-						<tr v-for="(row, index) in current_data.row_datas" :key="index" class="data-row">
-							<td class="drag-handle">⋮⋮</td>
+						<tr v-for="(row, index) in current_data.row_datas"
+							:key="index"
+							class="data-row"
+							:data-index="index"
+							:draggable="true"
+							@dragstart="handleDragStart($event, index)"
+							@dragover="handleDragOver($event)"
+							@dragenter="handleDragEnter($event)" @dragleave="handleDragLeave($event)"
+							@drop="handleDrop($event, index)" @dragend="handleDragEnd"
+						>
+							<td class="drag-handle" draggable="false">⋮⋮</td>
 							<td>
 								<input @paste="handle_paste($event, index)" type="text" class="cell import-cell" />
 							</td>
@@ -204,6 +213,102 @@ const handle_paste = (event: ClipboardEvent, row_index: number) => {
 // 行をクリアしてソート
 const clearRow = (row_index: number) => {
 	store.UPDATE_ROW_DATA(INITIAL_ROW_DATA, row_index);
+};
+
+const tableBody = ref<HTMLElement>();
+const dragStartIndex = ref<number | null>(null);
+const dragOverIndex = ref<number | null>(null);
+const isDragging = ref(false);
+
+// ドラッグ開始
+const handleDragStart = (event: DragEvent, index: number) => {
+	if (!event.dataTransfer) return;
+
+	dragStartIndex.value = index;
+	isDragging.value = true;
+
+	// ドラッグ中の視覚効果を設定
+	event.dataTransfer.effectAllowed = 'move';
+
+	// モバイルデバイス用にドラッグ画像を設定
+	const target = event.currentTarget as HTMLElement;
+	if (target) {
+		event.dataTransfer.setDragImage(target, 20, 10);
+	}
+
+	// ドラッグ中のスタイル変更
+	target.classList.add('dragging');
+};
+
+// ドラッグオーバー
+const handleDragOver = (event: DragEvent) => {
+	event.preventDefault();
+	if (!event.dataTransfer) return;
+
+	event.dataTransfer.dropEffect = 'move';
+};
+
+// ドラッグエンター
+const handleDragEnter = (event: DragEvent) => {
+	const target = (event.currentTarget as HTMLElement);
+	const index = parseInt(target.getAttribute('data-index') || '-1');
+
+	if (index !== -1 && index !== dragStartIndex.value) {
+		dragOverIndex.value = index;
+		target.classList.add('drag-over');
+	}
+};
+
+// ドラッグリーブ
+const handleDragLeave = (event: DragEvent) => {
+	const target = (event.currentTarget as HTMLElement);
+	target.classList.remove('drag-over');
+};
+
+// ドロップ
+const handleDrop = (event: DragEvent, dropIndex: number) => {
+	event.preventDefault();
+	const target = (event.currentTarget as HTMLElement);
+	target.classList.remove('drag-over');
+
+	if (dragStartIndex.value === null || dragStartIndex.value === dropIndex) {
+		resetDragState();
+		return;
+	}
+
+	// 行の順番を入れ替え
+	const newRowDatas = [...current_data.value.row_datas];
+	const [movedRow] = newRowDatas.splice(dragStartIndex.value, 1);
+	newRowDatas.splice(dropIndex, 0, movedRow);
+
+	// ストアを更新
+	store.UPDATE_CURRENT_DATA({
+		...current_data.value,
+		row_datas: newRowDatas
+	});
+
+	resetDragState();
+};
+
+// ドラッグ終了
+const handleDragEnd = (event: DragEvent) => {
+	const target = (event.currentTarget as HTMLElement);
+	target.classList.remove('dragging');
+
+	// すべての行からdrag-overクラスを削除
+	if (tableBody.value) {
+		const rows = tableBody.value.querySelectorAll('.data-row');
+		rows.forEach(row => row.classList.remove('drag-over'));
+	}
+
+	resetDragState();
+};
+
+// ドラッグ状態をリセット
+const resetDragState = () => {
+	dragStartIndex.value = null;
+	dragOverIndex.value = null;
+	isDragging.value = false;
 };
 
 onMounted(() => {
@@ -580,6 +685,51 @@ input[type="number"] {
 
 	.project-name-input {
 		min-width: 100%;
+	}
+}
+
+.drag-handle {
+	text-align: center;
+	color: #6c757d;
+	cursor: grab;
+	font-size: 12px;
+	padding: 5px 4px;
+	user-select: none;
+	touch-action: none;
+	/* モバイルでのタッチ操作を改善 */
+}
+
+.drag-handle:active {
+	cursor: grabbing;
+}
+
+.drag-handle:hover {
+	color: #495057;
+	background-color: #e9ecef;
+}
+
+/* ドラッグ中の行スタイル */
+.data-row.dragging {
+	opacity: 0.5;
+	background-color: #f8f9fa;
+}
+
+/* ドロップ可能領域のスタイル */
+.data-row.drag-over {
+	border-top: 2px solid #4dabf7;
+	background-color: #e7f3ff !important;
+}
+
+/* ドラッグ中の行に適用されるスタイル */
+.data-row.dragging .drag-handle {
+	cursor: grabbing;
+}
+
+/* モバイルデバイス用の最適化 */
+@media (max-width: 768px) {
+	.drag-handle {
+		padding: 8px 6px;
+		font-size: 14px;
 	}
 }
 </style>
