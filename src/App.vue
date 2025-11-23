@@ -19,6 +19,7 @@
 							<th class="drag-column"></th>
 							<th class="import-column">Import</th>
 							<th class="name-column">name</th>
+							<th class="count-column">count</th>
 							<th class="resource-column"><img src="./icons/items/fuel.png" /></th>
 							<th class="resource-column"><img src="./icons/items/ammo.png" /></th>
 							<th class="resource-column"><img src="./icons/items/steel.png" /></th>
@@ -40,6 +41,9 @@
 							</td>
 							<td>
 								<input v-model="row.row_name" @input="handleRowUpdate(index)" type="text" class="cell name-cell" />
+							</td>
+							<td>
+								<input v-model="row.multiplier" @input="handleRowUpdate(index)" class="cell count-cell" type="number" />
 							</td>
 							<td>
 								<input v-model.number="row.fuel" @input="handleRowUpdate(index)" class="cell resource-cell"
@@ -89,7 +93,7 @@
 							<td class="total-cell">{{ sum.bucket }}</td>
 							<td class="total-cell">{{ sum.damecon }}</td>
 							<td class="total-cell">{{ sum.underway_replenishment }}</td>
-							<td style="width:37px;"></td>
+							<td class="leftover-cell"></td>
 						</tr>
 					</tbody>
 				</table>
@@ -326,7 +330,7 @@ onMounted(() => {
 <style scoped>
 .container {
 	width: 100%;
-	max-width: 760px;
+	max-width: 800px;
 	margin: auto;
 	margin-top: 50px;
 	padding: 0 20px;
@@ -445,6 +449,10 @@ onMounted(() => {
 	width: 80px;
 }
 
+.count-column {
+	width: 40px;
+}
+
 .resource-column {
 	width: 65px;
 	padding: 0px;
@@ -499,6 +507,10 @@ onMounted(() => {
 .import-cell,
 .name-cell {
 	min-width: 60px;
+}
+
+.count-cell {
+	text-align: center !important;
 }
 
 .resource-cell {
@@ -586,7 +598,10 @@ input[type="number"] {
 }
 
 .empty-cell {
-	width: 161px;
+	width: 204px;
+}
+.leftover-cell {
+	width: 36px;;
 }
 
 /* 通知スタイル */
