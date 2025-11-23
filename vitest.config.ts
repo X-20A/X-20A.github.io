@@ -5,7 +5,7 @@ import vue from '@vitejs/plugin-vue';
 export default defineConfig({
     plugins: [vue()],
     test: {
-        environment: 'jsdom', // Vue コンポーネントのテストに必要
+        environment: 'node', // Vue コンポーネントのテストに必要
         globals: true, // describe, it, expect などをグローバルに使用可能にする
         coverage: {
             provider: 'istanbul', // カバレッジレポートの生成

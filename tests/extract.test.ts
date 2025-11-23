@@ -1,7 +1,7 @@
 // extract_data_from_text.test.ts
 import { describe, it, expect } from 'vitest';
+import { INITIAL_ROW_DATA, RowData } from '../src/types';
 import { extract_data_from_text } from '../src/logics/extract';
-import { RowData } from '../src/types';
 
 describe('extract_data_from_text', () => {
     it('通常のテキストからデータを正しく抽出する', () => {
@@ -28,7 +28,7 @@ describe('extract_data_from_text', () => {
             underway_replenishment: 12.345
         };
 
-        const result = extract_data_from_text(text);
+        const result = extract_data_from_text(text, INITIAL_ROW_DATA);
         expect(result).toEqual(expected);
     });
 
@@ -43,7 +43,7 @@ describe('extract_data_from_text', () => {
 洋上補給:12.345
     `;
 
-        const result = extract_data_from_text(text);
+        const result = extract_data_from_text(text, INITIAL_ROW_DATA);
         expect(result.fuel).toBe(85286.579);
         expect(result.ammo).toBe(84482.052);
     });
@@ -59,7 +59,7 @@ describe('extract_data_from_text', () => {
 洋上補給:	12.345
     `;
 
-        const result = extract_data_from_text(text);
+        const result = extract_data_from_text(text, INITIAL_ROW_DATA);
         expect(result.fuel).toBe(85286.579);
         expect(result.ammo).toBe(84482.052);
     });
@@ -86,7 +86,7 @@ describe('extract_data_from_text', () => {
             underway_replenishment: 0
         };
 
-        const result = extract_data_from_text(text);
+        const result = extract_data_from_text(text, INITIAL_ROW_DATA);
         expect(result).toEqual(expected);
     });
 
@@ -98,7 +98,7 @@ describe('extract_data_from_text', () => {
 ボーキ: 400
     `;
 
-        const result = extract_data_from_text(text);
+        const result = extract_data_from_text(text, INITIAL_ROW_DATA);
         expect(result.fuel).toBe(100);
         expect(result.ammo).toBe(200);
         expect(result.steel).toBe(300);
@@ -111,13 +111,13 @@ describe('extract_data_from_text', () => {
     it('データが見つからない場合はエラーをスローする', () => {
         const text = `このテキストにはリソースデータが含まれていません`;
 
-        expect(() => extract_data_from_text(text)).toThrow(
+        expect(() => extract_data_from_text(text, INITIAL_ROW_DATA)).toThrow(
             'テキストからリソースデータを抽出できませんでした'
         );
     });
 
     it('空のテキストでエラーをスローする', () => {
-        expect(() => extract_data_from_text('')).toThrow(
+        expect(() => extract_data_from_text('', INITIAL_ROW_DATA)).toThrow(
             'テキストからリソースデータを抽出できませんでした'
         );
     });
@@ -136,7 +136,7 @@ describe('extract_data_from_text', () => {
 最終行
     `;
 
-        const result = extract_data_from_text(text);
+        const result = extract_data_from_text(text, INITIAL_ROW_DATA);
         expect(result.fuel).toBe(100);
         expect(result.ammo).toBe(200);
         expect(result.steel).toBe(300);

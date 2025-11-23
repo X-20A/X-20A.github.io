@@ -19,27 +19,21 @@
 							<th class="drag-column"></th>
 							<th class="import-column">Import</th>
 							<th class="name-column">name</th>
-							<th class="resource-column">燃料</th>
-							<th class="resource-column">弾薬</th>
-							<th class="resource-column">鋼材</th>
-							<th class="resource-column">ボーキ</th>
-							<th class="resource-column">バケツ</th>
-							<th class="resource-column">ダメコン</th>
-							<th class="resource-column">洋上補給</th>
-							<th class="action-column">削除</th>
+							<th class="resource-column"><img src="./icons/items/fuel.png" /></th>
+							<th class="resource-column"><img src="./icons/items/ammo.png" /></th>
+							<th class="resource-column"><img src="./icons/items/steel.png" /></th>
+							<th class="resource-column"><img src="./icons/items/imo.png" /></th>
+							<th class="resource-column"><img src="./icons/items/bucket.png" /></th>
+							<th class="resource-column"><img src="./icons/items/damecon.png" /></th>
+							<th class="resource-column"><img src="./icons/items/underway_replenishment.png" /></th>
+							<th class="action-column"></th>
 						</tr>
 					</thead>
 					<tbody class="table-body">
-						<tr v-for="(row, index) in current_data.row_datas"
-							:key="index"
-							class="data-row"
-							:data-index="index"
-							:draggable="true"
-							@dragstart="handleDragStart($event, index)"
-							@dragover="handleDragOver($event)"
+						<tr v-for="(row, index) in current_data.row_datas" :key="index" class="data-row" :data-index="index"
+							:draggable="true" @dragstart="handleDragStart($event, index)" @dragover="handleDragOver($event)"
 							@dragenter="handleDragEnter($event)" @dragleave="handleDragLeave($event)"
-							@drop="handleDrop($event, index)" @dragend="handleDragEnd"
-						>
+							@drop="handleDrop($event, index)" @dragend="handleDragEnd">
 							<td class="drag-handle" draggable="false">⋮⋮</td>
 							<td>
 								<input @paste="handle_paste($event, index)" type="text" class="cell import-cell" />
