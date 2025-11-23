@@ -186,20 +186,36 @@ export const WORLD_61: Ttemplate[] = [
         "memo": "基地: 2部隊ボス集中"
     },
     {
+        "title": "61-5_JMNP_P削り",
+        "world": 61,
+        "area": 5,
+        "route": "2-J-M-N-P",
+        "token": "ustM9YPpbiQ",
+        "memo": "基地: ボス ボス N$e退避制限: ボスマスで索敵値108必要(C4)"
+    },
+    {
+        "title": "61-5_JMNP_P破壊",
+        "world": 61,
+        "area": 5,
+        "route": "2-J-M-N-P",
+        "token": "j62juTQhwaL",
+        "memo": "基地: ボス ボス N$e退避制限: ボスマスで索敵値108必要(C4)"
+    },
+    {
         "title": "61-5_JKMNP_P削り",
         "world": 61,
         "area": 5,
         "route": "2-J-K-M-N-P",
-        "token": "l0_SekQPaca",
-        "memo": "基地: ボス ボス N"
+        "token": "FiRPG8Kz7Ha",
+        "memo": "基地: ボス ボス N$e退避制限: ボスマスで索敵値108必要(C4)"
     },
     {
         "title": "61-5_JKMNP_P破壊",
         "world": 61,
         "area": 5,
         "route": "2-J-K-M-N-P",
-        "token": "epBLZbH55_J",
-        "memo": "基地: ボス ボス N"
+        "token": "FGdTCA2IRL_",
+        "memo": "基地: ボス ボス N$e退避制限: ボスマスで索敵値108必要(C4)"
     },
     {
         "title": "61-5_CRSDU_U削り",
@@ -262,7 +278,7 @@ export const WORLD_61: Ttemplate[] = [
         "world": 61,
         "area": 5,
         "route": "3-B2-X1-X2-Y-Z-ZZ",
-        "token": "GZhoQfa-Ao0",
+        "token": "uPwSKBFSXoV",
         "memo": "基地: ボス集中$e煙幕: X2"
     },
 ] as const;
