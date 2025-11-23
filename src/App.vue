@@ -119,7 +119,7 @@ import Footer from './components/Footer.vue';
 import Header from './components/Header.vue';
 import { useStore } from './stores';
 import { computed, onMounted, ref } from 'vue';
-import { INITIAL_SUM_DATA, INITIAL_ROW_DATA, INITIAL_SAVE_DATA, SaveData } from './types';
+import { INITIAL_SUM_DATA, INITIAL_ROW_DATA, INITIAL_SAVE_DATA } from './types';
 import { calc_sum_data } from './logics/sum';
 import { floor_sum_data } from './logics/floor';
 import { sort_row_datas } from './logics/sort';
@@ -376,7 +376,7 @@ onMounted(() => {
 <style scoped>
 .container {
 	width: 100%;
-	max-width: 800px;
+	max-width: 820px;
 	margin: auto;
 	margin-top: 50px;
 	padding: 0 20px;
@@ -502,7 +502,7 @@ onMounted(() => {
 }
 
 .name-column {
-	width: 80px;
+	width: 100px;
 }
 
 .count-column {
@@ -659,7 +659,7 @@ input[type="number"] {
 }
 
 .empty-cell {
-	width: 204px;
+	width: 225px;
 }
 
 .leftover-cell {
