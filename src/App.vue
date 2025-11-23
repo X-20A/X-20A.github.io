@@ -126,6 +126,8 @@ import { sort_row_datas } from './logics/sort';
 import { calc_URL_param, do_delete_URL_param, do_create_shorten_url } from './logics/url';
 import lzstring from "lz-string";
 import { extract_data_from_text } from './logics/extract';
+import { parse, ValiError } from 'valibot';
+import { SaveDataSchema } from './logics/sheme';
 
 const store = useStore();
 const current_data = computed(() => store.current_data);
@@ -331,19 +333,42 @@ const resetDragState = () => {
 };
 
 onMounted(() => {
-	const share_data = calc_URL_param('share');
+	const shareData = calc_URL_param('share');
 	do_delete_URL_param();
-	if (share_data) {
-		const is_permission =
-			confirm('現在のデータを共有URLのデータによって上書きします\n続行しますか?');
-		if (!is_permission) return;
 
-		const decompressed_data =
-			lzstring.decompressFromEncodedURIComponent(share_data);
+	if (shareData) {
+		const isPermission = confirm(
+			'現在のデータを共有URLのデータによって上書きします\n続行しますか?'
+		);
 
-		store.UPDATE_CURRENT_DATA(JSON.parse(decompressed_data) as SaveData);
-		return;
+		if (!isPermission) {
+			store.LOAD_DATA();
+			return;
+		}
+
+		try {
+			const decompressedData = lzstring.decompressFromEncodedURIComponent(shareData);
+			const parsedData = JSON.parse(decompressedData);
+
+			// バリデーション実行
+			const validatedData = parse(SaveDataSchema, parsedData);
+
+			store.UPDATE_CURRENT_DATA(validatedData);
+			return;
+		} catch (error) {
+			console.error('データの処理に失敗しました:', error);
+
+			if (error instanceof ValiError) {
+				alert('共有データの形式が正しくありません');
+			} else if (error instanceof SyntaxError) {
+				alert('共有データのJSON形式が不正です');
+			} else {
+				alert('共有データの読み込みに失敗しました');
+			}
+		}
 	}
+
+	// 共有データがない場合や、パースに失敗した場合などは通常読み込み
 	store.LOAD_DATA();
 });
 </script>
