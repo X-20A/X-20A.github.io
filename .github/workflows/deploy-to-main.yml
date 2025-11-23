@@ -1,0 +1,57 @@
+name: Deploy Cost Build to Main Branch
+# cost_devブランチにpushされたらビルドして、
+# mainブランチのcostディレクトリにデプロイ
+
+on:
+  push:
+    branches:
+      - cost_dev  # ソースコードのあるブランチ
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # --- Step 1: cost_devブランチのソースをチェックアウトしてビルド ---
+      - name: Checkout source (cost_dev)
+        uses: actions/checkout@v3
+        with:
+          ref: cost_dev
+
+      - name: Install Bun # Nodeとトータルの時間は変わんなかった
+        run: |
+          curl -fsSL https://bun.sh/install | bash
+          echo "$HOME/.bun/bin" >> $GITHUB_PATH  # bunのパスをGITHUB_PATHに追加
+
+      - name: Install dependencies and build
+        run: |
+          bun install
+          bun run build
+        # ※ビルド後、同ディレクトリ直下に「dist」フォルダが生成される前提
+
+      # --- Step 2: mainブランチをサブディレクトリにチェックアウト ---
+      - name: Checkout main branch into subdirectory
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ github.repository }}
+          ref: main
+          path: main_branch  # 別ディレクトリとしてチェックアウト
+
+      # --- Step 3: mainブランチ内のcostディレクトリを更新 ---
+      - name: Update cost directory in main branch
+        run: |
+          # mainブランチ内の古いcostディレクトリを削除
+          rm -rf main_branch/cost
+          # ビルド成果物(dist)をcostディレクトリとしてコピー
+          cp -R dist main_branch/cost
+          # mainブランチのディレクトリに移動
+          cd main_branch
+          # Gitの設定
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}.git
+          # 変更をステージングしてcommit（変更がない場合はエラーを無視）
+          git add .
+          # [skip ci] は発火ループに入らない為に必要
+          git commit -m "${{ github.event.head_commit.message }} [skip ci]" || echo "No changes to commit"
+          # mainブランチへpush
+          git push origin main
