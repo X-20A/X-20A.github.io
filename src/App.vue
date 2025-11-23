@@ -42,7 +42,8 @@
 								<input @paste="handle_paste($event, index)" type="text" class="cell import-cell" />
 							</td>
 							<td>
-								<input v-model="row.row_name" @input="handleRowUpdate(index)" type="text" class="cell name-cell" />
+								<input v-model="row.row_name" @input="handleRowUpdate(index)"
+									@keydown="handle_name_cell_keydown($event, index)" type="text" class="cell name-cell" ref="name_cells" />
 							</td>
 							<td>
 								<input v-model="row.multiplier" @input="handleRowUpdate(index)" class="cell count-cell" type="number" />
@@ -139,6 +140,7 @@ const current_data = computed(() => store.current_data);
 const is_show_notice = ref(false);
 const notice_message = ref('');
 const is_copying = ref(false);
+const name_cells = ref<HTMLInputElement[]>([]);
 
 const sum = computed(() => {
 	if (!current_data.value) return { ...INITIAL_SUM_DATA };
@@ -231,6 +233,26 @@ const clearRow = (row_index: number) => {
 // 行を追加
 const handle_add_rows = () => {
 	store.ADD_ROWS();
+};
+
+// name-cellのキーダウンイベント処理
+const handle_name_cell_keydown = (
+	event: KeyboardEvent,
+	index: number,
+) => {
+	// Enterキーかつ文字変換中でない場合
+	if (event.key === 'Enter' && !event.isComposing) {
+		event.preventDefault();
+
+		// 次の行のname-cellにフォーカスを移動
+		const next_index = index + 1;
+		if (next_index < name_cells.value.length) {
+			const next_name_cell = name_cells.value[next_index];
+			if (next_name_cell) {
+				next_name_cell.focus();
+			}
+		}
+	}
 };
 
 const tableBody = ref<HTMLElement>();
