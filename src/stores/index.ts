@@ -40,9 +40,10 @@ export const useStore = defineStore('datas', {
             this.UPDATE_CURRENT_DATA(next_data);
         },
         ADD_ROWS(): void {
+            const ADD_COUNT = 10;
             const new_row_datas: RowData[] =
                 this.current_data.row_datas
-                    .concat(Array(20)
+                    .concat(Array(ADD_COUNT)
                     .fill(null)
                     .map(() => ({ ...INITIAL_ROW_DATA })));
 
