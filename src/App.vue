@@ -48,7 +48,8 @@
 									@keydown="handle_name_cell_keydown($event, index)" type="text" class="cell name-cell"
 									ref="name_cells" />
 							</td>
-							<td class="url-cell" @click="open_url(row.url)">
+							<td class="url-cell" @click="open_url(row.url)"
+								@contextmenu.prevent="showContextMenu($event, index, row)">
 								<div class="url-icon-container">
 									<svg v-if="row.url" class="url-icon" viewBox="0 0 24 24" width="16" height="16">
 										<path fill="currentColor"
@@ -124,6 +125,13 @@
 		</div>
 	</div>
 
+	<!-- カスタムコンテキストメニュー -->
+	<div v-if="contextMenu.visible" class="context-menu"
+		:style="{ top: contextMenu.y + 'px', left: contextMenu.x + 'px' }">
+		<div class="context-menu-item" @click="copyUrl">URLをコピー</div>
+		<div class="context-menu-item" @click="deleteUrl">URLを削除</div>
+	</div>
+
 	<transition name="notification">
 		<div v-if="is_show_notice" class="notification">
 			<div class="notification-content">
@@ -156,6 +164,15 @@ const is_show_notice = ref(false);
 const notice_message = ref('');
 const is_copying = ref(false);
 const name_cells = ref<HTMLInputElement[]>([]);
+
+// コンテキストメニュー用の状態
+const contextMenu = ref({
+	visible: false,
+	x: 0,
+	y: 0,
+	rowIndex: -1,
+	rowData: null as any
+});
 
 const sum = computed(() => {
 	if (!current_data.value) return { ...INITIAL_SUM_DATA };
@@ -277,6 +294,73 @@ const handle_name_cell_keydown = (
 	}
 };
 
+// コンテキストメニューを表示
+const showContextMenu = (event: MouseEvent, rowIndex: number, rowData: any) => {
+	contextMenu.value = {
+		visible: true,
+		x: event.clientX,
+		y: event.clientY,
+		rowIndex,
+		rowData
+	};
+};
+
+// URLをコピー
+const copyUrl = () => {
+	if (contextMenu.value.rowData && contextMenu.value.rowData.url) {
+		navigator.clipboard.writeText(contextMenu.value.rowData.url)
+			.then(() => {
+				notice_message.value = 'URLをコピーしました';
+				is_show_notice.value = true;
+				setTimeout(() => {
+					is_show_notice.value = false;
+				}, 3000);
+			})
+			.catch(err => {
+				console.error('URLのコピーに失敗しました:', err);
+				notice_message.value = 'URLのコピーに失敗しました';
+				is_show_notice.value = true;
+				setTimeout(() => {
+					is_show_notice.value = false;
+				}, 3000);
+			});
+	}
+	hideContextMenu();
+};
+
+// URLを削除
+const deleteUrl = () => {
+	if (contextMenu.value.rowIndex >= 0) {
+		const rowIndex = contextMenu.value.rowIndex;
+		const newRowDatas = [...current_data.value.row_datas];
+
+		if (newRowDatas[rowIndex]) {
+			newRowDatas[rowIndex] = {
+				...newRowDatas[rowIndex],
+				url: ''
+			};
+
+			store.UPDATE_CURRENT_DATA({
+				...current_data.value,
+				row_datas: newRowDatas
+			});
+		}
+	}
+	hideContextMenu();
+};
+
+// コンテキストメニューを非表示
+const hideContextMenu = () => {
+	contextMenu.value.visible = false;
+};
+
+// ドキュメントクリックでコンテキストメニューを閉じる
+const handleDocumentClick = () => {
+	if (contextMenu.value.visible) {
+		hideContextMenu();
+	}
+};
+
 const tableBody = ref<HTMLElement>();
 const dragStartIndex = ref<number | null>(null);
 const dragOverIndex = ref<number | null>(null);
@@ -387,6 +471,9 @@ const resetDragState = () => {
 };
 
 onMounted(() => {
+	// ドキュメントクリックイベントを登録
+	document.addEventListener('click', handleDocumentClick);
+
 	const shareData = calc_URL_param('share');
 	do_delete_URL_param();
 
@@ -892,6 +979,29 @@ input[type="number"] {
 .notification-leave-to {
 	opacity: 0;
 	transform: translateX(100%);
+}
+
+/* コンテキストメニュースタイル */
+.context-menu {
+	position: fixed;
+	background: white;
+	border: 1px solid #e0e0e0;
+	border-radius: 4px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	z-index: 10000;
+	min-width: 120px;
+}
+
+.context-menu-item {
+	padding: 8px 12px;
+	cursor: pointer;
+	font-size: 13px;
+	transition: background-color 0.2s;
+}
+
+.context-menu-item:hover {
+	background-color: #f0f8ff;
+	color: #4dabf7;
 }
 
 /* スクロール可能なテーブルの場合 */
