@@ -5,6 +5,7 @@ const rowDataSchema = {
     row_name: string(),
     url: string(),
     multiplier: number(),
+    rate: number(),
     fuel: number(),
     ammo: number(),
     steel: number(),

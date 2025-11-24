@@ -23,6 +23,7 @@
 							<th class="name-column">name</th>
 							<th class="url-column">url</th>
 							<th class="count-column">count</th>
+							<th class="rate-column">rate(%)</th>
 							<th class="resource-column"><img src="./icons/items/fuel.png" /></th>
 							<th class="resource-column"><img src="./icons/items/ammo.png" /></th>
 							<th class="resource-column"><img src="./icons/items/steel.png" /></th>
@@ -60,6 +61,9 @@
 								<input v-model="row.multiplier" @input="handleRowUpdate(index)" class="cell count-cell" type="number" />
 							</td>
 							<td>
+								<input v-model="row.rate" @input="handleRowUpdate(index)" class="cell rate-cell" type="number" />
+							</td>
+							<td>
 								<input v-model.number="row.fuel" @input="handleRowUpdate(index)" class="cell resource-cell"
 									type="number" />
 							</td>
@@ -92,7 +96,7 @@
 							</td>
 						</tr>
 						<tr class="add-row-row">
-							<td colspan="13" class="add-row-cell">
+							<td colspan="14" class="add-row-cell">
 								<button @click="handle_add_rows" class="add-row-btn">行を追加</button>
 							</td>
 						</tr>
@@ -426,7 +430,7 @@ onMounted(() => {
 <style scoped>
 .container {
 	width: 100%;
-	max-width: 860px;
+	max-width: 910px;
 	margin: auto;
 	margin-top: 50px;
 	padding: 0 20px;
@@ -563,6 +567,10 @@ onMounted(() => {
 	width: 40px;
 }
 
+.rate-column {
+	width: 50px;
+}
+
 .resource-column {
 	width: 65px;
 	padding: 0px;
@@ -624,7 +632,8 @@ onMounted(() => {
 	min-width: 60px;
 }
 
-.count-cell {
+.count-cell,
+.rate-cell {
 	text-align: center !important;
 }
 
@@ -808,7 +817,7 @@ input[type="number"] {
 }
 
 .empty-cell {
-	width: 269px;
+	width: 322px;
 }
 
 .leftover-cell {
@@ -892,7 +901,7 @@ input[type="number"] {
 	}
 
 	.spread-sheet {
-		min-width: 940px;
+		min-width: 980px;
 	}
 }
 

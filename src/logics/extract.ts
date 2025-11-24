@@ -47,9 +47,12 @@ export function extract_data_from_text(
 
     const patterns = [
         {
-            // URLのパターンを修正 - キャプチャグループを追加
             regex: /(https?:\/\/[^\s]+)/g,
             setter: (val: string) => result.url = val,
+        },
+        {
+            regex: /旗艦撃沈率:\s*([\d.]+)%/,
+            setter: (val: string) => result.rate = parseFloat(val)
         },
         {
             regex: /(?:燃料|Fuel):\s*(\S+)/i,
