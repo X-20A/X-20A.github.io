@@ -21,6 +21,7 @@
 							<th class="drag-column"></th>
 							<th class="import-column">Import</th>
 							<th class="name-column">name</th>
+							<th class="url-column">url</th>
 							<th class="count-column">count</th>
 							<th class="resource-column"><img src="./icons/items/fuel.png" /></th>
 							<th class="resource-column"><img src="./icons/items/ammo.png" /></th>
@@ -43,7 +44,17 @@
 							</td>
 							<td>
 								<input v-model="row.row_name" @input="handleRowUpdate(index)"
-									@keydown="handle_name_cell_keydown($event, index)" type="text" class="cell name-cell" ref="name_cells" />
+									@keydown="handle_name_cell_keydown($event, index)" type="text" class="cell name-cell"
+									ref="name_cells" />
+							</td>
+							<td class="url-cell" @click="open_url(row.url)">
+								<div class="url-icon-container">
+									<svg v-if="row.url" class="url-icon" viewBox="0 0 24 24" width="16" height="16">
+										<path fill="currentColor"
+											d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-6h2v6zm3 0h-2V7h2v10z" />
+									</svg>
+									<div v-if="row.url" class="url-tooltip">{{ row.url }}</div>
+								</div>
 							</td>
 							<td>
 								<input v-model="row.multiplier" @input="handleRowUpdate(index)" class="cell count-cell" type="number" />
@@ -81,7 +92,7 @@
 							</td>
 						</tr>
 						<tr class="add-row-row">
-							<td colspan="12" class="add-row-cell">
+							<td colspan="13" class="add-row-cell">
 								<button @click="handle_add_rows" class="add-row-btn">行を追加</button>
 							</td>
 						</tr>
@@ -148,6 +159,13 @@ const sum = computed(() => {
 	const sumed_data = calc_sum_data(current_data.value.row_datas);
 	return floor_sum_data(sumed_data);
 });
+
+// URLを新しいタブで開く
+const open_url = (url: string) => {
+	if (url) {
+		window.open(url, '_blank');
+	}
+};
 
 // プロジェクト名更新
 const handle_project_name_update = () => {
@@ -408,7 +426,7 @@ onMounted(() => {
 <style scoped>
 .container {
 	width: 100%;
-	max-width: 820px;
+	max-width: 860px;
 	margin: auto;
 	margin-top: 50px;
 	padding: 0 20px;
@@ -537,6 +555,10 @@ onMounted(() => {
 	width: 100px;
 }
 
+.url-column {
+	width: 40px;
+}
+
 .count-column {
 	width: 40px;
 }
@@ -609,6 +631,72 @@ onMounted(() => {
 .resource-cell {
 	min-width: 50px;
 	text-align: right;
+}
+
+.url-cell {
+	text-align: center;
+	cursor: pointer;
+	padding: 0;
+	position: relative;
+}
+
+.url-icon-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	padding: 4px;
+	position: relative;
+}
+
+.url-icon {
+	color: #4dabf7;
+	transition: color 0.2s;
+}
+
+.url-cell:hover .url-icon {
+	color: #339af0;
+}
+
+.url-cell:hover {
+	background-color: #f0f8ff;
+}
+
+/* URLツールチップ  */
+.url-tooltip {
+	position: absolute;
+	bottom: 100%;
+	left: 50%;
+	transform: translateX(-50%);
+	background-color: rgba(0, 0, 0, 0.8);
+	color: white;
+	padding: 8px 12px;
+	border-radius: 4px;
+	font-size: 12px;
+	white-space: nowrap;
+	z-index: 1000;
+	pointer-events: none;
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 0.2s, visibility 0.2s;
+	max-width: 300px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.url-tooltip::after {
+	content: '';
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	transform: translateX(-50%);
+	border: 5px solid transparent;
+	border-top-color: rgba(0, 0, 0, 0.8);
+}
+
+.url-cell:hover .url-tooltip {
+	opacity: 1;
+	visibility: visible;
 }
 
 .action-column {
@@ -720,7 +808,7 @@ input[type="number"] {
 }
 
 .empty-cell {
-	width: 225px;
+	width: 269px;
 }
 
 .leftover-cell {
@@ -804,7 +892,7 @@ input[type="number"] {
 	}
 
 	.spread-sheet {
-		min-width: 900px;
+		min-width: 940px;
 	}
 }
 
@@ -821,6 +909,11 @@ input[type="number"] {
 
 	.project-name-input {
 		min-width: 100%;
+	}
+
+	/* モバイルではツールチップを非表示に */
+	.url-tooltip {
+		display: none;
 	}
 }
 

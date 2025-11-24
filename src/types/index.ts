@@ -1,5 +1,6 @@
 export type RowData = {
     row_name: string,
+    url: string,
     multiplier: number,
     fuel: number,
     ammo: number,
@@ -11,6 +12,7 @@ export type RowData = {
 }
 export const INITIAL_ROW_DATA: RowData = {
     row_name: '',
+    url: '',
     multiplier: 1,
     fuel: 0,
     ammo: 0,
@@ -21,7 +23,10 @@ export const INITIAL_ROW_DATA: RowData = {
     underway_replenishment: 0,
 } as const;
 
-export type SumData = Omit<RowData, "row_name" | "multiplier">
+export type SumData = Omit<
+    RowData,
+    "row_name" | "multiplier" | "url"
+>
 export const INITIAL_SUM_DATA: SumData = {
     fuel: 0,
     ammo: 0,

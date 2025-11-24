@@ -1,8 +1,9 @@
-import { object, string, number, array } from 'valibot';
+import { object, string, number, array, union, url, literal } from 'valibot';
 
 // 行データのスキーマ定義
 const rowDataSchema = {
     row_name: string(),
+    url: string(),
     multiplier: number(),
     fuel: number(),
     ammo: number(),

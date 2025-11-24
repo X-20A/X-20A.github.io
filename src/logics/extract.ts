@@ -39,24 +39,18 @@ export function parse_abnormal_value(value: string): number {
  */
 export function extract_data_from_text(
     text: string,
-    current_data: RowData,
+    row_data: RowData,
 ): RowData {
     const lines = text.split('\n');
 
-    // TODO: 抽出とマージを分離する
-    const result: RowData = {
-        row_name: current_data.row_name,
-        multiplier: current_data.multiplier,
-        fuel: current_data.fuel,
-        ammo: current_data.ammo,
-        steel: current_data.steel,
-        baux: current_data.baux,
-        bucket: current_data.bucket,
-        damecon: current_data.damecon,
-        underway_replenishment: current_data.underway_replenishment,
-    };
+    const result: RowData = { ...row_data };
 
     const patterns = [
+        {
+            // URLのパターンを修正 - キャプチャグループを追加
+            regex: /(https?:\/\/[^\s]+)/g,
+            setter: (val: string) => result.url = val,
+        },
         {
             regex: /(?:燃料|Fuel):\s*(\S+)/i,
             setter: (val: string) => result.fuel = parse_abnormal_value(val)
@@ -87,19 +81,21 @@ export function extract_data_from_text(
         },
     ] as const;
 
-    let matchFound = false;
+    let is_match_found = false;
 
     for (const line of lines) {
         for (const pattern of patterns) {
             const match = line.match(pattern.regex);
             if (match) {
-                pattern.setter(match[1]);
-                matchFound = true;
+                // URLの場合は match[0] でも match[1] でも同じ（キャプチャグループが全体）
+                const value = match[1] || match[0];
+                pattern.setter(value);
+                is_match_found = true;
             }
         }
     }
 
-    if (!matchFound) {
+    if (!is_match_found) {
         throw new Error("テキストからリソースデータを抽出できませんでした");
     }
 
