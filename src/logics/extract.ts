@@ -51,7 +51,7 @@ export function extract_data_from_text(
             setter: (val: string) => result.url = val,
         },
         {
-            regex: /旗艦撃沈率:\s*([\d.]+)%/,
+            regex: /(?:旗艦撃沈率|S率|A以上|B以上):\s*([\d.]+)%/,
             setter: (val: string) => result.rate = parseFloat(val)
         },
         {
