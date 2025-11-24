@@ -195,7 +195,7 @@ export function calc_61_5(
             }
             return 'U';
         case 'E':
-            if (CL === 0 && Ds <= 3) {
+            if (CL === 1 && Ds <= 3) {
                 return 'G';
             }
             return 'I';
