@@ -34,12 +34,12 @@
 							<th class="action-column"></th>
 						</tr>
 					</thead>
-					<tbody class="table-body" ref="tableBody">
+					<tbody class="table-body" ref="table_body">
 						<tr v-for="(row, index) in current_data.row_datas" :key="index" class="data-row" :data-index="index"
-							:draggable="true" @dragstart="handleDragStart($event, index)" @dragover="handleDragOver($event)"
-							@dragenter="handleDragEnter($event)" @dragleave="handleDragLeave($event)"
-							@drop="handleDrop($event, index)" @dragend="handleDragEnd">
-							<td class="drag-handle" draggable="false" @mousedown="handleMouseDown">⋮⋮</td>
+							:draggable="true" @dragstart="handle_drag_start($event, index)" @dragover="handle_drag_over($event)"
+							@dragenter="handle_drag_enter($event)" @dragleave="handle_drag_leave($event)"
+							@drop="handle_drop($event, index)" @dragend="handle_drag_end">
+							<td class="drag-handle" draggable="false" @mousedown="handle_mouse_down">⋮⋮</td>
 							<td>
 								<input @paste="handle_paste($event, index)" type="text" class="cell import-cell" />
 							</td>
@@ -49,7 +49,7 @@
 									ref="name_cells" />
 							</td>
 							<td class="url-cell" @click="open_url(row.url)"
-								@contextmenu.prevent="showContextMenu($event, index, row)">
+								@contextmenu.prevent="show_context_menu($event, index, row)">
 								<div class="url-icon-container">
 									<svg v-if="row.url" class="url-icon" viewBox="0 0 24 24" width="16" height="16">
 										<path fill="currentColor"
@@ -126,10 +126,10 @@
 	</div>
 
 	<!-- カスタムコンテキストメニュー -->
-	<div v-if="contextMenu.visible" class="context-menu"
-		:style="{ top: contextMenu.y + 'px', left: contextMenu.x + 'px' }">
-		<div class="context-menu-item" @click="copyUrl">URLをコピー</div>
-		<div class="context-menu-item" @click="deleteUrl">URLを削除</div>
+	<div v-if="context_menu.visible" class="context-menu"
+		:style="{ top: context_menu.y + 'px', left: context_menu.x + 'px' }">
+		<div class="context-menu-item" @click="copy_url">URLをコピー</div>
+		<div class="context-menu-item" @click="delete_url">URLを削除</div>
 	</div>
 
 	<transition name="notification">
@@ -148,7 +148,7 @@ import Footer from './components/Footer.vue';
 import Header from './components/Header.vue';
 import { useStore } from './stores';
 import { computed, onMounted, ref } from 'vue';
-import { INITIAL_SUM_DATA, INITIAL_ROW_DATA, INITIAL_SAVE_DATA } from './types';
+import { INITIAL_SUM_DATA, INITIAL_ROW_DATA, INITIAL_SAVE_DATA, RowData } from './types';
 import { calc_sum_data } from './logics/sum';
 import { floor_sum_data } from './logics/floor';
 import { sort_row_datas } from './logics/sort';
@@ -166,7 +166,7 @@ const is_copying = ref(false);
 const name_cells = ref<HTMLInputElement[]>([]);
 
 // コンテキストメニュー用の状態
-const contextMenu = ref({
+const context_menu = ref({
 	visible: false,
 	x: 0,
 	y: 0,
@@ -208,9 +208,7 @@ const handle_copy_url = async () => {
 	is_copying.value = true;
 
 	try {
-		console.log('handle_copy_url');
 		const shorten_url = await do_create_shorten_url(current_data.value);
-		// console.log('shorten_url: ', shorten_url);
 
 		const textArea = document.createElement('textarea');
 		textArea.value = shorten_url;
@@ -279,24 +277,31 @@ const handle_name_cell_keydown = (
 	event: KeyboardEvent,
 	index: number,
 ) => {
-	// Enterキーかつ文字変換中でない場合
-	if (event.key === 'Enter' && !event.isComposing) {
-		event.preventDefault();
+	if (
+		event.key !== 'Enter' ||
+		event.isComposing
+	) return;
 
-		// 次の行のname-cellにフォーカスを移動
-		const next_index = index + 1;
-		if (next_index < name_cells.value.length) {
-			const next_name_cell = name_cells.value[next_index];
-			if (next_name_cell) {
-				next_name_cell.focus();
-			}
-		}
+	// Enterキーかつ文字変換中でない場合
+	event.preventDefault();
+
+	// 次の行のname-cellにフォーカスを移動
+	const next_index = index + 1;
+	if (next_index >= name_cells.value.length) return;
+		
+	const next_name_cell = name_cells.value[next_index];
+	if (next_name_cell) {
+		next_name_cell.focus();
 	}
 };
 
 // コンテキストメニューを表示
-const showContextMenu = (event: MouseEvent, rowIndex: number, rowData: any) => {
-	contextMenu.value = {
+const show_context_menu = (
+	event: MouseEvent,
+	rowIndex: number,
+	rowData: RowData,
+) => {
+	context_menu.value = {
 		visible: true,
 		x: event.clientX,
 		y: event.clientY,
@@ -306,9 +311,9 @@ const showContextMenu = (event: MouseEvent, rowIndex: number, rowData: any) => {
 };
 
 // URLをコピー
-const copyUrl = () => {
-	if (contextMenu.value.rowData && contextMenu.value.rowData.url) {
-		navigator.clipboard.writeText(contextMenu.value.rowData.url)
+const copy_url = () => {
+	if (context_menu.value.rowData && context_menu.value.rowData.url) {
+		navigator.clipboard.writeText(context_menu.value.rowData.url)
 			.then(() => {
 				notice_message.value = 'URLをコピーしました';
 				is_show_notice.value = true;
@@ -325,65 +330,65 @@ const copyUrl = () => {
 				}, 3000);
 			});
 	}
-	hideContextMenu();
+	hide_context_menu();
 };
 
 // URLを削除
-const deleteUrl = () => {
-	if (contextMenu.value.rowIndex >= 0) {
-		const rowIndex = contextMenu.value.rowIndex;
-		const newRowDatas = [...current_data.value.row_datas];
+const delete_url = () => {
+	if (context_menu.value.rowIndex >= 0) {
+		const row_index = context_menu.value.rowIndex;
+		const new_row_datas = [...current_data.value.row_datas];
 
-		if (newRowDatas[rowIndex]) {
-			newRowDatas[rowIndex] = {
-				...newRowDatas[rowIndex],
+		if (new_row_datas[row_index]) {
+			new_row_datas[row_index] = {
+				...new_row_datas[row_index],
 				url: ''
 			};
 
 			store.UPDATE_CURRENT_DATA({
 				...current_data.value,
-				row_datas: newRowDatas
+				row_datas: new_row_datas
 			});
 		}
 	}
-	hideContextMenu();
+	hide_context_menu();
 };
 
 // コンテキストメニューを非表示
-const hideContextMenu = () => {
-	contextMenu.value.visible = false;
+const hide_context_menu = () => {
+	context_menu.value.visible = false;
 };
 
 // ドキュメントクリックでコンテキストメニューを閉じる
-const handleDocumentClick = () => {
-	if (contextMenu.value.visible) {
-		hideContextMenu();
+const handle_document_click = () => {
+	if (context_menu.value.visible) {
+		hide_context_menu();
 	}
 };
 
-const tableBody = ref<HTMLElement>();
-const dragStartIndex = ref<number | null>(null);
-const dragOverIndex = ref<number | null>(null);
-const isDragging = ref(false);
-const isDragHandle = ref(false);
+const table_body = ref<HTMLElement>();
+const drag_start_index = ref<number | null>(null);
+const drag_over_index = ref<number | null>(null);
+const is_dragging = ref(false);
+const is_drag_handle = ref(false);
 
 // マウスダウンイベントでドラッグハンドルかどうかを判定
-const handleMouseDown = (event: MouseEvent) => {
-	isDragHandle.value = true;
+const handle_mouse_down = (event: MouseEvent) => {
+	is_drag_handle.value = true;
 };
 
 // ドラッグ開始
-const handleDragStart = (event: DragEvent, index: number) => {
+const handle_drag_start = (event: DragEvent, index: number) => {
 	// ドラッグハンドル以外からのドラッグ開始を防止
-	if (!isDragHandle.value) {
+	if (!is_drag_handle.value) {
 		event.preventDefault();
 		return;
 	}
 
 	if (!event.dataTransfer) return;
 
-	dragStartIndex.value = index;
-	isDragging.value = true;
+	drag_start_index.value = index;
+	is_dragging.value = true;
 
 	// ドラッグ中の視覚効果を設定
 	event.dataTransfer.effectAllowed = 'move';
@@ -399,7 +404,7 @@ const handleDragStart = (event: DragEvent, index: number) => {
 };
 
 // ドラッグオーバー
-const handleDragOver = (event: DragEvent) => {
+const handle_drag_over = (event: DragEvent) => {
 	event.preventDefault();
 	if (!event.dataTransfer) return;
 
@@ -407,36 +412,36 @@ const handleDragOver = (event: DragEvent) => {
 };
 
 // ドラッグエンター
-const handleDragEnter = (event: DragEvent) => {
+const handle_drag_enter = (event: DragEvent) => {
 	const target = (event.currentTarget as HTMLElement);
 	const index = parseInt(target.getAttribute('data-index') || '-1');
 
-	if (index !== -1 && index !== dragStartIndex.value) {
-		dragOverIndex.value = index;
+	if (index !== -1 && index !== drag_start_index.value) {
+		drag_over_index.value = index;
 		target.classList.add('drag-over');
 	}
 };
 
 // ドラッグリーブ
-const handleDragLeave = (event: DragEvent) => {
+const handle_drag_leave = (event: DragEvent) => {
 	const target = (event.currentTarget as HTMLElement);
 	target.classList.remove('drag-over');
 };
 
 // ドロップ
-const handleDrop = (event: DragEvent, dropIndex: number) => {
+const handle_drop = (event: DragEvent, dropIndex: number) => {
 	event.preventDefault();
 	const target = (event.currentTarget as HTMLElement);
 	target.classList.remove('drag-over');
 
-	if (dragStartIndex.value === null || dragStartIndex.value === dropIndex) {
-		resetDragState();
+	if (drag_start_index.value === null || drag_start_index.value === dropIndex) {
+		reset_drag_state();
 		return;
 	}
 
 	// 行の順番を入れ替え
 	const newRowDatas = [...current_data.value.row_datas];
-	const [movedRow] = newRowDatas.splice(dragStartIndex.value, 1);
+	const [movedRow] = newRowDatas.splice(drag_start_index.value, 1);
 	newRowDatas.splice(dropIndex, 0, movedRow);
 
 	// ストアを更新
@@ -445,56 +450,56 @@ const handleDrop = (event: DragEvent, dropIndex: number) => {
 		row_datas: newRowDatas
 	});
 
-	resetDragState();
+	reset_drag_state();
 };
 
 // ドラッグ終了
-const handleDragEnd = (event: DragEvent) => {
+const handle_drag_end = (event: DragEvent) => {
 	const target = (event.currentTarget as HTMLElement);
 	target.classList.remove('dragging');
 
 	// すべての行からdrag-overクラスを削除
-	if (tableBody.value) {
-		const rows = tableBody.value.querySelectorAll('.data-row');
+	if (table_body.value) {
+		const rows = table_body.value.querySelectorAll('.data-row');
 		rows.forEach(row => row.classList.remove('drag-over'));
 	}
 
-	resetDragState();
+	reset_drag_state();
 };
 
 // ドラッグ状態をリセット
-const resetDragState = () => {
-	dragStartIndex.value = null;
-	dragOverIndex.value = null;
-	isDragging.value = false;
-	isDragHandle.value = false;
+const reset_drag_state = () => {
+	drag_start_index.value = null;
+	drag_over_index.value = null;
+	is_dragging.value = false;
+	is_drag_handle.value = false;
 };
 
 onMounted(() => {
 	// ドキュメントクリックイベントを登録
-	document.addEventListener('click', handleDocumentClick);
+	document.addEventListener('click', handle_document_click);
 
-	const shareData = calc_URL_param('share');
+	const share_data = calc_URL_param('share');
 	do_delete_URL_param();
 
-	if (shareData) {
-		const isPermission = confirm(
+	if (share_data) {
+		const is_permission = confirm(
 			'現在のデータを共有URLのデータによって上書きします\n続行しますか?'
 		);
 
-		if (!isPermission) {
+		if (!is_permission) {
 			store.LOAD_DATA();
 			return;
 		}
 
 		try {
-			const decompressedData = lzstring.decompressFromEncodedURIComponent(shareData);
-			const parsedData = JSON.parse(decompressedData);
+			const decompressed_data = lzstring.decompressFromEncodedURIComponent(share_data);
+			const parsed_data = JSON.parse(decompressed_data);
 
 			// バリデーション実行
-			const validatedData = parse(SaveDataSchema, parsedData);
+			const validated_data = parse(SaveDataSchema, parsed_data);
 
-			store.UPDATE_CURRENT_DATA(validatedData);
+			store.UPDATE_CURRENT_DATA(validated_data);
 			return;
 		} catch (error) {
 			console.error('データの処理に失敗しました:', error);
