@@ -3,7 +3,7 @@ import { PreSailNull } from "../../../types/brand";
 import { BranchResponse } from "../../../types";
 import { destructuring_assignment_helper, omission_of_conditions } from "..";
 import { is_fleet_speed_fast_or_more, is_fleet_speed_faster_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
-import { is_fleet_carrier, is_fleet_combined } from "../../../models/fleet/predicate";
+import { is_fleet_carrier, is_fleet_combined, is_fleet_striking } from "../../../models/fleet/predicate";
 import { AdoptFleet, count_Yamato_class } from "../../../models/fleet/AdoptFleet";
 import { EquippedShip } from "../../../models/ship/EquippedShip";
 import { includes_ship_name, is_CVs } from "../../../models/ship/predicate";
@@ -69,7 +69,11 @@ export function calc_61_5(
     switch (node) {
         case null:
             if (!is_fleet_combined(fleet_type)) {
-                if (phase >= 2 && every_carriers_has_rench(fleet)) {
+                if (
+                    phase >= 2 &&
+                    is_fleet_striking(fleet_type, ships_length) &&
+                    every_carriers_has_rench(fleet)
+                ) {
                     return '2';
                 }
                 return '1';
