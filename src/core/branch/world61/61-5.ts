@@ -193,7 +193,7 @@ export function calc_61_5(
             if (seek[3] >= 106) {
                 return 'U';
             }
-            return 'U';
+            return 'T';
         case 'E':
             if (CL === 1 && Ds <= 3) {
                 return 'G';
