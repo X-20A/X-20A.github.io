@@ -1,3 +1,7 @@
+import { Domain } from "../logics/url";
+
+export type Brand<T, B> = T & { __brand: B };
+
 export type RowData = {
     row_name: string,
     url: string,
@@ -42,8 +46,11 @@ export const INITIAL_SUM_DATA: SumData = {
 export type SaveData = {
     project_name: string,
     row_datas: RowData[],
+    approved_domains: Domain[],
 }
+const SORTIE_SIM_DOMAIN = 'kc3kai.github.io' as Domain;
 export const INITIAL_SAVE_DATA: SaveData = {
     project_name: '',
     row_datas: Array(80).fill(null).map(() => ({ ...INITIAL_ROW_DATA })),
+    approved_domains: [SORTIE_SIM_DOMAIN],
 } as const;

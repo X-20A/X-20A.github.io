@@ -52,3 +52,43 @@ export function do_delete_URL_param(): void {
     url.search = "";
     history.replaceState(null, "", url.toString());
 }
+
+/**
+ * urlが承認されたドメインのものであるか判定して返す
+ * @param search_url 
+ * @param allowed_domains 
+ * @returns 
+ */
+export function is_approved_url(
+    search_url: string,
+    allowed_domains: string[],
+): boolean {
+    const search_domain = extract_url_domain(search_url);
+    return allowed_domains.some(
+        allowed_domain => search_domain === allowed_domain
+    );
+}
+
+/**
+ * URLを新しいタブで開く
+ * @param url 
+ */
+export function do_open_url_in_new_tab(
+    url: string,
+): void {
+    window.open(url, '_blank');
+}
+
+export type Domain = string & { __brand?: "Domain" };
+
+/**
+ * URL文字列からドメイン名を抽出して返す
+ * @param url_string 
+ * @returns 
+ */
+export function extract_url_domain(
+    url_string: string,
+): Domain {
+    const url = new URL(url_string);
+    return url.hostname as Domain;
+}

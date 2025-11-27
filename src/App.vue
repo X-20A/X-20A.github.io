@@ -51,7 +51,10 @@
 							<td class="url-cell" @click="open_url(row.url)"
 								@contextmenu.prevent="show_context_menu($event, index, row)">
 								<div class="url-icon-container">
-									<svg v-if="row.url" class="url-icon" viewBox="0 0 24 24" width="16" height="16">
+									<svg v-if="row.url" class="url-icon" :class="{
+											'approved_url': is_approved_url(row.url, current_data.approved_domains),
+											'unapproved_url': !is_approved_url(row.url, current_data.approved_domains)
+											}" viewBox="0 0 24 24" width="16" height="16">
 										<path fill="currentColor"
 											d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-6h2v6zm3 0h-2V7h2v10z" />
 									</svg>
@@ -92,7 +95,7 @@
 								<input v-model.number="row.underway_replenishment" @input="handleRowUpdate(index)"
 									class="cell resource-cell" type="number" />
 							</td>
-							<td @pointerup="clearRow(index)" class="action-cell">
+							<td @pointerup="clear_row(index)" class="action-cell">
 								<span class="clear-btn">X</span>
 							</td>
 						</tr>
@@ -126,7 +129,7 @@
 	</div>
 
 	<!-- カスタムコンテキストメニュー -->
-	<div v-if="context_menu.visible" class="context-menu"
+	<div v-if="context_menu.is_visible" class="context-menu"
 		:style="{ top: context_menu.y + 'px', left: context_menu.x + 'px' }">
 		<div class="context-menu-item" @click="copy_url">URLをコピー</div>
 		<div class="context-menu-item" @click="delete_url">URLを削除</div>
@@ -141,38 +144,47 @@
 	</transition>
 
 	<Footer />
+	<div
+		v-if="is_error_visible || is_domain_permission_visible"
+		class="modal-overlay"
+		@pointerdown="handle_close_modals"
+	>
+		<DomainPermission />
+		<ErrorView />
+	</div>
 </template>
 
 <script setup lang="ts">
 import Footer from './components/Footer.vue';
 import Header from './components/Header.vue';
-import { useStore } from './stores';
+import { useStore, useModalStore } from './stores';
 import { computed, onMounted, ref } from 'vue';
-import { INITIAL_SUM_DATA, INITIAL_ROW_DATA, INITIAL_SAVE_DATA, RowData } from './types';
+import { INITIAL_SUM_DATA, INITIAL_ROW_DATA, RowData } from './types';
 import { calc_sum_data } from './logics/sum';
 import { floor_sum_data } from './logics/floor';
 import { sort_row_datas } from './logics/sort';
-import { calc_URL_param, do_delete_URL_param, do_create_shorten_url } from './logics/url';
+import { calc_URL_param, do_delete_URL_param, do_create_shorten_url, is_approved_url, do_open_url_in_new_tab } from './logics/url';
 import lzstring from "lz-string";
 import { extract_data_from_text } from './logics/extract';
 import { parse, ValiError } from 'valibot';
 import { SaveDataSchema } from './logics/sheme';
+import DomainPermission from './components/DomainPermission.vue';
+import ErrorView from './components/ErrorView.vue';
 
 const store = useStore();
 const current_data = computed(() => store.current_data);
+
+const modal_store = useModalStore();
+const is_error_visible = computed(() => modal_store.is_error_visible);
+const is_domain_permission_visible =
+	computed(() => modal_store.is_domain_permission_visible);
+
+const handle_close_modals = () => modal_store.HIDE_MODALS();
+
 const is_show_notice = ref(false);
 const notice_message = ref('');
 const is_copying = ref(false);
 const name_cells = ref<HTMLInputElement[]>([]);
-
-// コンテキストメニュー用の状態
-const context_menu = ref({
-	visible: false,
-	x: 0,
-	y: 0,
-	rowIndex: -1,
-	rowData: null as any
-});
 
 const sum = computed(() => {
 	if (!current_data.value) return { ...INITIAL_SUM_DATA };
@@ -183,9 +195,14 @@ const sum = computed(() => {
 
 // URLを新しいタブで開く
 const open_url = (url: string) => {
-	if (url) {
-		window.open(url, '_blank');
+	if (!url) return;
+	if (is_approved_url(url, current_data.value.approved_domains)) {
+		do_open_url_in_new_tab(url);
+		return;
 	}
+	
+	store.UPDATE_PENDING_URL(url);
+	modal_store.SHOW_DOMAIN_PERMISSION();
 };
 
 // プロジェクト名更新
@@ -235,7 +252,7 @@ const handle_initialize = () => {
 	const is_permission = confirm('データを削除しますか?');
 	if (!is_permission) return;
 
-	store.UPDATE_CURRENT_DATA({ ...INITIAL_SAVE_DATA });
+	store.INITIALIZE_DATA();
 };
 
 // 行データ更新
@@ -263,7 +280,7 @@ const handle_paste = (event: ClipboardEvent, row_index: number) => {
 };
 
 // 行をクリアしてソート
-const clearRow = (row_index: number) => {
+const clear_row = (row_index: number) => {
 	store.UPDATE_ROW_DATA(INITIAL_ROW_DATA, row_index);
 };
 
@@ -288,12 +305,21 @@ const handle_name_cell_keydown = (
 	// 次の行のname-cellにフォーカスを移動
 	const next_index = index + 1;
 	if (next_index >= name_cells.value.length) return;
-		
+
 	const next_name_cell = name_cells.value[next_index];
 	if (next_name_cell) {
 		next_name_cell.focus();
 	}
 };
+
+// コンテキストメニュー用の状態
+const context_menu = ref({
+	is_visible: false,
+	x: 0,
+	y: 0,
+	row_index: -1,
+	row_data: null as RowData | null,
+});
 
 // コンテキストメニューを表示
 const show_context_menu = (
@@ -302,68 +328,73 @@ const show_context_menu = (
 	rowData: RowData,
 ) => {
 	context_menu.value = {
-		visible: true,
+		is_visible: true,
 		x: event.clientX,
 		y: event.clientY,
-		rowIndex,
-		rowData
+		row_index: rowIndex,
+		row_data: rowData
 	};
 };
 
 // URLをコピー
 const copy_url = () => {
-	if (context_menu.value.rowData && context_menu.value.rowData.url) {
-		navigator.clipboard.writeText(context_menu.value.rowData.url)
-			.then(() => {
-				notice_message.value = 'URLをコピーしました';
-				is_show_notice.value = true;
-				setTimeout(() => {
-					is_show_notice.value = false;
-				}, 3000);
-			})
-			.catch(err => {
-				console.error('URLのコピーに失敗しました:', err);
-				notice_message.value = 'URLのコピーに失敗しました';
-				is_show_notice.value = true;
-				setTimeout(() => {
-					is_show_notice.value = false;
-				}, 3000);
-			});
-	}
+	if (
+		!context_menu.value.row_data ||
+		!context_menu.value.row_data.url
+	) return;
+
+	navigator.clipboard.writeText(context_menu.value.row_data.url)
+		.then(() => {
+			notice_message.value = 'URLをコピーしました';
+			is_show_notice.value = true;
+			setTimeout(() => {
+				is_show_notice.value = false;
+			}, 3000);
+		})
+		.catch(err => {
+			console.error('URLのコピーに失敗しました:', err);
+			notice_message.value = 'URLのコピーに失敗しました';
+			is_show_notice.value = true;
+			setTimeout(() => {
+				is_show_notice.value = false;
+			}, 3000);
+		});
+
 	hide_context_menu();
 };
 
 // URLを削除
 const delete_url = () => {
-	if (context_menu.value.rowIndex >= 0) {
-		const row_index = context_menu.value.rowIndex;
-		const new_row_datas = [...current_data.value.row_datas];
+	if (context_menu.value.row_index < 0) return;
 
-		if (new_row_datas[row_index]) {
-			new_row_datas[row_index] = {
-				...new_row_datas[row_index],
-				url: ''
-			};
+	const row_index = context_menu.value.row_index;
+	const new_row_datas = [...current_data.value.row_datas];
 
-			store.UPDATE_CURRENT_DATA({
-				...current_data.value,
-				row_datas: new_row_datas
-			});
-		}
-	}
+	if (!new_row_datas[row_index]) return;
+
+	new_row_datas[row_index] = {
+		...new_row_datas[row_index],
+		url: ''
+	};
+
+	store.UPDATE_CURRENT_DATA({
+		...current_data.value,
+		row_datas: new_row_datas
+	});
+
 	hide_context_menu();
 };
 
 // コンテキストメニューを非表示
 const hide_context_menu = () => {
-	context_menu.value.visible = false;
+	context_menu.value.is_visible = false;
 };
 
 // ドキュメントクリックでコンテキストメニューを閉じる
 const handle_document_click = () => {
-	if (context_menu.value.visible) {
-		hide_context_menu();
-	}
+	if (!context_menu.value.is_visible) return;
+
+	hide_context_menu();
 };
 
 const table_body = ref<HTMLElement>();
@@ -434,7 +465,10 @@ const handle_drop = (event: DragEvent, dropIndex: number) => {
 	const target = (event.currentTarget as HTMLElement);
 	target.classList.remove('drag-over');
 
-	if (drag_start_index.value === null || drag_start_index.value === dropIndex) {
+	if (
+		drag_start_index.value === null ||
+		drag_start_index.value === dropIndex
+	) {
 		reset_drag_state();
 		return;
 	}
@@ -493,7 +527,8 @@ onMounted(() => {
 		}
 
 		try {
-			const decompressed_data = lzstring.decompressFromEncodedURIComponent(share_data);
+			const decompressed_data =
+				lzstring.decompressFromEncodedURIComponent(share_data);
 			const parsed_data = JSON.parse(decompressed_data);
 
 			// バリデーション実行
@@ -627,7 +662,7 @@ onMounted(() => {
 	color: #495057;
 	padding: 8px 0px;
 	border-bottom: 2px solid #e9ecef;
-	border-right: 1px solid #e9ecef;
+	border-right: 1px solid #dee2e6;
 	text-align: center;
 	white-space: nowrap;
 	position: sticky;
@@ -750,13 +785,22 @@ onMounted(() => {
 	position: relative;
 }
 
-.url-icon {
+.url-icon.approved_url {
 	color: #4dabf7;
 	transition: color 0.2s;
 }
 
-.url-cell:hover .url-icon {
+.url-icon.unapproved_url {
+	color: #adadad;
+	transition: color 0.2s;
+}
+
+.url-cell:hover .url-icon.approved_url {
 	color: #339af0;
+}
+
+.url-cell:hover .url-icon.unapproved_url {
+	color: #7c7c7c;
 }
 
 .url-cell:hover {
@@ -899,7 +943,7 @@ input[type="number"] {
 	color: white;
 	font-weight: 600;
 	text-align: center;
-	width: 46px;
+	width: 45px;
 }
 
 .total-cell {
@@ -909,7 +953,7 @@ input[type="number"] {
 }
 
 .empty-cell {
-	width: 322px;
+	width: 323px;
 }
 
 .leftover-cell {
@@ -1064,5 +1108,18 @@ input[type="number"] {
 		padding: 8px 6px;
 		font-size: 14px;
 	}
+}
+
+.modal-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.5);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 9999;
 }
 </style>
