@@ -37,10 +37,10 @@ export function calc_61_1(
             }
             return 'C';
         case 'G':
-            if (BBs >= 3) {
-                return 'H';
-            }
             if (is_fleet_speed_fast_or_more(speed)) {
+                if (BBs >= 3) {
+                    return 'H';
+                }
                 if (Ds <= 1) {
                     return 'H';
                 }
@@ -69,7 +69,7 @@ export function calc_61_1(
             if (phase === 3 && DD === 7) {
                 return 'K';
             }
-            if (CL >= 1 && Ds >= 2) {
+            if (CL + CT >= 1 && Ds >= 2) {
                 return 'L';
             }
             if (Ds >= 2 && is_fleet_speed_fast_or_more(speed)) {
@@ -97,13 +97,13 @@ export function calc_61_1(
             if (phase === 1) {
                 return 'N';
             }
-            if (BBCVs >= 3) {
-                return 'N';
-            }
             if (BBs >= 2) {
                 return 'N';
             }
             if (CVH >= 1) {
+                return 'N';
+            }
+            if (CVL >= 2) {
                 return 'N';
             }
             if (Ds >= 4) {
@@ -132,16 +132,13 @@ export function calc_61_1(
             if (Ds === 0) {
                 return 'Q';
             }
-            if (Ss >= 1) {
-                return 'R';
-            }
             if (CVs === 2) {
                 return 'R';
             }
             if (CAs === 2) {
                 return 'R';
             }
-            if (CL >= 1 && Ds >= 5) {
+            if (CL >= 1 && Ds >= 5 && Ss === 0) {
                 return 'S';
             }
             if (CL >= 1 && Ds >= 3 && is_fleet_speed_fast_or_more(speed)) {
@@ -149,13 +146,10 @@ export function calc_61_1(
             }
             return 'R';
         case 'Q':
-            if (BBCVs >= 4) {
+            if (BBs >= 3 && is_fleet_speed_slow(speed)) {
                 return 'R';
             }
             if (CVs >= 2) {
-                return 'R';
-            }
-            if (BBs >= 3 && is_fleet_speed_slow(speed)) {
                 return 'R';
             }
             return 'S';
