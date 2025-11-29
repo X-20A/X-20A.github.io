@@ -3,7 +3,7 @@ import { PreSailNull } from "../../../types/brand";
 import { BranchResponse } from "../../../types";
 import { destructuring_assignment_helper, omission_of_conditions } from "..";
 import { is_fleet_speed_fast_or_more, is_fleet_speed_faster_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
-import { is_fleet_carrier, is_fleet_combined, is_fleet_striking } from "../../../models/fleet/predicate";
+import { is_fleet_carrier, is_fleet_combined, is_fleet_striking, is_fleet_surface } from "../../../models/fleet/predicate";
 import { AdoptFleet, count_Yamato_class } from "../../../models/fleet/AdoptFleet";
 import { EquippedShip } from "../../../models/ship/EquippedShip";
 import { includes_ship_name, is_CVs } from "../../../models/ship/predicate";
@@ -115,21 +115,30 @@ export function calc_61_5(
             if (count_Yamato_class(fleet) >= 1) {
                 return 'B2';
             }
+            if (Ss >= 1) {
+                return 'B2';
+            }
             if (BBs + CVH >= 5) {
                 return 'B2';
             }
-            if (Ds <= 2) {
+            if (CVL >= 3) {
                 return 'B2';
             }
-            if (is_fleet_speed_slow(speed)) {
-                return 'B2';
+            if (CL >= 2 && Ds >= 4) {
+                return 'X1';
             }
-            return 'X1';
+            if (Ds >= 3 && is_fleet_speed_fast_or_more(speed)) {
+                return 'X1';
+            }
+            return 'B2';
         case 'A':
             if (!is_fleet_combined(fleet_type)) {
                 return 'B';
             }
             if (count_Yamato_class(fleet) >= 2) {
+                return 'B';
+            }
+            if (BBCVs >= 7) {
                 return 'B';
             }
             if (BBs + CVH >= 6) {
@@ -141,7 +150,7 @@ export function calc_61_5(
             return 'A1';
         case 'B':
             if (!is_fleet_combined(fleet_type)) {
-                if (CL >= 2 && Ds >= 3) {
+                if (CL >= 2 && Ds >= 3 && is_fleet_speed_fast_or_more(speed)) {
                     return 'C';
                 }
                 return 'B1';
@@ -160,13 +169,10 @@ export function calc_61_5(
             if (phase <= 4) {
                 return 'F';
             }
-            if (is_fleet_speed_fast_or_more(speed)) {
-                return 'X1';
-            }
-            if (count_Yamato_class(fleet) >= 2) {
+            if (is_fleet_surface(fleet_type)) {
                 return 'F';
             }
-            if (BBs >= 3) {
+            if (count_Yamato_class(fleet) >= 2 && is_fleet_speed_slow(speed)) {
                 return 'F';
             }
             return 'X1';
@@ -174,15 +180,18 @@ export function calc_61_5(
             if (CVH >= 2) {
                 return 'C1';
             }
+            if (Ds <= 1) {
+                return 'C1';
+            }
+            if (BBs >= 3) {
+                return 'C2';
+            }
             if (
                 phase >= 3 &&
                 Ds >= 3 &&
                 is_fleet_speed_fast_or_more(speed)
             ) {
                 return 'R';
-            }
-            if (Ds <= 1) {
-                return 'C1';
             }
             if (CL >= 1) {
                 return 'C2';
@@ -194,7 +203,7 @@ export function calc_61_5(
         case 'C2':
             return 'D';
         case 'D':
-            if (seek[3] >= 106) {
+            if (seek[3] >= 112) {
                 return 'U';
             }
             return 'T';
@@ -223,6 +232,9 @@ export function calc_61_5(
             if (AV >= 1 && is_fleet_speed_slow(speed)) {
                 return 'Q';
             }
+            if (BBs >= 5) {
+                return 'V';
+            }
             if (BBs >= 4 && is_fleet_speed_slow(speed)) {
                 return 'V';
             }
@@ -250,10 +262,10 @@ export function calc_61_5(
             if (is_fleet_speed_fast_or_more(speed)) {
                 return 'M';
             }
-            if (CL >= 1) {
+            if (CL + CT >= 1) {
                 return 'M';
             }
-            if (Ds >= 6) {
+            if (DE >= 2) {
                 return 'M';
             }
             return 'L';
