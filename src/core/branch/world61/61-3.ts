@@ -39,6 +39,9 @@ export function calc_61_3(
                 return '2';
             }
         case '3':
+            if (BBCVs >= 6) {
+                return 'R';
+            }
             if (CVH >= 3) {
                 return 'R';
             }
@@ -46,9 +49,6 @@ export function calc_61_3(
                 return 'N';
             }
             if (BBs >= 3) {
-                return 'R';
-            }
-            if (CVs >= 4) {
                 return 'R';
             }
             if (CL >= 2) {
@@ -71,6 +71,9 @@ export function calc_61_3(
             if (is_fleet_speed_fast_or_more(speed)) {
                 return 'T';
             }
+            if (Ss >= 1 && CL === 0) {
+                return 'C1';
+            }
             if (BBs <= 1 && Ds >= 3) {
                 return 'T';
             }
@@ -88,10 +91,10 @@ export function calc_61_3(
             if (AV >= 1) {
                 return 'P';
             }
-            if (BBCVs >= 4) {
+            if (BBs >= 2) {
                 return 'C2'
             }
-            if (BBs + CVH >= 3) {
+            if (CVH >= 2) {
                 return 'C2'
             }
             return 'P';
@@ -117,7 +120,7 @@ export function calc_61_3(
             if (is_fleet_speed_faster_or_more(speed)) {
                 return 'I';
             }
-            if (CVs === 0) {
+            if (CVs + Ss === 0) {
                 return 'J';
             }
             if (is_fleet_speed_slow(speed)) {
@@ -126,10 +129,10 @@ export function calc_61_3(
             if (CVs === 1 && Ds >= 4) {
                 return 'J';
             }
-            if (CL >= 2 && Ds >= 4) {
+            if (CL === 2 && Ds >= 4) {
                 return 'J';
             }
-            if (CL >= 3 && Ds >= 3) {
+            if (CL >= 3) {
                 return 'J';
             }
             return 'I';
@@ -176,12 +179,18 @@ export function calc_61_3(
             if (CVH >= 3) {
                 return 'Y';
             }
-            if (Ds <= 2 && is_fleet_speed_slow(speed)) {
+            if (CVs >= 4) {
                 return 'Y';
             }
-            return 'Z';
+            if (Ds >= 3) {
+                return 'Z';
+            }
+            if (is_fleet_speed_fast_or_more(speed)) {
+                return 'Z';
+            }
+            return 'Y';
         case 'R':
-            if (CVs <= 2 && Ds >= 5) {
+            if (BBs <= 2 && CVs <= 2 && Ss === 0 && Ds >= 4) {
                 return 'R2';
             }
             return 'R1';
@@ -191,19 +200,15 @@ export function calc_61_3(
             if (seek[3] < 100) {
                 return 'R3';
             }
-            if (is_fleet_speed_slow(speed)) {
-                return 'G1';
+            if (
+                BBs <= 1 &&
+                CVs <= 1 &&
+                CL + CT >= 1 &&
+                is_fleet_speed_fast_or_more(speed)
+            ) {
+                return 'W';
             }
-            if (BBs >= 2) {
-                return 'G1';
-            }
-            if (CVs >= 2) {
-                return 'G1';
-            }
-            if (CL === 0) {
-                return 'G1';
-            }
-            return 'W';
+            return 'G1';
         case 'X':
             if (seek[1] < 80) {
                 return 'O';
