@@ -92,10 +92,10 @@ export function calc_61_3(
                 return 'P';
             }
             if (BBs >= 2) {
-                return 'C2'
+                return 'C2';
             }
             if (CVH >= 2) {
-                return 'C2'
+                return 'C2';
             }
             return 'P';
         case 'G':
