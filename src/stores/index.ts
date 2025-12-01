@@ -168,6 +168,7 @@ export const useToastStore = defineStore('toast', {
             message: string,
             display_time: number = 5000,
         ): void {
+            this.notice_message = message;
             this.is_show_notice = true;
 
             setTimeout(() => {
