@@ -38,8 +38,10 @@
 						<tr v-for="(row, index) in current_data.row_datas" :key="index" class="data-row" :data-index="index"
 							:draggable="true" @dragstart="handle_drag_start($event, index)" @dragover="handle_drag_over($event)"
 							@dragenter="handle_drag_enter($event)" @dragleave="handle_drag_leave($event)"
-							@drop="handle_drop($event, index)" @dragend="handle_drag_end">
-							<td class="drag-handle" draggable="false" @mousedown="handle_mouse_down">⋮⋮</td>
+							@drop="handle_drop($event, index)" @dragend="handle_drag_end"
+							:class="{ 'selected-row': selected_rows.includes(index) }">
+							<td class="drag-handle" draggable="false" @mousedown="handle_mouse_down"
+								@click="handle_drag_handle_click($event, index)">⋮⋮</td>
 							<td>
 								<input @paste="handle_paste($event, index)" type="text" class="cell import-cell" />
 							</td>
@@ -52,9 +54,9 @@
 								@contextmenu.prevent="show_context_menu($event, index, row)">
 								<div class="url-icon-container">
 									<svg v-if="row.url" class="url-icon" :class="{
-											'approved_url': is_approved_url(row.url, current_data.approved_domains),
-											'unapproved_url': !is_approved_url(row.url, current_data.approved_domains)
-											}" viewBox="0 0 24 24" width="16" height="16">
+										'approved_url': is_approved_url(row.url, current_data.approved_domains),
+										'unapproved_url': !is_approved_url(row.url, current_data.approved_domains)
+									}" viewBox="0 0 24 24" width="16" height="16">
 										<path fill="currentColor"
 											d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-6h2v6zm3 0h-2V7h2v10z" />
 									</svg>
@@ -111,15 +113,41 @@
 				<table class="spread-sheet total-table">
 					<tbody>
 						<tr class="total-row">
-							<td class="total-label">sum</td>
+							<td class="total-label">{{ display_mode === 'diff' ? 'diff' : 'sum' }}</td>
 							<td class="empty-cell"></td>
-							<td class="total-cell">{{ sum.fuel }}</td>
-							<td class="total-cell">{{ sum.ammo }}</td>
-							<td class="total-cell">{{ sum.steel }}</td>
-							<td class="total-cell">{{ sum.baux }}</td>
-							<td class="total-cell">{{ sum.bucket }}</td>
-							<td class="total-cell">{{ sum.damecon }}</td>
-							<td class="total-cell">{{ sum.underway_replenishment }}</td>
+							<td class="result-rate-cell"
+								:class="{ 'diff-negative': display_mode === 'diff' && diff_data.rate > 0, 'diff-positive': display_mode === 'diff' && diff_data.rate < 0 }">
+								{{ display_mode === 'diff' ? format_diff_data(diff_data.rate) : '' }}
+							</td>
+							<td class="total-cell"
+								:class="{ 'diff-positive': display_mode === 'diff' && diff_data.fuel > 0, 'diff-negative': display_mode === 'diff' && diff_data.fuel < 0 }">
+								{{ display_mode === 'diff' ? format_diff_data(diff_data.fuel) : sum_data.fuel }}
+							</td>
+							<td class="total-cell"
+								:class="{ 'diff-positive': display_mode === 'diff' && diff_data.ammo > 0, 'diff-negative': display_mode === 'diff' && diff_data.ammo < 0 }">
+								{{ display_mode === 'diff' ? format_diff_data(diff_data.ammo) : sum_data.ammo }}
+							</td>
+							<td class="total-cell"
+								:class="{ 'diff-positive': display_mode === 'diff' && diff_data.steel > 0, 'diff-negative': display_mode === 'diff' && diff_data.steel < 0 }">
+								{{ display_mode === 'diff' ? format_diff_data(diff_data.steel) : sum_data.steel }}
+							</td>
+							<td class="total-cell"
+								:class="{ 'diff-positive': display_mode === 'diff' && diff_data.baux > 0, 'diff-negative': display_mode === 'diff' && diff_data.baux < 0 }">
+								{{ display_mode === 'diff' ? format_diff_data(diff_data.baux) : sum_data.baux }}
+							</td>
+							<td class="total-cell"
+								:class="{ 'diff-positive': display_mode === 'diff' && diff_data.bucket > 0, 'diff-negative': display_mode === 'diff' && diff_data.bucket < 0 }">
+								{{ display_mode === 'diff' ? format_diff_data(diff_data.bucket) : sum_data.bucket }}
+							</td>
+							<td class="total-cell"
+								:class="{ 'diff-positive': display_mode === 'diff' && diff_data.damecon > 0, 'diff-negative': display_mode === 'diff' && diff_data.damecon < 0 }">
+								{{ display_mode === 'diff' ? format_diff_data(diff_data.damecon) : sum_data.damecon }}
+							</td>
+							<td class="total-cell"
+								:class="{ 'diff-positive': display_mode === 'diff' && diff_data.underway_replenishment > 0, 'diff-negative': display_mode === 'diff' && diff_data.underway_replenishment < 0 }">
+								{{ display_mode === 'diff' ? format_diff_data(diff_data.underway_replenishment) :
+								sum_data.underway_replenishment }}
+							</td>
 							<td class="leftover-cell"></td>
 						</tr>
 					</tbody>
@@ -144,11 +172,7 @@
 	</transition>
 
 	<Footer />
-	<div
-		v-if="is_error_visible || is_domain_permission_visible"
-		class="modal-overlay"
-		@pointerdown="handle_close_modals"
-	>
+	<div v-if="is_error_visible || is_domain_permission_visible" class="modal-overlay" @pointerdown="handle_close_modals">
 		<DomainPermission />
 		<ErrorView />
 	</div>
@@ -159,9 +183,9 @@ import Footer from './components/Footer.vue';
 import Header from './components/Header.vue';
 import { useStore, useModalStore } from './stores';
 import { computed, onMounted, ref } from 'vue';
-import { INITIAL_SUM_DATA, INITIAL_ROW_DATA, RowData } from './types';
+import { INITIAL_SUM_DATA, INITIAL_ROW_DATA, RowData, INITIAL_DIFF_DATA } from './types';
 import { calc_sum_data } from './logics/sum';
-import { floor_sum_data } from './logics/floor';
+import { floor_diff_data, floor_sum_data } from './logics/floor';
 import { sort_row_datas } from './logics/sort';
 import { calc_URL_param, do_delete_URL_param, do_create_shorten_url, is_approved_url, do_open_url_in_new_tab } from './logics/url';
 import lzstring from "lz-string";
@@ -170,6 +194,7 @@ import { parse, ValiError } from 'valibot';
 import { SaveDataSchema } from './logics/sheme';
 import DomainPermission from './components/DomainPermission.vue';
 import ErrorView from './components/ErrorView.vue';
+import { calc_diff_data } from './logics/difference';
 
 const store = useStore();
 const current_data = computed(() => store.current_data);
@@ -186,12 +211,69 @@ const notice_message = ref('');
 const is_copying = ref(false);
 const name_cells = ref<HTMLInputElement[]>([]);
 
-const sum = computed(() => {
+// 選択された行のインデックスを管理
+const selected_rows = ref<number[]>([]);
+const display_mode = ref<'sum' | 'diff'>('sum');
+
+const sum_data = computed(() => {
 	if (!current_data.value) return { ...INITIAL_SUM_DATA };
 
 	const sumed_data = calc_sum_data(current_data.value.row_datas);
-	return floor_sum_data(sumed_data);
+	return floor_sum_data(sumed_data, 0.1);
 });
+
+// 差分データの計算
+const diff_data = computed(() => {
+	if (selected_rows.value.length !== 2) {
+		return { ...INITIAL_DIFF_DATA };
+	}
+
+	const [firstIndex, secondIndex] = selected_rows.value;
+	const firstRow = current_data.value.row_datas[firstIndex];
+	const secondRow = current_data.value.row_datas[secondIndex];
+
+	if (!firstRow || !secondRow) {
+		return { ...INITIAL_DIFF_DATA };
+	}
+
+	const diff = calc_diff_data(firstRow, secondRow);
+	return floor_diff_data(diff, 0.1);
+});
+
+// 差分値のフォーマット関数
+const format_diff_data = (value: number): string => {
+	if (value > 0) {
+		return `+${value}`;
+	}
+	return value.toString();
+};
+
+// ドラッグハンドルのCtrl+クリック処理
+const handle_drag_handle_click = (event: MouseEvent, index: number) => {
+	if (event.ctrlKey || event.metaKey) {
+		event.preventDefault();
+		event.stopPropagation();
+
+		const currentIndex = selected_rows.value.indexOf(index);
+
+		if (currentIndex === -1) {
+			// 行を選択に追加（最大2つまで）
+			if (selected_rows.value.length < 2) {
+				selected_rows.value.push(index);
+			} else {
+				// 既に2つ選択されている場合は古いものを削除して新しいものを追加
+				selected_rows.value.shift();
+				selected_rows.value.push(index);
+			}
+		} else {
+			// 既に選択されている場合は選択解除
+			selected_rows.value.splice(currentIndex, 1);
+		}
+
+		// 表示モードを更新
+		display_mode.value = selected_rows.value.length === 2 ? 'diff' : 'sum';
+	}
+};
 
 // URLを新しいタブで開く
 const open_url = (url: string) => {
@@ -200,7 +282,7 @@ const open_url = (url: string) => {
 		do_open_url_in_new_tab(url);
 		return;
 	}
-	
+
 	store.UPDATE_PENDING_URL(url);
 	modal_store.SHOW_DOMAIN_PERMISSION();
 };
@@ -253,6 +335,9 @@ const handle_initialize = () => {
 	if (!is_permission) return;
 
 	store.INITIALIZE_DATA();
+	// 初期化時に選択状態もリセット
+	selected_rows.value = [];
+	display_mode.value = 'sum';
 };
 
 // 行データ更新
@@ -282,6 +367,14 @@ const handle_paste = (event: ClipboardEvent, row_index: number) => {
 // 行をクリアしてソート
 const clear_row = (row_index: number) => {
 	store.UPDATE_ROW_DATA(INITIAL_ROW_DATA, row_index);
+	// クリアした行が選択されていた場合は選択から削除
+	const index = selected_rows.value.indexOf(row_index);
+	if (index !== -1) {
+		selected_rows.value.splice(index, 1);
+		display_mode.value = selected_rows.value.length === 2
+			? 'diff'
+			: 'sum';
+	}
 };
 
 // 行を追加
@@ -324,15 +417,17 @@ const context_menu = ref({
 // コンテキストメニューを表示
 const show_context_menu = (
 	event: MouseEvent,
-	rowIndex: number,
-	rowData: RowData,
+	row_index: number,
+	row_data: RowData,
 ) => {
+	if (row_data.url === '') return;
+
 	context_menu.value = {
 		is_visible: true,
 		x: event.clientX,
 		y: event.clientY,
-		row_index: rowIndex,
-		row_data: rowData
+		row_index: row_index,
+		row_data: row_data,
 	};
 };
 
@@ -460,28 +555,46 @@ const handle_drag_leave = (event: DragEvent) => {
 };
 
 // ドロップ
-const handle_drop = (event: DragEvent, dropIndex: number) => {
+const handle_drop = (event: DragEvent, drop_index: number) => {
 	event.preventDefault();
 	const target = (event.currentTarget as HTMLElement);
 	target.classList.remove('drag-over');
 
 	if (
 		drag_start_index.value === null ||
-		drag_start_index.value === dropIndex
+		drag_start_index.value === drop_index
 	) {
 		reset_drag_state();
 		return;
 	}
 
 	// 行の順番を入れ替え
-	const newRowDatas = [...current_data.value.row_datas];
-	const [movedRow] = newRowDatas.splice(drag_start_index.value, 1);
-	newRowDatas.splice(dropIndex, 0, movedRow);
+	const new_row_datas = [...current_data.value.row_datas];
+	const [moved_row] = new_row_datas.splice(drag_start_index.value, 1);
+	new_row_datas.splice(drop_index, 0, moved_row);
+
+	// 選択状態のインデックスを更新
+	const old_index = drag_start_index.value;
+	const new_selected_rows = selected_rows.value.map(selected_index => {
+		if (selected_index === old_index) {
+			return drop_index;
+		} else if (selected_index === drop_index && drop_index > old_index) {
+			return selected_index - 1;
+		} else if (selected_index === drop_index && drop_index < old_index) {
+			return selected_index + 1;
+		} else if (selected_index > old_index && selected_index <= drop_index) {
+			return selected_index - 1;
+		} else if (selected_index < old_index && selected_index >= drop_index) {
+			return selected_index + 1;
+		}
+		return selected_index;
+	});
+	selected_rows.value = new_selected_rows;
 
 	// ストアを更新
 	store.UPDATE_CURRENT_DATA({
 		...current_data.value,
-		row_datas: newRowDatas
+		row_datas: new_row_datas
 	});
 
 	reset_drag_state();
@@ -848,6 +961,7 @@ onMounted(() => {
 }
 
 .action-cell {
+	border-right: 1px solid #ebebeb !important;
 	text-align: center;
 	cursor: pointer;
 	color: #c9c9c9;
@@ -951,12 +1065,37 @@ input[type="number"] {
 	background-color: #e7f3ff;
 }
 
+.result-rate-cell {
+	width: 55px;
+}
+
 .empty-cell {
-	width: 323px;
+	width: 267px;
 }
 
 .leftover-cell {
-	width: 36px;
+	width: 37px;
+}
+
+/* 選択された行のスタイル */
+.selected-row {
+	border: 2px solid #4dabf7 !important;
+	background-color: #e7f3ff !important;
+}
+
+.selected-row td {
+	border-color: #4dabf7;
+}
+
+/* 差分表示時のスタイル */
+.diff-positive {
+	color: #e03131 !important;
+	font-weight: bold;
+}
+
+.diff-negative {
+	color: #2b8a3e !important;
+	font-weight: bold;
 }
 
 /* 通知スタイル */

@@ -43,6 +43,21 @@ export const INITIAL_SUM_DATA: SumData = {
     underway_replenishment: 0,
 } as const;
 
+export type DiffData = Omit<
+    RowData,
+    "row_name" | "url" | "multiplier"
+>
+export const INITIAL_DIFF_DATA: DiffData = {
+    rate: 0,
+    fuel: 0,
+    ammo: 0,
+    steel: 0,
+    baux: 0,
+    bucket: 0,
+    damecon: 0,
+    underway_replenishment: 0,
+} as const;
+
 export type SaveData = {
     project_name: string,
     row_datas: RowData[],
