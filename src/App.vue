@@ -2,17 +2,7 @@
 	<Header />
 	<div class="container">
 		<p style="color:magenta;">β版</p>
-		<div class="header-controls">
-			<input v-model="current_data.project_name" placeholder="計画名" @input="handle_project_name_update"
-				class="project-name-input" />
-			<div class="button-group">
-				<button @pointerdown="handle_sort_rows" class="action-btn">上詰め</button>
-				<button @pointerdown="handle_copy_url" class="action-btn" :disabled="is_copying">
-					{{ is_copying ? '処理中...' : 'URL発行' }}
-				</button>
-				<button @pointerdown="handle_initialize" class="action-btn danger">初期化</button>
-			</div>
-		</div>
+		<HeaderControls />
 		<div class="sheet-container">
 			<div class="table-wrapper">
 				<table class="spread-sheet">
@@ -39,7 +29,7 @@
 							:draggable="true" @dragstart="handle_drag_start($event, index)" @dragover="handle_drag_over($event)"
 							@dragenter="handle_drag_enter($event)" @dragleave="handle_drag_leave($event)"
 							@drop="handle_drop($event, index)" @dragend="handle_drag_end"
-							:class="{ 'selected-row': selected_rows.includes(index) }">
+							:class="{ 'selected-row': selected_row_indexes.includes(index) }">
 							<td class="drag-handle" draggable="false" @mousedown="handle_mouse_down"
 								@click="handle_drag_handle_click($event, index)">⋮⋮</td>
 							<td>
@@ -146,7 +136,7 @@
 							<td class="total-cell"
 								:class="{ 'diff-positive': display_mode === 'diff' && diff_data.underway_replenishment > 0, 'diff-negative': display_mode === 'diff' && diff_data.underway_replenishment < 0 }">
 								{{ display_mode === 'diff' ? format_diff_data(diff_data.underway_replenishment) :
-								sum_data.underway_replenishment }}
+									sum_data.underway_replenishment }}
 							</td>
 							<td class="leftover-cell"></td>
 						</tr>
@@ -181,13 +171,13 @@
 <script setup lang="ts">
 import Footer from './components/Footer.vue';
 import Header from './components/Header.vue';
-import { useStore, useModalStore } from './stores';
+import HeaderControls from './components/HeaderControls.vue';
+import { useStore, useModalStore, useToastStore } from './stores';
 import { computed, onMounted, ref } from 'vue';
 import { INITIAL_SUM_DATA, INITIAL_ROW_DATA, RowData, INITIAL_DIFF_DATA } from './types';
 import { calc_sum_data } from './logics/sum';
 import { floor_diff_data, floor_sum_data } from './logics/floor';
-import { sort_row_datas } from './logics/sort';
-import { calc_URL_param, do_delete_URL_param, do_create_shorten_url, is_approved_url, do_open_url_in_new_tab } from './logics/url';
+import { calc_URL_param, do_delete_URL_param, is_approved_url, do_open_url_in_new_tab } from './logics/url';
 import lzstring from "lz-string";
 import { extract_data_from_text } from './logics/extract';
 import { parse, ValiError } from 'valibot';
@@ -198,22 +188,21 @@ import { calc_diff_data } from './logics/difference';
 
 const store = useStore();
 const current_data = computed(() => store.current_data);
+const selected_row_indexes = computed(() => store.selected_row_indexes);
+const display_mode = computed(() => store.display_mode);
 
 const modal_store = useModalStore();
 const is_error_visible = computed(() => modal_store.is_error_visible);
 const is_domain_permission_visible =
 	computed(() => modal_store.is_domain_permission_visible);
 
+const toast_store = useToastStore();
+const is_show_notice = computed(() => toast_store.is_show_notice);
+const notice_message = computed(() => toast_store.notice_message);
+
 const handle_close_modals = () => modal_store.HIDE_MODALS();
 
-const is_show_notice = ref(false);
-const notice_message = ref('');
-const is_copying = ref(false);
 const name_cells = ref<HTMLInputElement[]>([]);
-
-// 選択された行のインデックスを管理
-const selected_rows = ref<number[]>([]);
-const display_mode = ref<'sum' | 'diff'>('sum');
 
 const sum_data = computed(() => {
 	if (!current_data.value) return { ...INITIAL_SUM_DATA };
@@ -224,11 +213,11 @@ const sum_data = computed(() => {
 
 // 差分データの計算
 const diff_data = computed(() => {
-	if (selected_rows.value.length !== 2) {
+	if (selected_row_indexes.value.length !== 2) {
 		return { ...INITIAL_DIFF_DATA };
 	}
 
-	const [firstIndex, secondIndex] = selected_rows.value;
+	const [firstIndex, secondIndex] = selected_row_indexes.value;
 	const firstRow = current_data.value.row_datas[firstIndex];
 	const secondRow = current_data.value.row_datas[secondIndex];
 
@@ -254,24 +243,27 @@ const handle_drag_handle_click = (event: MouseEvent, index: number) => {
 		event.preventDefault();
 		event.stopPropagation();
 
-		const currentIndex = selected_rows.value.indexOf(index);
+		const currentIndex = selected_row_indexes.value.indexOf(index);
 
 		if (currentIndex === -1) {
 			// 行を選択に追加（最大2つまで）
-			if (selected_rows.value.length < 2) {
-				selected_rows.value.push(index);
+			if (selected_row_indexes.value.length < 2) {
+				selected_row_indexes.value.push(index);
 			} else {
 				// 既に2つ選択されている場合は古いものを削除して新しいものを追加
-				selected_rows.value.shift();
-				selected_rows.value.push(index);
+				selected_row_indexes.value.shift();
+				selected_row_indexes.value.push(index);
 			}
 		} else {
 			// 既に選択されている場合は選択解除
-			selected_rows.value.splice(currentIndex, 1);
+			selected_row_indexes.value.splice(currentIndex, 1);
 		}
 
 		// 表示モードを更新
-		display_mode.value = selected_rows.value.length === 2 ? 'diff' : 'sum';
+		const new_mode = selected_row_indexes.value.length === 2
+			? 'diff'
+			: 'sum';
+		store.UPDATE_DISPLAY_MODE(new_mode);
 	}
 };
 
@@ -285,59 +277,6 @@ const open_url = (url: string) => {
 
 	store.UPDATE_PENDING_URL(url);
 	modal_store.SHOW_DOMAIN_PERMISSION();
-};
-
-// プロジェクト名更新
-const handle_project_name_update = () => {
-	store.UPDATE_CURRENT_DATA({
-		...current_data.value,
-	});
-};
-
-const handle_sort_rows = () => {
-	store.UPDATE_CURRENT_DATA({
-		...current_data.value,
-		row_datas: sort_row_datas(current_data.value.row_datas),
-	});
-};
-
-const handle_copy_url = async () => {
-	if (is_copying.value) return;
-
-	is_copying.value = true;
-
-	try {
-		const shorten_url = await do_create_shorten_url(current_data.value);
-
-		const textArea = document.createElement('textarea');
-		textArea.value = shorten_url;
-		document.body.appendChild(textArea);
-		textArea.select();
-		document.execCommand('copy');
-		document.body.removeChild(textArea);
-		// 通知を表示
-		notice_message.value = `copied: ${shorten_url}`;
-		is_show_notice.value = true;
-	} catch (err) {
-		notice_message.value = '共有URLの発行に失敗しました';
-		console.error(err);
-	} finally {
-		is_copying.value = false;
-	}
-	// 5秒後に自動的に非表示
-	setTimeout(() => {
-		is_show_notice.value = false;
-	}, 5000);
-};
-
-const handle_initialize = () => {
-	const is_permission = confirm('データを削除しますか?');
-	if (!is_permission) return;
-
-	store.INITIALIZE_DATA();
-	// 初期化時に選択状態もリセット
-	selected_rows.value = [];
-	display_mode.value = 'sum';
 };
 
 // 行データ更新
@@ -368,12 +307,13 @@ const handle_paste = (event: ClipboardEvent, row_index: number) => {
 const clear_row = (row_index: number) => {
 	store.UPDATE_ROW_DATA(INITIAL_ROW_DATA, row_index);
 	// クリアした行が選択されていた場合は選択から削除
-	const index = selected_rows.value.indexOf(row_index);
+	const index = selected_row_indexes.value.indexOf(row_index);
 	if (index !== -1) {
-		selected_rows.value.splice(index, 1);
-		display_mode.value = selected_rows.value.length === 2
+		selected_row_indexes.value.splice(index, 1);
+		const new_mode = selected_row_indexes.value.length === 2
 			? 'diff'
 			: 'sum';
+		store.UPDATE_DISPLAY_MODE(new_mode);
 	}
 };
 
@@ -440,19 +380,11 @@ const copy_url = () => {
 
 	navigator.clipboard.writeText(context_menu.value.row_data.url)
 		.then(() => {
-			notice_message.value = 'URLをコピーしました';
-			is_show_notice.value = true;
-			setTimeout(() => {
-				is_show_notice.value = false;
-			}, 3000);
+			toast_store.SHOW_TOAST('URLをコピーしました', 3000);
 		})
 		.catch(err => {
+			toast_store.SHOW_TOAST('URLのコピーに失敗しました', 3000);
 			console.error('URLのコピーに失敗しました:', err);
-			notice_message.value = 'URLのコピーに失敗しました';
-			is_show_notice.value = true;
-			setTimeout(() => {
-				is_show_notice.value = false;
-			}, 3000);
 		});
 
 	hide_context_menu();
@@ -575,7 +507,7 @@ const handle_drop = (event: DragEvent, drop_index: number) => {
 
 	// 選択状態のインデックスを更新
 	const old_index = drag_start_index.value;
-	const new_selected_rows = selected_rows.value.map(selected_index => {
+	const new_selected_row_indexes = selected_row_indexes.value.map(selected_index => {
 		if (selected_index === old_index) {
 			return drop_index;
 		} else if (selected_index === drop_index && drop_index > old_index) {
@@ -589,7 +521,7 @@ const handle_drop = (event: DragEvent, drop_index: number) => {
 		}
 		return selected_index;
 	});
-	selected_rows.value = new_selected_rows;
+	store.UPDATE_SELECTED_ROW_INDEXES(new_selected_row_indexes);
 
 	// ストアを更新
 	store.UPDATE_CURRENT_DATA({
@@ -674,66 +606,6 @@ onMounted(() => {
 	margin: auto;
 	margin-top: 50px;
 	padding: 0 20px;
-}
-
-.header-controls {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	margin-bottom: 10px;
-	flex-wrap: wrap;
-	gap: 15px;
-}
-
-.project-name-input {
-	flex: 1;
-	min-width: 200px;
-	padding: 8px 12px;
-	border: 1px solid #ced4da;
-	border-radius: 4px;
-	font-size: 14px;
-}
-
-.button-group {
-	display: flex;
-	gap: 10px;
-}
-
-.action-btn {
-	padding: 6px 14px;
-	border: none;
-	border-radius: 4px;
-	background-color: #4dabf7;
-	color: white;
-	font-size: 14px;
-	cursor: pointer;
-	transition: background-color 0.2s, transform 0.1s;
-}
-
-.action-btn:hover {
-	background-color: #339af0;
-}
-
-.action-btn:active {
-	transform: translateY(1px);
-}
-
-.action-btn:disabled {
-	background-color: #adb5bd;
-	cursor: not-allowed;
-	transform: none;
-}
-
-.action-btn:disabled:hover {
-	background-color: #adb5bd;
-}
-
-.action-btn.danger {
-	background-color: #fa5252;
-}
-
-.action-btn.danger:hover {
-	background-color: #e03131;
 }
 
 .sheet-container {
@@ -1204,18 +1076,6 @@ input[type="number"] {
 
 /* レスポンシブ対応 */
 @media (max-width: 768px) {
-	.header-controls {
-		flex-direction: column;
-		align-items: stretch;
-	}
-
-	.button-group {
-		justify-content: space-between;
-	}
-
-	.project-name-input {
-		min-width: 100%;
-	}
 
 	/* モバイルではツールチップを非表示に */
 	.url-tooltip {

@@ -12,6 +12,8 @@ export const useStore = defineStore('datas', {
         current_data: INITIAL_SAVE_DATA as SaveData,
         data_history: [] as SaveData[],
         pending_url: '' as string,
+        selected_row_indexes: [] as number[],
+        display_mode: 'sum' as 'sum' | 'diff',
     }),
     actions: {
         UPDATE_CURRENT_DATA(new_data: SaveData): void {
@@ -38,6 +40,12 @@ export const useStore = defineStore('datas', {
         },
         UPDATE_PENDING_URL(url: string): void {
             this.pending_url = url;
+        },
+        UPDATE_SELECTED_ROW_INDEXES(indexes: number[]): void {
+            this.selected_row_indexes = indexes;
+        },
+        UPDATE_DISPLAY_MODE(mode: 'sum' | 'diff'): void {
+            this.display_mode = mode;
         },
         REDO_DATA(history_index: number): void {
             const next_data = this.data_history[history_index + 1];
@@ -100,6 +108,8 @@ export const useStore = defineStore('datas', {
         },
         INITIALIZE_DATA(): void {
             this.UPDATE_CURRENT_DATA({ ...INITIAL_SAVE_DATA });
+            this.UPDATE_SELECTED_ROW_INDEXES([]);
+            this.UPDATE_DISPLAY_MODE('sum');
         }
     },
 });
@@ -139,6 +149,37 @@ export const useModalStore = defineStore('modal', {
             this.is_domain_permission_visible = false;
             this.is_error_visible = false;
             this.error_message = '';
+        },
+    }
+});
+
+export const useToastStore = defineStore('toast', {
+    state: () => ({
+        /** ドメイン確認モーダルの表示状態 */
+        is_show_notice: false,
+        /** 表示するエラーメッセージ */
+        notice_message: '',
+    }),
+    actions: {
+        /**
+         * ドメイン確認モーダル表示
+         */
+        SHOW_TOAST(
+            message: string,
+            display_time: number = 5000,
+        ): void {
+            this.is_show_notice = true;
+
+            setTimeout(() => {
+                this.HIDE_TOAST();
+            }, display_time);
+        },
+        /**
+         * モーダル非表示。種類に関わらず、全てこれを呼ぶ
+         */
+        HIDE_TOAST(): void {
+            this.is_show_notice = false;
+            this.notice_message = '';
         },
     }
 });

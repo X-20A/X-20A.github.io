@@ -5,11 +5,11 @@ const get_shorten_url = async (
     original_url: string,
 ): Promise<string> => {
     try {
-        const response = await fetch(
-            `https://tinyurl.com/api-create.php?url=${original_url}`
-        );
+        const request = `https://tinyurl.com/api-create.php?url=${original_url}`;
+        const response = await fetch(request);
 
         if (!response.ok) {
+            console.error('request: ', request);
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
