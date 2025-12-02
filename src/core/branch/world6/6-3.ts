@@ -38,16 +38,16 @@ export function calc_6_3(
             }
             return 'F';
         case 'H':
-            if (seek[2] < 36) {
+            if (seek.c3 < 36) {
                 return 'I';
             }
-            if (seek[2] < 38 && seek[2] >= 36) {
+            if (seek.c3 < 38 && seek.c3 >= 36) {
                 return [
                     { node: 'I', rate: 0.5 },
                     { node: 'J', rate: 0.5 },
                 ];
             }
-            if (seek[2] >= 38) {
+            if (seek.c3 >= 38) {
                 return 'J';
             }
             break; // LoSより例外なし

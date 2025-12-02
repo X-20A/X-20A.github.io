@@ -82,16 +82,16 @@ export function calc_3_5(
             }
             break; // CAsより例外なし
         case 'G':
-            if (seek[3] < 23) {
+            if (seek.c4 < 23) {
                 return 'I';
             }
-            if (seek[3] < 28 && seek[3] >= 23) {
+            if (seek.c4 < 28 && seek.c4 >= 23) {
                 return [
                     { node: 'I', rate: 0.5 },
                     { node: 'K', rate: 0.5 },
                 ];
             }
-            if (seek[3] >= 28) {
+            if (seek.c4 >= 28) {
                 return 'K';
             }
             break; // 索敵より例外なし
@@ -102,16 +102,16 @@ export function calc_3_5(
             if (BBCVs > 1 && LHA > 0) {
                 return 'J';
             }
-            if (seek[3] < 35) {
+            if (seek.c4 < 35) {
                 return 'J';
             }
-            if (seek[3] < 40 && seek[3] >= 35) {
+            if (seek.c4 < 40 && seek.c4 >= 35) {
                 return [
                     { node: 'J', rate: 0.5 },
                     { node: 'K', rate: 0.5 },
                 ];
             }
-            if (seek[3] >= 40) {
+            if (seek.c4 >= 40) {
                 return 'K';
             }
             break; // f_seekより例外なし

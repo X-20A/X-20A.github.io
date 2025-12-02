@@ -117,16 +117,16 @@
 						<span v-if="index < adoptFleet.ships_length - 1"> | </span>
 					</template>
 				</template>
-				<p :style="adoptFleet?.seek[0] === 999 ? 'color: #f6a306' : ''">
+				<p :style="adoptFleet?.seek.c1 === 999 ? 'color: #f6a306' : ''">
 					<span>索敵値: </span>
 					<strong>1: </strong>
-					<span>{{ adoptFleet.seek[0] }}</span>
+					<span>{{ adoptFleet.seek.c1 }}</span>
 					<strong> 2: </strong>
-					<span>{{ adoptFleet.seek[1] }}</span>
+					<span>{{ adoptFleet.seek.c2 }}</span>
 					<strong> 3: </strong>
-					<span>{{ adoptFleet.seek[2] }}</span>
+					<span>{{ adoptFleet.seek.c3 }}</span>
 					<strong> 4: </strong>
-					<span>{{ adoptFleet.seek[3] }}</span>
+					<span>{{ adoptFleet.seek.c4 }}</span>
 				</p>
 			</div>
 			<p v-if="is_target_world([61])" style="color: red;font-size: 15px;">
@@ -138,7 +138,7 @@
 		</div>
 		<div class="result-container">
 			<template v-if="simResult.length > 0">
-				<SvgIcon @pointerdown="switchSeek" name="radar-8" :color="adoptFleet?.seek[0] === 999 ? '#f6a306' : '#fff'"
+				<SvgIcon @pointerdown="switchSeek" name="radar-8" :color="adoptFleet?.seek.c1 === 999 ? '#f6a306' : '#fff'"
 					class="ignore-seek icon-on-map"></SvgIcon>
 				<SvgIcon @pointerdown="showRefference" name="layers" color="#fff" class="reference icon-on-map"></SvgIcon>
 				<SvgIcon @click="screenShot" name="camera-outline" color="#fff" class="screen-shot icon-on-map"></SvgIcon>
@@ -642,10 +642,10 @@ const screenShot = async () => {
 	const fleet_seek = adoptFleet.value.seek;
 	const speed = adoptFleet.value.speed * 5;
 	const los = {
-		'1': fleet_seek[0],
-		'2': fleet_seek[1],
-		'3': fleet_seek[2],
-		'4': fleet_seek[3],
+		'1': fleet_seek.c1,
+		'2': fleet_seek.c2,
+		'3': fleet_seek.c3,
+		'4': fleet_seek.c4,
 	};
 	const canvas = await gkcoi.generate(
 		gkcoiBuilder,

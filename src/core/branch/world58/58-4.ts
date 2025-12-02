@@ -268,7 +268,7 @@ export function calc_58_4(
         case 'L':
             return 'M';
         case 'M':
-            if (seek[1] >= 52) {
+            if (seek.c2 >= 52) {
                 return 'O';
             }
             return 'N';
@@ -304,7 +304,7 @@ export function calc_58_4(
             }
             return 'X';
         case 'X':
-            if (seek[1] >= 84) {
+            if (seek.c2 >= 84) {
                 return 'Z';
             }
             return 'Y';

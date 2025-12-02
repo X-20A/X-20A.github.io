@@ -99,7 +99,7 @@ export function calc_60_6(
             }
             break;
         case 'H':
-            if (seek[1] < 65) {
+            if (seek.c2 < 65) {
                 return 'E';
             }
             if (is_fleet_speed_faster_or_more(speed)) {

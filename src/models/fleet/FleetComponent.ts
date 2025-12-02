@@ -1,4 +1,4 @@
-import type { Seek } from '../../types';
+import type { FleetSeek } from '../../types';
 import { SG, ST as ShipType } from '../../data/ship';
 import { calc_fleet_speed } from '../../logic/speed/fleet';
 import { calc_fleet_seek } from '../../logic/seek/fleet';
@@ -74,7 +74,7 @@ export type FleetComponent = {
     /** 艦隊速度 */
     readonly speed: Speed;
     /** 艦隊索敵値 */
-    readonly seek: Seek;
+    readonly seek: FleetSeek;
 } & PreInfo
 
 export function derive_fleet_component(

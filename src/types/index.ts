@@ -5,7 +5,12 @@ import { ShipName } from "./shipName";
 
 export type Brand<T, B> = T & { __brand: B };
 
-export type Seek = [number, number, number, number]
+export type FleetSeek = {
+    c1: number,
+    c2: number,
+    c3: number,
+    c4: number,
+}
 
 export interface ShipData {
     /** 艦名 */

@@ -99,7 +99,7 @@ export function calc_60_2(
             }
             return 'M';
         case 'I':
-            if (seek[3] >= 82) {
+            if (seek.c4 >= 82) {
                 return 'K';
             }
             return 'J';
@@ -162,7 +162,7 @@ export function calc_60_2(
             }
             return 'S';
         case 'V1':
-            if (seek[1] >= 68) {
+            if (seek.c2 >= 68) {
                 return 'W';
             }
             return 'V2';

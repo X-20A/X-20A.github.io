@@ -98,7 +98,7 @@ export function calc_58_3(
             }
             return 'F';
         case 'F':
-            if (seek[1] >= 65) {
+            if (seek.c2 >= 65) {
                 return 'O';
             }
             return 'G';
@@ -129,7 +129,7 @@ export function calc_58_3(
         case 'L':
             return 'M';
         case 'O':
-            if (seek[1] < 75) {
+            if (seek.c2 < 75) {
                 return 'O1';
             }
             if (BBs < 3) {
@@ -140,7 +140,7 @@ export function calc_58_3(
             }
             return 'O2';
         case 'P':
-            if (seek[3] >= 98) {
+            if (seek.c4 >= 98) {
                 return 'R';
             }
             return 'Q';

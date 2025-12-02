@@ -88,16 +88,16 @@ export function calc_5_4(
             if (is_fleet_speed_faster_or_more(speed)) {
                 return 'P';
             }
-            if (seek[1] < 56) {
+            if (seek.c2 < 56) {
                 return 'N';
             }
-            if ((seek[1] < 60 && seek[1] >= 56) || BBs + CVH > 4) {
+            if ((seek.c2 < 60 && seek.c2 >= 56) || BBs + CVH > 4) {
                 return [
                     { node: 'N', rate: 0.5 },
                     { node: 'P', rate: 0.5 },
                 ];
             }
-            if (seek[1] >= 60) {
+            if (seek.c2 >= 60) {
                 return 'P';
             }
             break; // LoSより例外なし
@@ -105,16 +105,16 @@ export function calc_5_4(
             if (is_fleet_speed_faster_or_more(speed)) {
                 return 'P';
             }
-            if (seek[1] < 41) {
+            if (seek.c2 < 41) {
                 return 'O';
             }
-            if ((seek[1] < 45 && seek[1] >= 41)) {
+            if ((seek.c2 < 45 && seek.c2 >= 41)) {
                 return [
                     { node: 'O', rate: 0.5 },
                     { node: 'P', rate: 0.5 },
                 ];
             }
-            if (seek[1] >= 45) {
+            if (seek.c2 >= 45) {
                 if (Ss > 0) {
                     return [
                         { node: 'O', rate: 0.334 },

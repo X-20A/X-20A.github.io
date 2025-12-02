@@ -203,7 +203,7 @@ export function calc_61_5(
         case 'C2':
             return 'D';
         case 'D':
-            if (seek[3] >= 112) {
+            if (seek.c4 >= 112) {
                 return 'U';
             }
             return 'T';
@@ -270,7 +270,7 @@ export function calc_61_5(
             }
             return 'L';
         case 'N':
-            if (seek[3] >= 108) {
+            if (seek.c4 >= 108) {
                 return 'P';
             }
             return 'O';
@@ -286,7 +286,7 @@ export function calc_61_5(
             }
             return 'D';
         case 'W':
-            if (seek[1] >= 85) {
+            if (seek.c2 >= 85) {
                 return 'X';
             }
             return 'T';

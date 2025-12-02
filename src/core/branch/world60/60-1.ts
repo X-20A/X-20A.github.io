@@ -162,7 +162,7 @@ export function calc_60_1(
             }
             return 'L';
         case 'M':
-            if (seek[3] >= 62) {
+            if (seek.c4 >= 62) {
                 return 'O';
             }
             return 'N';

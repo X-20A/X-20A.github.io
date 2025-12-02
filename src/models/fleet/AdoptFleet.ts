@@ -1,11 +1,12 @@
 import { ST as ShipType } from "../../data/ship";
 import type { FleetComponent } from "./FleetComponent";
 import { type Composition, derive_composition } from "../../models/Composition";
-import { Seek } from "../../types";
+import { FleetSeek } from "../../types";
 import { extract_ships_from_fleet_unit } from "./FleetUnit";
 import { ShipName } from "../../types/shipName";
 import { Ft as FleetType } from "./predicate";
 import { Sp as Speed } from "../../logic/speed/predicate";
+import { round_seek } from "../../logic/seek/fleet";
 
 /**
  * FleetComponentsからSelectedTypeによって抽出、構成されたシミュに使用される艦隊のデフォルト構造
@@ -18,8 +19,8 @@ export type AdoptFleet = {
     readonly fleet_type: FleetType,
     readonly ships_length: number,
     readonly speed: Speed,
-    readonly seek: Seek,
-    readonly save_seek: Seek,
+    readonly seek: FleetSeek,
+    readonly save_seek: FleetSeek,
     readonly drum_carrier_count: number;
     readonly radar_carrier_count: number;
     readonly craft_carrier_count: number;
@@ -38,8 +39,8 @@ export type AdoptFleet = {
 export function derive_adopt_fleet(
     fleets: FleetComponent[],
     fleet_type_id: FleetType,
-    seek?: Seek,
-    save_seek?: Seek
+    seek?: FleetSeek,
+    save_seek?: FleetSeek
 ): AdoptFleet {
     const is_combined = fleet_type_id > 0;
     const all_ships = fleets[1]
@@ -48,8 +49,8 @@ export function derive_adopt_fleet(
         : extract_ships_from_fleet_unit(fleets[0].units);
 
     let speed: Speed;
-    let fleet_seek: Seek;
-    let fleet_save_seek: Seek;
+    let fleet_seek: FleetSeek;
+    let fleet_save_seek: FleetSeek;
     let drum_carrier_count: number;
     let radar_carrier_count: number;
     let craft_carrier_count: number;
@@ -70,19 +71,14 @@ export function derive_adopt_fleet(
             speed = 1;
         }
 
-        const total_seek = [
-            main.seek[0] + escort.seek[0],
-            main.seek[1] + escort.seek[1],
-            main.seek[2] + escort.seek[2],
-            main.seek[3] + escort.seek[3],
-        ];
+        const total_seek: FleetSeek = {
+            c1: main.seek.c1 + escort.seek.c1,
+            c2: main.seek.c2 + escort.seek.c2,
+            c3: main.seek.c3 + escort.seek.c3,
+            c4: main.seek.c4 + escort.seek.c4,
+        };
 
-        fleet_seek = seek ?? [
-            Math.floor(total_seek[0] * 100) / 100,
-            Math.floor(total_seek[1] * 100) / 100,
-            Math.floor(total_seek[2] * 100) / 100,
-            Math.floor(total_seek[3] * 100) / 100,
-        ];
+        fleet_seek = seek ?? round_seek(total_seek);
         fleet_save_seek = save_seek ?? fleet_seek;
 
         drum_carrier_count = main.drum_carrier_count + escort.drum_carrier_count;
@@ -95,12 +91,7 @@ export function derive_adopt_fleet(
 
         speed = fleet.speed;
 
-        fleet_seek = seek ?? [
-            Math.floor(fleet.seek[0] * 100) / 100,
-            Math.floor(fleet.seek[1] * 100) / 100,
-            Math.floor(fleet.seek[2] * 100) / 100,
-            Math.floor(fleet.seek[3] * 100) / 100,
-        ];
+        fleet_seek = seek ?? round_seek(fleet.seek);
         fleet_save_seek = save_seek ?? fleet_seek;
 
         drum_carrier_count = fleet.drum_carrier_count;
@@ -372,13 +363,20 @@ export function count_not_equip_arctic_carriers(fleet: AdoptFleet): number {
     return count;
 }
 
+export const MAX_SEEK: FleetSeek = {
+    c1: 999,
+    c2: 999,
+    c3: 999,
+    c4: 999,
+} as const;
+
 /**
  * 索敵無視の為に索敵値を退避フィールドと切替
  * @param fleet AdoptFleet
- * @returns 新しいAdoptFleet
+ * @returns
  */
 export function switch_seek(fleet: AdoptFleet): AdoptFleet {
-    if (fleet.seek.every(value => value === 999)) {
+    if (Object.values(fleet.seek).every(value => value === 999)) {
         return derive_adopt_fleet(
             fleet.fleets,
             fleet.fleet_type,
@@ -389,7 +387,7 @@ export function switch_seek(fleet: AdoptFleet): AdoptFleet {
         return derive_adopt_fleet(
             fleet.fleets,
             fleet.fleet_type,
-            [999, 999, 999, 999],
+            MAX_SEEK,
             fleet.seek
         );
     }

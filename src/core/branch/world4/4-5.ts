@@ -81,10 +81,10 @@ export function calc_4_5(
             if (AO > 0) {
                 return 'M';
             }
-            if (seek[1] < 63) {
+            if (seek.c2 < 63) {
                 return 'L';
             }
-            if (seek[1] < 70 && seek[1] >= 63) {
+            if (seek.c2 < 70 && seek.c2 >= 63) {
                 if (Ss > 0) {
                     return [
                         { node: 'L', rate: 0.333 },
@@ -103,7 +103,7 @@ export function calc_4_5(
                     { node: 'T', rate: 0.5 },
                 ];
             }
-            if (seek[1] >= 70) {
+            if (seek.c2 >= 70) {
                 return 'T';
             }
             break; // LoSより例外なし
@@ -133,10 +133,10 @@ export function calc_4_5(
                 { node: 'T', rate: 0.5 },
             ];
         case 'Q':
-            if (seek[1] < 55) {
+            if (seek.c2 < 55) {
                 return 'P';
             }
-            if (seek[1] < 59 && seek[1] >= 55) {
+            if (seek.c2 < 59 && seek.c2 >= 55) {
                 if (BBCVs > 4) {
                     return [
                         { node: 'O', rate: 0.5 },
@@ -157,7 +157,7 @@ export function calc_4_5(
             if (BBCVs > 4 || DD === 0) {
                 return 'O';
             }
-            return 'N'; // f_seek[1] >= 59
+            return 'N'; // f_seek.c2 >= 59
         case 'R':
             if (is_fleet_speed_faster_or_more(speed)) {
                 return 'N';

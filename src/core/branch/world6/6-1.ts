@@ -44,13 +44,13 @@ export function calc_6_1(
             }
             return 'D';
         case 'G':
-            if (Ss < 3 || BBCVs + CAs === 2 || seek[3] < 12) {
+            if (Ss < 3 || BBCVs + CAs === 2 || seek.c4 < 12) {
                 return 'I';
             }
-            if (AS > 0 && seek[3] >= 16) {
+            if (AS > 0 && seek.c4 >= 16) {
                 return 'H';
             }
-            if (AS === 0 && seek[3] >= 16) {
+            if (AS === 0 && seek.c4 >= 16) {
                 return [
                     { node: 'H', rate: 0.85 },
                     { node: 'I', rate: 0.15 },
@@ -61,34 +61,34 @@ export function calc_6_1(
                 { node: 'I', rate: 0.5 },
             ];
         case 'H':
-            if (seek[3] < 20) {
+            if (seek.c4 < 20) {
                 return 'E';
             }
             if (AS > 0) {
-                if (seek[3] < 25 && seek[3] >= 20) {
+                if (seek.c4 < 25 && seek.c4 >= 20) {
                     return [
                         { node: 'E', rate: 0.5 },
                         { node: 'K', rate: 0.5 },
                     ];
                 }
-                if (seek[3] >= 25) {
+                if (seek.c4 >= 25) {
                     return 'K';
                 } // LoSより例外なし
             }
-            if (seek[3] < 25 && seek[3] >= 20) {
+            if (seek.c4 < 25 && seek.c4 >= 20) {
                 return [
                     { node: 'E', rate: 0.333 },
                     { node: 'J', rate: 0.333 },
                     { node: 'K', rate: 0.334 },
                 ];
             }
-            if (seek[3] < 36 && seek[3] >= 25) {
+            if (seek.c4 < 36 && seek.c4 >= 25) {
                 return [
                     { node: 'J', rate: 0.5 },
                     { node: 'K', rate: 0.5 },
                 ];
             }
-            if (seek[3] >= 36) {
+            if (seek.c4 >= 36) {
                 return 'K';
             }
             break; // LoSより例外なし

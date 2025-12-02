@@ -84,7 +84,7 @@ export function calc_57_7(
             }
             return 'A5'; // fleet_type !== 通常艦隊
         case 'B':
-            if (seek[3] >= 88) {
+            if (seek.c4 >= 88) {
                 return 'B2';
             }
             return 'B1';

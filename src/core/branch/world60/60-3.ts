@@ -56,7 +56,7 @@ export function calc_60_3(
             }
             return 'B1';
         case 'B2':
-            if (seek[3] >= 72) {
+            if (seek.c4 >= 72) {
                 return 'B4';
             }
             return 'B3';
@@ -84,12 +84,12 @@ export function calc_60_3(
             }
             return 'D1';
         case 'D1':
-            if (seek[3] >= 70) {
+            if (seek.c4 >= 70) {
                 return 'D3';
             }
             return 'D2';
         case 'E':
-            if (seek[3] < 76) {
+            if (seek.c4 < 76) {
                 return 'E1';
             }
             if (phase === 1) {
@@ -131,7 +131,7 @@ export function calc_60_3(
             }
             return 'E2';
         case 'F1':
-            if (seek[3] < 79) {
+            if (seek.c4 < 79) {
                 return 'F2';
             }
             if (is_fleet_speed_faster_or_more(speed)) {
@@ -163,7 +163,7 @@ export function calc_60_3(
             // route.includes('3')
             return 'U';
         case 'H1':
-            if (seek[3] >= 67) {
+            if (seek.c4 >= 67) {
                 return 'H3';
             }
             return 'H2';
@@ -180,7 +180,7 @@ export function calc_60_3(
             return 'J';
         case 'K':
             if (route.includes('2')) {
-                if (seek[3] >= 75) {
+                if (seek.c4 >= 75) {
                     return 'K2';
                 }
                 return 'K1';
@@ -249,7 +249,7 @@ export function calc_60_3(
             }
             return 'F3';
         case 'V':
-            if (seek[1] < 76) {
+            if (seek.c2 < 76) {
                 return 'W';
             }
             if (phase === 5 && count_ship(fleet, ['明石改', '朝日改', '秋津洲改', '速吸改', '山汐丸改', '神威改母', '宗谷', 'しまね丸改']) > 0) {

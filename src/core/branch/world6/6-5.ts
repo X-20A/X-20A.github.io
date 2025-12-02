@@ -42,7 +42,7 @@ export function calc_6_5(
             }
             return 'I';
         case 'G':
-            if (seek[2] < 50) {
+            if (seek.c3 < 50) {
                 return 'K';
             }
             return 'M';
@@ -63,7 +63,7 @@ export function calc_6_5(
             }
             return 'H';
         case 'J':
-            if (seek[2] < 35) {
+            if (seek.c3 < 35) {
                 return 'L';
             }
             return 'M';

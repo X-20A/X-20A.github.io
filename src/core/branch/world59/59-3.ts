@@ -93,7 +93,7 @@ export function calc_59_3(
             }
             return 'P'; // 保険
         case 'C3':
-            if (seek[3] < 103) {
+            if (seek.c4 < 103) {
                 return 'E';
             }
             if (BBs + CVH > 3) {
@@ -112,7 +112,7 @@ export function calc_59_3(
             }
             return 'H1';
         case 'I':
-            if (seek[3] >= 82) {
+            if (seek.c4 >= 82) {
                 return 'K';
             }
             return 'J';
@@ -148,7 +148,7 @@ export function calc_59_3(
             }
             break; // 2からは来られないので例外なし
         case 'Q':
-            if (seek[1] >= 53) {
+            if (seek.c2 >= 53) {
                 return 'S';
             }
             return 'R';
@@ -194,7 +194,7 @@ export function calc_59_3(
             }
             return 'V3';
         case 'V3':
-            if (seek[1] >= 72) {
+            if (seek.c2 >= 72) {
                 return 'X';
             }
             return 'W';

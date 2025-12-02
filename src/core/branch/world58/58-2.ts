@@ -75,7 +75,7 @@ export function calc_58_2(
             break; // 1, 3以外からは来られない
         case 'D':
             if (!is_fleet_combined(fleet_type)) {
-                if (seek[3] >= 98) {
+                if (seek.c4 >= 98) {
                     return 'D2';
                 }
                 return 'D1';
@@ -97,7 +97,7 @@ export function calc_58_2(
             return 'F';
         case 'H':
             if (route.includes('1')) {
-                if (seek[3] < 80) {
+                if (seek.c4 < 80) {
                     return 'K';
                 }
                 if (is_fleet_speed_slow(speed)) {
@@ -158,7 +158,7 @@ export function calc_58_2(
             }
             return 'O';
         case 'P':
-            if (seek[1] >= 62) {
+            if (seek.c2 >= 62) {
                 return 'R';
             }
             return 'Q';

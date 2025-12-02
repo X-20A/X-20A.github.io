@@ -74,10 +74,10 @@ export function calc_7_4(
                 return 'K';
             }
             if (route.includes('E')) {
-                if (seek[3] < 33) {
+                if (seek.c4 < 33) {
                     return 'K';
                 }
-                if (seek[3] < 37 && seek[3] >= 33) {
+                if (seek.c4 < 37 && seek.c4 >= 33) {
                     if (
                         CT > 0 &&
                         DE > 2 &&
@@ -94,7 +94,7 @@ export function calc_7_4(
                         { node: 'L', rate: 0.5 },
                     ];
                 }
-                if (seek[3] >= 37) {
+                if (seek.c4 >= 37) {
                     if (
                         CT > 0 &&
                         DE > 2 &&
@@ -117,16 +117,16 @@ export function calc_7_4(
                 || (CVL + count_ship(fleet, 'あきつ丸') > 1)
                 || (BBs - SBB_count + BBV + CVL + count_ship(fleet, 'あきつ丸') > 2)
                 || (Ds < 2);
-            if (seek[3] < 45) {
+            if (seek.c4 < 45) {
                 return 'N';
             }
-            if (flag && seek[3] < 47 && seek[3] >= 45) {
+            if (flag && seek.c4 < 47 && seek.c4 >= 45) {
                 return [
                     { node: 'N', rate: 0.5 },
                     { node: 'O', rate: 0.5 },
                 ];
             }
-            if (flag && seek[3] >= 47) {
+            if (flag && seek.c4 >= 47) {
                 return 'O';
             }
             return 'P';

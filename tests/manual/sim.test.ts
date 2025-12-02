@@ -8,7 +8,7 @@ import {
 import Const from '../../src/constants/const';
 import type { AreaId, OptionsType } from '../../src/types';
 import { derive_FleetComponents_from_DeckBuilder } from '../../src/logic/deckBuilder';
-import { derive_adopt_fleet, calc_escort_fleet_ship_names, calc_main_fleet_ship_names } from '../../src/models/fleet/AdoptFleet';
+import { derive_adopt_fleet, calc_escort_fleet_ship_names, calc_main_fleet_ship_names, MAX_SEEK } from '../../src/models/fleet/AdoptFleet';
 import { calc_URL_param } from '../../src/logic/url';
 import { nomal_mock_datas, astray_mock_datas } from '../expects/route';
 import { EDGE_DATAS, NODE_DATAS, NT as NodeType } from '../../src/data/map';
@@ -160,7 +160,7 @@ describe('Simテスト', () => {
             const adoptFleet = derive_adopt_fleet(
                 fleet_components,
                 fleet_type_id,
-                [999, 999, 999, 999],
+                { ...MAX_SEEK },
             );
 
             const expected_routes = mock_data.routes;

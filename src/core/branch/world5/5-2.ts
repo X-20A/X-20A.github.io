@@ -106,10 +106,10 @@ export function calc_5_2(
             }
             return 'F';
         case 'F':
-            if (seek[1] < 63) {
+            if (seek.c2 < 63) {
                 return 'H';
             }
-            if (seek[1] < 70 && seek[1] >= 63) {
+            if (seek.c2 < 70 && seek.c2 >= 63) {
                 if (BBs + CVH > 4) {
                     return [
                         { node: 'H', rate: 0.5 },
@@ -137,7 +137,7 @@ export function calc_5_2(
                     { node: 'O', rate: 0.3 },
                 ];
             }
-            if (seek[1] >= 70) {
+            if (seek.c2 >= 70) {
                 return 'O';
             }
             break; // LoSより例外なし
@@ -166,20 +166,20 @@ export function calc_5_2(
                         { node: 'N', rate: 0.5 },
                     ];
                 }
-                if (seek[1] < 60) {
+                if (seek.c2 < 60) {
                     return [
                         { node: 'M', rate: 0.5 },
                         { node: 'N', rate: 0.5 },
                     ];
                 }
-                if (seek[1] < 62 && seek[1] >= 60) {
+                if (seek.c2 < 62 && seek.c2 >= 60) {
                     return [
                         { node: 'K', rate: 0.333 },
                         { node: 'M', rate: 0.333 },
                         { node: 'N', rate: 0.334 },
                     ];
                 }
-                if (seek[1] >= 62) {
+                if (seek.c2 >= 62) {
                     return [
                         { node: 'K', rate: 0.5 },
                         { node: 'N', rate: 0.5 },
@@ -189,16 +189,16 @@ export function calc_5_2(
             if (is_fleet_speed_faster_or_more(speed)) {
                 return 'K';
             }
-            if (seek[1] < 60) {
+            if (seek.c2 < 60) {
                 return 'M';
             }
-            if (seek[1] < 62 && seek[1] >= 60) {
+            if (seek.c2 < 62 && seek.c2 >= 60) {
                 return [
                     { node: 'K', rate: 0.5 },
                     { node: 'M', rate: 0.5 },
                 ];
             }
-            if (seek[1] >= 62) {
+            if (seek.c2 >= 62) {
                 return 'K';
             }
             break; // LoSより例外なし

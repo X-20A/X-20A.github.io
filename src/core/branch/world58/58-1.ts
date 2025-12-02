@@ -113,7 +113,7 @@ export function calc_58_1(
             }
             break;
         case 'K':
-            if (seek[3] >= 68) {
+            if (seek.c4 >= 68) {
                 return 'M';
             }
             return 'L';
@@ -140,7 +140,7 @@ export function calc_58_1(
             }
             return 'S';
         case 'S':
-            if (seek[3] >= 80) {
+            if (seek.c4 >= 80) {
                 return 'T';
             }
             return 'U';
@@ -172,7 +172,7 @@ export function calc_58_1(
             if (BBs === 0) {
                 return 'R2';
             }
-            if (seek[3] >= 100) {
+            if (seek.c4 >= 100) {
                 return 'R2';
             }
             return 'R';

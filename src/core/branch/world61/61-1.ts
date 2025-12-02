@@ -154,10 +154,10 @@ export function calc_61_1(
             }
             return 'S';
         case 'T':
-            if (DD === 7 && seek[3] >= 70) {
+            if (DD === 7 && seek.c4 >= 70) {
                 return 'V';
             }
-            if (DD <= 6 && seek[3] >= 82) {
+            if (DD <= 6 && seek.c4 >= 82) {
                 return 'V';
             }
             return 'U';

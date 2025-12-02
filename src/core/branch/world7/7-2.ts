@@ -104,7 +104,7 @@ export function calc_7_2(
             if (ships_length < 6 || Ds > 4 || (DD > 0 && DE > 2)) {
                 return 'G';
             }
-            if (seek[3] < 46) {
+            if (seek.c4 < 46) {
                 return 'F';
             }
             return 'G';
@@ -112,17 +112,17 @@ export function calc_7_2(
             if (AO > 0 || (AV > 0 && Ds > 2)) {
                 return 'J';
             }
-            if (seek[3] < 63) {
+            if (seek.c4 < 63) {
                 return 'L';
             }
-            if (seek[3] < 69 && seek[3] >= 63) {
+            if (seek.c4 < 69 && seek.c4 >= 63) {
                 return [
                     { node: 'J', rate: 0.333 },
                     { node: 'L', rate: 0.333 },
                     { node: 'M', rate: 0.334 },
                 ];
             }
-            if (seek[3] >= 69) {
+            if (seek.c4 >= 69) {
                 return 'M';
             } // LoSより例外なし
             break;

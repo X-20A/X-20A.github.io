@@ -114,32 +114,32 @@ export function calc_2_5(
             if (BBCVs === 0 && CL > 0 && DD > 2) {
                 return 'I';
             }
-            if (seek[0] < 37) {
+            if (seek.c1 < 37) {
                 return 'K';
             }
-            if (seek[0] < 41 && seek[0] >= 37) {
+            if (seek.c1 < 41 && seek.c1 >= 37) {
                 return [
                     { node: 'K', rate: 0.5 },
                     { node: 'L', rate: 0.5 },
                 ];
             }
-            return 'L'; // f_seek[0] >= 41
+            return 'L'; // f_seek.c1 >= 41
         case 'I':
-            if (seek[0] < 31) {
+            if (seek.c1 < 31) {
                 return 'H';
             }
-            if (seek[0] < 34 && seek[0] >= 31) {
+            if (seek.c1 < 34 && seek.c1 >= 31) {
                 return [
                     { node: 'H', rate: 0.5 },
                     { node: 'O', rate: 0.5 },
                 ];
             }
-            return 'O'; // f_seek[0] >= 31
+            return 'O'; // f_seek.c1 >= 31
         case 'J':
-            if (seek[0] < 42) {
+            if (seek.c1 < 42) {
                 return 'H';
             }
-            if (seek[0] < 49 && seek[0] >= 42) {
+            if (seek.c1 < 49 && seek.c1 >= 42) {
                 if (BBCVs > 3) {
                     return [
                         { node: 'H', rate: 0.333 },
@@ -158,7 +158,7 @@ export function calc_2_5(
                     { node: 'O', rate: 0.5 },
                 ];
             }
-            if (seek[0] >= 49) {
+            if (seek.c1 >= 49) {
                 return 'O';
             }
             break; // 索敵値より例外なし

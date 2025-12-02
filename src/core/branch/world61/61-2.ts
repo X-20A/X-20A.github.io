@@ -64,7 +64,7 @@ export function calc_61_2(
             }
             return 'N';
         case 'B':
-            if (seek[3] >= 85) {
+            if (seek.c4 >= 85) {
                 return 'D';
             }
             return 'C';
@@ -98,12 +98,12 @@ export function calc_61_2(
             if (Ds >= 5) {
                 return 'I';
             }
-            if (seek[3] >= 88) {
+            if (seek.c4 >= 88) {
                 return 'I';
             }
             return 'G';
         case 'G':
-            if (seek[3] >= 85) {
+            if (seek.c4 >= 85) {
                 return 'I';
             }
             return 'H';
@@ -166,12 +166,12 @@ export function calc_61_2(
             }
             return 'O'; // 聯合艦隊
         case 'T':
-            if (is_fleet_transport(fleet_type) && seek[1] >= 35) {
+            if (is_fleet_transport(fleet_type) && seek.c2 >= 35) {
                 return 'V';
             }
             if (
                 (is_fleet_carrier(fleet_type) || is_fleet_surface(fleet_type)) &&
-                seek[1] >= 68
+                seek.c2 >= 68
             ) {
                 return 'V';
             }

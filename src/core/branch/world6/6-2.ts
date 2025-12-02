@@ -68,21 +68,21 @@ export function calc_6_2(
             if (BBs > 1 || CVs > 1 || DD < 2) {
                 return 'F';
             }
-            if (seek[2] < 43) {
+            if (seek.c3 < 43) {
                 return 'I';
             }
-            if (seek[2] < 50 && seek[2] >= 43) {
+            if (seek.c3 < 50 && seek.c3 >= 43) {
                 return [
                     { node: 'I', rate: 0.5 },
                     { node: 'J', rate: 0.5 },
                 ];
             }
-            if (seek[2] >= 50) {
+            if (seek.c3 >= 50) {
                 return 'J';
             }
             break; // LoSより例外なし
         case 'H':
-            if (seek[2] < 32) {
+            if (seek.c3 < 32) {
                 return 'G';
             }
             return 'K';
@@ -90,16 +90,16 @@ export function calc_6_2(
             if (Ss > 3) {
                 return 'G';
             }
-            if (seek[2] < 35) {
+            if (seek.c3 < 35) {
                 return 'G';
             }
-            if (seek[2] < 40 && seek[2] >= 35) {
+            if (seek.c3 < 40 && seek.c3 >= 35) {
                 return [
                     { node: 'G', rate: 0.5 },
                     { node: 'K', rate: 0.5 },
                 ];
             }
-            if (seek[2] >= 40) {
+            if (seek.c3 >= 40) {
                 return 'K';
             }
             break; // LoSより例外なし

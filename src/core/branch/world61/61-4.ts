@@ -201,7 +201,7 @@ export function calc_61_4(
                 if (count_Yamato_class(fleet) >= 2) {
                     return 'L';
                 }
-                if (seek[1] >= 80) {
+                if (seek.c2 >= 80) {
                     return 'N';
                 }
                 return 'L';
@@ -209,12 +209,12 @@ export function calc_61_4(
             // route.includes('3')
             return 'R';
         case 'H':
-            if (seek[1] >= 45) {
+            if (seek.c2 >= 45) {
                 return 'I';
             }
             return 'B3';
         case 'L':
-            if (seek[1] >= 75) {
+            if (seek.c2 >= 75) {
                 return 'N';
             }
             return 'M';
@@ -240,7 +240,7 @@ export function calc_61_4(
             }
             return 'R2';
         case 'S':
-            if (seek[1] >= 80) {
+            if (seek.c2 >= 80) {
                 return 'T';
             }
             return 'M';
@@ -279,7 +279,7 @@ export function calc_61_4(
             }
             return 'X';
         case 'X':
-            if (seek[3] >= 117) {
+            if (seek.c4 >= 117) {
                 return 'Z';
             }
             return 'Y';

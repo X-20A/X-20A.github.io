@@ -125,7 +125,7 @@ export function calc_59_4(
             }
             return 'N';
         case 'Q':
-            if (seek[3] >= 72) {
+            if (seek.c4 >= 72) {
                 return 'S';
             }
             return 'R';
@@ -156,7 +156,7 @@ export function calc_59_4(
             }
             return 'T1';
         case 'W':
-            if (seek[1] < 80) {
+            if (seek.c2 < 80) {
                 return 'X';
             }
             if (is_fleet_speed_faster_or_more(speed)) {
@@ -173,7 +173,7 @@ export function calc_59_4(
             }
             return 'Z';
         case 'X':
-            if (seek[1] < 73) {
+            if (seek.c2 < 73) {
                 return 'K';
             }
             if (is_fleet_speed_faster_or_more(speed)) {

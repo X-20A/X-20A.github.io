@@ -47,16 +47,16 @@ export function calc_1_6(
             if (Ds < 3) {
                 return 'L';
             }
-            if (seek[2] < 28) {
+            if (seek.c3 < 28) {
                 return 'L';
             }
-            if (seek[2] < 30 && seek[2] >= 28) {
+            if (seek.c3 < 30 && seek.c3 >= 28) {
                 return [
                     { node: 'J', rate: 0.5 },
                     { node: 'L', rate: 0.5 },
                 ];
             }
-            return 'J'; // f_seek[2] >= 30
+            return 'J'; // f_seek.c3 >= 30
     }
 
     omission_of_conditions(node, sim_fleet);

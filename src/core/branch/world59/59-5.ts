@@ -85,7 +85,7 @@ export function calc_59_5(
             }
             return 'A';
         case 'C':
-            if (seek[3] >= 70) {
+            if (seek.c4 >= 70) {
                 return 'C2';
             }
             return 'C1';
@@ -187,12 +187,12 @@ export function calc_59_5(
             }
             return 'S1';
         case 'T':
-            if (seek[1] >= 65) {
+            if (seek.c2 >= 65) {
                 return 'V';
             }
             return 'U';
         case 'Z':
-            if (seek[1] < 83) {
+            if (seek.c2 < 83) {
                 return 'Z1';
             }
             if (count_carriers(fleet) > 2) {

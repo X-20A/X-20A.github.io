@@ -105,7 +105,7 @@ export function calc_60_4(
             }
             return 'G2';
         case 'I':
-            if (seek[3] < 70) {
+            if (seek.c4 < 70) {
                 return 'K';
             } if (count_Yamato_class(fleet) > 0) {
                 return 'J';
@@ -132,7 +132,7 @@ export function calc_60_4(
             }
             return 'N';
         case 'P':
-            if (seek[3] >= 77) {
+            if (seek.c4 >= 77) {
                 return 'R';
             }
             return 'Q';

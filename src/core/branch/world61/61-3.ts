@@ -79,7 +79,7 @@ export function calc_61_3(
             }
             return 'C1';
         case 'C1':
-            if (seek[3] < 90) {
+            if (seek.c4 < 90) {
                 return 'D';
             }
             if (phase === 1) {
@@ -142,7 +142,7 @@ export function calc_61_3(
             }
             return 'J';
         case 'K':
-            if (seek[1] >= 72) {
+            if (seek.c2 >= 72) {
                 return 'M';
             }
             return 'L';
@@ -164,7 +164,7 @@ export function calc_61_3(
             if (phase <= 2) {
                 return 'D';
             }
-            if (seek[1] < 80) {
+            if (seek.c2 < 80) {
                 return 'D';
             }
             if (Ss >= 1) {
@@ -197,7 +197,7 @@ export function calc_61_3(
         case 'R2':
             return 'V';
         case 'T':
-            if (seek[3] < 100) {
+            if (seek.c4 < 100) {
                 return 'R3';
             }
             if (
@@ -210,7 +210,7 @@ export function calc_61_3(
             }
             return 'G1';
         case 'X':
-            if (seek[1] < 80) {
+            if (seek.c2 < 80) {
                 return 'O';
             }
             if (
@@ -223,7 +223,7 @@ export function calc_61_3(
             }
             return 'O';
         case 'Y':
-            if (seek[1] >= 80) {
+            if (seek.c2 >= 80) {
                 return 'Z';
             }
             return 'L';

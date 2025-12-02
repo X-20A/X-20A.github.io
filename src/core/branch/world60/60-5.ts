@@ -47,7 +47,7 @@ export function calc_60_5(
             }
             return 'C';
         case 'D1':
-            if (seek[3] >= 92) {
+            if (seek.c4 >= 92) {
                 return 'D2';
             }
             return 'E';
@@ -66,7 +66,7 @@ export function calc_60_5(
             }
             return 'E2';
         case 'F':
-            if (seek[3] >= 102) {
+            if (seek.c4 >= 102) {
                 return 'F2';
             }
             return 'F1';
@@ -76,7 +76,7 @@ export function calc_60_5(
             }
             return 'J1';
         case 'J':
-            if (seek[3] >= 91) {
+            if (seek.c4 >= 91) {
                 return 'K';
             }
             return 'J2';
@@ -186,12 +186,12 @@ export function calc_60_5(
             return 'Y';
         case 'R':
             if (phase !== 3) {
-                if (seek[1] >= 74) {
+                if (seek.c2 >= 74) {
                     return 'T';
                 }
                 return 'S';
             }
-            if (seek[1] < 74) {
+            if (seek.c2 < 74) {
                 return 'S';
             }
             if (route.includes('U') || route.includes('U1')) {

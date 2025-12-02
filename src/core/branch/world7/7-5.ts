@@ -80,16 +80,16 @@ export function calc_7_5(
                 ? 'I'
                 : 'K';
         case 'I':
-            if (seek[3] < 53) {
+            if (seek.c4 < 53) {
                 return 'L';
             }
-            if (seek[3] < 59 && seek[3] >= 53) {
+            if (seek.c4 < 59 && seek.c4 >= 53) {
                 return [
                     { node: 'L', rate: 0.5 },
                     { node: 'M', rate: 0.5 },
                 ];
             }
-            if (seek[3] >= 59) {
+            if (seek.c4 >= 59) {
                 return 'M';
             }
             break; // LoSより例外なし
@@ -118,10 +118,10 @@ export function calc_7_5(
                 ? 'P'
                 : 'Q';
         case 'P': // 🤧
-            if (seek[3] < 58) {
+            if (seek.c4 < 58) {
                 return 'S';
             }
-            if (seek[3] < 63 && seek[3] >= 58) {
+            if (seek.c4 < 63 && seek.c4 >= 58) {
                 if (is_fleet_speed_fastest(speed)) {
                     return [
                         { node: 'S', rate: 0.333 },
@@ -143,7 +143,7 @@ export function calc_7_5(
                     { node: 'S', rate: 0.333 },
                     { node: 'T', rate: 0.667 },
                 ];
-            } else if (seek[3] >= 63) {
+            } else if (seek.c4 >= 63) {
                 if (is_fleet_speed_fastest(speed)) {
                     return 'T';
                 }

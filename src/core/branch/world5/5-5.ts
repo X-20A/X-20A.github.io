@@ -108,16 +108,16 @@ export function calc_5_5(
             if (is_fleet_speed_faster_or_more(speed)) {
                 return 'S';
             }
-            if (seek[1] < 63) {
+            if (seek.c2 < 63) {
                 return 'R';
             }
-            if ((seek[1] < 66 && seek[1] >= 63) || Ss > 0) {
+            if ((seek.c2 < 66 && seek.c2 >= 63) || Ss > 0) {
                 return [
                     { node: 'S', rate: 0.5 },
                     { node: 'R', rate: 0.5 },
                 ];
             }
-            if (seek[1] >= 66) {
+            if (seek.c2 >= 66) {
                 return 'S';
             }
             break; // LoSより例外なし
@@ -140,16 +140,16 @@ export function calc_5_5(
                     { node: 'S', rate: 0.5 },
                 ];
             }
-            if (seek[1] < 73) {
+            if (seek.c2 < 73) {
                 return 'Q';
             }
-            if ((seek[1] < 80 && seek[1] >= 73) || Ss > 0 || BBCVs > 4) {
+            if ((seek.c2 < 80 && seek.c2 >= 73) || Ss > 0 || BBCVs > 4) {
                 return [
                     { node: 'S', rate: 0.666 },
                     { node: 'Q', rate: 0.334 },
                 ];
             }
-            if (seek[1] >= 80) {
+            if (seek.c2 >= 80) {
                 return 'S';
             }
             break; // LoSより例外なし

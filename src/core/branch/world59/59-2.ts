@@ -37,7 +37,7 @@ export function calc_59_2(
             }
             return 'A1';
         case 'C':
-            if (seek[3] >= 60) {
+            if (seek.c4 >= 60) {
                 return 'E';
             }
             return 'D';
@@ -109,12 +109,12 @@ export function calc_59_2(
             }
             return 'J';
         case 'R':
-            if (seek[1] >= 68) {
+            if (seek.c2 >= 68) {
                 return 'W';
             }
             return 'V';
         case 'S':
-            if (seek[1] >= 59) {
+            if (seek.c2 >= 59) {
                 return 'U';
             }
             return 'T';
