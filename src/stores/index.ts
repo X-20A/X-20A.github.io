@@ -155,15 +155,12 @@ export const useModalStore = defineStore('modal', {
 
 export const useToastStore = defineStore('toast', {
     state: () => ({
-        /** ドメイン確認モーダルの表示状態 */
+        /** トーストの表示状態 */
         is_show_notice: false,
-        /** 表示するエラーメッセージ */
+        /** 表示するメッセージ */
         notice_message: '',
     }),
     actions: {
-        /**
-         * ドメイン確認モーダル表示
-         */
         SHOW_TOAST(
             message: string,
             display_time: number = 5000,
@@ -175,9 +172,6 @@ export const useToastStore = defineStore('toast', {
                 this.HIDE_TOAST();
             }, display_time);
         },
-        /**
-         * モーダル非表示。種類に関わらず、全てこれを呼ぶ
-         */
         HIDE_TOAST(): void {
             this.is_show_notice = false;
             this.notice_message = '';

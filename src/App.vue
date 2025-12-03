@@ -36,7 +36,7 @@
 								<input @paste="handle_paste($event, index)" type="text" class="cell import-cell" />
 							</td>
 							<td>
-								<input v-model="row.row_name" @input="handleRowUpdate(index)"
+								<input v-model="row.row_name" @input="handle_row_update(index)"
 									@keydown="handle_name_cell_keydown($event, index)" type="text" class="cell name-cell"
 									ref="name_cells" />
 							</td>
@@ -54,37 +54,38 @@
 								</div>
 							</td>
 							<td>
-								<input v-model="row.multiplier" @input="handleRowUpdate(index)" class="cell count-cell" type="number" />
-							</td>
-							<td>
-								<input v-model="row.rate" @input="handleRowUpdate(index)" class="cell rate-cell" type="number" />
-							</td>
-							<td>
-								<input v-model.number="row.fuel" @input="handleRowUpdate(index)" class="cell resource-cell"
+								<input v-model="row.multiplier" @input="handle_row_update(index)" class="cell count-cell"
 									type="number" />
 							</td>
 							<td>
-								<input v-model.number="row.ammo" @input="handleRowUpdate(index)" class="cell resource-cell"
+								<input v-model="row.rate" @input="handle_row_update(index)" class="cell rate-cell" type="number" />
+							</td>
+							<td>
+								<input v-model.number="row.fuel" @input="handle_row_update(index)" class="cell resource-cell"
 									type="number" />
 							</td>
 							<td>
-								<input v-model.number="row.steel" @input="handleRowUpdate(index)" class="cell resource-cell"
+								<input v-model.number="row.ammo" @input="handle_row_update(index)" class="cell resource-cell"
 									type="number" />
 							</td>
 							<td>
-								<input v-model.number="row.baux" @input="handleRowUpdate(index)" class="cell resource-cell"
+								<input v-model.number="row.steel" @input="handle_row_update(index)" class="cell resource-cell"
 									type="number" />
 							</td>
 							<td>
-								<input v-model.number="row.bucket" @input="handleRowUpdate(index)" class="cell resource-cell"
+								<input v-model.number="row.baux" @input="handle_row_update(index)" class="cell resource-cell"
 									type="number" />
 							</td>
 							<td>
-								<input v-model.number="row.damecon" @input="handleRowUpdate(index)" class="cell resource-cell"
+								<input v-model.number="row.bucket" @input="handle_row_update(index)" class="cell resource-cell"
 									type="number" />
 							</td>
 							<td>
-								<input v-model.number="row.underway_replenishment" @input="handleRowUpdate(index)"
+								<input v-model.number="row.damecon" @input="handle_row_update(index)" class="cell resource-cell"
+									type="number" />
+							</td>
+							<td>
+								<input v-model.number="row.underway_replenishment" @input="handle_row_update(index)"
 									class="cell resource-cell" type="number" />
 							</td>
 							<td @pointerup="clear_row(index)" class="action-cell">
@@ -99,44 +100,48 @@
 					</tbody>
 				</table>
 			</div>
-			<div class="total-row-container">
+			<div class="result-row-draggable-container" :style="{ bottom: result_row_position + 'px' }">
 				<table class="spread-sheet total-table">
 					<tbody>
-						<tr class="total-row">
-							<td class="total-label">{{ display_mode === 'diff' ? 'diff' : 'sum' }}</td>
-							<td class="empty-cell"></td>
+						<tr class="result-row">
+							<td
+							class="result-drag-handle"
+							@mousedown="start_result_row_drag"
+							@touchstart="start_result_row_drag"
+							>⋮⋮</td>
+							<td class="display-mode-cell">{{ display_mode === 'diff' ? 'diff' : 'sum' }}</td>
 							<td class="result-rate-cell"
 								:class="{ 'diff-negative': display_mode === 'diff' && diff_data.rate > 0, 'diff-positive': display_mode === 'diff' && diff_data.rate < 0 }">
 								{{ display_mode === 'diff' ? format_diff_data(diff_data.rate) : '' }}
 							</td>
-							<td class="total-cell"
+							<td class="result-cell"
 								:class="{ 'diff-positive': display_mode === 'diff' && diff_data.fuel > 0, 'diff-negative': display_mode === 'diff' && diff_data.fuel < 0 }">
 								{{ display_mode === 'diff' ? format_diff_data(diff_data.fuel) : sum_data.fuel }}
 							</td>
-							<td class="total-cell"
+							<td class="result-cell"
 								:class="{ 'diff-positive': display_mode === 'diff' && diff_data.ammo > 0, 'diff-negative': display_mode === 'diff' && diff_data.ammo < 0 }">
 								{{ display_mode === 'diff' ? format_diff_data(diff_data.ammo) : sum_data.ammo }}
 							</td>
-							<td class="total-cell"
+							<td class="result-cell"
 								:class="{ 'diff-positive': display_mode === 'diff' && diff_data.steel > 0, 'diff-negative': display_mode === 'diff' && diff_data.steel < 0 }">
 								{{ display_mode === 'diff' ? format_diff_data(diff_data.steel) : sum_data.steel }}
 							</td>
-							<td class="total-cell"
+							<td class="result-cell"
 								:class="{ 'diff-positive': display_mode === 'diff' && diff_data.baux > 0, 'diff-negative': display_mode === 'diff' && diff_data.baux < 0 }">
 								{{ display_mode === 'diff' ? format_diff_data(diff_data.baux) : sum_data.baux }}
 							</td>
-							<td class="total-cell"
+							<td class="result-cell"
 								:class="{ 'diff-positive': display_mode === 'diff' && diff_data.bucket > 0, 'diff-negative': display_mode === 'diff' && diff_data.bucket < 0 }">
 								{{ display_mode === 'diff' ? format_diff_data(diff_data.bucket) : sum_data.bucket }}
 							</td>
-							<td class="total-cell"
+							<td class="result-cell"
 								:class="{ 'diff-positive': display_mode === 'diff' && diff_data.damecon > 0, 'diff-negative': display_mode === 'diff' && diff_data.damecon < 0 }">
 								{{ display_mode === 'diff' ? format_diff_data(diff_data.damecon) : sum_data.damecon }}
 							</td>
-							<td class="total-cell"
+							<td class="result-cell"
 								:class="{ 'diff-positive': display_mode === 'diff' && diff_data.underway_replenishment > 0, 'diff-negative': display_mode === 'diff' && diff_data.underway_replenishment < 0 }">
 								{{ display_mode === 'diff' ? format_diff_data(diff_data.underway_replenishment) :
-									sum_data.underway_replenishment }}
+								sum_data.underway_replenishment }}
 							</td>
 							<td class="leftover-cell"></td>
 						</tr>
@@ -217,15 +222,18 @@ const diff_data = computed(() => {
 		return { ...INITIAL_DIFF_DATA };
 	}
 
-	const [firstIndex, secondIndex] = selected_row_indexes.value;
-	const firstRow = current_data.value.row_datas[firstIndex];
-	const secondRow = current_data.value.row_datas[secondIndex];
+	const [first_index, second_index] = selected_row_indexes.value;
+	// 選択順に関わらず 下の行 - 上の行
+	const first_row =
+		current_data.value.row_datas[first_index > second_index ? second_index : first_index];
+	const second_row =
+		current_data.value.row_datas[first_index > second_index ? first_index : second_index];
 
-	if (!firstRow || !secondRow) {
+	if (!first_row || !second_row) {
 		return { ...INITIAL_DIFF_DATA };
 	}
 
-	const diff = calc_diff_data(firstRow, secondRow);
+	const diff = calc_diff_data(first_row, second_row);
 	return floor_diff_data(diff, 0.1);
 });
 
@@ -235,6 +243,99 @@ const format_diff_data = (value: number): string => {
 		return `+${value}`;
 	}
 	return value.toString();
+};
+
+// total-rowのドラッグ関連
+const result_row_position = ref(0);
+const is_dragging_result_row = ref(false);
+const drag_start_Y = ref(0);
+const drag_start_top = ref(0);
+
+// ドラッグの上限を計算する関数
+const calc_max_position = (): number => {
+	const sheet_container = document.querySelector('.sheet-container') as HTMLElement;
+	const result_row_container = document.querySelector('.result-row-draggable-container') as HTMLElement;
+
+	if (!sheet_container || !result_row_container) {
+		return 400; // デフォルト値
+	}
+
+	const sheet_container_height = sheet_container.clientHeight;
+	const result_row_container_height = result_row_container.clientHeight;
+
+	// シートコンテナの高さから、合計行コンテナの高さとマージンを引いた値が上限
+	return sheet_container_height - result_row_container_height - 10; // 10pxのマージンを確保
+};
+
+// total-rowのドラッグ開始
+const start_result_row_drag = (event: MouseEvent | TouchEvent) => {
+	event.preventDefault();
+	is_dragging_result_row.value = true;
+
+	// タッチイベントとマウスイベントの区別
+	const clientY = 'touches' in event ? event.touches[0].clientY : event.clientY;
+
+	drag_start_Y.value = clientY;
+	drag_start_top.value = result_row_position.value;
+
+	// イベントリスナーの登録
+	document.addEventListener('mousemove', handle_result_row_drag);
+	document.addEventListener('mouseup', stop_result_row_drag);
+	document.addEventListener('touchmove', handle_result_row_touch);
+	document.addEventListener('touchend', stop_result_row_drag);
+	document.addEventListener('touchcancel', stop_result_row_drag);
+
+	// ドラッグ中のスタイル変更
+	const result_row_element = document.querySelector('.total-row-draggable-container');
+	if (result_row_element) {
+		result_row_element.classList.add('dragging');
+	}
+};
+
+// total-rowのドラッグ中
+const handle_result_row_drag = (event: MouseEvent) => {
+	if (!is_dragging_result_row.value) return;
+
+	const delta_Y = event.clientY - drag_start_Y.value;
+	const new_position = drag_start_top.value - delta_Y;
+	const max_position = calc_max_position();
+
+	// 上限と下限を制限（最小値は0）
+	result_row_position.value = Math.max(0, Math.min(max_position, new_position));
+};
+
+// total-rowのタッチドラッグ中
+const handle_result_row_touch = (event: TouchEvent) => {
+	if (!is_dragging_result_row.value) return;
+	event.preventDefault();
+
+	const client_Y = event.touches[0].clientY;
+	const delta_Y = client_Y - drag_start_Y.value;
+	const new_position = drag_start_top.value - delta_Y;
+	const max_position = calc_max_position();
+
+	// 上限と下限を制限（最小値は0）
+	result_row_position.value = Math.max(0, Math.min(max_position, new_position));
+};
+
+// total-rowのドラッグ終了
+const stop_result_row_drag = () => {
+	if (!is_dragging_result_row.value) return;
+
+	is_dragging_result_row.value = false;
+
+	// イベントリスナーの削除
+	document.removeEventListener('mousemove', handle_result_row_drag);
+	document.removeEventListener('mouseup', stop_result_row_drag);
+	document.removeEventListener('touchmove', handle_result_row_touch);
+	document.removeEventListener('touchend', stop_result_row_drag);
+	document.removeEventListener('touchcancel', stop_result_row_drag);
+
+	// ドラッグスタイルの削除
+	const result_row_element = document.querySelector('.total-row-draggable-container');
+	if (result_row_element) {
+		result_row_element.classList.remove('dragging');
+	}
 };
 
 // ドラッグハンドルのCtrl+クリック処理
@@ -280,7 +381,7 @@ const open_url = (url: string) => {
 };
 
 // 行データ更新
-const handleRowUpdate = (rowIndex: number) => {
+const handle_row_update = (row_index: number) => {
 	store.UPDATE_CURRENT_DATA({
 		...current_data.value,
 		row_datas: [...current_data.value.row_datas] // 配列を新しく作成してリアクティブをトリガー
@@ -616,7 +717,9 @@ onMounted(() => {
 	border: 1px solid #e0e0e0;
 	display: flex;
 	flex-direction: column;
-	height: 82vh;
+	/* ビューポートの高さに応じて調整 */
+	height: clamp(45vh, 45vh + (82vh - 45vh) * (100vh - 400px) / (700px - 400px), 82vh);
+	position: relative;
 }
 
 .table-wrapper {
@@ -893,12 +996,21 @@ input[type="number"] {
 	-moz-appearance: textfield;
 }
 
-.total-row-container {
-	border-top: 2px solid #4dabf7;
-	position: sticky;
-	bottom: 0;
-	background-color: white;
-	z-index: 5;
+/* total-rowのドラッグ可能コンテナ */
+.result-row-draggable-container {
+	position: absolute;
+	left: 0;
+	right: 0;
+	z-index: 100;
+	transition: transform 0.2s;
+	background: white;
+	border-top: 1px solid #e0e0e0;
+}
+
+.result-row-draggable-container.dragging {
+	opacity: 0.9;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+	z-index: 101;
 }
 
 .total-table {
@@ -906,12 +1018,12 @@ input[type="number"] {
 	/* ボーダーの重なりを防ぐ */
 }
 
-.total-row {
+.result-row {
 	background-color: #e7f3ff;
 	font-weight: 500;
 }
 
-.total-row td {
+.result-row td {
 	padding: 10px 0px;
 	border-bottom: none;
 	border-right: 1px solid #dee2e6;
@@ -919,30 +1031,33 @@ input[type="number"] {
 	vertical-align: middle;
 }
 
-.total-row td:last-child {
+.result-row td:last-child {
 	border-right: none;
 }
 
-.total-label {
+.result-drag-handle {
 	background-color: #4dabf7;
 	color: white;
 	font-weight: 600;
 	text-align: center;
 	width: 45px;
+	cursor: ns-resize;
+	user-select: none;
 }
 
-.total-cell {
+.result-cell {
 	font-weight: 600;
 	color: #1971c2;
 	background-color: #e7f3ff;
 }
 
 .result-rate-cell {
-	width: 55px;
+	width: 54px;
 }
 
-.empty-cell {
+.display-mode-cell {
 	width: 267px;
+	color: #1971c2;
 }
 
 .leftover-cell {
