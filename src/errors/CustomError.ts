@@ -9,3 +9,5 @@ export default class CustomError extends Error {
 export class DisallowToSortie extends CustomError {}
 /** 分岐条件に漏れがある */
 export class OmissionOfConditions extends CustomError {}
+/** 画像生成に失敗 */
+export class ImageGenerationFailed extends CustomError {}

@@ -187,7 +187,7 @@ import ErrorView from './components/modals/ErrorView.vue';
 import CommandEvacuation from './components/modals/CommandEvacuation.vue';
 import SvgIcon from './components/SvgIcon.vue';
 import type { SelectedType } from './types';
-import CustomError, { DisallowToSortie } from './errors/CustomError';
+import CustomError, { DisallowToSortie, ImageGenerationFailed } from './errors/CustomError';
 import {
 	derive_FleetComponents_from_DeckBuilder,
 	derive_DeckBuilder_from_AdoptFleet,
@@ -198,7 +198,7 @@ import {
 	sanitize_text
 } from './logic/util';
 import { type AdoptFleet, count_not_equip_arctic_carriers, derive_adopt_fleet, get_escort_fleet_ships_length, calc_escort_fleet_ship_names, get_main_fleet_ships_length, calc_main_fleet_ship_names, count_Reigo_ships, count_Daigo_ships } from './models/fleet/AdoptFleet';
-import type { DeckBuilder as GkcoiDeckBuilder } from 'gkcoi/dist/type';
+import type { GenerateOptions, DeckBuilder as GkcoiDeckBuilder, LoS, Speed } from 'gkcoi/dist/type';
 import do_draw_map from './logic/efffects/draw';
 import { EDGE_DATAS, NODE_DATAS } from './data/map';
 import {
@@ -632,34 +632,37 @@ const screenShot = async () => {
 
 	const gkcoi = await import('gkcoi'); // 動的import
 	const time = getZeroFilledTime(new Date());
-	const fileName = `${drewArea.value}_${time}`;
+	const file_name = `${drewArea.value}_${time}`;
 
 	const deck = derive_DeckBuilder_from_AdoptFleet(adoptFleet.value as AdoptFleet);
-	const gkcoiBuilder = Object.assign(deck, {
+	const gkcoi_deck_builder = Object.assign(deck, {
 		lang: 'jp',
 		theme: 'dark',
 	}) as GkcoiDeckBuilder;
-	const fleet_seek = adoptFleet.value.seek;
-	const speed = adoptFleet.value.speed * 5;
-	const los = {
-		'1': fleet_seek.c1,
-		'2': fleet_seek.c2,
-		'3': fleet_seek.c3,
-		'4': fleet_seek.c4,
+	const options: GenerateOptions = { // thank you, Chami
+		start2URL: 'https://raw.githubusercontent.com/Tibowl/api_start2/master/start2.json',
 	};
-	const canvas = await gkcoi.generate(
-		gkcoiBuilder,
-		undefined,
-		los,
-		speed as 0 | 5 | 10 | 15 | 20,
-	);
-	const g_blob = calc_Gkcoi_Blob(canvas);
-	const cy_blob = calc_Cytoscape_Blob(cytoscape_core);
+	const { seek } = adoptFleet.value;
+	const gkcoi_los: LoS = {
+		'1': seek.c1,
+		'2': seek.c2,
+		'3': seek.c3,
+		'4': seek.c4,
+	};
+	const gkcoi_speed = adoptFleet.value.speed * 5 as Speed;
 	try {
+		const canvas = await gkcoi.generate(
+			gkcoi_deck_builder,
+			options,
+			gkcoi_los,
+			gkcoi_speed,
+		);
+		const g_blob = calc_Gkcoi_Blob(canvas);
+		const cy_blob = calc_Cytoscape_Blob(cytoscape_core);
 		const data_url = await do_combine_blobs(cy_blob, g_blob);
-		do_download_data_URL(data_url, fileName);
+		do_download_data_URL(data_url, file_name);
 	} catch (error) {
-		modalStore.SHOW_ERROR('画像出力に失敗しました');
+		modalStore.SHOW_ERROR(new ImageGenerationFailed('画像生成に失敗しました'));
 		console.error(error);
 		return;
 	}

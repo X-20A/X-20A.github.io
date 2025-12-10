@@ -115,18 +115,20 @@ export function derive_DeckBuilder_from_AdoptFleet(
         for (let j = 0;j < fleet.units.length;j++) {
             const ship = fleet.units[j].ship;
 
-            const deck_ship = {} as DeckBuilderShip;
-            deck_ship.id = ship.id;
-            deck_ship.lv = ship.lv;
-            deck_ship.luck = ship.luck;
-            deck_ship.hp = ship.hp;
-            deck_ship.fp = 0;
-            deck_ship.tp = 0;
-            deck_ship.aa = 0;
-            deck_ship.ar = 0;
-            deck_ship.asw = ship.asw;
-            deck_ship.ev = 0;
-            deck_ship.los = Number(ship.status_seek);
+            const deck_ship: DeckBuilderShip = {
+                id: ship.id,
+                lv: ship.lv,
+                luck: ship.luck,
+                hp: ship.hp,
+                fp: 0,
+                tp: 0,
+                aa: 0,
+                ar: 0,
+                asw: ship.asw,
+                ev: 0,
+                los: Number(ship.status_seek),
+                items: {},
+            };
             const deck_item: { [name: string]: DeckBuilderItem } = {};
             for (let k = 0;k < ship.equips.length;k++) {
                 const equip = ship.equips[k];
