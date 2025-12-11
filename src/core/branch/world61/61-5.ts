@@ -201,6 +201,15 @@ export function calc_61_5(
             }
             return 'C1';
         case 'C2':
+            if (phase <= 2) {
+                return 'D';
+            }
+            if (BBCVs >= 5) {
+                return 'S';
+            }
+            if (Ds === 0) {
+                return 'S';
+            }
             return 'D';
         case 'D':
             if (seek.c4 >= 112) {
@@ -291,6 +300,9 @@ export function calc_61_5(
             }
             return 'T';
         case 'Z':
+            if (is_fleet_surface(fleet_type)) {
+                return 'ZZ';
+            }
             if (
                 count_Yamato_class(fleet) >= 2 &&
                 is_fleet_speed_slow(speed)
