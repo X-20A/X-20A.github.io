@@ -345,6 +345,7 @@ const OPTION_DATA: OptionSelector = {
 				{ value: '3', label: 'Uボス出現後' },
 				{ value: '4', label: 'Xボス出現後' },
 				{ value: '5', label: 'ZZボス出現後' },
+				{ value: '6', label: '出撃地点3解放後' },
 			]
 		},
 	},

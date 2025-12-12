@@ -79,7 +79,7 @@ export function calc_61_5(
                 return '1';
             }
             // 連合艦隊
-            if (phase === 5 && is_fleet_carrier(fleet_type)) {
+            if (phase === 6 && is_fleet_carrier(fleet_type)) {
                 return '3';
             }
             return '1';

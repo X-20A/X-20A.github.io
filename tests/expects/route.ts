@@ -585,7 +585,7 @@ export const nomal_mock_datas: MockData[] = [
     {
         area: '61-5', routes: ['3-B2-X1-X2-Y-Z-ZZ'],
         option: {
-            'phase': '5',
+            'phase': '6',
         },
         deck: 'https://x-20a.github.io/compass/?pdz=N4IgbgpgTgzglgewHYgFwBYA0IAWBHAGzDQEYAmABmwDMS1QkBDAWwjREBpvEwMyDAotJGwAXUthh1UoOABM0AThIlsRObOwQAHozSCoAVwjY4giMxj0AvthwAHFdkYwA7miogCugMYBrNAFYKliAwZPQg0n7oAGxKxKiyABxqmmjUjAQwBmHGpqFw4pIyqADMRdhQ1C6BcCESYYXxAOxlFagN5oE2diAOzqiu7t6kAaJFuYVR0W6xsqogGlqoqemZRiZmEh22rYndTi5Knj6olIEw6GOkspPKcTvzKWkZhtnrwJtokU27vf2HfkWnXwXVAkWRfG7yJILJZPLJrCxWLafex7PoHQYgtqiSLAki%2Ba7TXxQh7LZ7wjaItANVw9fZuP4Ydo0GoMFhsVCcMh8AQgYQg0T5Op%2BCgErr3VA6fRknIU3BIxTfOkDI5kLFBFlC1CRSI7CGzcWSlYvBFy-4o3qNdFHXwkU6jWrhDDxWYQu7JRaPI3kt6U4oK2moXwuhkkeKnc4Owq%2BdClKZi92G6Wvd7FWMBnVWtBFYZBIGRvzamJoeJu6GepMmzqp80fMiZ445mA4-NxSIKvXEiV6L0yn2m4pYRWoEv13y%2BJkgaj2vvUCNvcxAA',
     },
