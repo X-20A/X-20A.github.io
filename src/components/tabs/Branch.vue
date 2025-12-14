@@ -6,7 +6,10 @@
 				<p>
 					<span>出典: </span>
 					<span><a :href="source.url" target="_blank" rel="noopener noreferrer">{{ source.label }}</a>, </span>
-					<span>出典元の最終更新: {{ last_update }}</span>
+					<span>出典元の最終更新: {{ last_update }}, </span>
+					<span>実装: <a :href="source_url" target="_blank" rel="noopener noreferrer" aria-label="分岐実装ファイルリンク">
+						<SvgIcon name="github" class="github-icon"></SvgIcon></a>
+					</span>
 				</p>
 			</div>
 			<table>
@@ -33,6 +36,7 @@ import { useStore } from '../../stores';
 import { convert_branch_data_to_HTML } from '../../logic/convert';
 import { sanitize_text } from '../../logic/util';
 import { disassembly_area_id } from '../../logic/area';
+import SvgIcon from '../SvgIcon.vue';
 
 // 分岐条件一覧
 
@@ -57,6 +61,16 @@ const source = ref<Source>({
 });
 
 const last_update = ref<string>('');
+
+const SOURCE_BASE_URL =
+	'https://github.com/X-20A/X-20A.github.io/blob/compass_dev/src/core/branch';
+
+const source_url = computed(() => {
+	if (!selectedArea.value) return '';
+
+	const world_num = selectedArea.value.split('-')[0];
+	return `${SOURCE_BASE_URL}/world${world_num}/${selectedArea.value}.ts`;
+});
 
 const formated_branch = ref<Record<string, string>>({});
 
@@ -171,6 +185,11 @@ watch(selectedArea, () => {
 .area {
 	font-weight: 600;
 	font-size: 16px;
+}
+.github-icon {
+	vertical-align: middle;
+	height: 16px;
+	width: 16px;
 }
 table {
 	border-collapse: collapse;
