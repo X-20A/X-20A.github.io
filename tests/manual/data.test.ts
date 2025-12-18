@@ -34,6 +34,7 @@ describe('Dataテスト', () => {
             seek2: number,
         }
         type MismatchShipParam = {
+            id: number,
             param: 'name' | 'type' | 'seek' | 'seek2',
             ship_name: string,
             master_param: number | string,
@@ -57,6 +58,7 @@ describe('Dataテスト', () => {
 
             if (ac_ship.name !== ship.name) {
                 mismatch_ship_params.push({
+                    id: ac_ship.id,
                     param: 'name',
                     ship_name: ac_ship.name,
                     master_param: ac_ship.name,
@@ -67,6 +69,7 @@ describe('Dataテスト', () => {
                 // こちらでは高速戦艦と低速戦艦をデータでは区別しない
                 if (!(Number(ac_ship.type) === 8 && ship.type === ShipType.BB)) {
                     mismatch_ship_params.push({
+                        id: ac_ship.id,
                         param: 'type',
                         ship_name: ac_ship.name,
                         master_param: ac_ship.type,
@@ -76,6 +79,7 @@ describe('Dataテスト', () => {
 
             if (ac_ship.min_scout !== ship.seek) {
                 mismatch_ship_params.push({
+                    id: ac_ship.id,
                     param: 'seek',
                     ship_name: ac_ship.name,
                     master_param: ac_ship.min_scout,
@@ -84,6 +88,7 @@ describe('Dataテスト', () => {
 
             if (ac_ship.scout !== ship.seek2) {
                 mismatch_ship_params.push({
+                    id: ac_ship.id,
                     param: 'seek2',
                     ship_name: ac_ship.name,
                     master_param: ac_ship.scout,
