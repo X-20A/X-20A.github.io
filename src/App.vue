@@ -180,7 +180,6 @@ import HeaderControls from './components/HeaderControls.vue';
 import { useStore, useModalStore, useToastStore } from './stores';
 import { computed, onMounted, ref } from 'vue';
 import { INITIAL_SUM_DATA, INITIAL_ROW_DATA, RowData, INITIAL_DIFF_DATA } from './types';
-import { calc_sum_data } from './logics/sum';
 import { floor_diff_data, floor_sum_data } from './logics/floor';
 import { calc_URL_param, do_delete_URL_param, is_approved_url, do_open_url_in_new_tab } from './logics/url';
 import lzstring from "lz-string";
@@ -189,7 +188,7 @@ import { parse, ValiError } from 'valibot';
 import { SaveDataSchema } from './logics/sheme';
 import DomainPermission from './components/DomainPermission.vue';
 import ErrorView from './components/ErrorView.vue';
-import { calc_diff_data } from './logics/difference';
+import { calc_diff_data, calc_total_data } from './logics/calculation';
 
 const store = useStore();
 const current_data = computed(() => store.current_data);
@@ -212,8 +211,8 @@ const name_cells = ref<HTMLInputElement[]>([]);
 const sum_data = computed(() => {
 	if (!current_data.value) return { ...INITIAL_SUM_DATA };
 
-	const sumed_data = calc_sum_data(current_data.value.row_datas);
-	return floor_sum_data(sumed_data, 0.1);
+	const total_data = calc_total_data(current_data.value.row_datas);
+	return floor_sum_data(total_data, 0.1);
 });
 
 // 差分データの計算
