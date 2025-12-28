@@ -46,3 +46,15 @@ export function includes_ship_name(
 ): boolean {
     return match_names.includes(search_name);
 }
+
+/**
+ * search_namesのいずれかがmatch_namesに含まれているか判定して返す
+ */
+export function includes_ship_names(
+    match_names: ShipName[],
+    search_names: ShipName[],
+): boolean {
+    return search_names.some(search_name =>
+        includes_ship_name(match_names, search_name)
+    );
+}

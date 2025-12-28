@@ -56,7 +56,7 @@ describe('Simテスト', () => {
                 command_evacuations: CommandEvacuation[] = [],
             ) => {
                 const executor = derive_sim_executer(adoptFleet, area_id, options, command_evacuations);
-                const result = await start_sim(executor, adoptFleet, command_evacuations);
+                const result = await start_sim(executor);
                 // console.log(result);
                 const total_rate = result.reduce(
                     (sum, item) => sum.plus(item.rate),
@@ -179,7 +179,7 @@ describe('Simテスト', () => {
                 const command_evacuations: CommandEvacuation[] = []; // 退避設定はなし
 
                 const executor = derive_sim_executer(adoptFleet, area_id, options, command_evacuations);
-                const result = start_sim(executor, adoptFleet, command_evacuations);
+                const result = start_sim(executor);
                 const actual_route = result[0].route.join('-');
 
                 if (expected_route !== actual_route) {

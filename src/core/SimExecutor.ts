@@ -153,10 +153,8 @@ function advance_sim_fleet(
  */
 export function start_sim(
     executor: SimExecutor,
-    adopt_fleet: AdoptFleet,
-    command_evacuations: CommandEvacuation[],
 ): SimResult[] {
-    let sim_fleets: SimFleet[] = [derive_default_sim_fleet(adopt_fleet)];
+    let sim_fleets: SimFleet[] = [derive_default_sim_fleet(executor.adopt_fleet)];
     let results: SimResult[] = [];
     const area_routes = EDGE_DATAS[executor.area_id];
     let clone_count = executor.clone_count;
@@ -168,7 +166,7 @@ export function start_sim(
             area_routes,
             clone_count,
             sim_fleets,
-            command_evacuations,
+            executor.command_evacuations,
             results
         );
         clone_count = advance_result.clone_count;

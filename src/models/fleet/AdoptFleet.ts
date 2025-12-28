@@ -7,6 +7,8 @@ import { ShipName } from "../../types/shipName";
 import { Ft as FleetType } from "./predicate";
 import { Sp as Speed } from "../../logic/speed/predicate";
 import { round_seek } from "../../logic/seek/fleet";
+import { includes_ship_name } from "../ship/predicate";
+import { EquippedShip } from "../ship/EquippedShip";
 
 /**
  * FleetComponentsからSelectedTypeによって抽出、構成されたシミュに使用される艦隊のデフォルト構造
@@ -174,11 +176,22 @@ export function include_ship_names(fleet: AdoptFleet, target_name: string | stri
 }
 
 /**
+ * 旗艦を返す
+ * @param fleet 
+ * @returns 
+ */
+export function extract_flagship(
+    fleet: AdoptFleet,
+): EquippedShip {
+    return fleet.fleets[0].units[0].ship;
+}
+
+/**
  * 旗艦が軽巡であるか判定
  * @param fleet AdoptFleet
  */
 export function is_flagship_CL(fleet: AdoptFleet): boolean {
-    return fleet.fleets[0].units[0].ship.type === ShipType.CL;
+    return extract_flagship(fleet).type === ShipType.CL;
 }
 
 /**
@@ -241,14 +254,22 @@ const YAMATO_CLASS_NAMES: ShipName[] =
         '大和', '大和改', '大和改二', '大和改二重',
         '武蔵', '武蔵改', '武蔵改二',
     ] as const;
+
+export function count_ships_by_names(
+    target_names: ShipName[],
+    search_names: ShipName[],
+): number {
+    return search_names.filter(ship_name =>
+        includes_ship_name(target_names, ship_name)
+    ).length;
+}
+
 /**
  * 艦隊内の大和型の数を返す
  * @param fleet AdoptFleet
  */
 export function count_Yamato_class(fleet: AdoptFleet): number {
-    return fleet.ship_names.filter(ship_name =>
-        YAMATO_CLASS_NAMES.some(name => ship_name === name)
-    ).length;
+    return count_ships_by_names(YAMATO_CLASS_NAMES, fleet.ship_names);
 }
 
 const MATSU_CLASS_NAMES: ShipName[] =

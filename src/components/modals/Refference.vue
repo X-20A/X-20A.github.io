@@ -1,47 +1,49 @@
 <template>
-	<div
-		v-if="isRefferenceVisible"
-		@pointerdown.stop
-		class="refference-container"
-	>
-		<v-tabs
-    v-model="tab"
-    align-tabs="center"
-    show-arrows
-    class="tab-header"
-    color="#1976d2"
-    bg-color="primary"
-  >
-    <v-tab class="custom-tab" :value="route" @pointerdown="tab = route">経路</v-tab>
-    <v-tab class="custom-tab" :value="branch" @pointerdown="tab = branch">分岐条件</v-tab>
-  </v-tabs>
-		<v-tabs-window v-model="tab">
-			<v-tabs-window-item :value="Route">
+	<div v-if="is_refference_visible" @pointerdown.stop class="refference-container">
+		<v-tabs v-model="tab_key" align-tabs="center" show-arrows class="tab-header" color="#1976d2" bg-color="primary">
+			<v-tab class="custom-tab" value="route">経路</v-tab>
+			<v-tab class="custom-tab" value="branch">分岐条件</v-tab>
+			<v-tab class="custom-tab" value="quest">任務</v-tab>
+		</v-tabs>
+
+		<v-tabs-window v-model="tab_key">
+			<v-tabs-window-item value="route">
 				<Route />
 			</v-tabs-window-item>
-			<v-tabs-window-item :value="Branch">
+			<v-tabs-window-item value="branch">
 				<Branch />
+			</v-tabs-window-item>
+			<v-tabs-window-item value="quest">
+				<Quest />
 			</v-tabs-window-item>
 		</v-tabs-window>
 	</div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import Route from '../tabs/Route.vue';
 import Branch from '../tabs/Branch.vue';
-import { useModalStore } from '../../stores';
+import Quest from '../tabs/Quest.vue';
+import { useModalStore, useStore } from '../../stores';
 
-// 経路/分岐条件一覧
+/** タブ識別子 */
+export type RefferenceTabKey = 'route' | 'branch' | 'quest';
 
-// mousedownにしたいのでちょっと工夫
-const route = ref(Route);
-const branch = ref(Branch);
-const tab = ref(route.value);
+const store = useStore();
+const modal_store = useModalStore();
 
-const modalStore = useModalStore();
+const tab_key = computed<RefferenceTabKey>({
+	get: () => store.refferenceTabKey ?? 'route',
+	set: (value) => {
+		store.UPDATE_REFFERENCE_TAB_KEY(value);
+		store.SAVE_DATA();
+	},
+});
 
-const isRefferenceVisible = computed(() => modalStore.isRefferenceVisible);
+const is_refference_visible = computed(
+	() => modal_store.isRefferenceVisible,
+);
 </script>
 
 <style scoped>
@@ -50,16 +52,20 @@ const isRefferenceVisible = computed(() => modalStore.isRefferenceVisible);
 	height: 90vh;
 	max-height: 820px;
 	background-color: white;
-	overflow: scroll;
+	overflow-y: scroll;
 	overflow-x: hidden;
+	scrollbar-gutter: stable;
 	overscroll-behavior: contain;
+	margin-top: 50px;
 }
+
 .tab-header {
-	border-bottom: 1px solid #E0E0E0;
+	border-bottom: 1px solid #e0e0e0;
 	color: #1976d2;
 	top: 0;
 	z-index: 10;
 }
+
 .custom-tab {
 	cursor: pointer;
 	color: #8b8b8b;

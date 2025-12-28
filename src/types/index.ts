@@ -2,6 +2,7 @@ import type Big from "big.js";
 import type { NA as National, SG as SpeedGroup, ST as ShipType } from "../data/ship";
 import type { NT as NodeType } from "../data/map";
 import { ShipName } from "./shipName";
+import { RefferenceTabKey } from "../components/modals/Refference.vue";
 
 export type Brand<T, B> = T & { __brand: B };
 
@@ -40,7 +41,7 @@ export type EquipInDeck = {
 
 export type SelectedType = 1|2|3|4|5|6|7
 
-export type AreaId = // @expansion
+export type NormalAreaId =
     | '1-1' | '1-2' | '1-3' | '1-4' | '1-5' | '1-6'
     | '2-1' | '2-2' | '2-3' | '2-4' | '2-5'
     | '3-1' | '3-2' | '3-3' | '3-4' | '3-5'
@@ -48,11 +49,15 @@ export type AreaId = // @expansion
     | '5-1' | '5-2' | '5-3' | '5-4' | '5-5'
     | '6-1' | '6-2' | '6-3' | '6-4' | '6-5'
     | '7-1' | '7-2' | '7-3' | '7-4' | '7-5'
+
+type EventAreaId =
     | '57-7'
     | '58-1' | '58-2' | '58-3' | '58-4'
     | '59-1' | '59-2' | '59-3' | '59-4' | '59-5'
     | '60-1' | '60-2' | '60-3' | '60-4' | '60-5' | '60-6'
-    | '61-1' | '61-2' | '61-3' | '61-4' | '61-5'
+    | '61-1' | '61-2' | '61-3' | '61-4' | '61-5' // @expansion
+
+export type AreaId = NormalAreaId | EventAreaId
 
 export type BranchResponse = {
     node: string;
@@ -91,6 +96,7 @@ export type SaveData = {
     selected_type: SelectedType | null,
     area: AreaId | null,
     options: OptionsType | null,
+    refferrence_tab_key: RefferenceTabKey,
 }
 
 export type BranchLastUpdate = {

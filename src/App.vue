@@ -141,7 +141,7 @@
 				<SvgIcon @pointerdown="switchSeek" name="radar-8" :color="adoptFleet?.seek.c1 === 999 ? '#f6a306' : '#fff'"
 					class="ignore-seek icon-on-map"></SvgIcon>
 				<SvgIcon @pointerdown="showRefference" name="layers" color="#fff" class="reference icon-on-map"></SvgIcon>
-				<SvgIcon @click="screenShot" name="camera-outline" color="#fff" class="screen-shot icon-on-map"></SvgIcon>
+				<SvgIcon @click="screenShot" name="camera-outline" color="#fff" class="screen-shot icon-on-map" ></SvgIcon>
 			</template>
 			<div id="cy" class="cy">
 			</div>
@@ -150,14 +150,15 @@
 	<div v-if="isAreaVisible
 		|| isRefferenceVisible
 		|| isErrorVisible
-		|| isCommandEvacuationVisible" class="modal-overlay" @pointerdown="closeModals">
+		|| isCommandEvacuationVisible"
+		class="modal-overlay" @pointerdown="closeModals">
 		<Area />
 		<Refference />
 		<ErrorView />
 		<CommandEvacuation />
 	</div>
-	<NomalResourcePopup :data="nomalResource" :style="popupStyle" class="popup popup-info" />
-	<SyonanResourcePopup :data="syonanResource" :style="popupStyle" class="popup popup-info" />
+	<NomalResourcePopup v-if="nomalResource" :data="nomalResource" :style="popupStyle" class="popup popup-info" />
+	<SyonanResourcePopup v-if="syonanResource" :data="syonanResource" :style="popupStyle" class="popup popup-info" />
 	<template v-if="branchHtml === '<p>$sw</p>'">
 		<div class="popup popup-info" :style="popupStyle">
 			<p>
@@ -177,14 +178,10 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, watch, ref, computed } from 'vue';
+import { onMounted, watch, ref, computed, defineAsyncComponent } from 'vue';
 import { useStore, useModalStore } from './stores';
 import Header from './components/Header.vue';
 import Option from './components/Option.vue';
-import Area from './components/modals/Area.vue';
-import Refference from './components/modals/Refference.vue';
-import ErrorView from './components/modals/ErrorView.vue';
-import CommandEvacuation from './components/modals/CommandEvacuation.vue';
 import SvgIcon from './components/SvgIcon.vue';
 import type { SelectedType } from './types';
 import CustomError, { DisallowToSortie, ImageGenerationFailed } from './errors/CustomError';
@@ -215,8 +212,6 @@ import Craft from '@/icons/items/craft.png';
 import Radar from '@/icons/items/radar.png';
 import { do_delete_URL_param, calc_URL_param } from './logic/url';
 import { do_combine_blobs, do_download_data_URL } from './logic/efffects/render';
-import NomalResourcePopup from './components/resource/NomalResourcePopup.vue';
-import SyonanResourcePopup from './components/resource/SyonanResourcePopup.vue';
 import type { FleetComponent } from './models/fleet/FleetComponent';
 import type { SyonanResource } from './models/resource/SyonanResource';
 import type { NomalResource } from './models/resource/NomalResource';
@@ -230,6 +225,25 @@ import { register_Cytoscape_events } from './logic/efffects/cytoscapeEvents';
 import { disassembly_area_id } from './logic/area';
 import lzstring from "lz-string";
 import { Ft as FleetType } from './models/fleet/predicate';
+
+const Area = defineAsyncComponent(() => import(
+	'./components/modals/Area.vue'
+));
+const Refference = defineAsyncComponent(() => import(
+	'./components/modals/Refference.vue'
+));
+const ErrorView = defineAsyncComponent(() => import(
+	'./components/modals/ErrorView.vue'
+));
+const CommandEvacuation = defineAsyncComponent(() => import(
+	'./components/modals/CommandEvacuation.vue'
+));
+const NomalResourcePopup = defineAsyncComponent(() => import(
+	'./components/resource/NomalResourcePopup.vue'
+));
+const SyonanResourcePopup = defineAsyncComponent(() => import(
+	'./components/resource/SyonanResourcePopup.vue'
+));
 
 const store = useStore();
 const modalStore = useModalStore();
@@ -459,7 +473,7 @@ watch([adoptFleet, selectedArea, options, commandEvacuations], async () => {
 
 	try {
 		parseAreaId(selectedArea.value);
-		const sim = derive_sim_executer(
+		const sim_executer = derive_sim_executer(
 			adoptFleet.value as AdoptFleet,
 			selectedArea.value,
 			options.value,
@@ -467,9 +481,7 @@ watch([adoptFleet, selectedArea, options, commandEvacuations], async () => {
 		);
 		// console.time('シミュ計測');
 		const result = start_sim(
-			sim,
-			adoptFleet.value as AdoptFleet,
-			commandEvacuations.value,
+			sim_executer,
 		);
 		// console.timeEnd('シミュ計測');
 		store.UPDATE_SIM_RESULT(result);
@@ -602,6 +614,7 @@ const adjustPopupPosition = (
 	popupStyle.value.left = left + 'px';
 };
 
+// 能動分岐切替
 const switchActive = (event: Event) => {
 	if (options.value && drewArea.value && options.value[drewArea.value]) {
 		const target = event.target as HTMLButtonElement;

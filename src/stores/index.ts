@@ -19,6 +19,7 @@ import type { FleetComponent } from '../models/fleet/FleetComponent';
 import { is_battle_node, is_last_stop_node, type CommandEvacuation } from '../core/CommandEvacuation';
 import type { Node } from '../types/brand';
 import { parseOptionsType } from '../models/shemas';
+import { RefferenceTabKey } from '../components/modals/Refference.vue';
 
 export type LoadDataCommands = {
     /** deck読込をスキップするか */
@@ -64,6 +65,8 @@ export const useStore = defineStore('compass', {
 
         /** 司令退避設定（ノードごと） */
         commandEvacuations: [] as CommandEvacuation[],
+
+        refferenceTabKey: 'route' as RefferenceTabKey,
 	}),
 	actions: {
         UPDATE_DECK(value: string): void {
@@ -98,6 +101,9 @@ export const useStore = defineStore('compass', {
                 this.options[area][key] = value;
             }
         },
+        UPDATE_REFFERENCE_TAB_KEY(refferrence_tab_key: RefferenceTabKey): void {
+            this.refferenceTabKey = refferrence_tab_key;
+        },
         SWITCH_SEEK(): void {
             if (!this.adoptFleet) return;
             this.UPDATE_ADOPT_FLEET(switch_seek(this.adoptFleet as AdoptFleet));
@@ -118,6 +124,7 @@ export const useStore = defineStore('compass', {
                         // Const.OPTIONS をそのまま渡す
                         this.UPDATE_OPTIONS(Const.DEFAULT_OPTIONS);
                     }
+                    if (json.refferrence_tab_key) this.UPDATE_REFFERENCE_TAB_KEY(json.refferrence_tab_key);
                 } catch (e) {
                     // エラーが発生した場合も Const.OPTIONS をそのまま渡す
                     this.UPDATE_OPTIONS(Const.DEFAULT_OPTIONS);
@@ -139,6 +146,7 @@ export const useStore = defineStore('compass', {
                     selected_type: this.selectedType,
                     area: this.selectedArea,
                     options: this.options,
+                    refferrence_tab_key: this.refferenceTabKey,
                 };
             }
 
