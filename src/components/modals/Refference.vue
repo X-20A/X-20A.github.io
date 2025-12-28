@@ -52,7 +52,7 @@ const is_refference_visible = computed(
 	height: 90vh;
 	max-height: 820px;
 	background-color: white;
-	overflow-y: scroll;
+	overflow-y: auto;
 	overflow-x: hidden;
 	scrollbar-gutter: stable;
 	overscroll-behavior: contain;
@@ -60,10 +60,12 @@ const is_refference_visible = computed(
 }
 
 .tab-header {
+	position: sticky;
+	top: 0;
+	background-color: white;
 	border-bottom: 1px solid #e0e0e0;
 	color: #1976d2;
-	top: 0;
-	z-index: 10;
+	z-index: 20;
 }
 
 .custom-tab {

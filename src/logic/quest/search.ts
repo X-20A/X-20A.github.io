@@ -1,9 +1,9 @@
 import Big from "big.js";
 import { derive_sim_executer, start_sim } from "../../core/SimExecutor";
 import { NODE_DATAS, NT } from "../../data/map";
-import { QuestData, TargetNodeInfo } from "../../data/quest";
+import { QUEST_ICON_PERIOD_MAP, QuestData, QuestIconType, QuestPeriod, TargetNodeInfo } from "../../data/quest";
 import { AdoptFleet } from "../../models/fleet/AdoptFleet";
-import { NormalAreaId, OptionsType, SimResult } from "../../types";
+import { AreaId, NORMAL_AREA_ID_LIST, NormalAreaId, OptionsType, SimResult } from "../../types";
 import { CompositionCondition, QuestCompositionCondition } from "./conditions";
 import { is_fleet_combined, is_fleet_striking } from "../../models/fleet/predicate";
 
@@ -12,22 +12,20 @@ type AreaSimResult = {
     reach_rate: Big,
 }
 
-const NORMAL_AREA_ID_SET = new Set<NormalAreaId>([
-    '1-1', '1-2', '1-3', '1-4', '1-5', '1-6',
-    '2-1', '2-2', '2-3', '2-4', '2-5',
-    '3-1', '3-2', '3-3', '3-4', '3-5',
-    '4-1', '4-2', '4-3', '4-4', '4-5',
-    '5-1', '5-2', '5-3', '5-4', '5-5',
-    '6-1', '6-2', '6-3', '6-4', '6-5',
-    '7-1', '7-2', '7-3', '7-4', '7-5',
-]);
+export const NORMAL_AREA_ID_SET: ReadonlySet<NormalAreaId> =
+    new Set<NormalAreaId>(NORMAL_AREA_ID_LIST);
 
+export function has_normal_area_id(
+    area_id: AreaId,
+): area_id is NormalAreaId {
+    return NORMAL_AREA_ID_SET.has(area_id as NormalAreaId);
+}
 
 const is_normal_area_id = (
-    value: TargetNodeInfo,
-): value is NormalAreaId => {
-    return typeof value === 'string' &&
-        NORMAL_AREA_ID_SET.has(value as NormalAreaId);
+    info: TargetNodeInfo,
+): info is NormalAreaId => {
+    return typeof info === 'string' &&
+        has_normal_area_id(info as NormalAreaId);
 }
 
 /**
@@ -141,7 +139,7 @@ const evaluate_condition = (
 
 export type ViewQuestData = {
     name: string,
-    icon: string,
+    icon: QuestIconType,
     zekamashi_id: string,
     composition_condition_state: CompositionCondition,
     area_sim_results: AreaSimResult[],
@@ -185,4 +183,22 @@ export async function calc_view_quest_data(
     });
 
     return view_quest_datas;
+}
+
+export function filter_by_period(
+    view_quest_datas: readonly ViewQuestData[],
+    period: QuestPeriod,
+): ViewQuestData[] {
+    return view_quest_datas.filter(data =>
+        QUEST_ICON_PERIOD_MAP[data.icon] === period,
+    );
+}
+
+export function filter_both_area(
+    view_quest_datas: readonly ViewQuestData[],
+    area_id: NormalAreaId,
+): readonly ViewQuestData[] {
+    return view_quest_datas.filter(data =>
+        data.area_sim_results.some(result => result.area_id === area_id),
+    );
 }

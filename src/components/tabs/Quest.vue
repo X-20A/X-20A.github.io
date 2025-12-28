@@ -1,8 +1,17 @@
 <template>
 	<div class="composition-condition">
-		<p class="attention-note">※到達率の演算には現在の設定の能動分岐が使用されます</p>
+		<p class="attention-note">
+			※到達率の演算には現在の設定の能動分岐が使用されます
+		</p>
 
-		<template v-for="data in view_quest_datas" :key="data.zekamashi_id">
+		<div class="period-filter">
+			<button v-for="period in PERIOD_BUTTONS" :key="period.label" class="period-button"
+				:class="{ active: selected_period === period.value }" @pointerdown="select_period(period.value)">
+				{{ period.label }}
+			</button>
+		</div>
+
+		<template v-for="data in filtered_view_quest_datas" :key="data.zekamashi_id">
 			<div class="quest-block">
 				<div class="quest-header">
 					<div class="sortie-icon-wrapper">
@@ -61,8 +70,8 @@
 <script setup lang="ts">
 import { computed, ref, watch, Ref } from 'vue';
 import { useStore } from '../../stores';
-import { QUEST_DATAS } from '../../data/quest';
-import { calc_view_quest_data, ViewQuestData } from '../../logic/quest/search';
+import { QUEST_DATAS, QuestPeriod } from '../../data/quest';
+import { calc_view_quest_data, filter_both_area, filter_by_period, has_normal_area_id, ViewQuestData } from '../../logic/quest/search';
 import { CompositionCondition } from '../../logic/quest/conditions';
 import { NormalAreaId } from '../../types';
 
@@ -81,6 +90,25 @@ const build_zekamashi_url = (zekamashi_id: string): string => {
 const select_area = (area_id: NormalAreaId): void => {
 	store.UPDATE_SELECTED_AREA(area_id);
 	store.SAVE_DATA();
+};
+
+type QuestFilterType = QuestPeriod | 'All' | 'Both_Area'
+
+const PERIOD_BUTTONS: readonly { label: string; value: QuestFilterType }[] = [
+	{ label: 'All', value: 'All' },
+	{ label: 'D', value: 'Daily' },
+	{ label: 'W', value: 'Weekly' },
+	{ label: 'M', value: 'Monthly' },
+	{ label: 'Q', value: 'Quarterly' },
+	{ label: 'Y', value: 'Yearly' },
+	{ label: 'Area', value: 'Both_Area' },
+];
+
+const selected_period = ref<QuestFilterType | null>('All');
+
+const select_period = (period: QuestFilterType): void => {
+	selected_period.value =
+		selected_period.value === period ? 'All' : period;
 };
 
 /** 編成条件の表示テキストを返す */
@@ -107,6 +135,22 @@ const QUEST_DATA_VALUES = Object.values(QUEST_DATAS);
 
 const view_quest_datas: Ref<readonly ViewQuestData[]> = ref([]);
 
+const filtered_view_quest_datas = computed<readonly ViewQuestData[]>(() => {
+	if (
+		!selected_period.value ||
+		selected_period.value === 'All' ||
+		!selected_area.value
+	) return view_quest_datas.value;
+
+	if (
+		selected_period.value !== 'Both_Area'
+	) return filter_by_period(view_quest_datas.value, selected_period.value);
+
+	return has_normal_area_id(selected_area.value) 
+		? filter_both_area(view_quest_datas.value, selected_area.value)
+		: [];
+});
+
 watch(
 	[selected_area, adopt_fleet, options],
 	async (): Promise<void> => {
@@ -128,12 +172,35 @@ watch(
 <style scoped>
 .composition-condition {
 	padding: 5px 16px;
+	margin-bottom: 300px;
 }
 
 .attention-note {
 	font-size: 14px;
 	color: #e63026;
-	margin-bottom: 0px;
+	margin-bottom: 4px;
+}
+
+.period-filter {
+	display: flex;
+	gap: 6px;
+	margin-bottom: 8px;
+}
+
+.period-button {
+	font-size: 12px;
+	padding: 2px 6px;
+	border-radius: 4px;
+	border: 1px solid #bbb;
+	background-color: #f7f7f7;
+	color: #444;
+	cursor: pointer;
+}
+
+.period-button.active {
+	background-color: #1976d2;
+	border-color: #1976d2;
+	color: #fff;
 }
 
 .quest-block {

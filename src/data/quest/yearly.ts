@@ -1,4 +1,4 @@
-import { QuestData, TEMPLATE_1_6, YearlyQuestId } from ".";
+import { QuestData, YearlyQuestId } from ".";
 import { calc_By1, calc_By10, calc_By11, calc_By12, calc_By13, calc_By14, calc_By15, calc_By2, calc_By3, calc_By4, calc_By5, calc_By6, calc_By7, calc_By8, calc_By9 } from "../../logic/quest/conditions/yearly";
 
 export const YEARLY_QUEST_DATAS = {

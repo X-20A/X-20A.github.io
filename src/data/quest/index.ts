@@ -49,9 +49,43 @@ export const TEMPLATE_1_6: SpecificNodeSet = {
 
 export type TargetNodeInfo = NormalAreaId | SpecificNodeSet
 
+export type QuestIconType =
+    | 'Daily'
+    | 'Weekly'
+    | 'Monthly'
+    | 'Quarterly'
+    | 'January'
+    | 'February'
+    | 'March'
+    | 'May'
+    | 'June'
+    | 'September'
+
+export type QuestPeriod =
+    | 'Daily'
+    | 'Weekly'
+    | 'Monthly'
+    | 'Quarterly'
+    | 'Yearly';
+
+export const QUEST_ICON_PERIOD_MAP:
+    Readonly<Record<QuestIconType, QuestPeriod>> = {
+    Daily: 'Daily',
+    Weekly: 'Weekly',
+    Monthly: 'Monthly',
+    Quarterly: 'Quarterly',
+
+    January: 'Yearly',
+    February: 'Yearly',
+    March: 'Yearly',
+    May: 'Yearly',
+    June: 'Yearly',
+    September: 'Yearly',
+};
+
 export type QuestData = {
     readonly name: string,
-    readonly icon: string,
+    readonly icon: QuestIconType,
     readonly zekamashi_id: string,
     readonly target_areas: TargetNodeInfo[],
     readonly condition: QuestCompositionCondition,
