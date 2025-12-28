@@ -25,7 +25,7 @@ const is_normal_area_id = (
     info: TargetNodeInfo,
 ): info is NormalAreaId => {
     return typeof info === 'string' &&
-        has_normal_area_id(info as NormalAreaId);
+        has_normal_area_id(info);
 }
 
 /**

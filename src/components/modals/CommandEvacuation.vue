@@ -182,7 +182,7 @@ function clearEvacuation(): void {
 let is_first_tap = true;
 window.addEventListener('contextmenu', (event) => {
 	// モーダル表示時の右クリックメニューを抑止
-	if (is_first_tap) {
+	if (isCommandEvacuationVisible.value && is_first_tap) {
 		event.preventDefault();
 		is_first_tap = false;
 	}
