@@ -5,6 +5,7 @@ import { ShipAsw, ShipHp, ShipLuck, ShipLv } from "../../types/brand";
 import { ShipId } from "../../types/shipId";
 import { ShipName } from "../../types/shipName";
 import SHIP_DATAS from '../../data/ship';
+import { NotYetSupportedShip } from '../../errors/CustomError';
 
 /**
  * レベルに応じて変動するステータスを返す
@@ -56,7 +57,7 @@ export function derive_naked_ship(
     const data = SHIP_DATAS[id];
 
     if (!data) {
-        throw new Error(`id: ${ship_id}の艦は未対応です`);
+        throw new NotYetSupportedShip(`id: ${ship_id}の艦は未対応です`);
     }
 
     const ship: NakedShip = {

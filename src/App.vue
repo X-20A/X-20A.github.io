@@ -184,7 +184,7 @@ import Header from './components/Header.vue';
 import Option from './components/Option.vue';
 import SvgIcon from './components/SvgIcon.vue';
 import type { SelectedType } from './types';
-import CustomError, { DisallowToSortie, ImageGenerationFailed } from './errors/CustomError';
+import CustomError, { DisallowToSortie, ImageGenerationFailed, NotYetSupportedShip } from './errors/CustomError';
 import {
 	derive_FleetComponents_from_DeckBuilder,
 	derive_DeckBuilder_from_AdoptFleet,

@@ -5,7 +5,10 @@ export default class CustomError extends Error {
     }
 }
 
-/** 指定の海域では出撃できない編成 */
+/** 装備が未対応 */
+export class NotYetSupportedEquip extends CustomError {}
+/** 艦が未対応 */
+export class NotYetSupportedShip extends CustomError {}/** 指定の海域では出撃できない編成 */
 export class DisallowToSortie extends CustomError {}
 /** 分岐条件に漏れがある */
 export class OmissionOfConditions extends CustomError {}

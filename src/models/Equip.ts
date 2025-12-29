@@ -1,6 +1,6 @@
 import type { EquipType } from "../data/equip";
 import type { Improvement } from "../types";
-import CustomError from "../errors/CustomError";
+import { NotYetSupportedEquip } from "../errors/CustomError";
 import EQUIP_DATAS from "../data/equip";
 import { EquipId } from "../types/equipId";
 
@@ -28,7 +28,7 @@ export type Equip = {
  * @param slot_index スロット番号
  * @param is_ex 増設かどうか
  * @returns Equipオブジェクト
- * @throws CustomError 未対応装備の場合
+ * @throws NotYetSupportedEquip 未対応装備の場合
  */
 export function derive_equip(
     id: number,
@@ -39,7 +39,7 @@ export function derive_equip(
     const data = EQUIP_DATAS[equip_id];
 
     if (!data) {
-        throw new CustomError(`id: ${id}の装備は未対応です`);
+        throw new NotYetSupportedEquip(`id: ${id}の装備は未対応です`);
     }
 
     const equip: Equip = {
