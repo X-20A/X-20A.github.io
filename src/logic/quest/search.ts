@@ -145,11 +145,11 @@ export type ViewQuestData = {
     area_sim_results: AreaSimResult[],
 }
 
-export async function calc_view_quest_data(
+export function calc_view_quest_data(
     quest_datas: QuestData[],
     fleet: AdoptFleet,
     options: OptionsType,
-): Promise<ViewQuestData[]> {
+): ViewQuestData[] {
     const view_quest_datas: ViewQuestData[] = quest_datas.map(quest_data => {
         const composition_condition_state =
             evaluate_condition(quest_data.condition, fleet);

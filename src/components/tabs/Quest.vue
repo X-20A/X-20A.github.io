@@ -153,13 +153,13 @@ const filtered_view_quest_datas = computed<readonly ViewQuestData[]>(() => {
 
 watch(
 	[selected_area, adopt_fleet, options],
-	async (): Promise<void> => {
+	() => {
 		if (!selected_area.value || !adopt_fleet.value || !options.value) {
 			view_quest_datas.value = [];
 			return;
 		}
 
-		view_quest_datas.value = await calc_view_quest_data(
+		view_quest_datas.value = calc_view_quest_data(
 			QUEST_DATA_VALUES,
 			adopt_fleet.value,
 			options.value,
