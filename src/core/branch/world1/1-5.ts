@@ -17,7 +17,7 @@ export function calc_1_5(
 
     switch (node) {
         case null:
-            return 'A';
+            return '1';
         case 'D':
             if (ships_length === 1) {
                 return 'E';
