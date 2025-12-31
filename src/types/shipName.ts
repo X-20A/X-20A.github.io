@@ -828,4 +828,6 @@ export type ShipName =
     | 'Wasp'
     | 'Wasp改'
     | '秋月改二'
+    | 'Thonburi'
+    | 'Thonburi改'
 ;

@@ -28,7 +28,7 @@
 				</div>
 			</template>
 		</template>
-	</div>
+	</div>nyo~
 </template>
 
 <script setup lang="ts">
