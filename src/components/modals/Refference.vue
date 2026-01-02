@@ -21,10 +21,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, defineAsyncComponent } from 'vue';
 import Route from '../tabs/Route.vue';
 import Branch from '../tabs/Branch.vue';
-import Quest from '../tabs/Quest.vue';
+
+// Route, Branchは非同期読込すると却ってモタる
+const Quest = defineAsyncComponent(() => import(
+	'../tabs/Quest.vue'
+));
+
 import { useModalStore, useStore } from '../../stores';
 
 /** タブ識別子 */
