@@ -1,14 +1,12 @@
-import { SimFleet } from "../../../models/fleet/SimFleet";
-import { PreSailNull } from "../../../types/brand";
-import { BranchResponse } from "../../../types";
-import { destructuring_assignment_helper, omission_of_conditions } from "..";
+import { CalcFnNoCondition } from "..";
 import { is_fleet_speed_fast_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
 import { is_flagship_CL, include_ship_names } from "../../../models/fleet/AdoptFleet";
+import { destructuring_assignment_helper, omission_of_conditions } from "../util";
 
-export function calc_6_4(
-    node: string | PreSailNull,
-    sim_fleet: SimFleet,
-): BranchResponse[] | string {
+export const calc_6_4: CalcFnNoCondition = (
+    node,
+    sim_fleet,
+) => {
     const {
         fleet, fleet_type, ships_length, speed, seek, route,
         drum_carrier_count, craft_carrier_count, radar_carrier_count,

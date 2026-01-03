@@ -1,16 +1,14 @@
-import { SimFleet } from "../../../models/fleet/SimFleet";
-import { PreSailNull } from "../../../types/brand";
-import { BranchResponse } from "../../../types";
-import { destructuring_assignment_helper, omission_of_conditions } from "..";
+import { CalcFnWithCondition } from "..";
 import { is_fleet_speed_fast_or_more, is_fleet_speed_faster_or_more } from "../../../logic/speed/predicate";
 import { count_Yamato_class } from "../../../models/fleet/AdoptFleet";
 import { is_fleet_combined } from "../../../models/fleet/predicate";
+import { destructuring_assignment_helper, omission_of_conditions } from "../util";
 
-export function calc_59_4(
-    node: string | PreSailNull,
-    sim_fleet: SimFleet,
-    option: Record<string, string>,
-): BranchResponse[] | string {
+export const calc_59_4: CalcFnWithCondition = (
+    node,
+    sim_fleet,
+    option,
+) => {
     const {
         fleet, fleet_type, ships_length, speed, seek, route,
         drum_carrier_count, craft_carrier_count, radar_carrier_count,
@@ -82,15 +80,9 @@ export function calc_59_4(
             }
             return 'L';
         case 'F':
-            if (true) {
-                return 'F1';
-            }
-            return 'F2';
+            return 'F1';
         case 'G':
-            if (true) {
-                return 'H';
-            }
-            return 'K';
+            return 'H';
         case 'I':
             if (CVH > 1) {
                 return 'J';
@@ -98,15 +90,9 @@ export function calc_59_4(
             if (CLE === 0 && Ds < 3) {
                 return 'J';
             }
-            if (true) {
-                return 'L';
-            }
-            return 'J';
+            return 'L';
         case 'J':
-            if (true) {
-                return 'L';
-            }
-            return 'K';
+            return 'L';
         case 'M':
             if (CVH > 0) {
                 return 'N';
@@ -187,15 +173,9 @@ export function calc_59_4(
             }
             return 'Z';
         case 'A2':
-            if (option.A2 === 'B') {
-                return 'B';
-            }
-            return 'C';
+            return option.A2;
         case 'D':
-            if (option.D === 'E') {
-                return 'E';
-            }
-            return 'F';
+            return option.D;
     }
 
     omission_of_conditions(node, sim_fleet);

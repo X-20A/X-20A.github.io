@@ -1,13 +1,11 @@
-import { SimFleet } from "../../../models/fleet/SimFleet";
-import { PreSailNull } from "../../../types/brand";
-import { BranchResponse } from "../../../types";
-import { destructuring_assignment_helper, omission_of_conditions } from "..";
+import { CalcFnWithCondition } from "..";
+import { destructuring_assignment_helper, omission_of_conditions } from "../util";
 
-export function calc_6_3(
-    node: string | PreSailNull,
-    sim_fleet: SimFleet,
-    option: Record<string, string>,
-): BranchResponse[] | string {
+export const calc_6_3: CalcFnWithCondition = (
+    node,
+    sim_fleet,
+    option,
+) => {
     const {
         fleet, fleet_type, ships_length, speed, seek, route,
         drum_carrier_count, craft_carrier_count, radar_carrier_count,
@@ -20,9 +18,7 @@ export function calc_6_3(
         case null:
             return '1';
         case 'A':
-            return option.A === 'B'
-                ? 'B'
-                : 'C';
+            return option.A;
         case 'E':
             if (AV < 2) {
                 if (CL < 2 && DD > 2) {

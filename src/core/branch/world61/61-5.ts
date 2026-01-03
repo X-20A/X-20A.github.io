@@ -1,13 +1,11 @@
-import { SimFleet } from "../../../models/fleet/SimFleet";
-import { PreSailNull } from "../../../types/brand";
-import { BranchResponse } from "../../../types";
-import { destructuring_assignment_helper, omission_of_conditions } from "..";
+import { CalcFnWithCondition } from "..";
 import { is_fleet_speed_fast_or_more, is_fleet_speed_faster_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
 import { is_fleet_carrier, is_fleet_combined, is_fleet_striking, is_fleet_surface } from "../../../models/fleet/predicate";
 import { AdoptFleet, count_Yamato_class } from "../../../models/fleet/AdoptFleet";
 import { EquippedShip } from "../../../models/ship/EquippedShip";
 import { includes_ship_name, is_CVs } from "../../../models/ship/predicate";
 import { ShipName } from "../../../types/shipName";
+import { destructuring_assignment_helper, omission_of_conditions } from "../util";
 
 const TARGET_SHIP_NAMES: ShipName[] = [
     '伊勢改二', '日向改二',
@@ -48,11 +46,11 @@ const every_carriers_has_rench = (
     })
 }
 
-export function calc_61_5(
-    node: string | PreSailNull,
-    sim_fleet: SimFleet,
-    option: Record<string, string>,
-): BranchResponse[] | string {
+export const calc_61_5: CalcFnWithCondition = (
+    node,
+    sim_fleet,
+    option,
+) => {
     const {
         fleet, fleet_type, ships_length, speed, seek, route,
         drum_carrier_count, craft_carrier_count, radar_carrier_count,
@@ -317,10 +315,8 @@ export function calc_61_5(
             }
             return 'ZZ';
         case 'A2':
-            return option.A2 === 'B2'
-                ? 'B2'
-                : 'E';
+            return option.A2;
     }
 
     omission_of_conditions(node, sim_fleet);
-}
+};

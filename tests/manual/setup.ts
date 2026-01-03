@@ -38,13 +38,13 @@ export const generate_sim_set = () => {
     ]; // @expansion
 
     type MapKey = `${number}-${number}`; // '4-5' などのキー
-    type PhaseKey = 'phase' | 'difficulty' | 'tag' | 'is_third' |string; // 特定のキーを定義しつつ汎用性も持たせる
+    type PhaseKey = 'phase' | 'difficulty' | 'tag' | 'is_third' | string; // 特定のキーを定義しつつ汎用性も持たせる
     type RouteMap = Record<PhaseKey, string[]>; // 各キーに対して行き先の配列を持つ
     type Options = Record<MapKey, RouteMap>; // マップキーと対応するルート情報
 
     const options: Options = {
         '4-5': { 'A': ['B','D'], 'C': ['D','F'], 'I': ['G','J'] },
-        '5-3': { 'O': ['K','Q'] },
+        '5-3': { 'O': ['K','P'] },
         '5-5': { 'F': ['D','J'] },
         '6-3': { 'A': ['B','C'] },
         '7-3': { 'phase': ['1','2'] },
@@ -64,7 +64,7 @@ export const generate_sim_set = () => {
         '60-2': { 'phase': ['1', '2', '3'], 'B': ['C', 'D'], 'E': ['F', 'F1'], 'N': ['O', 'P'] },
         '60-3': { 'phase': ['1', '2', '3', '4', '5'], 'difficulty': ['1', '2', '3', '4'], 'A': ['B', 'C'], 'C': ['D', 'E'], 'H': ['H1', 'I'], 'M': ['M1', 'M2'], 'S': ['S1', 'S2'] },
         '60-4': { 'phase': ['1', '2', '3'], 'A': ['B', 'D'], 'F': ['F1', 'G'], 'G': ['G1', 'H'] },
-        '60-5': { 'phase': ['1', '2', '3'], 'difficulty': ['1', '2', '3', '4'], 'B': ['B1', 'B2'], 'D': ['D1', 'D2'] },
+        '60-5': { 'phase': ['1', '2', '3'], 'difficulty': ['1', '2', '3', '4'], 'B': ['B1', 'B2'], 'D': ['D1', 'E'] },
         '60-6': { 'phase': ['1', '2', '3'], 'difficulty': ['1', '2', '3', '4'], 'G': ['H', 'J'], 'K': ['J3', 'L'], 'R': ['S', 'T'] },
         '61-1': { 'phase': ['1', '2', '3'], 'A': ['B', 'F'], 'F': ['G', 'J'], 'L': ['M', 'P'], },
         '61-2': { 'phase': ['1', '2', '3'], 'A': ['B', 'F'] },

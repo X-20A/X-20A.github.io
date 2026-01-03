@@ -1,14 +1,12 @@
-import { SimFleet } from "../../../models/fleet/SimFleet";
-import { PreSailNull } from "../../../types/brand";
-import { BranchResponse } from "../../../types";
-import { destructuring_assignment_helper, omission_of_conditions } from "..";
+import { CalcFnWithCondition } from "..";
 import { is_fleet_speed_faster_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
+import { destructuring_assignment_helper, omission_of_conditions } from "../util";
 
-export function calc_5_3(
-    node: string | PreSailNull,
-    sim_fleet: SimFleet,
-    option: Record<string, string>,
-): BranchResponse[] | string {
+export const calc_5_3: CalcFnWithCondition = (
+    node,
+    sim_fleet,
+    option,
+) => {
     const {
         fleet, fleet_type, ships_length, speed, seek, route,
         drum_carrier_count, craft_carrier_count, radar_carrier_count,
@@ -123,9 +121,7 @@ export function calc_5_3(
                 { node: 'N', rate: 0.5 },
             ];
         case 'O':
-            return option.O === 'K'
-                ? 'K'
-                : 'P';
+            return option.O;
         case 'K':
             if (DD > 3 || (DD === 3 && CL === 1)) {
                 return 'H';

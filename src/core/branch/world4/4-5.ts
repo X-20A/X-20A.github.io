@@ -1,14 +1,12 @@
-import { SimFleet } from "../../../models/fleet/SimFleet";
-import { PreSailNull } from "../../../types/brand";
-import { BranchResponse } from "../../../types";
-import { destructuring_assignment_helper, omission_of_conditions } from "..";
+import { CalcFnWithCondition } from "..";
 import { is_fleet_speed_fast_or_more, is_fleet_speed_faster_or_more, is_fleet_speed_fastest, is_fleet_speed_slow } from "../../../logic/speed/predicate";
+import { destructuring_assignment_helper, omission_of_conditions } from "../util";
 
-export function calc_4_5(
-    node: string | PreSailNull,
-    sim_fleet: SimFleet,
-    option: Record<string, string>,
-): BranchResponse[] | string {
+export const calc_4_5: CalcFnWithCondition = (
+    node,
+    sim_fleet,
+    option,
+) => {
     const {
         fleet, fleet_type, ships_length, speed, seek, route,
         drum_carrier_count, craft_carrier_count, radar_carrier_count,
@@ -26,13 +24,9 @@ export function calc_4_5(
                 { node: 'C', rate: 0.5 },
             ];
         case 'A':
-            return option.A === 'B'
-                ? 'B'
-                : 'D';
+            return option.A;
         case 'C':
-            return option.C === 'D'
-                ? 'D'
-                : 'F';
+            return option.C;
         case 'E':
             if (
                 is_fleet_speed_faster_or_more(speed) ||
@@ -65,9 +59,7 @@ export function calc_4_5(
             }
             return 'K';
         case 'I':
-            return option.I === 'G'
-                ? 'G'
-                : 'J';
+            return option.I;
         case 'K':
             if (route.includes('E')) {
                 return 'M';

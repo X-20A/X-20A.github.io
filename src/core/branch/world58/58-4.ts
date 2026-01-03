@@ -1,16 +1,14 @@
-import { SimFleet } from "../../../models/fleet/SimFleet";
-import { PreSailNull } from "../../../types/brand";
-import { BranchResponse } from "../../../types";
-import { destructuring_assignment_helper, omission_of_conditions } from "..";
 import { count_carriers, count_Yamato_class, include_ship_names } from "../../../models/fleet/AdoptFleet";
 import { is_fleet_speed_fast_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
 import { is_fleet_carrier, is_fleet_combined, is_fleet_surface, is_fleet_transport } from "../../../models/fleet/predicate";
+import { destructuring_assignment_helper, omission_of_conditions } from "../util";
+import { CalcFnWithCondition } from "..";
 
-export function calc_58_4(
-    node: string | PreSailNull,
-    sim_fleet: SimFleet,
-    option: Record<string, string>,
-): BranchResponse[] | string {
+export const calc_58_4: CalcFnWithCondition = (
+    node,
+    sim_fleet,
+    option,
+) => {
     const {
         fleet, fleet_type, ships_length, speed, seek, route,
         drum_carrier_count, craft_carrier_count, radar_carrier_count,
@@ -309,10 +307,7 @@ export function calc_58_4(
             }
             return 'Y';
         case 'B':
-            if (option.B === 'C') {
-                return 'C';
-            }
-            return 'D';
+            return option.B;
     }
 
     omission_of_conditions(node, sim_fleet);

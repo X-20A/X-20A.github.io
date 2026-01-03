@@ -1,15 +1,13 @@
-import { SimFleet } from "../../../models/fleet/SimFleet";
-import { PreSailNull } from "../../../types/brand";
-import { BranchResponse } from "../../../types";
-import { destructuring_assignment_helper, omission_of_conditions } from "..";
 import { count_ship, count_Taiyo_class, include_ship_names } from "../../../models/fleet/AdoptFleet";
 import { is_fleet_speed_faster_or_more } from "../../../logic/speed/predicate";
+import { destructuring_assignment_helper, omission_of_conditions } from "../util";
+import { CalcFnWithCondition } from "..";
 
-export function calc_7_4(
-    node: string | PreSailNull,
-    sim_fleet: SimFleet,
-    option: Record<string, string>,
-): BranchResponse[] | string {
+export const calc_7_4: CalcFnWithCondition = (
+    node,
+    sim_fleet,
+    option,
+) => {
     const {
         fleet, fleet_type, ships_length, speed, seek, route,
         drum_carrier_count, craft_carrier_count, radar_carrier_count,
@@ -64,9 +62,7 @@ export function calc_7_4(
             }
             return 'J';
         case 'F':
-            return option.F === 'H'
-                ? 'H'
-                : 'J';
+            return option.F;
         case 'G': // 索敵で分岐するようだが不明 とりあえず素通りで実装
             return 'L';
         case 'J': // ややこひ～

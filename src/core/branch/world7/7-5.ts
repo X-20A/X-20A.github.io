@@ -1,14 +1,12 @@
-import { SimFleet } from "../../../models/fleet/SimFleet";
-import { PreSailNull } from "../../../types/brand";
-import { BranchResponse } from "../../../types";
-import { destructuring_assignment_helper, omission_of_conditions } from "..";
+import { CalcFnWithCondition } from "..";
 import { is_fleet_speed_fast_or_more, is_fleet_speed_faster_or_more, is_fleet_speed_fastest, is_fleet_speed_slow } from "../../../logic/speed/predicate";
+import { destructuring_assignment_helper, omission_of_conditions } from "../util";
 
-export function calc_7_5(
-    node: string | PreSailNull,
-    sim_fleet: SimFleet,
-    option: Record<string, string>,
-): BranchResponse[] | string {
+export const calc_7_5: CalcFnWithCondition = (
+    node,
+    sim_fleet,
+    option,
+) => {
     const {
             fleet, fleet_type, ships_length, speed, seek, route,
             arBulge_carrier_count, SBB_count,
@@ -72,13 +70,9 @@ export function calc_7_5(
             }
             return 'F';
         case 'F':
-            return option.F === 'G'
-                ? 'G'
-                : 'J';
+            return option.F;
         case 'H':
-            return option.H === 'I'
-                ? 'I'
-                : 'K';
+            return option.H;
         case 'I':
             if (seek.c4 < 53) {
                 return 'L';
@@ -114,9 +108,7 @@ export function calc_7_5(
             }
             return 'N';
         case 'O':
-            return option.O === 'P'
-                ? 'P'
-                : 'Q';
+            return option.O;
         case 'P': // 🤧
             if (seek.c4 < 58) {
                 return 'S';

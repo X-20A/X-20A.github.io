@@ -62,10 +62,14 @@ type EventAreaId =
 
 export type AreaId = NormalAreaId | EventAreaId
 
-export type BranchResponse = {
+export type ProbabilityBranchInfo = {
     node: string;
     rate: number;
-};
+}
+
+export type BranchResponse =
+    | ProbabilityBranchInfo[]
+    | string
 
 export type SimResult = {
     route: string[];

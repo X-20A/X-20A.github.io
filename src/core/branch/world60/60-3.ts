@@ -1,16 +1,14 @@
-import { SimFleet } from "../../../models/fleet/SimFleet";
-import { PreSailNull } from "../../../types/brand";
-import { BranchResponse } from "../../../types";
-import { destructuring_assignment_helper, omission_of_conditions } from "..";
 import { count_Daigo_ships, count_ship, include_ship_names } from "../../../models/fleet/AdoptFleet";
 import { is_fleet_speed_fast_or_more, is_fleet_speed_faster_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
 import { is_fleet_combined, is_fleet_transport } from "../../../models/fleet/predicate";
+import { destructuring_assignment_helper, omission_of_conditions } from "../util";
+import { CalcFnWithCondition } from "..";
 
-export function calc_60_3(
-    node: string | PreSailNull,
-    sim_fleet: SimFleet,
-    option: Record<string, string>,
-): BranchResponse[] | string {
+export const calc_60_3: CalcFnWithCondition = (
+    node,
+    sim_fleet,
+    option,
+) => {
     const {
         fleet, fleet_type, ships_length, speed, seek, route,
         drum_carrier_count, craft_carrier_count, radar_carrier_count,
@@ -257,25 +255,15 @@ export function calc_60_3(
             }
             return 'X';
         case 'A':
-            return option.A === 'B'
-                ? 'B'
-                : 'C';
+            return option.A;
         case 'C':
-            return option.C === 'D'
-                ? 'D'
-                : 'E';
+            return option.C;
         case 'H':
-            return option.H === 'H1'
-                ? 'H1'
-                : 'I';
+            return option.H;
         case 'M':
-            return option.M === 'M1'
-                ? 'M1'
-                : 'M2';
+            return option.M;
         case 'S':
-            return option.S === 'S1'
-                ? 'S1'
-                : 'S2';
+            return option.S;
     }
 
     omission_of_conditions(node, sim_fleet);
