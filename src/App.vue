@@ -157,7 +157,7 @@
 		<ErrorView />
 		<CommandEvacuation />
 	</div>
-	<NomalResourcePopup v-if="nomalResource" :data="nomalResource" :style="popupStyle" class="popup popup-info" />
+	<StandardResourcePopup v-if="StandardResource" :data="StandardResource" :style="popupStyle" class="popup popup-info" />
 	<SyonanResourcePopup v-if="syonanResource" :data="syonanResource" :style="popupStyle" class="popup popup-info" />
 	<template v-if="branchHtml === '<p>$sw</p>'">
 		<div class="popup popup-info" :style="popupStyle">
@@ -214,7 +214,7 @@ import { do_delete_URL_param, calc_URL_param } from './logic/url';
 import { do_combine_blobs, do_download_data_URL } from './logic/efffects/render';
 import type { FleetComponent } from './models/fleet/FleetComponent';
 import type { SyonanResource } from './models/resource/SyonanResource';
-import type { NomalResource } from './models/resource/NomalResource';
+import type { StandardResource } from './models/resource/StandardResource';
 import DetailBox from './components/Detail.vue';
 import Footer from './components/Footer.vue';
 import { derive_sim_executer, start_sim } from './core/SimExecutor';
@@ -238,8 +238,8 @@ const ErrorView = defineAsyncComponent(() => import(
 const CommandEvacuation = defineAsyncComponent(() => import(
 	'./components/modals/CommandEvacuation.vue'
 ));
-const NomalResourcePopup = defineAsyncComponent(() => import(
-	'./components/resource/NomalResourcePopup.vue'
+const StandardResourcePopup = defineAsyncComponent(() => import(
+	'./components/resource/StandardResourcePopup.vue'
 ));
 const SyonanResourcePopup = defineAsyncComponent(() => import(
 	'./components/resource/SyonanResourcePopup.vue'
@@ -541,7 +541,7 @@ async function draw_map() {
 		NODE_DATAS,
 		EDGE_DATAS,
 		syonanResource,
-		nomalResource
+		StandardResource
 	);
 }
 
@@ -554,12 +554,12 @@ const popupStyle = ref({
 
 const node = ref<string | null>(null);
 
-const nomalResource = ref<NomalResource | null>(null);
+const StandardResource = ref<StandardResource | null>(null);
 
 const syonanResource = ref<SyonanResource | null>(null);
 
 const hidePopup = () => {
-	nomalResource.value = null;
+	StandardResource.value = null;
 	syonanResource.value = null;
 	branchHtml.value = null;
 }

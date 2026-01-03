@@ -7,7 +7,7 @@ type MockData = {
     deck: string,
 }
 
-export const nomal_mock_datas: MockData[] = [
+export const normal_mock_datas: MockData[] = [
     {
         area: '60-1', routes: ['1-A-B-B2-C1-C2'],
         option: {

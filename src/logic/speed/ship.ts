@@ -6,7 +6,7 @@ type PreInfo = {
     /** 改良型艦本式タービン 装備フラグ */
     readonly has_turbine: boolean,
     /** 強化型艦本式缶 装備数 */
-    readonly nomal_kan_count: number,
+    readonly normal_kan_count: number,
     /** 新型高温高圧缶 装備数 */
     readonly new_kan_count: number,
     /** 新型高温高圧缶☆7↑ 装備数 */
@@ -14,7 +14,7 @@ type PreInfo = {
 }
 const INITIAL: PreInfo = {
     has_turbine: false,
-    nomal_kan_count: 0,
+    normal_kan_count: 0,
     new_kan_count: 0,
     power_kan_count: 0,
 } as const;
@@ -26,7 +26,7 @@ const calc_pre_info = (
         if (item.id === 33) {
             return { ...acc, has_turbine: true };
         } else if (item.id === 34) {
-            return { ...acc, nomal_kan_count: acc.nomal_kan_count + 1 };
+            return { ...acc, normal_kan_count: acc.normal_kan_count + 1 };
         } else if (item.id === 87) {
             return {
                 ...acc,
@@ -50,12 +50,12 @@ export function calc_ship_speed(
 ): Speed {
     const {
         has_turbine,
-        nomal_kan_count,
+        normal_kan_count,
         new_kan_count,
         power_kan_count
     } = calc_pre_info(equips);
 
-    const total_kan_count = nomal_kan_count + new_kan_count;
+    const total_kan_count = normal_kan_count + new_kan_count;
 
     switch (speed_group) {
         case SpeedGroup.FastA:
@@ -140,7 +140,7 @@ export function calc_ship_speed(
         case SpeedGroup.SlowD:
             if (
                 (has_turbine && new_kan_count)
-                || (has_turbine && nomal_kan_count >= 3)
+                || (has_turbine && normal_kan_count >= 3)
             ) {
                 return Speed.faster;
             }
@@ -150,7 +150,7 @@ export function calc_ship_speed(
 
             return Speed.slow;
         case SpeedGroup.SlowE:
-            if (has_turbine && new_kan_count && nomal_kan_count >= 2) {
+            if (has_turbine && new_kan_count && normal_kan_count >= 2) {
                 return Speed.fastest;
             }
             if (has_turbine && new_kan_count >= 2) {

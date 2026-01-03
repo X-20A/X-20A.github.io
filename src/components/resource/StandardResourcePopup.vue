@@ -22,7 +22,7 @@
 				+
 				<span class="tooltip-container">
 					<img :src="data.icon_suite.craft" class="item-icon craft-icon">
-					<span class="tooltip-text" v-html="data.formattedCraftNames"></span>
+					<span class="tooltip-text">{{ data.formattedCraftNames }}</span>
 				</span> {{ data.fleet_total_craft }} * {{
 				data.actual_craft_coefficient }}
 			</p>
@@ -40,9 +40,9 @@
 	</div>
 </template>
 <script setup lang="ts">
-import { type NomalResource, ResourceType } from '../../models/resource/NomalResource';
+import { type StandardResource, ResourceType } from '../../models/resource/StandardResource';
 
-defineProps<{ data: NomalResource | null }>();
+defineProps<{ data: StandardResource | null }>();
 </script>
 <style scoped>
 .item-icon {

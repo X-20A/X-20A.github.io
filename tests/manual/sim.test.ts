@@ -10,7 +10,7 @@ import type { AreaId, OptionsType } from '../../src/types';
 import { derive_FleetComponents_from_DeckBuilder } from '../../src/logic/deckBuilder';
 import { derive_adopt_fleet, calc_escort_fleet_ship_names, calc_main_fleet_ship_names, MAX_SEEK } from '../../src/models/fleet/AdoptFleet';
 import { calc_URL_param } from '../../src/logic/url';
-import { nomal_mock_datas, astray_mock_datas } from '../expects/route';
+import { normal_mock_datas, astray_mock_datas } from '../expects/route';
 import { EDGE_DATAS, NODE_DATAS, NT as NodeType } from '../../src/data/map';
 import type { CommandEvacuation } from '../../src/core/CommandEvacuation';
 import { generate_sim_set } from './setup';
@@ -139,7 +139,7 @@ describe('Simテスト', () => {
     }, 30000);
 
     it('route-test: モック艦隊をSimにかけて、正しいルートを返すことを確認', async () => {
-        const mock_datas = nomal_mock_datas.concat(astray_mock_datas);
+        const mock_datas = normal_mock_datas.concat(astray_mock_datas);
 
         for (const mock_data of mock_datas) {
             // 海域

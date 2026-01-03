@@ -6,11 +6,11 @@ import type cytoscape from 'cytoscape';
 import type { Ref } from 'vue';
 import type { AdoptFleet } from '../../models/fleet/AdoptFleet';
 import { derive_Syonan_resource, type SyonanResource } from '../../models/resource/SyonanResource';
-import { derive_normal_resource, type NomalResource } from '../../models/resource/NomalResource';
 import type { AreaId, ItemIconKey, NodeDatas, EdgeDatas } from '../../types';
 import type { StoreType, ModalStoreType } from '../../stores/types';
 import { is_special_resource_node } from '../resource';
 import type { ConstType } from '../../constants/const';
+import { derive_standard_resource, StandardResource } from '../../models/resource/StandardResource';
 
 /**
  * cytoscapeインスタンスにイベントを登録する
@@ -49,7 +49,7 @@ export function register_Cytoscape_events(
     node_datas: NodeDatas,
     edge_datas: EdgeDatas,
     syonanResource: Ref<SyonanResource | null>,
-    nomalResource: Ref<NomalResource | null>
+    StandardResource: Ref<StandardResource | null>
 ) {
     cytoscape_core.on('mousedown tapstart', (event) => {
         if (!cytoscape_core) return;
@@ -84,7 +84,7 @@ export function register_Cytoscape_events(
             }
         } else {
             if (adoptFleet.value) {
-                nomalResource.value = derive_normal_resource(
+                StandardResource.value = derive_standard_resource(
                     drewArea.value,
                     node,
                     adoptFleet.value,

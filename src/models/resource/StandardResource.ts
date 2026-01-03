@@ -1,4 +1,4 @@
-import { type AdoptFleet, count_total_drum, count_total_valid_craft } from "../../models/fleet/AdoptFleet";
+import { type AdoptFleet, count_total_drum, count_total_valid_craft } from "../fleet/AdoptFleet";
 import type { AreaId, ItemIconKey } from "../../types";
 import type { NodeResource, ResourceData } from "../../types/resource";
 import { derive_resource_icon_suite, type ResourceIconSuite } from "./ResourceIconSuite";
@@ -140,9 +140,9 @@ const RESOURCE_DATA: ResourceData = {
 } as const;
 
 /**
- * NomalResource型
+ * StandardResource型
  */
-export type NomalResource = {
+export type StandardResource = {
     fleet_total_drum: number;
     fleet_total_craft: number;
     icon_suite: ResourceIconSuite;
@@ -161,25 +161,25 @@ export type NomalResource = {
 };
 
 /**
- * NomalResourceオブジェクトを生成
+ * StandardResourceオブジェクトを生成
  * @param node_resource ノード資源データ
  * @param fleet 艦隊情報
- * @param respurce_icons 資源アイコン
+ * @param resource_icons 資源アイコン
  * @param drum ドラム缶アイコン
  * @param craft 大発系アイコン
- * @returns NomalResourceオブジェクト
+ * @returns StandardResourceオブジェクト
  */
-const derive_nomal_resource_Object = (
+const derive_standard_resource_Object = (
     node_resource: NodeResource,
     fleet: AdoptFleet,
-    respurce_icons: Record<ItemIconKey, string>,
+    resource_icons: Record<ItemIconKey, string>,
     drum: string,
     craft: string,
     craftNames: ReadonlyArray<string>,
-): NomalResource => {
+): StandardResource => {
     const fleet_total_drum = count_total_drum(fleet);
     const fleet_total_craft = count_total_valid_craft(fleet);
-    const icon_suite = derive_resource_icon_suite(respurce_icons, drum, craft);
+    const icon_suite = derive_resource_icon_suite(resource_icons, drum, craft);
 
     let actual_drum_coefficient: number | undefined = undefined;
     let actual_craft_coefficient: number | undefined = undefined;
@@ -199,7 +199,7 @@ const derive_nomal_resource_Object = (
 
     const formattedCraftNames = calc_formated_craft_names(craftNames);
 
-    const resource: NomalResource = {
+    const resource: StandardResource = {
         fleet_total_drum,
         fleet_total_craft,
         icon_suite,
@@ -218,16 +218,16 @@ const derive_nomal_resource_Object = (
 }
 
 /**
- * NomalResourceオブジェクトを生成します。
+ * StandardResourceオブジェクトを生成します。
  * @param area_id 海域ID
  * @param node ノード名
  * @param fleet 艦隊情報
  * @param resource_icons アイコン情報
  * @param drum ドラム缶アイコン
  * @param craft 大発系アイコン
- * @returns NomalResourceオブジェクトまたはnull
+ * @returns StandardResourceオブジェクトまたはnull
  */
-export function derive_normal_resource(
+export function derive_standard_resource(
     area_id: AreaId,
     node: string,
     fleet: AdoptFleet,
@@ -235,13 +235,13 @@ export function derive_normal_resource(
     drum: string,
     craft: string,
     craftNames: ReadonlyArray<string>,
-): NomalResource | null {
+): StandardResource | null {
     if (
         !RESOURCE_DATA[area_id] ||
         !RESOURCE_DATA[area_id][node]
     ) return null;
 
-    return derive_nomal_resource_Object(
+    return derive_standard_resource_Object(
         RESOURCE_DATA[area_id][node],
         fleet,
         resource_icons,
