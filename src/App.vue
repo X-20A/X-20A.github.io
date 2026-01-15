@@ -1,7 +1,7 @@
 <template>
 	<Header />
 	<div class="container">
-		<button class="design-button area-select-button" @pointerdown="showArea">
+		<button class="design-button area-select-button" @pointerdown="show_area">
 			{{ selectedArea ? '海域: ' + selectedArea : '海域' }}
 		</button>
 		<div class="upper-container">
@@ -16,13 +16,13 @@
 							<p class="type-select" v-if="isVisibleTypeSelect" @mouseover="showFleetOptions">艦隊種別</p>
 							<div v-if="isFleetOptionsVisible" class="fleet-option-box" @mouseover="showFleetOptions"
 								@mouseleave="hideFleetOptions">
-								<span class="fleet-type" @pointerdown=updateSelectedType(1)>第一艦隊</span>
-								<span class="fleet-type" @pointerdown=updateSelectedType(2)>第二艦隊</span>
-								<span class="fleet-type" @pointerdown=updateSelectedType(3)>第三艦隊</span>
-								<span class="fleet-type" @pointerdown=updateSelectedType(4)>第四艦隊</span>
-								<span class="fleet-type" @pointerdown=updateSelectedType(5)>空母機動部隊</span>
-								<span class="fleet-type" @pointerdown=updateSelectedType(6)>水上打撃部隊</span>
-								<span class="fleet-type" @pointerdown=updateSelectedType(7)>輸送護衛部隊</span>
+								<span class="fleet-type" @pointerdown=update_selected_type(1)>第一艦隊</span>
+								<span class="fleet-type" @pointerdown=update_selected_type(2)>第二艦隊</span>
+								<span class="fleet-type" @pointerdown=update_selected_type(3)>第三艦隊</span>
+								<span class="fleet-type" @pointerdown=update_selected_type(4)>第四艦隊</span>
+								<span class="fleet-type" @pointerdown=update_selected_type(5)>空母機動部隊</span>
+								<span class="fleet-type" @pointerdown=update_selected_type(6)>水上打撃部隊</span>
+								<span class="fleet-type" @pointerdown=update_selected_type(7)>輸送護衛部隊</span>
 							</div>
 						</div>
 						<Option />
@@ -31,13 +31,13 @@
 			</div>
 			<div v-if="adoptFleet">
 				<template v-if="adoptFleet.fleet_type > 0">
-					<p>{{ fleetTypeLabels[adoptFleet.fleet_type] }}</p>
+					<p>{{ FLEET_TYPE_LABELS[adoptFleet.fleet_type] }}</p>
 				</template>
 				<template v-if="adoptFleet.fleet_type === 0 && adoptFleet.ships_length === 7">
 					<p>遊撃部隊</p>
 				</template>
 				<p>
-					<span>{{ speedLabels[adoptFleet.speed] }}</span>
+					<span>{{ SPEED_LABELS[adoptFleet.speed] }}</span>
 					<span> | </span>
 					<span>搭載艦数[ </span>
 
@@ -140,7 +140,7 @@
 			<template v-if="simResult.length > 0">
 				<SvgIcon @pointerdown="switchSeek" name="radar-8" :color="adoptFleet?.seek.c1 === 999 ? '#f6a306' : '#fff'"
 					class="ignore-seek icon-on-map"></SvgIcon>
-				<SvgIcon @pointerdown="showRefference" name="layers" color="#fff" class="reference icon-on-map"></SvgIcon>
+				<SvgIcon @pointerdown="show_refference" name="layers" color="#fff" class="reference icon-on-map"></SvgIcon>
 				<SvgIcon @click="screenShot" name="camera-outline" color="#fff" class="screen-shot icon-on-map" ></SvgIcon>
 			</template>
 			<div id="cy" class="cy">
@@ -151,14 +151,14 @@
 		|| isRefferenceVisible
 		|| isErrorVisible
 		|| isCommandEvacuationVisible"
-		class="modal-overlay" @pointerdown="closeModals">
+		class="modal-overlay" @pointerdown="close_modals">
 		<Area />
 		<Refference />
 		<ErrorView />
 		<CommandEvacuation />
 	</div>
-	<StandardResourcePopup v-if="StandardResource" :data="StandardResource" :style="popupStyle" class="popup popup-info" />
-	<SyonanResourcePopup v-if="syonanResource" :data="syonanResource" :style="popupStyle" class="popup popup-info" />
+	<StandardResourcePopup v-if="standard_resource" :data="standard_resource" :style="popupStyle" class="popup popup-info" />
+	<SyonanResourcePopup v-if="syonan_resource" :data="syonan_resource" :style="popupStyle" class="popup popup-info" />
 	<template v-if="branchHtml === '<p>$sw</p>'">
 		<div class="popup popup-info" :style="popupStyle">
 			<p>
@@ -284,13 +284,13 @@ const isRefferenceVisible = computed(() => modalStore.isRefferenceVisible);
 const isErrorVisible = computed(() => modalStore.isErrorVisible);
 const isCommandEvacuationVisible = computed(() => modalStore.isCommandEvacuationVisible);
 
-const showArea = () => {
+const show_area = () => {
 	modalStore.SHOW_AREA();
 }
-const showRefference = () => {
+const show_refference = () => {
 	modalStore.SHOW_REFFERENCE();
 }
-const closeModals = () => {
+const close_modals = () => {
 	modalStore.HIDE_MODALS();
 }
 
@@ -321,14 +321,14 @@ const branchData = computed(() => store.branchData);
 
 const icons = computed(() => store.icons);
 
-const speedLabels = {
+const SPEED_LABELS = {
 	1: '低速艦隊',
 	2: '高速艦隊',
 	3: '高速+艦隊',
 	4: '最速艦隊',
 };
 
-const fleetTypeLabels = {
+const FLEET_TYPE_LABELS = {
 	0: '', // 通常艦隊 表示されることは無いので空文字
 	1: '空母機動部隊',
 	2: '水上打撃部隊',
@@ -398,7 +398,7 @@ const load_fleet = (deck_string: string): void => {
 	}
 };
 
-const updateSelectedType = (type_id: number) => {
+const update_selected_type = (type_id: number) => {
 	adjustFleetType(type_id);
 }
 
@@ -521,14 +521,14 @@ async function draw_map() {
 		is_first_run = false;
 	}
 
-	hidePopup();
+	hide_popup();
 	store.UPDATE_DREW_AREA(selectedArea.value);
 
 	register_Cytoscape_events(
 		cytoscape_core,
-		generarteBranchHtml,
-		adjustPopupPosition,
-		hidePopup,
+		generarte_branch_html,
+		adjust_popup_position,
+		hide_popup,
 		branchHtml,
 		drewArea,
 		adoptFleet,
@@ -540,8 +540,8 @@ async function draw_map() {
 		modalStore,
 		NODE_DATAS,
 		EDGE_DATAS,
-		syonanResource,
-		StandardResource
+		syonan_resource,
+		standard_resource
 	);
 }
 
@@ -554,17 +554,17 @@ const popupStyle = ref({
 
 const node = ref<string | null>(null);
 
-const StandardResource = ref<StandardResource | null>(null);
+const standard_resource = ref<StandardResource | null>(null);
 
-const syonanResource = ref<SyonanResource | null>(null);
+const syonan_resource = ref<SyonanResource | null>(null);
 
-const hidePopup = () => {
-	StandardResource.value = null;
-	syonanResource.value = null;
+const hide_popup = () => {
+	standard_resource.value = null;
+	syonan_resource.value = null;
 	branchHtml.value = null;
 }
 
-const generarteBranchHtml = (node_name: string): string | null => {
+const generarte_branch_html = (node_name: string): string | null => {
 	node.value = node_name;
 
 	let key = selectedArea.value!;
@@ -589,7 +589,7 @@ const generarteBranchHtml = (node_name: string): string | null => {
 	return node_data;
 };
 
-const adjustPopupPosition = (
+const adjust_popup_position = (
 	cy: cytoscape.Core,
 	element: cytoscape.EventObject,
 ) => {

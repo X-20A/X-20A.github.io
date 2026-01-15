@@ -127,8 +127,6 @@ describe('艦速度テスト', () => {
                 get_speed([TURBINE, NEW_KAN, NEW_KAN, NEW_KAN, NEW_KAN]),
             ];
 
-            console.log('check at ', key);
-
             // 装備不可で検証データなし
             const is_not_SlowD = key !== 'SlowD';
 
