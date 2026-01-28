@@ -933,6 +933,8 @@ const SHIP_DATAS: ShipDatas = {
 
 ,973:{name:'Thonburi',type:ST.DE,seek:8,seek2:38,na:NA.Thai,sg:SG.SlowB}
 ,978:{name:'Thonburi改',type:ST.DE,seek:10,seek2:41,na:NA.Thai,sg:SG.SlowB}
+
+,982:{name:'早波改二',type:ST.DD,seek:11,seek2:55,na:NA.Japan,sg:SG.FastB2}
 }; // @expansion
 //,_:{name:'',type:ST.,seek:0,seek2:0,na:NA.,sg:SG.}
 export default SHIP_DATAS;

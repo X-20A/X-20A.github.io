@@ -830,4 +830,5 @@ export type ShipName =
     | '秋月改二'
     | 'Thonburi'
     | 'Thonburi改'
+    | '早波改二'
 ;
