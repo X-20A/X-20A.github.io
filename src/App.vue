@@ -225,10 +225,8 @@ import { register_Cytoscape_events } from './logic/efffects/cytoscapeEvents';
 import { disassembly_area_id } from './logic/area';
 import lzstring from "lz-string";
 import { Ft as FleetType } from './models/fleet/predicate';
+import Area from './components/modals/Area.vue';
 
-const Area = defineAsyncComponent(() => import(
-	'./components/modals/Area.vue'
-));
 const Refference = defineAsyncComponent(() => import(
 	'./components/modals/Refference.vue'
 ));
