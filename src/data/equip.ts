@@ -610,6 +610,8 @@ const EQUIP_DATAS: EquipDatas = {
 ,566:[0,EquipType.SecGun] // 10.2cm三連装副砲
 ,567:[1,EquipType.Fighter] // Sea Gladiator
 ,568:[3,EquipType.SeaPlaneFighter] // 強風改二(熟練)
+
+,547:[1,EquipType.Fighter] // 震電改二(艦戦型改二)
 } as const; // @expansion
 
 export default EQUIP_DATAS;
