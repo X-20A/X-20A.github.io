@@ -910,29 +910,29 @@ const SHIP_DATAS: ShipDatas = {
 ,737:{name:"Richard P.Leary改",type:ST.DD,seek:21,seek2:61,na:NA.USA,sg:SG.FastB2}
 
 ,998:{name:'Norge',type:ST.DE,seek:3,seek2:6,na:NA.Norge,sg:SG.SlowB}
-,738:{name:'Norge改',type:ST.DE,seek:0,seek2:0,na:NA.Norge,sg:SG.SlowB}
-,999:{name:'Eidsvold',type:ST.DE,seek:0,seek2:8,na:NA.Norge,sg:SG.SlowB}
-,739:{name:'Eidsvold改',type:ST.DE,seek:0,seek2:0,na:NA.Norge,sg:SG.SlowB}
+,738:{name:'Norge改',type:ST.DE,seek:4,seek2:7,na:NA.Norge,sg:SG.SlowB}
+,999:{name:'Eidsvold',type:ST.DE,seek:4,seek2:8,na:NA.Norge,sg:SG.SlowB}
+,739:{name:'Eidsvold改',type:ST.DE,seek:5,seek2:9,na:NA.Norge,sg:SG.SlowB}
 ,1022:{name:'Glorious',type:ST.BB,seek:12,seek2:40,na:NA.Norge,sg:SG.FastB2}
-,1027:{name:'Glorious',type:ST.CV,seek:0,seek2:65,na:NA.Norge,sg:SG.FastB2}
-,740:{name:'Glorious改',type:ST.BB,seek:15,seek2:46,na:NA.Norge,sg:SG.FastB2}
+,1027:{name:'Glorious',type:ST.CV,seek:37,seek2:65,na:NA.Norge,sg:SG.FastB2}
+,740:{name:'Glorious改',type:ST.BB,seek:14,seek2:46,na:NA.Norge,sg:SG.FastB2}
 ,741:{name:'Glorious改',type:ST.CV,seek:42,seek2:86,na:NA.Norge,sg:SG.FastB2}
 
-,993:{name:'樫',type:ST.DD,seek:0,seek2:0,na:NA.Japan,sg:SG.FastB2}
-,742:{name:'樫改',type:ST.DD,seek:0,seek2:0,na:NA.Japan,sg:SG.FastB2}
+,993:{name:'樫',type:ST.DD,seek:7,seek2:26,na:NA.Japan,sg:SG.FastB2}
+,742:{name:'樫改',type:ST.DD,seek:16,seek2:47,na:NA.Japan,sg:SG.FastB2}
 ,985:{name:'Dace',type:ST.SS,seek:12,seek2:45,na:NA.USA,sg:SG.SlowC}
-,990:{name:'Dace改',type:ST.SS,seek:13,seek2:47,na:NA.USA,sg:SG.SlowC}
-,1007:{name:'Leonardo da Vinci',type:ST.SS,seek:0,seek2:0,na:NA.USA,sg:SG.SlowC}
+,990:{name:'Dace改',type:ST.SS,seek:14,seek2:47,na:NA.USA,sg:SG.SlowC}
+,1007:{name:'Leonardo da Vinci',type:ST.SS,seek:15,seek2:50,na:NA.USA,sg:SG.SlowC}
 ,988:{name:'南海',type:ST.AO,seek:2,seek2:4,na:NA.Japan,sg:SG.SlowB}
 ,996:{name:'野埼',type:ST.AO,seek:3,seek2:7,na:NA.Japan,sg:SG.SlowB}
-,1002:{name:'野埼改',type:ST.AO,seek:3,seek2:12,na:NA.Japan,sg:SG.SlowB}
-,1025:{name:'Wasp',type:ST.CV,seek:0,seek2:82,na:NA.USA,sg:SG.FastB2}
-,1030:{name:'Wasp改',type:ST.CV,seek:0,seek2:0,na:NA.USA,sg:SG.FastB2}
+,1002:{name:'野埼改',type:ST.AO,seek:4,seek2:12,na:NA.Japan,sg:SG.SlowB}
+,1025:{name:'Wasp',type:ST.CV,seek:51,seek2:82,na:NA.USA,sg:SG.FastB2}
+,1030:{name:'Wasp改',type:ST.CV,seek:53,seek2:92,na:NA.USA,sg:SG.FastB2}
 
 ,963:{name:'秋月改二',type:ST.DD,seek:14,seek2:56,na:NA.Japan,sg:SG.FastB2}
 
-,973:{name:'Thonburi',type:ST.DE,seek:0,seek2:0,na:NA.Thai,sg:SG.SlowB}
-,978:{name:'Thonburi改',type:ST.DE,seek:0,seek2:0,na:NA.Thai,sg:SG.SlowB}
+,973:{name:'Thonburi',type:ST.DE,seek:8,seek2:38,na:NA.Thai,sg:SG.SlowB}
+,978:{name:'Thonburi改',type:ST.DE,seek:10,seek2:41,na:NA.Thai,sg:SG.SlowB}
 }; // @expansion
 //,_:{name:'',type:ST.,seek:0,seek2:0,na:NA.,sg:SG.}
 export default SHIP_DATAS;

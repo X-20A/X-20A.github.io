@@ -12,6 +12,7 @@
     "route-test": "vitest --run -t 'route-test'",
     "data-test": "vitest --run -t 'data-test'",
     "speed-test": "vitest --run -t 'speed-test'",
+	"quest-test": "vitest --run -t 'quest-test'",
     "tests": "vitest run",
     "tsc": "vue-tsc --noEmit",
     "dep": "depcheck",

@@ -7,7 +7,7 @@ const delay = (
 ) => new Promise(resolve => setTimeout(resolve, ms));
 
 describe('任務データ', () => {
-    it('data-test: 任務データ重複チェック', () => {
+    it('quest-test: 任務データ重複チェック', () => {
         const name_set = new Set();
         const zekamashi_id_set = new Set();
         for (const quest_data of Object.values(QUEST_DATAS)) {
@@ -26,7 +26,7 @@ describe('任務データ', () => {
             zekamashi_id_set.add(zekamashi_id);
         }
     });
-    it('data-test: ぜかましリンク', async () => {
+    it('quest-test: ぜかましリンク', async () => {
         for (const quest_data of Object.values(QUEST_DATAS)) {
             const {
                 zekamashi_id,
