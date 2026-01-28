@@ -88,19 +88,32 @@ export const calc_5_2: CalcFnNoCondition = (
             return 'E';
         case 'D':
             if (
-                (include_ship_names(fleet, '祥鳳') && DD === 3)
-                && (((CA === 1 && (CL === 1 || AO === 1))
-                    || AO === 2))
-            ) return 'G';
-            if (include_ship_names(fleet, '夕張') && DD >= 2) {
-                if (DD === 3
-                    || (AO === 1 && (DD === 2 || CA === 2))
-                    || (AO === 2 && (DD === 1 || CA === 2))
-                    || (include_ship_names(fleet, '祥鳳') && (CA === 2 || AO === 2))
-                ) {
-                    return 'G';
-                }
-                return 'F';
+                include_ship_names(fleet, '夕張') &&
+                include_ship_names(fleet, '祥鳳') &&
+                (DD === 2 && (CA === 2 || AO === 2))
+            ) {
+                return 'G';
+            }
+            if (
+                include_ship_names(fleet, '祥鳳') &&
+                (
+                    ((DD === 3) && CA === 1 && (CL === 1 || AO === 1)) ||
+                    (DD === 3 && AO === 2)
+                )
+            ) {
+                return 'G';
+            }
+            if (
+                include_ship_names(fleet, '夕張') &&
+                (
+                    (DD === 5) ||
+                    (DD === 4 && AO === 1) ||
+                    (DD === 3 && AO === 2) ||
+                    (DD === 2 && AO === 2 && CA === 1) ||
+                    (DD === 2 && AO === 1 && CA === 2)
+                )
+            ) {
+                return 'G';
             }
             return 'F';
         case 'F':
