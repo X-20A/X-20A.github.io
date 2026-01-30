@@ -502,4 +502,5 @@ export type EquipName =
     | 'Sea Gladiator'
     | '強風改二(熟練)'
     | '震電改二(艦戦型改二)'
+    | '三式爆雷投射機改'
 ;

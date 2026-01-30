@@ -612,6 +612,7 @@ const EQUIP_DATAS: EquipDatas = {
 ,568:[3,EquipType.SeaPlaneFighter] // 強風改二(熟練)
 
 ,547:[1,EquipType.Fighter] // 震電改二(艦戦型改二)
+,569:[0,EquipType.DepthCharge] // 三式爆雷投射機改
 } as const; // @expansion
 
 export default EQUIP_DATAS;
