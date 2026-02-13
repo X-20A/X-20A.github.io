@@ -831,4 +831,5 @@ export type ShipName =
     | 'Thonburi'
     | 'Thonburi改'
     | '早波改二'
+    | '飛龍改三'
 ;

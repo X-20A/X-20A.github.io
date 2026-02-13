@@ -100,6 +100,8 @@ export const enum EquipType {
     ArmyUnit = 52,
     /** 煙幕装置|阻塞気球 */
     SmokeScreen = 54,
+    /** 噴式戦闘機 */
+    JetFighter = 56,
     /** 噴式艦爆 */
     JetBomber = 57,
 }
@@ -613,6 +615,9 @@ const EQUIP_DATAS: EquipDatas = {
 
 ,547:[1,EquipType.Fighter] // 震電改二(艦戦型改二)
 ,569:[0,EquipType.DepthCharge] // 三式爆雷投射機改
+
+,570:[6,EquipType.TorpBomber] // 流星改(友永隊)
+,548:[0,EquipType.JetFighter] // 震電改三(試製 噴式震電)
 } as const; // @expansion
 
 export default EQUIP_DATAS;

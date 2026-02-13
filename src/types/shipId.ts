@@ -835,4 +835,5 @@ export type ShipId =
     | 973
     | 978
     | 982
+    | 1031
 ;
