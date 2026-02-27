@@ -618,6 +618,8 @@ const EQUIP_DATAS: EquipDatas = {
 
 ,570:[6,EquipType.TorpBomber] // 流星改(友永隊)
 ,548:[0,EquipType.JetFighter] // 震電改三(試製 噴式震電)
+
+,571:[0,EquipType.Torpedo] // 53cm連装魚雷改(酸素魚雷)
 } as const; // @expansion
 
 export default EQUIP_DATAS;
