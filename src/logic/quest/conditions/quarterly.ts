@@ -84,9 +84,9 @@ export const calc_Bq8: QuestCompositionCondition =
     () => NO_CONDITIONS;
 
 export const calc_Bq9: QuestCompositionCondition = (fleet) => {
-    const { BBV } = fleet.composition;
+    const { CV, CVB, CVL } = fleet.composition;
     return (
-        BBV >= 1
+        CV + CVB + CVL >= 1
     );
 };
 
