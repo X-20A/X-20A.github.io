@@ -95,16 +95,16 @@ const select_area = (area_id: NormalAreaId): void => {
 type QuestFilterType = QuestPeriod | 'All' | 'Both_Area'
 
 const PERIOD_BUTTONS: readonly { label: string; value: QuestFilterType }[] = [
+	{ label: 'Area', value: 'Both_Area' },
 	{ label: 'All', value: 'All' },
 	{ label: 'D', value: 'Daily' },
 	{ label: 'W', value: 'Weekly' },
 	{ label: 'M', value: 'Monthly' },
 	{ label: 'Q', value: 'Quarterly' },
 	{ label: 'Y', value: 'Yearly' },
-	{ label: 'Area', value: 'Both_Area' },
 ];
 
-const selected_period = ref<QuestFilterType | null>('All');
+const selected_period = ref<QuestFilterType | null>('Both_Area');
 
 const select_period = (period: QuestFilterType): void => {
 	selected_period.value =

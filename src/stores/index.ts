@@ -19,7 +19,7 @@ import type { FleetComponent } from '../models/fleet/FleetComponent';
 import { is_battle_node, is_last_stop_node, type CommandEvacuation } from '../core/CommandEvacuation';
 import type { Node } from '../types/brand';
 import { parseOptionsType } from '../models/shemas';
-import { RefferenceTabKey } from '../components/modals/Refference.vue';
+import { TabKey } from '../components/modals/Refference.vue';
 
 export type LoadDataCommands = {
     /** deck読込をスキップするか */
@@ -66,7 +66,7 @@ export const useStore = defineStore('compass', {
         /** 司令退避設定（ノードごと） */
         commandEvacuations: [] as CommandEvacuation[],
 
-        refferenceTabKey: 'route' as RefferenceTabKey,
+        refferenceTabKey: 'route' as TabKey,
 	}),
 	actions: {
         UPDATE_DECK(value: string): void {
@@ -101,7 +101,7 @@ export const useStore = defineStore('compass', {
                 this.options[area][key] = value;
             }
         },
-        UPDATE_REFFERENCE_TAB_KEY(refferrence_tab_key: RefferenceTabKey): void {
+        UPDATE_REFFERENCE_TAB_KEY(refferrence_tab_key: TabKey): void {
             this.refferenceTabKey = refferrence_tab_key;
         },
         SWITCH_SEEK(): void {

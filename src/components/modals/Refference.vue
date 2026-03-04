@@ -1,9 +1,9 @@
 <template>
 	<div v-if="is_refference_visible" @pointerdown.stop class="refference-container">
 		<v-tabs v-model="tab_key" align-tabs="center" show-arrows class="tab-header" color="#1976d2" bg-color="primary">
-			<v-tab class="custom-tab" value="route">経路</v-tab>
-			<v-tab class="custom-tab" value="branch">分岐条件</v-tab>
-			<v-tab class="custom-tab" value="quest">任務</v-tab>
+			<v-tab class="custom-tab" value="route" @pointerdown.prevent="handle_tab_pointer_down('route')">経路</v-tab>
+			<v-tab class="custom-tab" value="branch" @pointerdown.prevent="handle_tab_pointer_down('branch')">分岐条件</v-tab>
+			<v-tab class="custom-tab" value="quest" @pointerdown.prevent="handle_tab_pointer_down('quest')">任務</v-tab>
 		</v-tabs>
 
 		<v-tabs-window v-model="tab_key">
@@ -33,12 +33,12 @@ const Quest = defineAsyncComponent(() => import(
 import { useModalStore, useStore } from '../../stores';
 
 /** タブ識別子 */
-export type RefferenceTabKey = 'route' | 'branch' | 'quest';
+export type TabKey = 'route' | 'branch' | 'quest';
 
 const store = useStore();
 const modal_store = useModalStore();
 
-const tab_key = computed<RefferenceTabKey>({
+const tab_key = computed<TabKey>({
 	get: () => store.refferenceTabKey ?? 'route',
 	set: (value) => {
 		store.UPDATE_REFFERENCE_TAB_KEY(value);
@@ -49,6 +49,12 @@ const tab_key = computed<RefferenceTabKey>({
 const is_refference_visible = computed(
 	() => modal_store.isRefferenceVisible,
 );
+
+const handle_tab_pointer_down = (
+	selected_tab_key: TabKey,
+) => {
+	tab_key.value = selected_tab_key;
+};
 </script>
 
 <style scoped>
