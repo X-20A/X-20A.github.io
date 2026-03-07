@@ -234,10 +234,10 @@ watch(
 
 .sortie-overlay-icon {
 	position: absolute;
-	right: -2px;
-	bottom: -2px;
-	height: 16px;
-	width: 16px;
+	right: -8px;
+	bottom: -1px;
+	height: 24px;
+	width: 24px;
 }
 
 .quest-name {
