@@ -125,7 +125,7 @@ export const calc_By10: QuestCompositionCondition = (fleet) => {
 };
 
 export const calc_By5: QuestCompositionCondition = (fleet) => {
-    const { base_ship_names: base_ship_names } = fleet;
+    const { base_ship_names } = fleet;
     return count_ships_by_base_names(
             ['羽黒', '足柄', '妙高', '高雄', '神風'],
             base_ship_names,
@@ -134,7 +134,7 @@ export const calc_By5: QuestCompositionCondition = (fleet) => {
 
 export const calc_By15: QuestCompositionCondition = (fleet) => {
     const { DD } = fleet.composition;
-    const { base_ship_names: base_ship_names } = fleet;
+    const { base_ship_names } = fleet;
     return (
         includes_base_ship('比叡', base_ship_names) &&
         includes_base_ship('霧島', base_ship_names) &&

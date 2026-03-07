@@ -46,7 +46,7 @@ export const calc_Bq6: QuestCompositionCondition = (fleet) => {
 };
 
 export const calc_Bq7: QuestCompositionCondition = (fleet) => {
-    const { base_ship_names: base_ship_names } = fleet;
+    const { base_ship_names } = fleet;
     return count_ships_by_base_names(
             ['鳥海', '青葉', '衣笠', '加古', '古鷹', '天龍', '夕張'],
             base_ship_names,
@@ -84,7 +84,7 @@ const YUBARI_KAI_NI_SERIES: ShipName[] = [
 export const calc_Bq13: QuestCompositionCondition = (fleet) => {
     const {
         ship_names,
-        base_ship_names: base_ship_names,
+        base_ship_names,
     } = fleet;
     const flagship_name = extract_flagship(fleet).name;
     return (

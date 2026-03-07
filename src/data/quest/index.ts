@@ -29,8 +29,7 @@ export type YearlyQuestId =
 
 export type LimitedQuestId =
     | '2412B5'
-    // | '2602B1' | '2602B2'
-    // | '2603B1' | '2603B2' | '2603B3'
+    | '2602B1'
 
 export type Month =
     | 1 | 2 | 3 | 4 | 5 | 6

@@ -3,7 +3,7 @@ import { ST } from "../../../data/ship";
 import { count_ships_by_base_names, extract_flagship, includes_base_ship, is_flagship_CL } from "../../../models/fleet/AdoptFleet";
 
 export const calc_Bm1: QuestCompositionCondition = (fleet) => {
-    const { base_ship_names: base_ship_names } = fleet;
+    const { base_ship_names } = fleet;
     return (
         includes_base_ship('妙高', base_ship_names) &&
         includes_base_ship('那智', base_ship_names) &&
@@ -27,7 +27,7 @@ export const calc_Bm3: QuestCompositionCondition = (fleet) => {
 };
 
 export const calc_Bm4: QuestCompositionCondition = (fleet) => {
-    const { base_ship_names: base_ship_names } = fleet;
+    const { base_ship_names } = fleet;
     const { CL } = fleet.composition;
     return (
         count_ships_by_base_names(
