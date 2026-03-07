@@ -1,6 +1,7 @@
 import { QuestCompositionCondition } from "../../logic/quest/conditions";
 import { NormalAreaId } from "../../types";
 import { DAILY_QUEST_DATAS } from "./daily";
+import { LIMITED_QUEST_DATAS } from "./limited";
 import { MONTHLY_QUEST_DATAS } from "./monthly";
 import { QUARTERLY_QUEST_DATAS } from "./quaterly";
 import { WEEKLY_QUEST_DATAS } from "./weekly";
@@ -26,6 +27,11 @@ export type YearlyQuestId =
     | 'By11' | 'By12' | 'By14' | 'By6' | 'By7'
     | 'By8' | 'By9' | 'By10' | 'By5' | 'By15'
 
+export type LimitedQuestId =
+    | '2412B5'
+    // | '2602B1' | '2602B2'
+    // | '2603B1' | '2603B2' | '2603B3'
+
 export type Month =
     | 1 | 2 | 3 | 4 | 5 | 6
     | 7 | 8 | 9 | 10 | 11 | 12
@@ -36,6 +42,7 @@ export type QuestId =
     | MonthlyQuestId
     | QuarterlyQuestId
     | YearlyQuestId
+    | LimitedQuestId
 
 type SpecificNodeSet = {
     area: NormalAreaId,
@@ -66,7 +73,7 @@ export type QuestPeriod =
     | 'Weekly'
     | 'Monthly'
     | 'Quarterly'
-    | 'Yearly';
+    | 'Yearly'
 
 export const QUEST_ICON_PERIOD_MAP:
     Readonly<Record<QuestIconType, QuestPeriod>> = {
@@ -97,6 +104,7 @@ export type QuestDatas =
     & Record<MonthlyQuestId, QuestData>
     & Record<QuarterlyQuestId, QuestData>
     & Record<YearlyQuestId, QuestData>
+    & Record<LimitedQuestId, QuestData>
 
 export const QUEST_DATAS = {
     ...DAILY_QUEST_DATAS,
@@ -104,4 +112,5 @@ export const QUEST_DATAS = {
     ...MONTHLY_QUEST_DATAS,
     ...QUARTERLY_QUEST_DATAS,
     ...YEARLY_QUEST_DATAS,
+    ...LIMITED_QUEST_DATAS,
 } as const satisfies QuestDatas;

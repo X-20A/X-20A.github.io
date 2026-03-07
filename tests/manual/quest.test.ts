@@ -1,6 +1,7 @@
 import { describe, it } from "vitest";
-import { get_zekamashi_article_title } from "../gateway";
+import { get_wikiwiki_quest_names, get_zekamashi_article_title } from "../gateway";
 import { QUEST_DATAS } from "../../src/data/quest";
+import { LIMITED_QUEST_DATAS } from "../../src/data/quest/limited";
 
 const delay = (
     ms: number,
@@ -51,4 +52,18 @@ describe('任務データ', () => {
             await delay(200);
         }
     }, { timeout: 50000 });
+    it('quest-test: 期間限定任務 期限切れチェック', async () => {
+        const quest_names =
+            await get_wikiwiki_quest_names();
+        // console.log('quest_names: ', quest_names);
+
+        for (const quest_data of Object.values(LIMITED_QUEST_DATAS)) {
+            const { name } = quest_data;
+
+            if (
+                // wikiwikiの任務ページには失効した任務は記載されない
+                !quest_names.includes(name)
+            ) throw new Error(`${name} は期限切れの可能性があります`);
+        }
+    }, { timeout: 10000 });
 });
