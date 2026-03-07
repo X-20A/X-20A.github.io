@@ -6,6 +6,7 @@ import { ShipId } from "../../types/shipId";
 import { ShipName } from "../../types/shipName";
 import SHIP_DATAS from '../../data/ship';
 import { NotYetSupportedShip } from '../../errors/CustomError';
+import { BaseShipName } from '../../types/baseShipName';
 
 /**
  * レベルに応じて変動するステータスを返す
@@ -27,6 +28,7 @@ const calc_status_by_lv = (
 export type NakedShip = {
     readonly id: ShipId;
     readonly name: ShipName;
+    readonly base_name: BaseShipName;
     readonly lv: number;
     readonly type: ShipType;
     readonly national: National;
@@ -59,10 +61,12 @@ export function derive_naked_ship(
     if (!data) {
         throw new NotYetSupportedShip(`id: ${ship_id}の艦は未対応です`);
     }
+    const base_ship_data = SHIP_DATAS[data.base];
 
     const ship: NakedShip = {
         id,
         name: data.name,
+        base_name: base_ship_data.name as BaseShipName,
         lv,
         type: data.type,
         national: data.na,
@@ -74,30 +78,4 @@ export function derive_naked_ship(
     };
 
     return ship;
-}
-
-/**
- * 艦名の前方一致
- * @param match_name 
- * @param search_name 
- * @returns 
- */
-export function startsWith_ship_name(
-    match_name: ShipName,
-    search_name: ShipName,
-): boolean {
-    return search_name.startsWith(match_name);
-}
-
-/**
- * 艦名配列の各要素に対して前方一致
- * @param match_names 
- * @param search_name 
- * @returns 
- */
-export function some_startsWith_ship_name(
-    match_names: ShipName[],
-    search_name: ShipName,
-): boolean {
-    return match_names.some(item => startsWith_ship_name(item, search_name));
 }

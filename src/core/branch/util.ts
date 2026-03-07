@@ -30,6 +30,8 @@ export function destructuring_assignment_helper(
     return {
         route,
         fleet: adopt_fleet,
+        ship_names: adopt_fleet.ship_names,
+        base_ship_names: adopt_fleet.base_ship_names,
         fleet_type,
         ships_length,
         speed,

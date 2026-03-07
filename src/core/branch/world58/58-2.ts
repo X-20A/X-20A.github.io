@@ -1,6 +1,6 @@
 import { is_fleet_speed_fast_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
 import { is_fleet_carrier, is_fleet_combined } from "../../../models/fleet/predicate";
-import { count_carriers, count_ship } from "../../../models/fleet/AdoptFleet";
+import { count_carriers, count_ships_by_base_names } from "../../../models/fleet/AdoptFleet";
 import { CalcFnWithCondition } from "..";
 import { destructuring_assignment_helper, omission_of_conditions } from "../util";
 
@@ -10,7 +10,7 @@ export const calc_58_2: CalcFnWithCondition = (
     option,
 ) => {
     const {
-        fleet, fleet_type, ships_length, speed, seek, route,
+        fleet, ship_names, base_ship_names, fleet_type, ships_length, speed, seek, route,
         drum_carrier_count, craft_carrier_count, radar_carrier_count,
         arBulge_carrier_count, SBB_count,
         BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,
@@ -104,7 +104,7 @@ export const calc_58_2: CalcFnWithCondition = (
                 if (BBs > 1) {
                     return 'J';
                 }
-                if (count_ship(fleet, 'あきつ丸') + CVL > 1) {
+                if (count_ships_by_base_names(['あきつ丸'], base_ship_names) + CVL > 1) {
                     return 'J';
                 }
                 return 'I';

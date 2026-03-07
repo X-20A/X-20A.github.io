@@ -1,4 +1,4 @@
-import { count_carriers, count_ship, count_Yamato_class } from "../../../models/fleet/AdoptFleet";
+import { count_carriers, count_ships_by_base_names, count_Yamato_class } from "../../../models/fleet/AdoptFleet";
 import { is_fleet_speed_fast_or_more, is_fleet_speed_faster_or_more, is_fleet_speed_fastest, is_fleet_speed_slow } from "../../../logic/speed/predicate";
 import { is_fleet_carrier, is_fleet_combined } from "../../../models/fleet/predicate";
 import { destructuring_assignment_helper, omission_of_conditions } from "../util";
@@ -10,7 +10,7 @@ export const calc_59_5: CalcFnWithCondition = (
     option,
 ) => {
     const {
-        fleet, fleet_type, ships_length, speed, seek, route,
+        fleet, ship_names, base_ship_names, fleet_type, ships_length, speed, seek, route,
         drum_carrier_count, craft_carrier_count, radar_carrier_count,
         arBulge_carrier_count, SBB_count,
         BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,
@@ -146,7 +146,11 @@ export const calc_59_5: CalcFnWithCondition = (
             if (is_fleet_speed_fast_or_more(speed)) {
                 return 'R';
             }
-            if (count_Yamato_class(fleet) + count_ship(fleet, 'Iowa') > 1) {
+            if (
+                count_Yamato_class(fleet)
+                + count_ships_by_base_names(['Iowa'], base_ship_names)
+                > 1
+            ) {
                 return 'R2';
             }
             if (BB > 1) {

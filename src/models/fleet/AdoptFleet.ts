@@ -7,8 +7,8 @@ import { ShipName } from "../../types/shipName";
 import { Ft as FleetType } from "./predicate";
 import { Sp as Speed } from "../../logic/speed/predicate";
 import { round_seek } from "../../logic/seek/fleet";
-import { includes_ship_name } from "../ship/predicate";
 import { EquippedShip } from "../ship/EquippedShip";
+import { BaseShipName } from "../../types/baseShipName";
 
 /**
  * FleetComponentsからSelectedTypeによって抽出、構成されたシミュに使用される艦隊のデフォルト構造
@@ -17,6 +17,7 @@ export type AdoptFleet = {
     readonly fleets: FleetComponent[],
     /** 艦隊の構成艦名の配列(含随伴艦隊) */
     readonly ship_names: ShipName[],
+    readonly base_ship_names: BaseShipName[],
     readonly composition: Composition,
     readonly fleet_type: FleetType,
     readonly ships_length: number,
@@ -106,6 +107,7 @@ export function derive_adopt_fleet(
     const fleet: AdoptFleet = {
         fleets,
         ship_names: all_ships.map(ship => ship.name),
+        base_ship_names: all_ships.map(ship => ship.base_name),
         composition: derive_composition(all_ships),
         fleet_type: fleet_type_id,
         ships_length: all_ships.length,
@@ -160,22 +162,6 @@ export function get_escort_fleet_ships_length(fleet: AdoptFleet): number {
 }
 
 /**
- * 艦隊構成艦にtarget_nameが含まれるか判定(部分一致)
- * @param fleet AdoptFleet
- * @param target_name 判定する艦の名前(部分一致)
- * @returns 艦が在籍していればtrue
- */
-export function include_ship_names(fleet: AdoptFleet, target_name: string | string[]): boolean {
-    if (Array.isArray(target_name)) {
-        return target_name.some(
-            name => fleet.ship_names.some(ship_name => ship_name.includes(name))
-        );
-    } else {
-        return fleet.ship_names.some(ship_name => ship_name.includes(target_name));
-    }
-}
-
-/**
  * 旗艦を返す
  * @param fleet 
  * @returns 
@@ -195,161 +181,101 @@ export function is_flagship_CL(fleet: AdoptFleet): boolean {
 }
 
 /**
- * 艦隊構成艦に含まれる艦名がtarget_name(部分一致)の艦をカウント
- * @param fleet AdoptFleet
- * @param target_name 判定する艦の名前(部分一致)
- * @returns 該当する艦の隻数
+ * 配列にベース艦が含まれるか判定して返す
+ * @param target_base_name 
+ * @param search_base_name 
+ * @returns 
  */
-export function count_ship(
-    fleet: AdoptFleet,
-    target_name: ShipName | ShipName[],
-): number {
-    if (Array.isArray(target_name)) {
-        return fleet.ship_names.filter(ship_name =>
-            target_name.some(target => ship_name.includes(target))
-        ).length;
-    } else {
-        return fleet.ship_names
-            .filter(ship_name => ship_name.includes(target_name))
-            .length;
-    }
+export function includes_base_ship(
+    target_base_name: BaseShipName,
+    search_base_name: BaseShipName[],
+): boolean {
+    return search_base_name.includes(target_base_name);
 }
 
 /**
- * 艦隊構成艦に含まれる艦名が target_name (完全一致) の艦をカウント
- * @param fleet AdoptFleet
- * @param target_name 判定する艦の名前(完全一致)
- * @returns 該当する艦の隻数
+ * 配列に含まれるベース艦の数を返す
+ * @param target_base_names 
+ * @param search_names 
+ * @returns 
  */
-export function count_ship_exact(
-    fleet: AdoptFleet,
-    target_name: ShipName | ShipName[],
+export function count_ships_by_base_names(
+    target_base_names: BaseShipName[],
+    search_names: BaseShipName[],
 ): number {
-    if (Array.isArray(target_name)) {
-        return fleet.ship_names.filter(ship_name =>
-            target_name.includes(ship_name)
-        ).length;
-    } else {
-        return fleet.ship_names
-            .filter(
-                ship_name => ship_name === target_name
-            ).length;
-    }
+    return target_base_names
+        .filter(name => includes_base_ship(name, search_names))
+        .length;
 }
 
-const TAIYO_CLASS_NAMES: ShipName[] =
-    ['春日丸', '大鷹', '八幡丸', '雲鷹', '神鷹'] as const;
+const TAIYO_CLASS_BASE_NAMES: BaseShipName[] =
+    ['春日丸', '八幡丸', '神鷹'] as const;
 /**
  * 艦隊内の大鷹型の数を返す
  * @param fleet AdoptFleet
  */
-export function count_Taiyo_class(fleet: AdoptFleet): number {
-    return fleet.ship_names.filter(ship_name =>
-        TAIYO_CLASS_NAMES.some(name => ship_name.startsWith(name))
-    ).length;
-}
-
-const YAMATO_CLASS_NAMES: ShipName[] =
-    [
-        '大和', '大和改', '大和改二', '大和改二重',
-        '武蔵', '武蔵改', '武蔵改二',
-    ] as const;
-
-export function count_ships_by_names(
-    target_names: ShipName[],
-    search_names: ShipName[],
+export function count_Taiyo_class(
+    fleet: AdoptFleet,
 ): number {
-    return search_names.filter(ship_name =>
-        includes_ship_name(target_names, ship_name)
-    ).length;
+    return count_ships_by_base_names(
+        TAIYO_CLASS_BASE_NAMES,
+        fleet.base_ship_names,
+    );
 }
+
+const YAMATO_CLASS_BASE_NAMES: BaseShipName[] =
+    ['大和', '武蔵'] as const;
 
 /**
  * 艦隊内の大和型の数を返す
  * @param fleet AdoptFleet
  */
-export function count_Yamato_class(fleet: AdoptFleet): number {
-    return count_ships_by_names(YAMATO_CLASS_NAMES, fleet.ship_names);
+export function count_Yamato_class(
+    fleet: AdoptFleet,
+): number {
+    return count_ships_by_base_names(
+        YAMATO_CLASS_BASE_NAMES,
+        fleet.base_ship_names,
+    );
 }
 
-const MATSU_CLASS_NAMES: ShipName[] =
-    [
-        '松', '松改',
-        '竹', '竹改',
-        '梅', '梅改',
-        '桃', '桃改',
-        '杉', '杉改',
-        '榧', '榧改',
-    ] as const;
+const MATSU_CLASS_BASE_NAMES: BaseShipName[] =
+    ['松', '竹', '梅', '桃', '杉', '榧'] as const;
+
 /**
  * 艦隊内の松型の数を返す
  * @param fleet AdoptFleet
  */
 export function count_Matsu_class(fleet: AdoptFleet): number {
-    return fleet.ship_names.filter(ship_name =>
-        MATSU_CLASS_NAMES.some(name => ship_name === name)
-    ).length;
-}
-
-/** 作戦参加艦のグループ型 */
-type OperationShipGroups = ReadonlyArray<readonly ShipName[]>;
-
-/**
- * 艦隊内の作戦参加艦の数を返す（同名艦グループは1隻のみカウント）
- * @param fleet 艦隊
- * @param ship_groups 作戦参加艦のグループ配列
- */
-const count_operation_ships = (
-    fleet: AdoptFleet,
-    ship_groups: OperationShipGroups,
-): number => {
-    const counted_groups = new Set<number>();
-
-    return fleet.ship_names.filter(ship_name => {
-        const group_index = ship_groups.findIndex(names =>
-            names.includes(ship_name)
-        );
-
-        if (group_index === -1 || counted_groups.has(group_index)) {
-            return false;
-        }
-
-        counted_groups.add(group_index);
-        return true;
-    }).length;
+    return count_ships_by_base_names(
+        MATSU_CLASS_BASE_NAMES,
+        fleet.base_ship_names,
+    );
 }
 
 /** 礼号作戦ID配列 */
-const REIGO_PARTICIPATED_SHIP_NAMES: OperationShipGroups = [
-    ['足柄', '足柄改', '足柄改二'],
-    ['大淀', '大淀改'],
-    ['霞', '霞改', '霞改二', '霞改二乙'],
-    ['朝霜', '朝霜改', '朝霜改二'],
-    ['清霜', '清霜改', '清霜改二', '清霜改二丁'],
-    ['榧', '榧改'],
-    ['杉', '杉改'],
-] as const;
+const REIGO_BASE_NAMES: BaseShipName[] = 
+    ['足柄', '大淀', '霞', '朝霜', '清霜', '榧', '杉'] as const;
 
 /** 礼号作戦参加艦の数を返す */
 export function count_Reigo_ships(fleet: AdoptFleet): number {
-    return count_operation_ships(fleet, REIGO_PARTICIPATED_SHIP_NAMES);
+    return count_ships_by_base_names(
+        REIGO_BASE_NAMES,
+        fleet.base_ship_names,
+    );
 }
 
-/** 第五艦隊構成艦配列 */
-const DAIGO_CONSTITUENT_SHIP_NAMES: OperationShipGroups = [
-    ['那智', '那智改', '那智改二'],
-    ['木曾', '木曾改', '木曾改二'],
-    ['阿武隈', '阿武隈改', '阿武隈改二'],
-    ['多摩', '多摩改', '多摩改二'],
-    ['曙', '曙改', '曙改二'],
-    ['潮', '潮改', '潮改二'],
-    ['初春', '初春改', '初春改二'],
-    ['不知火', '不知火改', '不知火改二'],
-] as const;
+const DAIGO_BASE_NAMES: BaseShipName[] =
+    ['那智', '木曾', '阿武隈', '多摩', '曙', '潮', '初春', '不知火'] as const;
 
 /** 第五艦隊構成艦の数を返す */
-export function count_Daigo_ships(fleet: AdoptFleet): number {
-    return count_operation_ships(fleet, DAIGO_CONSTITUENT_SHIP_NAMES);
+export function count_Daigo_ships(
+    fleet: AdoptFleet,
+): number {
+    return count_ships_by_base_names(
+        DAIGO_BASE_NAMES,
+        fleet.base_ship_names,
+    );
 }
 
 /**
@@ -357,11 +283,11 @@ export function count_Daigo_ships(fleet: AdoptFleet): number {
  * @param fleet AdoptFleet
  */
 export function count_carriers(fleet: AdoptFleet): number {
-    const composition = fleet.composition;
-    return count_ship(fleet, 'あきつ丸')
-        + composition.CV
-        + composition.CVB
-        + composition.CVL;
+    const { CV, CVB, CVL } = fleet.composition;
+    return count_ships_by_base_names(['あきつ丸'], fleet.base_ship_names)
+        + CV
+        + CVB
+        + CVL;
 }
 
 /**
@@ -438,4 +364,4 @@ export function count_total_valid_craft(fleet: AdoptFleet): number {
     } else {
         return fleet.fleets[0].total_valid_craft_count;
     }
-}
+} 

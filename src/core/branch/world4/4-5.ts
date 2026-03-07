@@ -8,7 +8,7 @@ export const calc_4_5: CalcFnWithCondition = (
     option,
 ) => {
     const {
-        fleet, fleet_type, ships_length, speed, seek, route,
+        fleet, ship_names, base_ship_names, fleet_type, ships_length, speed, seek, route,
         drum_carrier_count, craft_carrier_count, radar_carrier_count,
         arBulge_carrier_count, SBB_count,
         BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,

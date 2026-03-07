@@ -1,6 +1,6 @@
 import { CalcFnNoCondition } from "..";
 import { is_fleet_speed_faster_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
-import { include_ship_names } from "../../../models/fleet/AdoptFleet";
+import { includes_base_ship } from "../../../models/fleet/AdoptFleet";
 import { destructuring_assignment_helper, omission_of_conditions } from "../util";
 
 export const calc_5_2: CalcFnNoCondition = (
@@ -8,7 +8,7 @@ export const calc_5_2: CalcFnNoCondition = (
     sim_fleet,
 ) => {
     const {
-        fleet, fleet_type, ships_length, speed, seek, route,
+        fleet, ship_names, base_ship_names, fleet_type, ships_length, speed, seek, route,
         drum_carrier_count, craft_carrier_count, radar_carrier_count,
         arBulge_carrier_count, SBB_count,
         BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,
@@ -55,13 +55,13 @@ export const calc_5_2: CalcFnNoCondition = (
                 return 'D';
             }
             if (
-                include_ship_names(fleet, '夕張') &&
+                includes_base_ship('夕張', base_ship_names) &&
                 CVL + CAs + DD + AO === 5
             ) {
                 return 'D';
             }
             if (
-                include_ship_names(fleet, '祥鳳') &&
+                includes_base_ship('祥鳳', base_ship_names) &&
                 CAs + CLE + DD + AO === 5
             ) {
                 return 'D';
@@ -70,8 +70,8 @@ export const calc_5_2: CalcFnNoCondition = (
                 return 'E';
             }
             if (
-                include_ship_names(fleet, '翔鶴') &&
-                include_ship_names(fleet, '瑞鶴') &&
+                includes_base_ship('翔鶴', base_ship_names) &&
+                includes_base_ship('瑞鶴', base_ship_names) &&
                 DD > 1
             ) {
                 return 'D';
@@ -88,14 +88,14 @@ export const calc_5_2: CalcFnNoCondition = (
             return 'E';
         case 'D':
             if (
-                include_ship_names(fleet, '夕張') &&
-                include_ship_names(fleet, '祥鳳') &&
+                includes_base_ship('夕張', base_ship_names) &&
+                includes_base_ship('祥鳳', base_ship_names) &&
                 (DD === 2 && (CA === 2 || AO === 2))
             ) {
                 return 'G';
             }
             if (
-                include_ship_names(fleet, '祥鳳') &&
+                includes_base_ship('祥鳳', base_ship_names) &&
                 (
                     ((DD === 3) && CA === 1 && (CL === 1 || AO === 1)) ||
                     (DD === 3 && AO === 2)
@@ -104,7 +104,7 @@ export const calc_5_2: CalcFnNoCondition = (
                 return 'G';
             }
             if (
-                include_ship_names(fleet, '夕張') &&
+                includes_base_ship('夕張', base_ship_names) &&
                 (
                     (DD === 5) ||
                     (DD === 4 && AO === 1) ||
@@ -154,8 +154,8 @@ export const calc_5_2: CalcFnNoCondition = (
             break; // LoSより例外なし
         case 'G':
             if (
-                include_ship_names(fleet, '祥鳳') &&
-                include_ship_names(fleet, '夕張')
+                includes_base_ship('祥鳳', base_ship_names) &&
+                includes_base_ship('夕張', base_ship_names)
             ) {
                 return [
                     { node: 'J', rate: 0.55 },
@@ -168,8 +168,8 @@ export const calc_5_2: CalcFnNoCondition = (
             ];
         case 'L':
             if (
-                !include_ship_names(fleet, '祥鳳') &&
-                !include_ship_names(fleet, '夕張')
+                !includes_base_ship('祥鳳', base_ship_names) &&
+                !includes_base_ship('夕張', base_ship_names)
             ) {
                 if (is_fleet_speed_faster_or_more(speed)) {
                     return [

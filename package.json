@@ -18,7 +18,7 @@
     "dep": "depcheck",
     "lint": "biome lint",
     "format": "biome format",
-	"gen_type": "bun run scripts/generateUnion.ts"
+	"gen_type": "bun run scripts/generateUnion.ts && bun run scripts/generateBassShipNameUnion.ts"
   },
   "dependencies": {
     "@biomejs/biome": "^1.9.4",

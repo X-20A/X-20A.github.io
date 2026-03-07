@@ -1,8 +1,7 @@
 import { QuestCompositionCondition } from ".";
 import { NA, ST } from "../../../data/ship";
-import { count_ships_by_names, extract_flagship } from "../../../models/fleet/AdoptFleet";
+import { count_ships_by_base_names, extract_flagship, includes_base_ship } from "../../../models/fleet/AdoptFleet";
 import { includes_ship_name, includes_ship_names, includes_ship_type, is_CVs } from "../../../models/ship/predicate";
-import { ShipName } from "../../../types/shipName";
 
 // wikiがID順でなく月順なので倣う
 
@@ -35,7 +34,7 @@ export const calc_By3: QuestCompositionCondition = (fleet) => {
     const { DD } = fleet.composition;
     const flagship = extract_flagship(fleet);
     return (
-        includes_ship_name(['明石', '明石改'], flagship.name) &&
+        flagship.base_name === '明石' &&
         DD >= 3
     );
 };
@@ -71,17 +70,12 @@ export const calc_By12: QuestCompositionCondition = (fleet) => {
     );
 };
 
-const UKURU_CLASS_NAMES: ShipName[] = [
-    '鵜来', '鵜来改',
-    '稲木', '稲木改', '稲木改二',
-] as const;
-
 export const calc_By14: QuestCompositionCondition = (fleet) => {
     const { DE } = fleet.composition;
     const flagship = extract_flagship(fleet);
     const ships_length = fleet.fleets[0].units.length;
     return (
-        includes_ship_name(UKURU_CLASS_NAMES, flagship.name) &&
+        includes_base_ship(flagship.base_name, ['鵜来', '稲木']) &&
         ships_length <= 4 &&
         ships_length === DE
     );
@@ -130,46 +124,20 @@ export const calc_By10: QuestCompositionCondition = (fleet) => {
     );
 };
 
-const HAGURO_SERIES: ShipName[] = [
-    '羽黒', '羽黒改', '羽黒改二',
-] as const;
-const ASHIGARA_SERIES: ShipName[] = [
-    '足柄', '足柄改', '足柄改二',
-] as const;
-const MYOKO_SERIES: ShipName[] = [
-    '妙高', '妙高改', '妙高改二',
-] as const;
-const TAKAO_SERIES: ShipName[] = [
-    '高雄', '高雄改',
-] as const;
-const KAMIKAZE_SERIES: ShipName[] = [
-    '神風', '神風改',
-] as const;
-
 export const calc_By5: QuestCompositionCondition = (fleet) => {
-    const { ship_names } = fleet;
-    return (
-        count_ships_by_names(HAGURO_SERIES, ship_names)
-        + count_ships_by_names(ASHIGARA_SERIES, ship_names)
-        + count_ships_by_names(MYOKO_SERIES, ship_names)
-        + count_ships_by_names(TAKAO_SERIES, ship_names)
-        + count_ships_by_names(KAMIKAZE_SERIES, ship_names) >= 2
-    );
+    const { base_ship_names: base_ship_names } = fleet;
+    return count_ships_by_base_names(
+            ['羽黒', '足柄', '妙高', '高雄', '神風'],
+            base_ship_names,
+        ) >= 2;
 };
-
-const HIEI_SERIES: ShipName[] = [
-    '比叡', '比叡改', '比叡改二', '比叡改二丙',
-] as const;
-const KIRISHIMA_SERIES: ShipName[] = [
-    '霧島', '霧島改', '霧島改二', '霧島改二丙',
-] as const;
 
 export const calc_By15: QuestCompositionCondition = (fleet) => {
     const { DD } = fleet.composition;
-    const { ship_names } = fleet;
+    const { base_ship_names: base_ship_names } = fleet;
     return (
-        includes_ship_names(HIEI_SERIES, ship_names) &&
-        includes_ship_names(KIRISHIMA_SERIES, ship_names) &&
+        includes_base_ship('比叡', base_ship_names) &&
+        includes_base_ship('霧島', base_ship_names) &&
         DD >= 2
     );
 };

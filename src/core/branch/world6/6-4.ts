@@ -1,6 +1,7 @@
 import { CalcFnNoCondition } from "..";
 import { is_fleet_speed_fast_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
-import { is_flagship_CL, include_ship_names } from "../../../models/fleet/AdoptFleet";
+import { is_flagship_CL, includes_base_ship } from "../../../models/fleet/AdoptFleet";
+import { includes_ship_name } from "../../../models/ship/predicate";
 import { destructuring_assignment_helper, omission_of_conditions } from "../util";
 
 export const calc_6_4: CalcFnNoCondition = (
@@ -8,7 +9,7 @@ export const calc_6_4: CalcFnNoCondition = (
     sim_fleet,
 ) => {
     const {
-        fleet, fleet_type, ships_length, speed, seek, route,
+        fleet, ship_names, base_ship_names, fleet_type, ships_length, speed, seek, route,
         drum_carrier_count, craft_carrier_count, radar_carrier_count,
         arBulge_carrier_count, SBB_count,
         BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,
@@ -21,8 +22,8 @@ export const calc_6_4: CalcFnNoCondition = (
                 return '2';
             }
             if (
-                !include_ship_names(fleet, '長門改二') &&
-                !include_ship_names(fleet, '陸奥改二') &&
+                !includes_ship_name(ship_names, '長門改二') &&
+                !includes_ship_name(ship_names, '陸奥改二') &&
                 BBs === 2
             ) {
                 return '2';
@@ -50,7 +51,7 @@ export const calc_6_4: CalcFnNoCondition = (
             }
             break; // これ以外は既に2へ行ってるので例外なし。でもちょっとヤだね
         case 'A':
-            if (include_ship_names(fleet, '秋津洲') &&
+            if (includes_base_ship('秋津洲', base_ship_names) &&
                 (CAV === 1
                     || CL > 0
                     || DD > 2)) {
@@ -65,8 +66,8 @@ export const calc_6_4: CalcFnNoCondition = (
             return 'E';
         case 'E':
             if (
-                include_ship_names(fleet, '秋津洲') ||
-                include_ship_names(fleet, '如月')
+                includes_base_ship('秋津洲', base_ship_names) ||
+                includes_base_ship('如月', base_ship_names)
             ) {
                 return 'D';
             }

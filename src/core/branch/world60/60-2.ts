@@ -1,6 +1,6 @@
 import { is_fleet_combined, is_fleet_transport } from "../../../models/fleet/predicate";
 import { is_fleet_speed_fast_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
-import { count_Daigo_ships, count_ship, count_ship_exact } from "../../../models/fleet/AdoptFleet";
+import { count_Daigo_ships, count_ships_by_base_names } from "../../../models/fleet/AdoptFleet";
 import { destructuring_assignment_helper, omission_of_conditions } from "../util";
 import { CalcFnWithCondition } from "..";
 
@@ -10,7 +10,7 @@ export const calc_60_2: CalcFnWithCondition = (
     option,
 ) => {
     const {
-        fleet, fleet_type, ships_length, speed, seek, route,
+        fleet, ship_names, base_ship_names, fleet_type, ships_length, speed, seek, route,
         drum_carrier_count, craft_carrier_count, radar_carrier_count,
         arBulge_carrier_count, SBB_count,
         BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,
@@ -61,7 +61,7 @@ export const calc_60_2: CalcFnWithCondition = (
             }
             return 'A2';
         case 'C':
-            if (count_ship(fleet, '大泊') > 0) {
+            if (count_ships_by_base_names(['大泊'], base_ship_names) > 0) {
                 return 'H';
             }
             if (CL > 0 && Ds > 1) {
@@ -111,7 +111,11 @@ export const calc_60_2: CalcFnWithCondition = (
             if (CVH > 0 && is_fleet_speed_slow(speed)) {
                 return 'D';
             }
-            if (count_ship(fleet, '大泊') + CA > 1 && CLE > 1 && Ds > 2) {
+            if (
+                count_ships_by_base_names(['大泊'], base_ship_names) + CA > 1 &&
+                CLE > 1 &&
+                Ds > 2
+            ) {
                 return 'N';
             }
             return 'D';
@@ -133,7 +137,7 @@ export const calc_60_2: CalcFnWithCondition = (
             if (CVs > 1) {
                 return 'S';
             }
-            if (count_ship(fleet, '大泊') > 0) {
+            if (count_ships_by_base_names(['大泊'], base_ship_names) > 0) {
                 return 'V';
             }
             if (CL < 3 && is_fleet_speed_slow(speed)) {
@@ -145,15 +149,18 @@ export const calc_60_2: CalcFnWithCondition = (
             if (count_Daigo_ships(fleet) > 7) {
                 return 'V';
             }
-            if (count_ship(fleet, ['那智', '足柄']) + CLE === 5) {
+            if (
+                count_ships_by_base_names(['那智', '足柄'], base_ship_names)
+                + CLE === 5
+            ) {
                 return 'V';
             }
             if (
-                count_ship(fleet, ['那智', '足柄']) === 2
-                && count_ship(fleet, ['阿武隈', '多摩', '木曾']) === 2
-                && count_ship(fleet, ['霞', '不知火', '薄雲', '曙', '初霜', '初春', '若葉'])
-                + count_ship_exact(fleet, ['潮', '潮改', '潮改二'])
-                > 1
+                count_ships_by_base_names(['那智', '足柄'], base_ship_names) === 2
+                && count_ships_by_base_names(['阿武隈', '多摩', '木曾'], base_ship_names) === 2
+                && count_ships_by_base_names(['霞', '不知火', '薄雲', '曙', '初霜', '初春', '若葉'], base_ship_names)
+                + count_ships_by_base_names(['潮'], base_ship_names)
+                >= 2
                 && DD === 5
             ) {
                 return 'V';

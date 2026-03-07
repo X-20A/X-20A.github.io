@@ -1,4 +1,4 @@
-import { count_ship, count_Taiyo_class, include_ship_names } from "../../../models/fleet/AdoptFleet";
+import { count_ships_by_base_names, count_Taiyo_class, includes_base_ship } from "../../../models/fleet/AdoptFleet";
 import { is_fleet_speed_faster_or_more } from "../../../logic/speed/predicate";
 import { destructuring_assignment_helper, omission_of_conditions } from "../util";
 import { CalcFnWithCondition } from "..";
@@ -9,7 +9,7 @@ export const calc_7_4: CalcFnWithCondition = (
     option,
 ) => {
     const {
-        fleet, fleet_type, ships_length, speed, seek, route,
+        fleet, ship_names, base_ship_names, fleet_type, ships_length, speed, seek, route,
         drum_carrier_count, craft_carrier_count, radar_carrier_count,
         arBulge_carrier_count, SBB_count,
         BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,
@@ -24,13 +24,18 @@ export const calc_7_4: CalcFnWithCondition = (
                 return 'C';
             }
             if (
-                include_ship_names(fleet, 'あきつ丸') &&
+                includes_base_ship('あきつ丸', base_ship_names) &&
                 DE >= 2 &&
                 (DD > 0 || DE > 3)
             ) {
                 return 'A';
             }
-            if (BBV + CVL + count_ship(fleet, 'あきつ丸') > 2) {
+            if (
+                BBV
+                + CVL
+                + count_ships_by_base_names(['あきつ丸'], fleet.base_ship_names)
+                > 2
+            ) {
                 return 'C';
             }
             if (Ds > 2 || DE > 1) {
@@ -40,7 +45,7 @@ export const calc_7_4: CalcFnWithCondition = (
         case 'C':
             if (
                 BB + CVH + Ss > 0 ||
-                CVL + count_ship(fleet, 'あきつ丸') > 2
+                CVL + count_ships_by_base_names(['あきつ丸'], fleet.base_ship_names) > 2
             ) {
                 return 'D';
             }
@@ -110,8 +115,8 @@ export const calc_7_4: CalcFnWithCondition = (
                 (SBB_count > 0 && CVH > 0)
                 || (BBs - SBB_count > 1)
                 || (BBV > 1)
-                || (CVL + count_ship(fleet, 'あきつ丸') > 1)
-                || (BBs - SBB_count + BBV + CVL + count_ship(fleet, 'あきつ丸') > 2)
+                || (CVL + count_ships_by_base_names(['あきつ丸'], fleet.base_ship_names) > 1)
+                || (BBs - SBB_count + BBV + CVL + count_ships_by_base_names(['あきつ丸'], fleet.base_ship_names) > 2)
                 || (Ds < 2);
             if (seek.c4 < 45) {
                 return 'N';

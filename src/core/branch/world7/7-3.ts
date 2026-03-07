@@ -1,4 +1,4 @@
-import { include_ship_names } from "../../../models/fleet/AdoptFleet";
+import { includes_base_ship } from "../../../models/fleet/AdoptFleet";
 import { is_fleet_speed_fast_or_more, is_fleet_speed_faster_or_more, is_fleet_speed_fastest, is_fleet_speed_slow } from "../../../logic/speed/predicate";
 import { destructuring_assignment_helper, omission_of_conditions } from "../util";
 import { CalcFnNoCondition, CalcFnWithCondition } from "..";
@@ -8,7 +8,7 @@ const calc_phase_1: CalcFnNoCondition = (
     sim_fleet,
 ) => {
     const {
-        fleet, fleet_type, ships_length, speed, seek, route,
+        fleet, ship_names, base_ship_names, fleet_type, ships_length, speed, seek, route,
         drum_carrier_count, craft_carrier_count, radar_carrier_count,
         arBulge_carrier_count, SBB_count,
         BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,
@@ -25,7 +25,10 @@ const calc_phase_1: CalcFnNoCondition = (
             if (CA === 0 || CVs > 0 || Ds === 0 || ships_length > 4) {
                 return 'B';
             }
-            if (include_ship_names(fleet, '羽黒') && include_ship_names(fleet, '神風')) {
+            if (
+                includes_base_ship('羽黒', base_ship_names) &&
+                includes_base_ship('神風', base_ship_names)
+            ) {
                 return 'C';
             }
             if (ships_length === 4) {
@@ -48,11 +51,17 @@ const calc_phase_1: CalcFnNoCondition = (
             if (BBCVs > 0 || Ds === 0 || ships_length > 4) {
                 return 'D';
             }
-            if (include_ship_names(fleet, '羽黒') && include_ship_names(fleet, '神風')) {
+            if (
+                includes_base_ship('羽黒', base_ship_names) &&
+                includes_base_ship('神風', base_ship_names)
+            ) {
                 if (CAs > 2) {
                     return 'D';
                 }
-                if (include_ship_names(fleet, '足柄') || include_ship_names(fleet, '妙高')) {
+                if (
+                    includes_base_ship('足柄', base_ship_names) ||
+                    includes_base_ship('妙高', base_ship_names)
+                ) {
                     return 'E';
                 }
                 if (Ds < 2) {
@@ -61,10 +70,10 @@ const calc_phase_1: CalcFnNoCondition = (
                 return 'E';
             }
             if (ships_length === 4) {
-                if (include_ship_names(fleet, '羽黒') && Ds === 3) {
+                if (includes_base_ship('羽黒', base_ship_names) && Ds === 3) {
                     return 'E';
                 }
-                if (include_ship_names(fleet, '神風') && Ds === 4) {
+                if (includes_base_ship('神風', base_ship_names) && Ds === 4) {
                     return 'E';
                 }
                 return 'D';
@@ -97,7 +106,7 @@ const calc_phase_2: CalcFnNoCondition = (
     sim_fleet,
 ) => {
     const {
-        fleet, fleet_type, ships_length, speed, seek, route,
+        fleet, ship_names, base_ship_names, fleet_type, ships_length, speed, seek, route,
         drum_carrier_count, craft_carrier_count, radar_carrier_count,
         arBulge_carrier_count, SBB_count,
         BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,
@@ -120,19 +129,19 @@ const calc_phase_2: CalcFnNoCondition = (
             if (
                 CA === 0 ||
                 Ds === 0 ||
-                (BBs > 0 && !include_ship_names(fleet, '羽黒'))
+                (BBs > 0 && !includes_base_ship('羽黒', base_ship_names))
             ) {
                 return 'B';
             }
             if (
-                include_ship_names(fleet, '羽黒') &&
-                include_ship_names(fleet, '神風')
+                includes_base_ship('羽黒', base_ship_names) &&
+                includes_base_ship('神風', base_ship_names)
             ) {
                 return 'C';
             }
             if (ships_length > 4) {
                 if (
-                    !include_ship_names(fleet, '羽黒') &&
+                    !includes_base_ship('羽黒', base_ship_names) &&
                     is_fleet_speed_slow(speed)
                 ) {
                     return 'B';
@@ -172,11 +181,14 @@ const calc_phase_2: CalcFnNoCondition = (
                 if (ships_length === 6) {
                     return 'D';
                 }
-                if (include_ship_names(fleet, '羽黒') && include_ship_names(fleet, '神風')) {
+                if (
+                    includes_base_ship('羽黒', base_ship_names) &&
+                    includes_base_ship('神風', base_ship_names)
+                ) {
                     if (Ds < 2) {
                         return 'D';
                     }
-                    if (CL > 0 || include_ship_names(fleet, '足柄')) {
+                    if (CL > 0 || includes_base_ship('足柄', base_ship_names)) {
                         return 'I';
                     }
                     return 'D';
@@ -187,11 +199,17 @@ const calc_phase_2: CalcFnNoCondition = (
                 return 'D';
             }
             if (ships_length === 4) {
-                if (include_ship_names(fleet, '羽黒') && include_ship_names(fleet, '神風')) {
+                if (
+                    includes_base_ship('羽黒', base_ship_names) &&
+                    includes_base_ship('神風', base_ship_names)
+                ) {
                     if (CAs > 2) {
                         return 'D';
                     }
-                    if (include_ship_names(fleet, '足柄') || include_ship_names(fleet, '妙高')) {
+                    if (
+                        includes_base_ship('足柄', base_ship_names) ||
+                        includes_base_ship('妙高', base_ship_names)
+                    ) {
                         return 'E';
                     }
                     if (Ds < 2) {
@@ -199,10 +217,10 @@ const calc_phase_2: CalcFnNoCondition = (
                     }
                     return 'E';
                 }
-                if (include_ship_names(fleet, '羽黒') && Ds === 3) {
+                if (includes_base_ship('羽黒', base_ship_names) && Ds === 3) {
                     return 'E';
                 }
-                if (include_ship_names(fleet, '神風') && Ds === 4) {
+                if (includes_base_ship('神風', base_ship_names) && Ds === 4) {
                     return 'E';
                 }
                 return 'D';
@@ -235,7 +253,10 @@ const calc_phase_2: CalcFnNoCondition = (
             if (BBCVs > 0) {
                 return 'J';
             }
-            if (include_ship_names(fleet, '羽黒') && include_ship_names(fleet, '神風')) {
+            if (
+                includes_base_ship('羽黒', base_ship_names) &&
+                includes_base_ship('神風', base_ship_names)
+            ) {
                 if (ships_length < 5) {
                     return 'P';
                 }
@@ -248,7 +269,7 @@ const calc_phase_2: CalcFnNoCondition = (
                 if (CAs > 2 || is_fleet_speed_slow(speed)) {
                     return 'J';
                 }
-                if (include_ship_names(fleet, '足柄')) {
+                if (includes_base_ship('足柄', base_ship_names)) {
                     return 'P';
                 }
                 return 'K';
@@ -261,7 +282,10 @@ const calc_phase_2: CalcFnNoCondition = (
             if (BBCVs > 0 || CAs > 2 || Ds === 0) {
                 return 'J';
             }
-            if (include_ship_names(fleet, '羽黒') && include_ship_names(fleet, '神風')) {
+            if (
+                includes_base_ship('羽黒', base_ship_names) &&
+                includes_base_ship('神風', base_ship_names)
+            ) {
                 if (Ds > 2) {
                     if (is_fleet_speed_faster_or_more(speed)) {
                         return 'J';
@@ -281,7 +305,14 @@ const calc_phase_2: CalcFnNoCondition = (
             if (is_fleet_speed_fastest(speed) && DD > 2) {
                 return 'J';
             }
-            if ((include_ship_names(fleet, '羽黒') || include_ship_names(fleet, '神風')) && include_ship_names(fleet, '足柄') && Ds > 2) {
+            if (
+                (
+                    includes_base_ship('羽黒', base_ship_names) ||
+                    includes_base_ship('神風', base_ship_names)
+                ) &&
+                includes_base_ship('足柄', base_ship_names) &&
+                Ds > 2
+            ) {
                 return 'M';
             }
             return 'L';
@@ -290,14 +321,27 @@ const calc_phase_2: CalcFnNoCondition = (
                 return 'M';
             }
             if (DD > 2) {
-                if ((include_ship_names(fleet, '羽黒') && include_ship_names(fleet, '足柄')) || (include_ship_names(fleet, '羽黒') && include_ship_names(fleet, '神風'))) {
+                if (
+                    (
+                        includes_base_ship('羽黒', base_ship_names) &&
+                        includes_base_ship('足柄', base_ship_names)
+                    ) ||
+                    (
+                        includes_base_ship('羽黒', base_ship_names) &&
+                        includes_base_ship('神風', base_ship_names)
+                    )
+                ) {
                     return 'P';
                 } else {
                     return 'M';
                 }
             }
             if (DD === 2) {
-                if (include_ship_names(fleet, '羽黒') && include_ship_names(fleet, '神風') && include_ship_names(fleet, '足柄')) {
+                if (
+                    includes_base_ship('羽黒', base_ship_names) &&
+                    includes_base_ship('神風', base_ship_names) &&
+                    includes_base_ship('足柄', base_ship_names)
+                ) {
                     return 'P';
                 } else {
                     return 'M';

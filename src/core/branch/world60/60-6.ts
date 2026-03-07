@@ -1,8 +1,9 @@
 import { is_fleet_combined, is_fleet_transport } from "../../../models/fleet/predicate";
 import { is_fleet_speed_faster_or_more, is_fleet_speed_fastest, is_fleet_speed_slow } from "../../../logic/speed/predicate";
-import { count_Reigo_ships, count_ship, count_Yamato_class } from "../../../models/fleet/AdoptFleet";
+import { count_Reigo_ships, count_ships_by_base_names, count_Yamato_class } from "../../../models/fleet/AdoptFleet";
 import { CalcFnWithCondition } from "..";
 import { destructuring_assignment_helper, omission_of_conditions } from "../util";
+import { includes_ship_names } from "../../../models/ship/predicate";
 
 export const calc_60_6: CalcFnWithCondition = (
     node,
@@ -10,7 +11,7 @@ export const calc_60_6: CalcFnWithCondition = (
     option,
 ) => {
     const {
-        fleet, fleet_type, ships_length, speed, seek, route,
+        fleet, ship_names, base_ship_names, fleet_type, ships_length, speed, seek, route,
         drum_carrier_count, craft_carrier_count, radar_carrier_count,
         arBulge_carrier_count, SBB_count,
         BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,
@@ -137,10 +138,14 @@ export const calc_60_6: CalcFnWithCondition = (
             if (count_Yamato_class(fleet) > 0) {
                 return 'J2';
             }
-            if (count_ship(fleet, ['榧', '杉']) > 0) {
+            if (count_ships_by_base_names(['榧', '杉'], base_ship_names) > 0) {
                 return 'P';
             }
-            if (count_ship(fleet, ['足柄', '大淀', '霞', '朝霜', '清霜']) > 4) {
+            if (
+                count_ships_by_base_names(
+                    ['足柄', '大淀', '霞', '朝霜', '清霜'],
+                    base_ship_names,
+                ) > 4) {
                 return 'P';
             }
             if (Ds > 3 && BBs + CVH < 3) {
@@ -191,7 +196,12 @@ export const calc_60_6: CalcFnWithCondition = (
             }
             return 'J4';
         case 'N':
-            if (count_ship(fleet, ['明石改', '朝日改', '秋津洲改', '速吸改', '山汐丸改', '神威改母', '宗谷', 'しまね丸改']) > 0) {
+            if (
+                includes_ship_names(
+                    ['明石改', '朝日改', '秋津洲改', '速吸改', '山汐丸改', '神威改母', '宗谷', 'しまね丸改'],
+                    ship_names,
+                )
+            ) {
                 return 'O1';
             }
             return 'O';

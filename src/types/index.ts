@@ -3,6 +3,7 @@ import type { NA as National, SG as SpeedGroup, ST as ShipType } from "../data/s
 import type { NT as NodeType } from "../data/map";
 import { ShipName } from "./shipName";
 import { TabKey } from "../components/modals/Refference.vue";
+import { ShipId } from "./shipId";
 
 export type Brand<T, B> = T & { __brand: B };
 
@@ -26,6 +27,8 @@ export interface ShipData {
 	na: National
     /** 速力グループID */
 	sg: SpeedGroup
+    /** オリジナル艦船ID */
+	base: ShipId
 }
 
 export type Improvement = 0|1|2|3|4|5|6|7|8|9|10

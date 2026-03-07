@@ -11,6 +11,7 @@ import { ShipName } from '../../types/shipName';
 import { NakedShip } from './NakedShip';
 import { EquipId } from '../../types/equipId';
 import { Sp as Speed } from '../../logic/speed/predicate';
+import { BaseShipName } from '../../types/baseShipName';
 
 type PreInfo = {
     readonly drum_count: number;
@@ -54,6 +55,7 @@ const calc_pre_info = (
 export type EquippedShip = {
     readonly id: ShipId;
     readonly name: ShipName;
+    readonly base_name: BaseShipName;
     readonly lv: number;
     readonly type: ShipType;
     readonly status_seek: number;
@@ -101,6 +103,7 @@ export function derive_equipped_ship(
 
     const bonus_seek = calc_equip_bonus(
         naked_ship.name,
+        naked_ship.base_name,
         naked_ship.type,
         naked_ship.national,
         equips,
@@ -111,6 +114,7 @@ export function derive_equipped_ship(
     const ship: EquippedShip = {
         id: naked_ship.id,
         name: naked_ship.name,
+        base_name: naked_ship.base_name,
         lv: naked_ship.lv,
         type: naked_ship.type,
         national: naked_ship.national,

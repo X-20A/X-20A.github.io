@@ -1,4 +1,4 @@
-import { count_Reigo_ships, count_ship, count_Yamato_class } from "../../../models/fleet/AdoptFleet";
+import { count_Reigo_ships, count_ships_by_base_names, count_Yamato_class } from "../../../models/fleet/AdoptFleet";
 import { is_fleet_speed_fast_or_more, is_fleet_speed_faster_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
 import { is_fleet_combined } from "../../../models/fleet/predicate";
 import { CalcFnWithCondition } from "..";
@@ -10,7 +10,7 @@ export const calc_60_5: CalcFnWithCondition = (
     option,
 ) => {
     const {
-        fleet, fleet_type, ships_length, speed, seek, route,
+        fleet, ship_names, base_ship_names, fleet_type, ships_length, speed, seek, route,
         drum_carrier_count, craft_carrier_count, radar_carrier_count,
         arBulge_carrier_count, SBB_count,
         BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,
@@ -166,7 +166,10 @@ export const calc_60_5: CalcFnWithCondition = (
             if (LHA + AV + AO > 2) {
                 return 'Q';
             }
-            if (Ds < 4 && count_ship(fleet, ['杉', '榧']) === 0) {
+            if (
+                Ds < 4 &&
+                count_ships_by_base_names(['杉', '榧'], base_ship_names) === 0
+            ) {
                 return 'Q';
             }
             if (difficulty === 4 && count_Reigo_ships(fleet) < 5) {

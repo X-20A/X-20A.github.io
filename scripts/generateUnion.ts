@@ -9,24 +9,24 @@ const generate_union_type = (
 ): void => {
     const input_file_path = path.resolve(__dirname, input_path);
 
-    const fileContent = fs.readFileSync(input_file_path, "utf-8");
+    const file_content = fs.readFileSync(input_file_path, "utf-8");
 
     // 正規表現で値を抽出
-    const matches = [...fileContent.matchAll(extract_pattern)];
+    const matches = [...file_content.matchAll(extract_pattern)];
     const names = Array.from(new Set(matches.map((match) => match[1])));
 
     // 全て数値なら数値リテラル型、そうでなければ文字列リテラル型
-    const isAllNumber = names.every(num => {
+    const is_all_number = names.every(num => {
         if (!num) throw new Error('正規表現抽出に失敗しました');
         return /^\d+$/.test(num);
     });
-    const typeDef = [
+    const type_def = [
         '/**',
         ` * ${type_name}ユニオン型 (自動生成)`,
         ` * @see ${input_path.replace(/^(\.\.\/)+/, '')}`,
         ' */',
         `export type ${type_name} =`,
-        names.map((n) => isAllNumber
+        names.map((n) => is_all_number
             ? `    | ${n}`
             : `    | '${n}'`).join("\n"),
         ';',
@@ -35,7 +35,7 @@ const generate_union_type = (
 
     fs.writeFileSync(
         path.resolve(__dirname, output_path),
-        typeDef,
+        type_def,
         "utf-8"
     );
 

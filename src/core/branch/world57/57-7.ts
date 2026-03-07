@@ -1,8 +1,9 @@
-import { count_Yamato_class, include_ship_names } from "../../../models/fleet/AdoptFleet";
+import { count_Yamato_class } from "../../../models/fleet/AdoptFleet";
 import { is_fleet_speed_fast_or_more, is_fleet_speed_faster_or_more, is_fleet_speed_fastest, is_fleet_speed_slow } from "../../../logic/speed/predicate";
 import { is_fleet_carrier, is_fleet_combined, is_fleet_surface, is_fleet_transport } from "../../../models/fleet/predicate";
 import { destructuring_assignment_helper, omission_of_conditions } from "../util";
 import { CalcFnWithCondition } from "..";
+import { includes_ship_names } from "../../../models/ship/predicate";
 
 export const calc_57_7: CalcFnWithCondition = (
     node,
@@ -10,7 +11,7 @@ export const calc_57_7: CalcFnWithCondition = (
     option,
 ) => {
     const {
-        fleet, fleet_type, ships_length, speed, seek, route,
+        fleet, ship_names, base_ship_names, fleet_type, ships_length, speed, seek, route,
         drum_carrier_count, craft_carrier_count, radar_carrier_count,
         arBulge_carrier_count, SBB_count,
         BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,
@@ -88,7 +89,7 @@ export const calc_57_7: CalcFnWithCondition = (
             return 'B1';
         case 'C2':
             if (phase >= 5
-                && include_ship_names(fleet, ['明石改', '秋津洲改', '速吸改', '神威改母', '山汐丸改', '宗谷'])
+                && includes_ship_names(['明石改', '秋津洲改', '速吸改', '神威改母', '山汐丸改', '宗谷'], ship_names)
                 && is_fleet_speed_fast_or_more(speed)
             ) {
                 return 'L';
@@ -194,7 +195,7 @@ export const calc_57_7: CalcFnWithCondition = (
             if (phase < 6) {
                 return 'W';
             }
-            if (include_ship_names(fleet, ['明石改', '秋津洲改', '速吸改', '神威改母', '山汐丸改', '宗谷'])) {
+            if (includes_ship_names(['明石改', '秋津洲改', '速吸改', '神威改母', '山汐丸改', '宗谷'], ship_names)) {
                 return 'Y';
             }
             return 'Z';

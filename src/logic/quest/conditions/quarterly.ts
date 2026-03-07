@@ -1,5 +1,5 @@
 import { QuestCompositionCondition, NO_CONDITIONS } from ".";
-import { count_ships_by_names } from "../../../models/fleet/AdoptFleet";
+import { count_ships_by_base_names, extract_flagship } from "../../../models/fleet/AdoptFleet";
 import { includes_ship_name, includes_ship_names } from "../../../models/ship/predicate";
 import { ShipName } from "../../../types/shipName";
 
@@ -45,39 +45,12 @@ export const calc_Bq6: QuestCompositionCondition = (fleet) => {
     );
 };
 
-const CHOKAI_SERIES: ShipName[] = [
-    '鳥海', '鳥海改', '鳥海改二',
-] as const;
-const AOBA_SERIES: ShipName[] = [
-    '青葉', '青葉改',
-] as const;
-const KINUGASA_SERIES: ShipName[] = [
-    '衣笠', '衣笠改', '衣笠改二',
-] as const;
-const KAKO_SERIES: ShipName[] = [
-    '加古', '加古改', '加古改二',
-] as const;
-const HURUTAKA_SERIES: ShipName[] = [
-    '古鷹', '古鷹改', '古鷹改二',
-] as const;
-const TENRYU_SERIES: ShipName[] = [
-    '天龍', '天龍改', '天龍改二',
-] as const;
-const YUBARI_SERIES: ShipName[] = [
-    '夕張', '夕張改', '夕張改二', '夕張改二丁', '夕張改二特',
-] as const;
-
 export const calc_Bq7: QuestCompositionCondition = (fleet) => {
-    const { ship_names } = fleet;
-    return (
-        count_ships_by_names(CHOKAI_SERIES, ship_names)
-        + count_ships_by_names(AOBA_SERIES, ship_names)
-        + count_ships_by_names(KINUGASA_SERIES, ship_names)
-        + count_ships_by_names(KAKO_SERIES, ship_names)
-        + count_ships_by_names(HURUTAKA_SERIES, ship_names)
-        + count_ships_by_names(TENRYU_SERIES, ship_names)
-        + count_ships_by_names(YUBARI_SERIES, ship_names) >= 4
-    );
+    const { base_ship_names: base_ship_names } = fleet;
+    return count_ships_by_base_names(
+            ['鳥海', '青葉', '衣笠', '加古', '古鷹', '天龍', '夕張'],
+            base_ship_names,
+        ) >= 4;
 };
 
 export const calc_Bq8: QuestCompositionCondition =
@@ -107,39 +80,20 @@ export const calc_Bq12: QuestCompositionCondition =
 const YUBARI_KAI_NI_SERIES: ShipName[] = [
     '夕張改二', '夕張改二丁', '夕張改二特',
 ] as const;
-const MUTSUKI_SERIES: ShipName[] = [
-    '睦月', '睦月改', '睦月改二',
-] as const;
-const KISARAGI_SERIES: ShipName[] = [
-    '如月', '如月改', '如月改二',
-] as const;
-const YAYOI_SERIES: ShipName[] = [
-    '弥生', '弥生改',
-] as const;
-const UZUKI_SERIES: ShipName[] = [
-    '卯月', '卯月改',
-] as const;
-const KIKUZUKI: ShipName[] = [
-    '菊月', '菊月改',
-] as const;
-const MOCHIZUKI: ShipName[] = [
-    '望月', '望月改',
-] as const;
 
 export const calc_Bq13: QuestCompositionCondition = (fleet) => {
-    const { ship_names } = fleet;
-    const flagship_name = fleet.fleets[0].units[0].ship.name;
+    const {
+        ship_names,
+        base_ship_names: base_ship_names,
+    } = fleet;
+    const flagship_name = extract_flagship(fleet).name;
     return (
         includes_ship_name(YUBARI_KAI_NI_SERIES, flagship_name) &&
         (
-            (
-                count_ships_by_names(MUTSUKI_SERIES, ship_names)
-                + count_ships_by_names(KISARAGI_SERIES, ship_names)
-                + count_ships_by_names(YAYOI_SERIES, ship_names)
-                + count_ships_by_names(UZUKI_SERIES, ship_names)
-                + count_ships_by_names(KIKUZUKI, ship_names)
-                + count_ships_by_names(MOCHIZUKI, ship_names) >= 2
-            ) ||
+            count_ships_by_base_names(
+                ['睦月', '如月', '弥生', '卯月', '菊月', '望月'],
+                base_ship_names,
+            ) >= 2 ||
             includes_ship_name(ship_names, '由良改二')
         )
     );

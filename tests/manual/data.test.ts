@@ -15,6 +15,7 @@ describe('Dataテスト', () => {
             type: ShipType,
             min_scout: number,
             scout: number,
+            orig: number,
         }
         type MasterItem = {
             id: number,
@@ -32,10 +33,11 @@ describe('Dataテスト', () => {
             type: ShipType,
             seek: number,
             seek2: number,
+            base: number,
         }
         type MismatchShipParam = {
             id: number,
-            param: 'name' | 'type' | 'seek' | 'seek2',
+            param: 'name' | 'type' | 'seek' | 'seek2' | 'base',
             ship_name: string,
             master_param: number | string,
         }
@@ -52,6 +54,7 @@ describe('Dataテスト', () => {
                     type: ac_ship.type,
                     seek: ac_ship.min_scout,
                     seek2: ac_ship.scout,
+                    base: ac_ship.orig,
                 });
                 continue;
             }
@@ -92,6 +95,15 @@ describe('Dataテスト', () => {
                     param: 'seek2',
                     ship_name: ac_ship.name,
                     master_param: ac_ship.scout,
+                });
+            }
+
+            if (ac_ship.orig !== ship.base) {
+                mismatch_ship_params.push({
+                    id: ac_ship.id,
+                    param: 'base',
+                    ship_name: ac_ship.name,
+                    master_param: ac_ship.orig,
                 });
             }
         }
