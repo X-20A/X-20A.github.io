@@ -194,7 +194,7 @@ export function includes_base_ship(
 }
 
 /**
- * 配列に含まれるベース艦の数を返す
+ * target_base_namesに合致するベース艦の数を返す
  * @param target_base_names 
  * @param search_names 
  * @returns 

@@ -116,7 +116,7 @@ export const calc_7_4: CalcFnWithCondition = (
                 || (BBs - SBB_count > 1)
                 || (BBV > 1)
                 || (CVL + count_ships_by_base_names(['あきつ丸'], fleet.base_ship_names) > 1)
-                || (BBs - SBB_count + BBV + CVL + count_ships_by_base_names(['あきつ丸'], fleet.base_ship_names) > 2)
+                || (BBs - SBB_count + BBV + CVL + count_ships_by_base_names(['あきつ丸'], base_ship_names) > 2)
                 || (Ds < 2);
             if (seek.c4 < 45) {
                 return 'N';

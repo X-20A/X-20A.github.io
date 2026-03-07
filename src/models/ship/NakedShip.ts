@@ -62,12 +62,14 @@ export function derive_naked_ship(
         throw new NotYetSupportedShip(`id: ${ship_id}の艦は未対応です`);
     }
     const base_ship_data = SHIP_DATAS[data.base];
+    if (!base_ship_data) {
+        throw new NotYetSupportedShip(`id: ${data.base}の基本艦は未対応です`);
+    }
 
     const ship: NakedShip = {
         id,
         name: data.name,
-        base_name: base_ship_data.name as BaseShipName,
-        lv,
+        base_name: base_ship_data.name as BaseShipName,        lv,
         type: data.type,
         national: data.na,
         speed_group: data.sg,
