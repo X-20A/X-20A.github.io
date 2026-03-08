@@ -1,5 +1,6 @@
 import { QuestCompositionCondition } from "../../../logic/quest/conditions/sortie"
 import { QuestIconType } from "../sortie"
+import { LIMITED_EXERCISE_QUEST_DATAS } from "./limited"
 import { QUARTERLY_EXERCISE_QUEST_DATAS } from "./quarterly"
 import { YEARLY_EXERCISE_QUEST_DATAS } from "./yearly"
 
@@ -11,6 +12,9 @@ export type YearlyExerciseQuestId =
     | 'Cy5' | 'Cy9' | 'Cy13' | 'Cy6' | 'Cy11'
     | 'Cy14' | 'Cy15' | 'Cy1' | 'Cy2' | 'Cy7'
     | 'Cy16'
+
+export type LimitedExerciseQuestId =
+    | '2603C1' | '2602C1' | '2409C1'
 
 export type ExerciseQuestData = {
     readonly name: string,
@@ -24,6 +28,7 @@ export type ExerciseQuestDatas =
     & Record<YearlyExerciseQuestId, ExerciseQuestData>
 
 export const EXERCISE_QUEST_DATAS = {
+    ...LIMITED_EXERCISE_QUEST_DATAS,
     ...QUARTERLY_EXERCISE_QUEST_DATAS,
     ...YEARLY_EXERCISE_QUEST_DATAS,
 } as const satisfies ExerciseQuestDatas;
