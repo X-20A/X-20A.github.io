@@ -2,16 +2,22 @@ import { describe, it } from "vitest";
 import { get_wikiwiki_quest_names, get_zekamashi_article_title } from "../gateway";
 import { SORTIE_QUEST_DATAS } from "../../src/data/quest/sortie";
 import { LIMITED_QUEST_DATAS } from "../../src/data/quest/sortie/limited";
+import { EXERCISE_QUEST_DATAS } from "../../src/data/quest/exercise";
 
 const delay = (
     ms: number,
 ) => new Promise(resolve => setTimeout(resolve, ms));
 
+const all_quest_datas = [
+    ...Object.values(SORTIE_QUEST_DATAS),
+    ...Object.values(EXERCISE_QUEST_DATAS),
+];
+
 describe('任務データ', () => {
     it('quest-test: 任務データ重複チェック', () => {
         const name_set = new Set();
         const zekamashi_id_set = new Set();
-        for (const quest_data of Object.values(SORTIE_QUEST_DATAS)) {
+        for (const quest_data of all_quest_datas) {
             const {
                 zekamashi_id,
                 name,
@@ -30,8 +36,9 @@ describe('任務データ', () => {
     it(
         'quest-test: ぜかましリンク',
         { timeout: 50000 },
-        async () => {
-        for (const quest_data of Object.values(SORTIE_QUEST_DATAS)) {
+    )
+    async () => {
+        for (const quest_data of all_quest_datas) {
             const {
                 zekamashi_id,
                 name,
@@ -54,22 +61,23 @@ describe('任務データ', () => {
 
             await delay(200);
         }
-    });
+    };
     it(
         'quest-test: 期間限定任務 期限切れチェック',
-        { timeout: 10000 }),
+        { timeout: 10000 }
+    ),
         async () => {
-        const quest_names =
-            await get_wikiwiki_quest_names();
-        // console.log('quest_names: ', quest_names);
+            const quest_names =
+                await get_wikiwiki_quest_names();
+            // console.log('quest_names: ', quest_names);
 
-        for (const quest_data of Object.values(LIMITED_QUEST_DATAS)) {
-            const { name } = quest_data;
+            for (const quest_data of Object.values(LIMITED_QUEST_DATAS)) {
+                const { name } = quest_data;
 
-            if (
-                // wikiwikiの任務ページには失効した任務は記載されない
-                !quest_names.includes(name)
-            ) throw new Error(`${name} は期限切れの可能性があります`);
-        }
-    };
+                if (
+                    // wikiwikiの任務ページには失効した任務は記載されない
+                    !quest_names.includes(name)
+                ) throw new Error(`${name} は期限切れの可能性があります`);
+            }
+        };
 });

@@ -59,9 +59,12 @@ export type QuestIconType =
     | 'January'
     | 'February'
     | 'March'
+    | 'April'
     | 'May'
     | 'June'
+    | 'July'
     | 'September'
+    | 'October'
 
 export type QuestPeriod =
     | 'Daily'
@@ -80,9 +83,12 @@ export const QUEST_ICON_PERIOD_MAP:
     January: 'Yearly',
     February: 'Yearly',
     March: 'Yearly',
+    April: 'Yearly',
     May: 'Yearly',
     June: 'Yearly',
+    July: 'Yearly',
     September: 'Yearly',
+    October: 'Yearly',
 };
 
 export type SortieQuestData = {
