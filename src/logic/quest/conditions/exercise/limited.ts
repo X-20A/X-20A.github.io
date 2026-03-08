@@ -4,8 +4,8 @@ import { QuestCompositionCondition } from "../sortie";
 
 export const calc_2603C1: QuestCompositionCondition = (fleet) => {
     const { DD, DE } = fleet.composition;
-    return DD >= 3 ||
-        DE >= 4;
+    return DE >= 3 ||
+        DD >= 4;
 };
 
 const VALENTINE_BASE_NAMES: BaseShipName[] =
