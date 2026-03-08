@@ -6,7 +6,7 @@
 
 		<div class="period-filter">
 			<button v-for="period in PERIOD_BUTTONS" :key="period.label" class="period-button"
-				:class="{ active: selected_period === period.value }" @pointerdown="select_period(period.value)">
+				:class="{ active: selected_quest_filter_key === period.value }" @pointerdown="select_period(period.value)">
 				{{ period.label }}
 			</button>
 		</div>
@@ -99,7 +99,7 @@ const select_area = (area_id: NormalAreaId): void => {
 	store.SAVE_DATA();
 };
 
-type QuestFilterType = QuestPeriod | 'All' | 'Both_Area' | 'Exercise'
+export type QuestFilterType = QuestPeriod | 'All' | 'Both_Area' | 'Exercise'
 
 const PERIOD_BUTTONS: readonly { label: string; value: QuestFilterType }[] = [
 	{ label: 'Area', value: 'Both_Area' },
@@ -112,11 +112,17 @@ const PERIOD_BUTTONS: readonly { label: string; value: QuestFilterType }[] = [
 	{ label: 'Y', value: 'Yearly' },
 ];
 
-const selected_period = ref<QuestFilterType | null>('Both_Area');
+const selected_quest_filter_key = computed<QuestFilterType>({
+	get: () => store.quest_filter_key ?? 'Both_Area',
+	set: (value) => {
+		store.UPDATE_QUEST_FILTER_KEY(value);
+		store.SAVE_DATA();
+	},
+});
 
-const select_period = (period: QuestFilterType): void => {
-	selected_period.value =
-		selected_period.value === period ? 'All' : period;
+const select_period = (key: QuestFilterType): void => {
+	selected_quest_filter_key.value =
+		selected_quest_filter_key.value === key ? 'All' : key;
 };
 
 /** 編成条件の表示テキストを返す */
@@ -146,19 +152,19 @@ const view_quest_datas: Ref<ViewSortieQuestData[] | ViewExerciseQuestData[]> = r
 const filtered_view_quest_datas =
 	computed<ViewSortieQuestData[] | ViewExerciseQuestData[]>(() => {
 	if (
-		!selected_period.value ||
-		selected_period.value === 'All' ||
+		!selected_quest_filter_key.value ||
+		selected_quest_filter_key.value === 'All' ||
 		!selected_area.value ||
 		!is_view_sortie_quest_datas(view_quest_datas.value) ||
-		selected_period.value === 'Exercise'
+		selected_quest_filter_key.value === 'Exercise'
 	) return view_quest_datas.value;
 
 	if (
-		selected_period.value !== 'Both_Area'
+		selected_quest_filter_key.value !== 'Both_Area'
 	) {
 		return filter_by_period(
 			view_quest_datas.value as ViewSortieQuestData[],
-			selected_period.value,
+			selected_quest_filter_key.value,
 		);
 	}
 
@@ -171,14 +177,14 @@ const filtered_view_quest_datas =
 });
 
 watch(
-	[selected_area, adopt_fleet, options, selected_period],
+	[selected_area, adopt_fleet, options, selected_quest_filter_key],
 	() => {
 		if (!selected_area.value || !adopt_fleet.value || !options.value) {
 			view_quest_datas.value = [];
 			return;
 		}
 
-		view_quest_datas.value = selected_period.value === 'Exercise'
+		view_quest_datas.value = selected_quest_filter_key.value === 'Exercise'
 			? calc_view_exercise_quest_data(
 				Object.values(EXERCISE_QUEST_DATAS),
 				adopt_fleet.value,
