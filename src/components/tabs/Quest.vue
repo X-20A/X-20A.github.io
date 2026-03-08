@@ -14,9 +14,13 @@
 		<template v-for="data in filtered_view_quest_datas" :key="data.zekamashi_id">
 			<div class="quest-block">
 				<div class="quest-header">
-					<div class="sortie-icon-wrapper">
-						<img :src="`./quest/sortie_quest.png`" class="sortie-icon" alt="sortie quest" />
-						<img :src="`./quest/${data.icon}.png`" class="sortie-overlay-icon" alt="overlay icon" />
+					<div class="quest-icon-wrapper">
+						<img
+						:src="'area_sim_results' in data ? `./quest/sortie_quest.png` : `./quest/exercise_quest.png`"
+						class="quest-icon"
+						alt="quest-icon"
+						/>
+						<img :src="`./quest/${data.icon}.png`" class="quest-overlay-icon" alt="overlay icon" />
 					</div>
 
 					<p class="quest-name">
@@ -43,23 +47,25 @@
 					</div>
 
 					<div class="area-node summary-node">
-						<span class="tree-line"></span>
-						<p class="area-text">
-							<span class="area-label">到達率</span>
-							<span class="area-results">
-								<template v-for="(sim_result, index) in data.area_sim_results" :key="sim_result.area_id">
-									<span class="area-id" @pointerdown="select_area(sim_result.area_id)">
-										{{ sim_result.area_id }}
-									</span>
-									<span class="area-rate">
-										: {{ sim_result.reach_rate }}%
-									</span>
-									<span v-if="index < data.area_sim_results.length - 1">
-										,
-									</span>
-								</template>
-							</span>
-						</p>
+						<template v-if="'area_sim_results' in data">
+							<p class="area-text">
+								<span class="area-label">到達率</span>
+								<span class="area-results">
+									<template v-for="(sim_result, index) in data.area_sim_results" :key="sim_result.area_id">
+										<span class="area-id" @pointerdown="select_area(sim_result.area_id)">
+											{{ sim_result.area_id }}
+										</span>
+										<span class="area-rate">
+											: {{ sim_result.reach_rate }}%
+										</span>
+										<span v-if="index < data.area_sim_results.length - 1">
+											,
+										</span>
+									</template>
+								</span>
+							</p>
+							<span class="tree-line"></span>
+						</template>
 					</div>
 				</div>
 			</div>
@@ -70,10 +76,11 @@
 <script setup lang="ts">
 import { computed, ref, watch, Ref } from 'vue';
 import { useStore } from '../../stores';
-import { QUEST_DATAS, QuestPeriod } from '../../data/quest';
-import { calc_view_quest_data, filter_both_area, filter_by_period, has_normal_area_id, ViewQuestData } from '../../logic/quest/search';
-import { CompositionCondition } from '../../logic/quest/conditions';
+import { SORTIE_QUEST_DATAS, QuestPeriod } from '../../data/quest/sortie';
+import { calc_view_exercise_quest_data, calc_view_sortie_quest_data, filter_both_area, filter_by_period, has_normal_area_id, is_view_sortie_quest_datas, ViewExerciseQuestData, ViewSortieQuestData } from '../../logic/quest/search';
+import { CompositionCondition } from '../../logic/quest/conditions/sortie';
 import { NormalAreaId } from '../../types';
+import { EXERCISE_QUEST_DATAS } from '../../data/quest/exercise';
 
 const store = useStore();
 
@@ -92,10 +99,11 @@ const select_area = (area_id: NormalAreaId): void => {
 	store.SAVE_DATA();
 };
 
-type QuestFilterType = QuestPeriod | 'All' | 'Both_Area'
+type QuestFilterType = QuestPeriod | 'All' | 'Both_Area' | 'Exercise'
 
 const PERIOD_BUTTONS: readonly { label: string; value: QuestFilterType }[] = [
 	{ label: 'Area', value: 'Both_Area' },
+	{ label: 'E', value: 'Exercise' },
 	{ label: 'All', value: 'All' },
 	{ label: 'D', value: 'Daily' },
 	{ label: 'W', value: 'Weekly' },
@@ -131,39 +139,55 @@ function composition_condition_class(
 	return state ? 'condition-ok' : 'condition-ng';
 }
 
-const QUEST_DATA_VALUES = Object.values(QUEST_DATAS);
+const QUEST_DATA_VALUES = Object.values(SORTIE_QUEST_DATAS);
 
-const view_quest_datas: Ref<readonly ViewQuestData[]> = ref([]);
+const view_quest_datas: Ref<ViewSortieQuestData[] | ViewExerciseQuestData[]> = ref([]);
 
-const filtered_view_quest_datas = computed<readonly ViewQuestData[]>(() => {
+const filtered_view_quest_datas =
+	computed<ViewSortieQuestData[] | ViewExerciseQuestData[]>(() => {
 	if (
 		!selected_period.value ||
 		selected_period.value === 'All' ||
-		!selected_area.value
+		!selected_area.value ||
+		!is_view_sortie_quest_datas(view_quest_datas.value) ||
+		selected_period.value === 'Exercise'
 	) return view_quest_datas.value;
 
 	if (
 		selected_period.value !== 'Both_Area'
-	) return filter_by_period(view_quest_datas.value, selected_period.value);
+	) {
+		return filter_by_period(
+			view_quest_datas.value as ViewSortieQuestData[],
+			selected_period.value,
+		);
+	}
 
 	return has_normal_area_id(selected_area.value) 
-		? filter_both_area(view_quest_datas.value, selected_area.value)
+		? filter_both_area(
+			view_quest_datas.value as ViewSortieQuestData[],
+			selected_area.value,
+		)
 		: [];
 });
 
 watch(
-	[selected_area, adopt_fleet, options],
+	[selected_area, adopt_fleet, options, selected_period],
 	() => {
 		if (!selected_area.value || !adopt_fleet.value || !options.value) {
 			view_quest_datas.value = [];
 			return;
 		}
 
-		view_quest_datas.value = calc_view_quest_data(
-			QUEST_DATA_VALUES,
-			adopt_fleet.value,
-			options.value,
-		);
+		view_quest_datas.value = selected_period.value === 'Exercise'
+			? calc_view_exercise_quest_data(
+				Object.values(EXERCISE_QUEST_DATAS),
+				adopt_fleet.value,
+			)
+			: calc_view_sortie_quest_data(
+				QUEST_DATA_VALUES,
+				adopt_fleet.value,
+				options.value,
+			);
 	},
 	{ immediate: true },
 );
@@ -218,7 +242,7 @@ watch(
 	gap: 8px;
 }
 
-.sortie-icon-wrapper {
+.quest-icon-wrapper {
 	position: relative;
 	height: 48px;
 	width: 48px;
@@ -226,16 +250,16 @@ watch(
 	margin-top: 4px;
 }
 
-.sortie-icon {
+.quest-icon {
 	height: 48px;
 	width: 48px;
 	display: block;
 }
 
-.sortie-overlay-icon {
+.quest-overlay-icon {
 	position: absolute;
 	right: -8px;
-	bottom: -1px;
+	bottom: -3px;
 	height: 24px;
 	width: 24px;
 }
@@ -278,6 +302,7 @@ watch(
 	display: flex;
 	align-items: flex-start;
 	padding-left: 20px;
+	height: 18px;
 }
 
 .tree-line {

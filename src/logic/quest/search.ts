@@ -1,11 +1,12 @@
 import Big from "big.js";
 import { derive_sim_executer, start_sim } from "../../core/SimExecutor";
 import { NODE_DATAS, NT } from "../../data/map";
-import { QUEST_ICON_PERIOD_MAP, QuestData, QuestIconType, QuestPeriod, TargetNodeInfo } from "../../data/quest";
+import { QUEST_ICON_PERIOD_MAP, SortieQuestData, QuestIconType, QuestPeriod, TargetNodeInfo } from "../../data/quest/sortie";
 import { AdoptFleet } from "../../models/fleet/AdoptFleet";
 import { AreaId, NORMAL_AREA_ID_LIST, NormalAreaId, OptionsType, SimResult } from "../../types";
-import { CompositionCondition, QuestCompositionCondition } from "./conditions";
+import { CompositionCondition, QuestCompositionCondition } from "./conditions/sortie";
 import { is_fleet_combined, is_fleet_striking } from "../../models/fleet/predicate";
+import { ExerciseQuestData } from "../../data/quest/exercise";
 
 type AreaSimResult = {
     area_id: NormalAreaId,
@@ -137,23 +138,53 @@ const evaluate_condition = (
     return codititon_state;
 }
 
-export type ViewQuestData = {
+export type ViewExerciseQuestData = {
     name: string,
     icon: QuestIconType,
     zekamashi_id: string,
     composition_condition_state: CompositionCondition,
+}
+
+export type ViewSortieQuestData = ViewExerciseQuestData & {
     area_sim_results: AreaSimResult[],
 }
 
-export function calc_view_quest_data(
-    quest_datas: QuestData[],
+export function is_view_sortie_quest_datas(
+    datas: ViewExerciseQuestData[] | ViewSortieQuestData[],
+): datas is ViewSortieQuestData[] {
+    if (datas.length === 0) return false;
+    return 'area_sim_results' in datas[0];
+}
+export function calc_view_exercise_quest_data(
+    quest_datas: ExerciseQuestData[],
     fleet: AdoptFleet,
-    options: OptionsType,
-): ViewQuestData[] {
-    const view_quest_datas: ViewQuestData[] = quest_datas.map(quest_data => {
+): ViewExerciseQuestData[] {
+    const view_quest_datas: ViewExerciseQuestData[] = quest_datas.map(quest_data => {
         const composition_condition_state =
             evaluate_condition(quest_data.condition, fleet);
-         const evaluate_reach_params: EvalueteReachParam[] = quest_data.target_areas.map(target_area => {
+
+        const view_quest_data: ViewExerciseQuestData = {
+            name: quest_data.name,
+            icon: quest_data.icon,
+            zekamashi_id: quest_data.zekamashi_id,
+            composition_condition_state,
+        };
+
+        return view_quest_data;
+    });
+
+    return view_quest_datas;
+}
+
+export function calc_view_sortie_quest_data(
+    quest_datas: SortieQuestData[],
+    fleet: AdoptFleet,
+    options: OptionsType,
+): ViewSortieQuestData[] {
+    const view_quest_datas: ViewSortieQuestData[] = quest_datas.map(quest_data => {
+        const composition_condition_state =
+            evaluate_condition(quest_data.condition, fleet);
+        const evaluate_reach_params: EvalueteReachParam[] = quest_data.target_areas.map(target_area => {
             const target_node = calc_target_node(target_area);
             const area_id = is_normal_area_id(target_area)
                 ? target_area
@@ -171,7 +202,7 @@ export function calc_view_quest_data(
             options,
          );
 
-        const view_quest_data: ViewQuestData = {
+        const view_quest_data: ViewSortieQuestData = {
             name: quest_data.name,
             icon: quest_data.icon,
             zekamashi_id: quest_data.zekamashi_id,
@@ -186,18 +217,18 @@ export function calc_view_quest_data(
 }
 
 export function filter_by_period(
-    view_quest_datas: readonly ViewQuestData[],
+    view_quest_datas: ViewSortieQuestData[],
     period: QuestPeriod,
-): ViewQuestData[] {
+): ViewSortieQuestData[] {
     return view_quest_datas.filter(data =>
         QUEST_ICON_PERIOD_MAP[data.icon] === period,
     );
 }
 
 export function filter_both_area(
-    view_quest_datas: readonly ViewQuestData[],
+    view_quest_datas: ViewSortieQuestData[],
     area_id: NormalAreaId,
-): readonly ViewQuestData[] {
+): ViewSortieQuestData[] {
     return view_quest_datas.filter(data =>
         data.area_sim_results.some(result => result.area_id === area_id),
     );

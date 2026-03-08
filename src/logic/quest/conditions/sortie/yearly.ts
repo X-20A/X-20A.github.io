@@ -1,7 +1,7 @@
 import { QuestCompositionCondition } from ".";
-import { NA, ST } from "../../../data/ship";
-import { count_ships_by_base_names, extract_flagship, includes_base_ship } from "../../../models/fleet/AdoptFleet";
-import { includes_ship_name, includes_ship_names, includes_ship_type, is_CVs } from "../../../models/ship/predicate";
+import { NA, ST } from "../../../../data/ship";
+import { count_ships_by_base_names, extract_flagship, includes_base_ship } from "../../../../models/fleet/AdoptFleet";
+import { includes_ship_name, includes_ship_names, includes_ship_type, is_CVs } from "../../../../models/ship/predicate";
 
 // wikiがID順でなく月順なので倣う
 

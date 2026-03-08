@@ -1,5 +1,5 @@
-import { QuestData, YearlyQuestId } from ".";
-import { calc_By1, calc_By10, calc_By11, calc_By12, calc_By13, calc_By14, calc_By15, calc_By2, calc_By3, calc_By4, calc_By5, calc_By6, calc_By7, calc_By8, calc_By9 } from "../../logic/quest/conditions/yearly";
+import { SortieQuestData, YearlySortieQuestId } from ".";
+import { calc_By1, calc_By10, calc_By11, calc_By12, calc_By13, calc_By14, calc_By15, calc_By2, calc_By3, calc_By4, calc_By5, calc_By6, calc_By7, calc_By8, calc_By9 } from "../../../logic/quest/conditions/sortie/yearly";
 
 export const YEARLY_QUEST_DATAS = {
     By13: {
@@ -135,4 +135,4 @@ export const YEARLY_QUEST_DATAS = {
         target_areas: ['5-1', '5-3', '5-4', '5-5'],
         condition: calc_By15,
     },
-} as const satisfies Record<YearlyQuestId, QuestData>;
+} as const satisfies Record<YearlySortieQuestId, SortieQuestData>;

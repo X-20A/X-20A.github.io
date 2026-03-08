@@ -1,4 +1,4 @@
-import { AdoptFleet } from "../../../models/fleet/AdoptFleet";
+import { AdoptFleet } from "../../../../models/fleet/AdoptFleet";
 
 export const NO_CONDITIONS = 'No_conditions' as const;
 

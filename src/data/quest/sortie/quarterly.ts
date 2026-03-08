@@ -1,5 +1,5 @@
-import { QuarterlyQuestId, QuestData } from ".";
-import { calc_Bq1, calc_Bq10, calc_Bq11, calc_Bq12, calc_Bq13, calc_Bq2, calc_Bq3, calc_Bq4, calc_Bq5, calc_Bq6, calc_Bq7, calc_Bq8, calc_Bq9 } from "../../logic/quest/conditions/quarterly";
+import { QuarterlySortieQuestId, SortieQuestData } from ".";
+import { calc_Bq1, calc_Bq10, calc_Bq11, calc_Bq12, calc_Bq13, calc_Bq2, calc_Bq3, calc_Bq4, calc_Bq5, calc_Bq6, calc_Bq7, calc_Bq8, calc_Bq9 } from "../../../logic/quest/conditions/sortie/quarterly";
 
 export const QUARTERLY_QUEST_DATAS = {
     Bq1: {
@@ -100,4 +100,4 @@ export const QUARTERLY_QUEST_DATAS = {
         condition: calc_Bq13,
     },
 
-} as const satisfies Record<QuarterlyQuestId, QuestData>;
+} as const satisfies Record<QuarterlySortieQuestId, SortieQuestData>;

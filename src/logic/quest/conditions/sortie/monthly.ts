@@ -1,6 +1,6 @@
 import { QuestCompositionCondition, NO_CONDITIONS } from ".";
-import { ST } from "../../../data/ship";
-import { count_ships_by_base_names, extract_flagship, includes_base_ship, is_flagship_CL } from "../../../models/fleet/AdoptFleet";
+import { ST } from "../../../../data/ship";
+import { count_ships_by_base_names, extract_flagship, includes_base_ship, is_flagship_CL } from "../../../../models/fleet/AdoptFleet";
 
 export const calc_Bm1: QuestCompositionCondition = (fleet) => {
     const { base_ship_names } = fleet;

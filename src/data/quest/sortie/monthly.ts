@@ -1,5 +1,5 @@
-import { MonthlyQuestId, QuestData } from ".";
-import { calc_Bm1, calc_Bm2, calc_Bm3, calc_Bm4, calc_Bm5, calc_Bm6, calc_Bm7, calc_Bm8 } from "../../logic/quest/conditions/monthly";
+import { MonthlySortieQuestId, SortieQuestData } from "../sortie";
+import { calc_Bm1, calc_Bm2, calc_Bm3, calc_Bm4, calc_Bm5, calc_Bm6, calc_Bm7, calc_Bm8 } from "../../../logic/quest/conditions/sortie/monthly";
 
 export const MONTHLY_QUEST_DATAS = {
     Bm1: {
@@ -58,4 +58,4 @@ export const MONTHLY_QUEST_DATAS = {
         target_areas: ['1-2', '1-3', '1-4', '2-1'],
         condition: calc_Bm8,
     },
-} as const satisfies Record<MonthlyQuestId, QuestData>;
+} as const satisfies Record<MonthlySortieQuestId, SortieQuestData>;

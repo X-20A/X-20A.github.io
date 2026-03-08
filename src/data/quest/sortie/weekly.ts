@@ -1,5 +1,5 @@
-import { QuestData, WeeklyQuestId } from ".";
-import { calc_Bw10, calc_Bw6, calc_Bw7, calc_Bw8, calc_Bw9 } from "../../logic/quest/conditions/weekly";
+import { SortieQuestData, WeeklySortieQuestId } from "../sortie";
+import { calc_Bw10, calc_Bw6, calc_Bw7, calc_Bw8, calc_Bw9 } from "../../../logic/quest/conditions/sortie/weekly";
 
 export const WEEKLY_QUEST_DATAS = {
     Bw6: {
@@ -37,4 +37,4 @@ export const WEEKLY_QUEST_DATAS = {
         target_areas: ['1-5'],
         condition: calc_Bw10,
     },
-} as const satisfies Record<WeeklyQuestId, QuestData>;
+} as const satisfies Record<WeeklySortieQuestId, SortieQuestData>;

@@ -1,5 +1,5 @@
-import { LimitedQuestId, QuestData } from ".";
-import { calc_2412B5, calc_2602B1 } from "../../logic/quest/conditions/limited";
+import { LimitedSortieQuestId, SortieQuestData } from "../sortie";
+import { calc_2412B5, calc_2602B1 } from "../../../logic/quest/conditions/sortie/limited";
 
 export const LIMITED_QUEST_DATAS = {
     '2412B5': {
@@ -16,4 +16,4 @@ export const LIMITED_QUEST_DATAS = {
         target_areas: ['1-3', '1-4', '2-1'],
         condition: calc_2602B1,
     },
-} as const satisfies Record<LimitedQuestId, QuestData>;
+} as const satisfies Record<LimitedSortieQuestId, SortieQuestData>;

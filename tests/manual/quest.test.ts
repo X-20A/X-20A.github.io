@@ -1,7 +1,7 @@
 import { describe, it } from "vitest";
 import { get_wikiwiki_quest_names, get_zekamashi_article_title } from "../gateway";
-import { QUEST_DATAS } from "../../src/data/quest";
-import { LIMITED_QUEST_DATAS } from "../../src/data/quest/limited";
+import { SORTIE_QUEST_DATAS } from "../../src/data/quest/sortie";
+import { LIMITED_QUEST_DATAS } from "../../src/data/quest/sortie/limited";
 
 const delay = (
     ms: number,
@@ -11,7 +11,7 @@ describe('任務データ', () => {
     it('quest-test: 任務データ重複チェック', () => {
         const name_set = new Set();
         const zekamashi_id_set = new Set();
-        for (const quest_data of Object.values(QUEST_DATAS)) {
+        for (const quest_data of Object.values(SORTIE_QUEST_DATAS)) {
             const {
                 zekamashi_id,
                 name,
@@ -31,7 +31,7 @@ describe('任務データ', () => {
         'quest-test: ぜかましリンク',
         { timeout: 50000 },
         async () => {
-        for (const quest_data of Object.values(QUEST_DATAS)) {
+        for (const quest_data of Object.values(SORTIE_QUEST_DATAS)) {
             const {
                 zekamashi_id,
                 name,

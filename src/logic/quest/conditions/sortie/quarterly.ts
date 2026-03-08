@@ -1,7 +1,7 @@
 import { QuestCompositionCondition, NO_CONDITIONS } from ".";
-import { count_ships_by_base_names, extract_flagship } from "../../../models/fleet/AdoptFleet";
-import { includes_ship_name, includes_ship_names } from "../../../models/ship/predicate";
-import { ShipName } from "../../../types/shipName";
+import { count_ships_by_base_names, extract_flagship } from "../../../../models/fleet/AdoptFleet";
+import { includes_ship_name, includes_ship_names } from "../../../../models/ship/predicate";
+import { ShipName } from "../../../../types/shipName";
 
 export const calc_Bq1: QuestCompositionCondition =
     () => NO_CONDITIONS;
