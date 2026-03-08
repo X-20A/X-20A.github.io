@@ -4,7 +4,7 @@ import type { NT as NodeType } from "../data/map";
 import { ShipName } from "./shipName";
 import { TabKey } from "../components/modals/Refference.vue";
 import { ShipId } from "./shipId";
-import { QuestFilterType } from "../components/tabs/Quest.vue";
+import { QuestFilterKey } from "../components/tabs/Quest.vue";
 
 export type Brand<T, B> = T & { __brand: B };
 
@@ -107,7 +107,7 @@ export type SaveData = {
     area: AreaId | null,
     options: OptionsType | null,
     refferrence_tab_key: TabKey,
-    quest_filter_key: QuestFilterType,
+    quest_filter_key: QuestFilterKey,
 }
 
 export type BranchLastUpdate = {

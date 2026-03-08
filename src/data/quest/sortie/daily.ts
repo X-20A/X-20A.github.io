@@ -1,7 +1,7 @@
 import { DailySortieQuestId, SortieQuestData } from ".";
 import { calc_Bd7 } from "../../../logic/quest/conditions/sortie/daily";
 
-export const DAILY_QUEST_DATAS = {
+export const DAILY_SORTIE_QUEST_DATAS = {
     Bd7: {
         name: '南西諸島海域の制海権を握れ！',
         icon: 'Daily',

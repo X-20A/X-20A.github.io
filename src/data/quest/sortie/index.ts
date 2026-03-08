@@ -1,11 +1,11 @@
 import { QuestCompositionCondition } from "../../../logic/quest/conditions/sortie";
 import { NormalAreaId } from "../../../types";
-import { DAILY_QUEST_DATAS } from "./daily";
-import { LIMITED_QUEST_DATAS } from "./limited";
-import { MONTHLY_QUEST_DATAS } from "./monthly";
-import { QUARTERLY_QUEST_DATAS } from "./quarterly";
-import { WEEKLY_QUEST_DATAS } from "./weekly";
-import { YEARLY_QUEST_DATAS } from "./yearly";
+import { DAILY_SORTIE_QUEST_DATAS } from "./daily";
+import { LIMITED_SORTIE_QUEST_DATAS } from "./limited";
+import { MONTHLY_SORTIE_QUEST_DATAS } from "./monthly";
+import { QUARTERLY_SORTIE_QUEST_DATAS } from "./quarterly";
+import { WEEKLY_SORTIE_QUEST_DATAS } from "./weekly";
+import { YEARLY_SORTIE_QUEST_DATAS } from "./yearly";
 
 export type DailySortieQuestId =
     | 'Bd7'
@@ -108,10 +108,10 @@ export type SortieQuestDatas =
     & Record<LimitedSortieQuestId, SortieQuestData>
 
 export const SORTIE_QUEST_DATAS = {
-    ...DAILY_QUEST_DATAS,
-    ...WEEKLY_QUEST_DATAS,
-    ...MONTHLY_QUEST_DATAS,
-    ...QUARTERLY_QUEST_DATAS,
-    ...YEARLY_QUEST_DATAS,
-    ...LIMITED_QUEST_DATAS,
+    ...DAILY_SORTIE_QUEST_DATAS,
+    ...WEEKLY_SORTIE_QUEST_DATAS,
+    ...MONTHLY_SORTIE_QUEST_DATAS,
+    ...QUARTERLY_SORTIE_QUEST_DATAS,
+    ...YEARLY_SORTIE_QUEST_DATAS,
+    ...LIMITED_SORTIE_QUEST_DATAS,
 } as const satisfies SortieQuestDatas;

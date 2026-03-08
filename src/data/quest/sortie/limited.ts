@@ -1,7 +1,7 @@
 import { LimitedSortieQuestId, SortieQuestData } from "../sortie";
 import { calc_2412B5, calc_2602B1 } from "../../../logic/quest/conditions/sortie/limited";
 
-export const LIMITED_QUEST_DATAS = {
+export const LIMITED_SORTIE_QUEST_DATAS = {
     '2412B5': {
         name: '【期間限定任務】「三十二駆」月次戦闘哨戒！',
         icon: 'Monthly',

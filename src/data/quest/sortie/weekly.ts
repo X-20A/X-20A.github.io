@@ -1,7 +1,7 @@
 import { SortieQuestData, WeeklySortieQuestId } from "../sortie";
 import { calc_Bw10, calc_Bw6, calc_Bw7, calc_Bw8, calc_Bw9 } from "../../../logic/quest/conditions/sortie/weekly";
 
-export const WEEKLY_QUEST_DATAS = {
+export const WEEKLY_SORTIE_QUEST_DATAS = {
     Bw6: {
         name: '敵東方艦隊を撃滅せよ！',
         icon: 'Weekly',

@@ -1,7 +1,7 @@
 import { describe, it } from "vitest";
 import { get_wikiwiki_quest_names, get_zekamashi_article_title } from "../gateway";
 import { SORTIE_QUEST_DATAS } from "../../src/data/quest/sortie";
-import { LIMITED_QUEST_DATAS } from "../../src/data/quest/sortie/limited";
+import { LIMITED_SORTIE_QUEST_DATAS } from "../../src/data/quest/sortie/limited";
 import { EXERCISE_QUEST_DATAS } from "../../src/data/quest/exercise";
 
 const delay = (
@@ -71,7 +71,7 @@ describe('任務データ', () => {
                 await get_wikiwiki_quest_names();
             // console.log('quest_names: ', quest_names);
 
-            for (const quest_data of Object.values(LIMITED_QUEST_DATAS)) {
+            for (const quest_data of Object.values(LIMITED_SORTIE_QUEST_DATAS)) {
                 const { name } = quest_data;
 
                 if (

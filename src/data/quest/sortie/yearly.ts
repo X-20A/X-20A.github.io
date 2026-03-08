@@ -1,7 +1,7 @@
 import { SortieQuestData, YearlySortieQuestId } from ".";
 import { calc_By1, calc_By10, calc_By11, calc_By12, calc_By13, calc_By14, calc_By15, calc_By2, calc_By3, calc_By4, calc_By5, calc_By6, calc_By7, calc_By8, calc_By9 } from "../../../logic/quest/conditions/sortie/yearly";
 
-export const YEARLY_QUEST_DATAS = {
+export const YEARLY_SORTIE_QUEST_DATAS = {
     By13: {
         name: '精強「第七駆逐隊」緊急出動！',
         icon: 'January',

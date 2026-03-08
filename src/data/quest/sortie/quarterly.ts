@@ -1,7 +1,7 @@
 import { QuarterlySortieQuestId, SortieQuestData } from ".";
 import { calc_Bq1, calc_Bq10, calc_Bq11, calc_Bq12, calc_Bq13, calc_Bq2, calc_Bq3, calc_Bq4, calc_Bq5, calc_Bq6, calc_Bq7, calc_Bq8, calc_Bq9 } from "../../../logic/quest/conditions/sortie/quarterly";
 
-export const QUARTERLY_QUEST_DATAS = {
+export const QUARTERLY_SORTIE_QUEST_DATAS = {
     Bq1: {
         name: '沖ノ島海域迎撃戦',
         icon: 'Quarterly',

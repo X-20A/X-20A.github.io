@@ -99,9 +99,9 @@ const select_area = (area_id: NormalAreaId): void => {
 	store.SAVE_DATA();
 };
 
-export type QuestFilterType = QuestPeriod | 'All' | 'Both_Area' | 'Exercise'
+export type QuestFilterKey = QuestPeriod | 'All' | 'Both_Area' | 'Exercise'
 
-const PERIOD_BUTTONS: readonly { label: string; value: QuestFilterType }[] = [
+const PERIOD_BUTTONS: readonly { label: string; value: QuestFilterKey }[] = [
 	{ label: 'Area', value: 'Both_Area' },
 	{ label: 'E', value: 'Exercise' },
 	{ label: 'All', value: 'All' },
@@ -112,7 +112,7 @@ const PERIOD_BUTTONS: readonly { label: string; value: QuestFilterType }[] = [
 	{ label: 'Y', value: 'Yearly' },
 ];
 
-const selected_quest_filter_key = computed<QuestFilterType>({
+const selected_quest_filter_key = computed<QuestFilterKey>({
 	get: () => store.quest_filter_key ?? 'Both_Area',
 	set: (value) => {
 		store.UPDATE_QUEST_FILTER_KEY(value);
@@ -120,7 +120,7 @@ const selected_quest_filter_key = computed<QuestFilterType>({
 	},
 });
 
-const select_period = (key: QuestFilterType): void => {
+const select_period = (key: QuestFilterKey): void => {
 	selected_quest_filter_key.value =
 		selected_quest_filter_key.value === key ? 'All' : key;
 };
@@ -144,8 +144,6 @@ function composition_condition_class(
 	}
 	return state ? 'condition-ok' : 'condition-ng';
 }
-
-const QUEST_DATA_VALUES = Object.values(SORTIE_QUEST_DATAS);
 
 const view_quest_datas: Ref<ViewSortieQuestData[] | ViewExerciseQuestData[]> = ref([]);
 
@@ -176,6 +174,9 @@ const filtered_view_quest_datas =
 		: [];
 });
 
+const SORTIE_QUEST_DATA_VALUES = Object.values(SORTIE_QUEST_DATAS);
+const EXERCISE_QUEST_DATA_VALUES = Object.values(EXERCISE_QUEST_DATAS);
+
 watch(
 	[selected_area, adopt_fleet, options, selected_quest_filter_key],
 	() => {
@@ -186,11 +187,11 @@ watch(
 
 		view_quest_datas.value = selected_quest_filter_key.value === 'Exercise'
 			? calc_view_exercise_quest_data(
-				Object.values(EXERCISE_QUEST_DATAS),
+				EXERCISE_QUEST_DATA_VALUES,
 				adopt_fleet.value,
 			)
 			: calc_view_sortie_quest_data(
-				QUEST_DATA_VALUES,
+				SORTIE_QUEST_DATA_VALUES,
 				adopt_fleet.value,
 				options.value,
 			);

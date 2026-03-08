@@ -20,7 +20,7 @@ import { is_battle_node, is_last_stop_node, type CommandEvacuation } from '../co
 import type { Node } from '../types/brand';
 import { parseOptionsType } from '../models/shemas';
 import { TabKey } from '../components/modals/Refference.vue';
-import { QuestFilterType } from '../components/tabs/Quest.vue';
+import { QuestFilterKey } from '../components/tabs/Quest.vue';
 
 export type LoadDataCommands = {
     /** deck読込をスキップするか */
@@ -68,7 +68,7 @@ export const useStore = defineStore('compass', {
         commandEvacuations: [] as CommandEvacuation[],
 
         refferenceTabKey: 'route' as TabKey,
-        quest_filter_key: 'Both_Area' as QuestFilterType,
+        quest_filter_key: 'Both_Area' as QuestFilterKey,
 	}),
 	actions: {
         UPDATE_DECK(value: string): void {
@@ -106,7 +106,7 @@ export const useStore = defineStore('compass', {
         UPDATE_REFFERENCE_TAB_KEY(refferrence_tab_key: TabKey): void {
             this.refferenceTabKey = refferrence_tab_key;
         },
-        UPDATE_QUEST_FILTER_KEY(quest_filter_key: QuestFilterType): void {
+        UPDATE_QUEST_FILTER_KEY(quest_filter_key: QuestFilterKey): void {
             this.quest_filter_key = quest_filter_key;
         },
         SWITCH_SEEK(): void {
