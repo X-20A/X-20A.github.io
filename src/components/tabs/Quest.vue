@@ -309,7 +309,7 @@ watch(
 	display: flex;
 	align-items: flex-start;
 	padding-left: 20px;
-	height: 18px;
+	min-height: 18px;
 }
 
 .tree-line {
