@@ -4,10 +4,10 @@
 			※到達率の演算には現在の設定の能動分岐が使用されます
 		</p>
 
-		<div class="period-filter">
-			<button v-for="period in PERIOD_BUTTONS" :key="period.label" class="period-button"
-				:class="{ active: selected_quest_filter_key === period.value }" @pointerdown="select_period(period.value)">
-				{{ period.label }}
+		<div class="filter-key-box">
+			<button v-for="buttons in FILTER_KEY_BUTTONS" :key="buttons.label" class="filter_key-button"
+				:class="{ active: selected_quest_filter_key === buttons.value }" @pointerdown="select_filter_key(buttons.value)">
+				{{ buttons.label }}
 			</button>
 		</div>
 
@@ -77,7 +77,7 @@
 import { computed, ref, watch, Ref } from 'vue';
 import { useStore } from '../../stores';
 import { SORTIE_QUEST_DATAS, QuestPeriod } from '../../data/quest/sortie';
-import { calc_view_exercise_quest_data, calc_view_sortie_quest_data, filter_both_area, filter_by_period, has_normal_area_id, is_view_sortie_quest_datas, ViewExerciseQuestData, ViewSortieQuestData } from '../../logic/quest/search';
+import { calc_view_exercise_quest_data, calc_view_sortie_quest_data, filter_both_area, filter_by_key, has_normal_area_id, is_view_sortie_quest_datas, ViewExerciseQuestData, ViewSortieQuestData } from '../../logic/quest/search';
 import { CompositionCondition } from '../../logic/quest/conditions/sortie';
 import { NormalAreaId } from '../../types';
 import { EXERCISE_QUEST_DATAS } from '../../data/quest/exercise';
@@ -101,7 +101,7 @@ const select_area = (area_id: NormalAreaId): void => {
 
 export type QuestFilterKey = QuestPeriod | 'All' | 'Both_Area' | 'Exercise'
 
-const PERIOD_BUTTONS: readonly { label: string; value: QuestFilterKey }[] = [
+const FILTER_KEY_BUTTONS: readonly { label: string; value: QuestFilterKey }[] = [
 	{ label: 'Area', value: 'Both_Area' },
 	{ label: 'E', value: 'Exercise' },
 	{ label: 'All', value: 'All' },
@@ -120,7 +120,7 @@ const selected_quest_filter_key = computed<QuestFilterKey>({
 	},
 });
 
-const select_period = (key: QuestFilterKey): void => {
+const select_filter_key = (key: QuestFilterKey): void => {
 	selected_quest_filter_key.value =
 		selected_quest_filter_key.value === key ? 'All' : key;
 };
@@ -160,7 +160,7 @@ const filtered_view_quest_datas =
 	if (
 		selected_quest_filter_key.value !== 'Both_Area'
 	) {
-		return filter_by_period(
+		return filter_by_key(
 			view_quest_datas.value as ViewSortieQuestData[],
 			selected_quest_filter_key.value,
 		);
@@ -212,13 +212,13 @@ watch(
 	margin-bottom: 4px;
 }
 
-.period-filter {
+.filter-key-box {
 	display: flex;
 	gap: 6px;
 	margin-bottom: 8px;
 }
 
-.period-button {
+.filter_key-button {
 	font-size: 12px;
 	padding: 2px 6px;
 	border-radius: 4px;
@@ -228,7 +228,7 @@ watch(
 	cursor: pointer;
 }
 
-.period-button.active {
+.filter_key-button.active {
 	background-color: #1976d2;
 	border-color: #1976d2;
 	color: #fff;

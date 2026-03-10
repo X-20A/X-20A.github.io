@@ -216,7 +216,7 @@ export function calc_view_sortie_quest_data(
     return view_quest_datas;
 }
 
-export function filter_by_period(
+export function filter_by_key(
     view_quest_datas: ViewSortieQuestData[],
     period: QuestPeriod,
 ): ViewSortieQuestData[] {
