@@ -108,10 +108,10 @@ export type SortieQuestDatas =
     & Record<LimitedSortieQuestId, SortieQuestData>
 
 export const SORTIE_QUEST_DATAS = {
-    ...DAILY_SORTIE_QUEST_DATAS,
+    ...LIMITED_SORTIE_QUEST_DATAS,
     ...WEEKLY_SORTIE_QUEST_DATAS,
     ...MONTHLY_SORTIE_QUEST_DATAS,
     ...QUARTERLY_SORTIE_QUEST_DATAS,
     ...YEARLY_SORTIE_QUEST_DATAS,
-    ...LIMITED_SORTIE_QUEST_DATAS,
+    ...DAILY_SORTIE_QUEST_DATAS,
 } as const satisfies SortieQuestDatas;
