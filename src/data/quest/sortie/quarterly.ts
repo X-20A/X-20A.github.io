@@ -6,7 +6,7 @@ export const QUARTERLY_SORTIE_QUEST_DATAS = {
         name: '沖ノ島海域迎撃戦',
         icon: 'Quarterly',
         zekamashi_id: '2-4-s-geigekisen',
-        target_areas: ['3-1', '3-2', '3-3', '3-4'],
+        target_areas: ['2-4'],
         condition: calc_Bq1,
     },
     Bq2: {
