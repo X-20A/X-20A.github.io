@@ -159,7 +159,7 @@ describe('Dataテスト', () => {
                 continue;
             }
 
-            if (ac_item.type !== equip[1]) {
+            if (ac_item.type !== equip.type) {
                 mismatch_equip_params.push({
                     name: ac_item.name,
                     param: 'type',
@@ -167,7 +167,7 @@ describe('Dataテスト', () => {
                 });
             }
 
-            if (ac_item.scout !== equip[0]) {
+            if (ac_item.scout !== equip.seek) {
                 mismatch_equip_params.push({
                     name: ac_item.name,
                     param: 'seek',

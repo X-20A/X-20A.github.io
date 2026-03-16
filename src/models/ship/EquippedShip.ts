@@ -5,13 +5,13 @@ import { EquipType } from '../../data/equip';
 import { calc_equip_bonus } from '../../logic/seek/equipBonus';
 import { calc_ship_speed } from '../../logic/speed/ship';
 import { calc_equip_seek } from '../../logic/seek/equip';
-import { Equip, includes_equip_id } from '../Equip';
+import { Equip, includes_equip_name } from '../Equip';
 import { ShipId } from '../../types/shipId';
 import { ShipName } from '../../types/shipName';
 import { NakedShip } from './NakedShip';
-import { EquipId } from '../../types/equipId';
 import { Sp as Speed } from '../../logic/speed/predicate';
 import { BaseShipName } from '../../types/baseShipName';
+import { EquipName } from '../../types/equipName';
 
 type PreInfo = {
     readonly drum_count: number;
@@ -36,11 +36,12 @@ const calc_pre_info = (
     equips: Equip[],
 ): PreInfo => {
     return equips.reduce((acc, equip) => {
-        if (equip.id === 75) acc.drum_count++;
-        if (equip.id === 268) acc.has_arBulge = true;
-        if (equip.id === 402) acc.has_arctic_gear = true;
-        if (includes_equip_id(ROUTING_CRAFT_IDS, equip.id)) acc.has_craft = true;
-        if (includes_equip_id(RESOURCE_CRAFT_IDS, equip.id)) acc.valid_craft_count++;
+        const { name } = equip;
+        if (name === 'ドラム缶(輸送用)') acc.drum_count++;
+        if (name === '北方迷彩(+北方装備)') acc.has_arBulge = true;
+        if (name === '寒冷地装備&甲板要員') acc.has_arctic_gear = true;
+        if (includes_equip_name(ROUTING_CRAFT_NAMES, name)) acc.has_craft = true;
+        if (includes_equip_name(RESOURCE_CRAFT_NAMES, name)) acc.valid_craft_count++;
         if ([EquipType.RadarS, EquipType.RadarL].includes(equip.type)) {
             acc.has_radar = true;
             if (equip.seek >= 5) acc.has_radar5 = true;
@@ -72,14 +73,35 @@ export type EquippedShip = {
 /**
  * ルート分岐に関わる大発群
  */
-const ROUTING_CRAFT_IDS: EquipId[] =
-    [68, 166, 167, 193, 409, 436, 449, 525, 526] as const;
+export const ROUTING_CRAFT_NAMES: EquipName[] =
+    [
+        '大発動艇',
+        '大発動艇(八九式中戦車&陸戦隊)',
+        '特二式内火艇',
+        '特大発動艇',
+        '武装大発',
+        '大発動艇(II号戦車/北アフリカ仕様)',
+        '特大発動艇+一式砲戦車',
+        '特四式内火艇',
+        '特四式内火艇改',
+    ] as const;
 
 /**
  * 資源獲得量増加に寄与する大発群
  */
-const RESOURCE_CRAFT_IDS: EquipId[] =
-    [68, 166, 167, 193, 408, 409, 436, 449, 525, 526] as const;
+export const RESOURCE_CRAFT_NAMES: EquipName[] =
+    [
+        '大発動艇',
+        '大発動艇(八九式中戦車&陸戦隊)',
+        '特二式内火艇',
+        '特大発動艇',
+        '装甲艇(AB艇)',
+        '武装大発',
+        '大発動艇(II号戦車/北アフリカ仕様)',
+        '特大発動艇+一式砲戦車',
+        '特四式内火艇',
+        '特四式内火艇改',
+    ] as const;
 
 /**
  * Shipオブジェクトを生成するファクトリ関数

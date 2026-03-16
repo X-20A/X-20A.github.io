@@ -7,21 +7,6 @@ import { EquipName } from '../types/equipName';
  * ※横断的なもののみ
  */
 export default class Const {
-
-    static readonly VALID_CRAFT_NAMES: EquipName[] =
-        [
-            '大発動艇',
-            '大発動艇(八九式中戦車&陸戦隊)',
-            '特二式内火艇',
-            '特大発動艇',
-            '装甲艇(AB艇)',
-            '武装大発',
-            '大発動艇(II号戦車/北アフリカ仕様)',
-            '特大発動艇+一式砲戦車',
-            '特四式内火艇',
-            '特四式内火艇改',
-        ];
-
     /**
      * getterからコピーを取得できる
      */

@@ -22,16 +22,17 @@ const INITIAL: PreInfo = {
 const calc_pre_info = (
     equips: Equip[],
 ): PreInfo => {
-    return equips.reduce((acc, item) => {
-        if (item.id === 33) {
+    return equips.reduce((acc, equip) => {
+        const { name } = equip;
+        if (name === '改良型艦本式タービン') {
             return { ...acc, has_turbine: true };
-        } else if (item.id === 34) {
+        } else if (name === '強化型艦本式缶') {
             return { ...acc, normal_kan_count: acc.normal_kan_count + 1 };
-        } else if (item.id === 87) {
+        } else if (name === '新型高温高圧缶') {
             return {
                 ...acc,
                 new_kan_count: acc.new_kan_count + 1,
-                power_kan_count: acc.power_kan_count + (item.improvement >= 7 ? 1 : 0)
+                power_kan_count: acc.power_kan_count + (equip.improvement >= 7 ? 1 : 0)
             };
         }
         return acc;

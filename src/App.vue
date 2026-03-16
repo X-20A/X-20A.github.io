@@ -82,9 +82,7 @@
 					<span class="tooltip-container">
 						<img :src="Craft" alt="大発系" style="height: 21px;vertical-align: -4px;">
 						<span>: {{ adoptFleet.craft_carrier_count }}&nbsp;</span>
-						<span class="tooltip-text">
-							大発動艇 | 大発動艇(八九式中戦車&陸戦隊) | 特二式内火艇 | 特大発動艇 | 武装大発<br> | 大発動艇(II号戦車/北アフリカ仕様) | 特大発動艇+一式砲戦車 | 特四式内火艇 | 特四式内火艇改
-						</span>
+						<span class="tooltip-text" v-html="routing_craft_text"></span>
 					</span>
 
 					<span class="tooltip-container">
@@ -184,7 +182,7 @@ import Header from './components/Header.vue';
 import Option from './components/Option.vue';
 import SvgIcon from './components/SvgIcon.vue';
 import type { SelectedType } from './types';
-import CustomError, { DisallowToSortie, ImageGenerationFailed, NotYetSupportedShip } from './errors/CustomError';
+import CustomError, { DisallowToSortie, ImageGenerationFailed } from './errors/CustomError';
 import {
 	derive_FleetComponents_from_DeckBuilder,
 	derive_DeckBuilder_from_AdoptFleet,
@@ -197,7 +195,7 @@ import {
 import { type AdoptFleet, count_not_equip_arctic_carriers, derive_adopt_fleet, get_escort_fleet_ships_length, calc_escort_fleet_ship_names, get_main_fleet_ships_length, calc_main_fleet_ship_names, count_Reigo_ships, count_Daigo_ships } from './models/fleet/AdoptFleet';
 import type { GenerateOptions, DeckBuilder as GkcoiDeckBuilder, LoS, Speed } from 'gkcoi/dist/type';
 import do_draw_map from './logic/efffects/draw';
-import { EDGE_DATAS, NODE_DATAS } from './data/map';
+import { ROUTING_CRAFT_NAMES } from './models/ship/EquippedShip';
 import {
 	calc_Gkcoi_Blob,
 	calc_Cytoscape_Blob,
@@ -218,7 +216,6 @@ import type { StandardResource } from './models/resource/StandardResource';
 import DetailBox from './components/Detail.vue';
 import Footer from './components/Footer.vue';
 import { derive_sim_executer, start_sim } from './core/SimExecutor';
-import Const from './constants/const';
 import { clear_command_evacuation } from './core/CommandEvacuation';
 import { parseAreaId, parse_DeckBuilder_String, parseSelectedType } from './models/shemas';
 import { register_Cytoscape_events } from './logic/efffects/cytoscapeEvents';
@@ -226,6 +223,7 @@ import { disassembly_area_id } from './logic/area';
 import lzstring from "lz-string";
 import { Ft as FleetType } from './models/fleet/predicate';
 import Area from './components/modals/Area.vue';
+import { EDGE_DATAS, NODE_DATAS } from './data/map';
 
 const Refference = defineAsyncComponent(() => import(
 	'./components/modals/Refference.vue'
@@ -291,6 +289,12 @@ const show_refference = () => {
 const close_modals = () => {
 	modalStore.HIDE_MODALS();
 }
+
+const routing_craft_text = computed(() => {
+	const first_part = ROUTING_CRAFT_NAMES.slice(0, 5).join(' | ');
+	const second_part = ROUTING_CRAFT_NAMES.slice(5).join(' | ');
+	return first_part + '<br> | ' + second_part;
+});
 
 /**
  * 海域IDのworldがtarget_worldsに含まれているか判定する関数
@@ -533,7 +537,6 @@ async function draw_map() {
 		icons,
 		Drum,
 		Craft,
-		Const,
 		store,
 		modalStore,
 		NODE_DATAS,

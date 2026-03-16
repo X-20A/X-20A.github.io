@@ -1,4 +1,5 @@
 import type { EquipType } from "../data/equip";
+import type { EquipName } from "../types/equipName";
 import type { Improvement } from "../types";
 import { NotYetSupportedEquip } from "../errors/CustomError";
 import EQUIP_DATAS from "../data/equip";
@@ -9,15 +10,17 @@ import { EquipId } from "../types/equipId";
  */
 export type Equip = {
     /** 装備ID */
-    readonly id: EquipId;
+    readonly id: EquipId,
+    /** 装備名 */
+    readonly name: EquipName,
     /** 改修値 */
-    readonly improvement: Improvement;
+    readonly improvement: Improvement,
     /** 種別ID */
-    readonly type: EquipType;
+    readonly type: EquipType,
     /** 索敵値 */
-    readonly seek: number;
+    readonly seek: number,
     /** 増設に設定された装備であるか */
-    readonly is_ex: boolean;
+    readonly is_ex: boolean,
 }
 
 /**
@@ -44,9 +47,10 @@ export function derive_equip(
 
     const equip: Equip = {
         id: equip_id,
+        name: data.name,
         improvement: implovement,
-        type: data[1],
-        seek: data[0],
+        type: data.type,
+        seek: data.seek,
         is_ex
     };
 
@@ -64,4 +68,17 @@ export function includes_equip_id(
     search_id: EquipId,
 ): boolean {
     return match_ids.includes(search_id);
+}
+
+/**
+ * 装備名が含まれるか判定して返す
+ * @param match_names 
+ * @param search_name
+ * @returns 
+ */
+export function includes_equip_name(
+    match_names: EquipName[],
+    search_name: EquipName,
+): boolean {
+    return match_names.includes(search_name);
 }

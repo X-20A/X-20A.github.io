@@ -11,6 +11,7 @@ import type { StoreType, ModalStoreType } from '../../stores/types';
 import { is_special_resource_node } from '../resource';
 import type { ConstType } from '../../constants/const';
 import { derive_standard_resource, StandardResource } from '../../models/resource/StandardResource';
+import { RESOURCE_CRAFT_NAMES } from '../../models/ship/EquippedShip';
 
 /**
  * cytoscapeインスタンスにイベントを登録する
@@ -24,7 +25,6 @@ import { derive_standard_resource, StandardResource } from '../../models/resourc
  * @param icons アイコンref
  * @param Drum ドラム缶画像
  * @param Craft 大発画像
- * @param Const 定数
  * @param store ストア
  * @param modalStore モーダルストア
  * @param node_datas ノードデータ
@@ -43,7 +43,6 @@ export function register_Cytoscape_events(
     icons: Ref<Record<ItemIconKey, string>>,
     Drum: string,
     Craft: string,
-    Const: ConstType,
     store: StoreType,
     modalStore: ModalStoreType,
     node_datas: NodeDatas,
@@ -79,7 +78,7 @@ export function register_Cytoscape_events(
                     icons.value,
                     Drum,
                     Craft,
-                    Const.VALID_CRAFT_NAMES,
+                    RESOURCE_CRAFT_NAMES,
                 );
             }
         } else {
@@ -91,7 +90,7 @@ export function register_Cytoscape_events(
                     icons.value,
                     Drum,
                     Craft,
-                    Const.VALID_CRAFT_NAMES,
+                    RESOURCE_CRAFT_NAMES,
                 );
             }
         }

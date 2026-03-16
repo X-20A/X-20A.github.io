@@ -70,6 +70,6 @@ generate_union_type(
 generate_union_type(
     '../src/data/equip.ts',
     '../src/types/equipName.ts',
-    /\]\s*\/\/\s*([^\n\r]+)/g,
+    /name:\s*["']([^"']+)["']/g,
     'EquipName',
 );
