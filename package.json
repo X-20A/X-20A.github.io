@@ -13,6 +13,7 @@
     "data-test": "vitest --run -t 'data-test'",
     "speed-test": "vitest --run -t 'speed-test'",
 	"quest-test": "vitest --run -t 'quest-test'",
+	"bonus-test": "vitest --run -t 'bonus-test'",
     "tests": "vitest run",
     "tsc": "vue-tsc --noEmit",
     "dep": "depcheck",
