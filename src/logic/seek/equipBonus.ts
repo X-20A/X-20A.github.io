@@ -1,355 +1,89 @@
-import
-{ NA as National, ST as ShipType }
-    from '../../data/ship';
-import { includes_equip_id, type Equip } from '../../models/Equip';
-import { includes_base_ship } from '../../models/fleet/AdoptFleet';
-import { includes_ship_name } from '../../models/ship/predicate';
-import { Brand } from '../../types';
-import { BaseShipName } from '../../types/baseShipName';
+import {
+    ConditionSpec,
+    EquipContext,
+    EquipBonusSeek,
+} from '../../types/equipBonus';
 import { EquipId } from '../../types/equipId';
 import { ShipName } from '../../types/shipName';
+import { BaseShipName } from '../../types/baseShipName';
+import { NA, ST } from '../../data/ship';
+import { Equip, includes_equip_id } from '../../models/Equip';
+import { includes_ship_name, includes_ship_type } from '../../models/ship/predicate';
+import { includes_base_ship } from '../../models/fleet/AdoptFleet';
+import EQUIP_BONUS_DATAS from '../../data/equipBonus';
 
-/**
- * 装備idがまだ重複していないことを判定して返す
- * @param disable_ids 
- * @param equip_id 
- * @returns 
- */
-const is_not_yet_duplicated = (
-    disable_ids: EquipId[],
-    equip_id: EquipId,
+/** 指定条件がコンテキストに対して満たされているか判定する (単純実装) */
+const condition_satisfied = (
+    cond: ConditionSpec,
+    ctx: EquipContext,
+    evaluated_equip_ids: EquipId[],
 ): boolean => {
-    return !includes_equip_id(disable_ids, equip_id);
-}
+    switch (cond.type) {
+        case 'name_in':
+            return includes_ship_name(cond.names, ctx.ship_name);
+        case 'base_name_in':
+            return includes_base_ship(ctx.base_name, cond.base_names);
+        case 'national_is':
+            return ctx.national === cond.national;
+        case 'ship_type_in':
+            return includes_ship_type(cond.types, ctx.ship_type);
+        case 'require_improvement_lv':
+            return ctx.equip.improvement >= cond.lv;
+        case 'equip_id_not_duplicated':
+            return !includes_equip_id(evaluated_equip_ids, ctx.equip.id);
+        default:
+            return false;
+    }
+};
 
-/** 装備ボーナスのブランド型 */
-export type EquipBonusSeek = Brand<number, 'EquipBonusSeek'>;
+/** 1装備に対してルールを適用して得られるボーナスを計算する */
+const extract_bonus_from_data = (
+    ctx: EquipContext,
+    evaluated_equip_ids: EquipId[],
+): number => {
+    let bonus = 0;
+    for (const data of EQUIP_BONUS_DATAS) {
+        if (data.equip_name !== ctx.equip.name) continue;
 
-/** 装備ボーナスを計算して返す */
-export function calc_equip_bonus(
+        const rules = data.rules ?? [];
+        for (const rule of rules) {
+            const conditions = rule.conditions ?? [];
+            const matched = conditions.every(
+                condition => condition_satisfied(condition, ctx, evaluated_equip_ids)
+            );
+            if (!matched) continue;
+
+            bonus += rule.seek;
+        }
+        evaluated_equip_ids.push(ctx.equip.id);
+    }
+    return bonus;
+};
+
+/** ルールセットを与え、艦と装備群から合計装備ボーナスを算出する */
+export const calc_equip_bonus = (
     ship_name: ShipName,
     base_name: BaseShipName,
-    ship_type: ShipType,
-    national: National,
-    equips: Equip[]
-): EquipBonusSeek {
-    let total_bonus = 0;
-    const disable_ids: EquipId[] = []; // 重複不可のがきたらこれに追加
-    for (let i = 0;i < equips.length;i++) {
-        const equip = equips[i];
-        const {
-            id: equip_id,
-            name: equip_name,
-        } = equip;
-        switch (equip_name) {
-            case 'SG レーダー(初期型)':
-                if (includes_ship_name(['丹陽', '雪風改二'], ship_name)) {
-                    if (is_not_yet_duplicated(disable_ids, equip_id)) {
-                        total_bonus += 3;
-                        disable_ids.push(equip_id);
-                    }
-                } else if (national === National.USA) {
-                    total_bonus += 4;
-                }
-                break;
-            case 'SG レーダー(後期型)':
-                if (includes_ship_name(['丹陽', '雪風改二'], ship_name)) {
-                    if (is_not_yet_duplicated(disable_ids, equip_id)) {
-                        total_bonus += 3;
-                        disable_ids.push(equip_id);
-                    }
-                } else if (national === National.USA) {
-                    total_bonus += 4;
-                } else if (national === National.UK) {
-                    total_bonus += 2;
-                }
-                break;
-            case 'SK レーダー':
-                if (national === National.USA) {
-                    if (is_not_yet_duplicated(disable_ids, equip_id)) {
-                        total_bonus += 1;
-                        disable_ids.push(equip_id);
-                    }
-                }
-                break;
-            case 'SK+SG レーダー':
-                if (national === National.USA) {
-                    if (is_not_yet_duplicated(disable_ids, equip_id)) {
-                        total_bonus += 2;
-                        disable_ids.push(equip_id);
-                    }
-                } else if (national === National.UK) {
-                    if (is_not_yet_duplicated(disable_ids, equip_id)) {
-                        total_bonus += 1;
-                        disable_ids.push(equip_id);
-                    }
-                }
-                break;
-            case '逆探(E27)+22号対水上電探改四(後期調整型)': {
-                if (ship_name === '清霜改二丁') {
-                    if (is_not_yet_duplicated(disable_ids, equip_id)) {
-                        total_bonus += 3;
-                        disable_ids.push(equip_id);
-                    }
-                } else if (includes_ship_name(['朝霜改二', '清霜改二', '初霜改二', '潮改二', 'Верный', '霞改二', '時雨改三', '雪風改二'], ship_name)) {
-                    if (is_not_yet_duplicated(disable_ids, equip_id)) {
-                        total_bonus += 2;
-                        disable_ids.push(equip_id);
-                    }
-                } else if (national === National.Japan && ship_type === ShipType.DD) {
-                    if (is_not_yet_duplicated(disable_ids, equip_id)) {
-                        total_bonus += 1;
-                        disable_ids.push(equip_id);
-                    }
-                }
-                break;
-            }
-            case '21号対空電探':
-            case '21号対空電探改二': {
-                const AKIZUKI_BASE_NAMES: BaseShipName[] = ['秋月', '照月', '初月', '涼月', '冬月'];
-                const MOGAMI_KAI_OR_MORE: ShipName[] = ['最上改', '最上改二', '最上改二特']; // 無印は含まない
-                if (
-                    includes_base_ship(base_name, AKIZUKI_BASE_NAMES) ||
-                    includes_ship_name(MOGAMI_KAI_OR_MORE, ship_name)
-                ) {
-                    if (is_not_yet_duplicated(disable_ids, equip_id)) {
-                        total_bonus += 2;
-                        disable_ids.push(equip_id);
-                    }
-                }
-                break;
-            }
-            case '紫雲': {
-                if (base_name === '大淀') {
-                    total_bonus += 2;
-                    if (equip.improvement === 10) { // 改修maxで更に+1
-                        total_bonus += 1;
-                    }
-                }
-                break;
-            }
-            case 'SOC Seagull': {
-                if (national === National.USA) {
-                    if ([ShipType.CL, ShipType.CA].includes(ship_type)) {
-                        if (is_not_yet_duplicated(disable_ids, equip_id)) {
-                            total_bonus += 2;
-                            // 改修でさらにボーナス
-                            if (equip.improvement > 3) {
-                                total_bonus += 1;
-                            }
-                            disable_ids.push(equip_id);
-                        }
-                    } else if (ship_type === ShipType.BB) {
-                        if (is_not_yet_duplicated(disable_ids, equip_id)) {
-                            total_bonus += 1;
-                            disable_ids.push(equip_id);
-                        }
-                    }
-                }
-                break;
-            }
-            case 'Ar196改':
-                if (includes_base_ship(base_name, ['Bismarck', 'Prinz Eugen'])) {
-                    total_bonus += 2;
-                }
-                break;
-            case 'Fairey Seafox改':
-                if (base_name === 'Gotland') {
-                    if (is_not_yet_duplicated(disable_ids, equip_id)) {
-                        total_bonus += 6;
-                        disable_ids.push(equip_id);
-                    }
-                } else if (base_name === 'Nelson') {
-                    if (is_not_yet_duplicated(disable_ids, equip_id)) {
-                        total_bonus += 5;
-                        disable_ids.push(equip_id);
-                    }
-                } else if (base_name === 'Commandant Teste') {
-                    if (is_not_yet_duplicated(disable_ids, equip_id)) {
-                        total_bonus += 4;
-                        disable_ids.push(equip_id);
-                    }
-                } else if (includes_base_ship(base_name, ['Warspite', 'Richelieu', 'Jean Bart'])) {
-                    if (is_not_yet_duplicated(disable_ids, equip_id)) {
-                        total_bonus += 3;
-                        disable_ids.push(equip_id);
-                    }
-                }
-                break;
-            case 'Swordfish Mk.II改(水偵型)':
-                if (base_name === 'Warspite') {
-                    if (is_not_yet_duplicated(disable_ids, equip_id)) {
-                        total_bonus += 3;
-                        disable_ids.push(equip_id);
-                    }
-                } else if (includes_base_ship(base_name, ['Nelson', 'Sheffield', 'Gotland'])) {
-                    if (is_not_yet_duplicated(disable_ids, equip_id)) {
-                        total_bonus += 2;
-                        disable_ids.push(equip_id);
-                    }
-                } else if (includes_base_ship(base_name, ['Commandant Teste', '瑞穂', '神威'])) {
-                    if (is_not_yet_duplicated(disable_ids, equip_id)) {
-                        total_bonus += 1;
-                        disable_ids.push(equip_id);
-                    }
-                }
-                break;
-            case 'Laté 298B': {
-                if (includes_base_ship(base_name, ['Commandant Teste', 'Richelieu', 'Jean Bart', '瑞穂', '神威'])) {
-                    total_bonus += 2;
-                }
-                break;
-            }
-            case 'SO3C Seamew改':
-                if (national === National.USA) {
-                    if ([ShipType.CL, ShipType.CA].includes(ship_type)) {
-                        if (is_not_yet_duplicated(disable_ids, equip_id)) {
-                            total_bonus += 2;
-                            disable_ids.push(equip_id);
-                        }
-                    } else if (ship_type === ShipType.BB) {
-                        if (is_not_yet_duplicated(disable_ids, equip_id)) {
-                            total_bonus += 1;
-                            disable_ids.push(equip_id);
-                        }
-                    }
-                }
-                break;
-            case 'Swordfish Mk.III改(水上機型/熟練)':
-                if (ship_name === 'Gotland andra') {
-                    if (disable_ids.filter(item => item === equip_id).length === 0) {
-                        total_bonus += 4;
-                        disable_ids.push(equip_id);
-                    } else if (disable_ids.filter(item => item === equip_id).length === 1) {
-                        total_bonus += 1;
-                        disable_ids.push(equip_id);
-                    }
-                } else if (includes_base_ship(base_name, ['Gotland', 'Commandant Teste'])) {
-                    if (is_not_yet_duplicated(disable_ids, equip_id)) {
-                        total_bonus += 3;
-                        disable_ids.push(equip_id);
-                    }
-                } else if (includes_base_ship(base_name, ['瑞穂', '神威'])) {
-                    if (is_not_yet_duplicated(disable_ids, equip_id)) {
-                        total_bonus += 2;
-                        disable_ids.push(equip_id);
-                    }
-                }
-                break;
-            case 'Swordfish Mk.III改(水上機型)':
-                if (ship_name === 'Gotland andra') {
-                    if (disable_ids.filter(item => item === equip_id).length === 0) {
-                        total_bonus += 4;
-                        disable_ids.push(equip_id);
-                    } else if (disable_ids.filter(item => item === equip_id).length < 5) {
-                        total_bonus += 3;
-                        disable_ids.push(equip_id);
-                    }
-                } else if (base_name === 'Gotland') {
-                    total_bonus += 3;
-                } else if (includes_base_ship(base_name, ['Commandant Teste', '瑞穂', '神威'])) {
-                    total_bonus += 2;
-                }
-                break;
-            case 'Swordfish(水上機型)':
-                if (includes_base_ship(base_name, ['Gotland', 'Commandant Teste', '瑞穂', '神威'])) {
-                    total_bonus += 1;
-                }
-                break;
-            case '装甲艇(AB艇)':
-                if (base_name === '神州丸') {
-                    total_bonus += 2;
-                } else if (
-                    base_name === 'あきつ丸' ||
-                    ship_type === ShipType.DD
-                ) { // 本来大発の乗る駆逐艦だが、駆逐に乗ってる時点でボーナスつけちゃう
-                    total_bonus += 1;
-                }
-                break;
-            case '武装大発': // 
-                if (base_name === '神州丸') {
-                    total_bonus += 2;
-                } else if (base_name === 'あきつ丸') {
-                    total_bonus += 1;
-                }
-                break;
-            case '水雷戦隊 熟練見張員': // 
-                if (national === National.Japan) {
-                    if (ship_type === ShipType.DD) {
-                        total_bonus += 1;
-                    } else if ([ShipType.CL, ShipType.CT, ShipType.CLT].includes(ship_type)) {
-                        total_bonus += 3;
-                    } else if ([ShipType.CA, ShipType.CAV].includes(ship_type)) {
-                        total_bonus += 1;
-                    }
-                }
-                break;
-            case '熟練見張員':
-                if (national === National.Japan) {
-                    if (ship_type === ShipType.DD) {
-                        total_bonus += 1;
-                    } else if ([ShipType.CL, ShipType.CT, ShipType.CLT].includes(ship_type)) {
-                        total_bonus += 3;
-                    } else if ([ShipType.CA, ShipType.CAV].includes(ship_type)) {
-                        total_bonus += 3;
-                    }
-                }
-                break;
-            case '紫雲(熟練)': {
-                if (ship_name === '大淀改') {
-                    if (equip.improvement > 0) { // 改修1以上で+5
-                        total_bonus += 5;
-                    }
-                    if (equip.improvement > 3) { // ☆4以上で更に+1
-                        total_bonus += 1;
-                    }
-                } else if (ship_name === '三隈改二特') {
-                    if (equip.improvement > 0) { // 改修1以上で+4
-                        total_bonus += 4;
-                    }
-                }
-                break;
-            }
-            case '零式小型水上機':
-                if ([ShipType.SS, ShipType.SSV].includes(ship_type)) {
-                    total_bonus += 3;
-                }
-                break;
-            case '零式小型水上機(熟練)':
-                if ([ShipType.SS, ShipType.SSV].includes(ship_type)) {
-                    total_bonus += 4;
-                }
-                break;
-            case 'Type281 レーダー':
-                if (national === National.UK) {
-                    total_bonus += 2;
-                }
-                break;
-            case '彩雲(偵四)': {
-                if (equip.improvement === 2) { // ☆2のときのみ
-                    if (is_not_yet_duplicated(disable_ids, equip_id)) {
-                        total_bonus += 1;
-                        disable_ids.push(equip_id);
-                    }
-                }
-                break;
-            }
-            case 'Walrus':
-                if (includes_base_ship(base_name, ['Nelson', 'Rodney'])) { // 含同改
-                    total_bonus += 5;
-                } else if (includes_base_ship(base_name, ['Warspite', 'Sheffield'])) { // 含同改
-                    total_bonus += 2;
-                }
-                break;
-            case '天山一二型甲改二(村田隊/電探装備)':
-                if (includes_ship_name(['翔鶴改二', '翔鶴改二甲'], ship_name)) {
-                    total_bonus += 2;
-                } else if (includes_ship_name(['瑞鶴改二','瑞鶴改二甲','加賀改二護','大鳳改','赤城改二戊','加賀改二戊'], ship_name)) {
-                    total_bonus += 1;
-                }
-                break;
-        }
+    ship_type: ST,
+    national: NA,
+    equips: Equip[],
+): EquipBonusSeek => {
+    const evaluated_equip_ids: EquipId[] = [];
+    let total = 0;
+
+    for (const equip of equips) {
+        const ctx: EquipContext = {
+            ship_name,
+            base_name,
+            ship_type,
+            national,
+            equip,
+        };
+
+        total += extract_bonus_from_data(ctx, evaluated_equip_ids);
     }
 
-    return total_bonus as EquipBonusSeek;
-}
+    return total as EquipBonusSeek;
+};
+
+export default calc_equip_bonus;

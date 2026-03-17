@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { calc_equip_bonus } from "../../src/logic/seek/equipBonus";
 import { build_ship_from_fixture } from "../generator/fixture";
 import { EquippedShip } from "../../src/models/ship/EquippedShip";
+import calc_equip_bonus from "../../src/logic/seek/equipBonus";
 
 describe('bonus-test: 装備ボーナス', () => {
     it('単発付与', () => {
@@ -168,9 +168,21 @@ describe('bonus-test: 装備ボーナス', () => {
             name: 'Gotland',
         }))
 
+        test(5, build_ship_from_fixture({
+            equips: [{ name: 'Swordfish Mk.III改(水上機型/熟練)' }],
+            name: 'Gotland andra',
+        }))
+
         test(3, build_ship_from_fixture({
-            equips: [{ name: 'Swordfish Mk.III改(水上機型)' }],
+            equips: [
+                { name: 'Swordfish Mk.III改(水上機型/熟練)' },
+            ],
             name: 'Gotland',
+        }))
+
+        test(4, build_ship_from_fixture({
+            equips: [{ name: 'Swordfish Mk.III改(水上機型)' }],
+            name: 'Gotland andra',
         }))
 
         test(1, build_ship_from_fixture({
@@ -298,7 +310,7 @@ describe('bonus-test: 装備ボーナス', () => {
         }))
 
         // 異なる装備は別カウント
-        test(6, build_ship_from_fixture({
+        test(3 + 3, build_ship_from_fixture({
             equips: [
                 { name: 'SG レーダー(初期型)' },
                 { name: 'SG レーダー(後期型)' }
@@ -321,8 +333,7 @@ describe('bonus-test: 装備ボーナス', () => {
             ));
         }
 
-        // 複数装備の合計
-        test(5, build_ship_from_fixture({
+        test(4 + 1, build_ship_from_fixture({
             equips: [
                 { name: 'SG レーダー(初期型)' },
                 { name: 'SK レーダー' }
@@ -330,22 +341,29 @@ describe('bonus-test: 装備ボーナス', () => {
             name: 'Atlanta',
         }))
 
-        // 21号対空電探 - 秋月
-        test(2, build_ship_from_fixture({
-            equips: [{ name: '21号対空電探' }],
-            name: '秋月',
+        test(3 + 3, build_ship_from_fixture({
+            equips: [
+                { name: 'Swordfish Mk.III改(水上機型/熟練)' },
+                { name: 'Swordfish Mk.III改(水上機型/熟練)' },
+            ],
+            name: 'Gotland',
         }))
 
-        // 21号対空電探改二 - 秋月
-        test(2, build_ship_from_fixture({
-            equips: [{ name: '21号対空電探改二' }],
-            name: '秋月',
+        // 2機目以降目減り
+        test(5 + 3, build_ship_from_fixture({
+            equips: [
+                { name: 'Swordfish Mk.III改(水上機型/熟練)' },
+                { name: 'Swordfish Mk.III改(水上機型/熟練)' },
+            ],
+            name: 'Gotland andra',
         }))
 
-        // 21号対空電探 - 最上改
-        test(2, build_ship_from_fixture({
-            equips: [{ name: '21号対空電探' }],
-            name: '最上改',
+        test(4 + 3, build_ship_from_fixture({
+            equips: [
+                { name: 'Swordfish Mk.III改(水上機型)' },
+                { name: 'Swordfish Mk.III改(水上機型)' },
+            ],
+            name: 'Gotland andra',
         }))
     });
 });
