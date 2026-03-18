@@ -17,28 +17,10 @@ export const calc_1_1: CalcFnNoCondition = (
         case null:
             return '1';
         case 'A':
-            if (ships_length === 1) {
+            if (ships_length >= 6) { // ships_lengthより例外なし
                 return [
-                    { node: 'B', rate: 0.2 },
-                    { node: 'C', rate: 0.8 },
-                ];
-            }
-            if (ships_length === 2) {
-                return [
-                    { node: 'B', rate: 0.25 },
-                    { node: 'C', rate: 0.75 },
-                ];
-            }
-            if (ships_length === 3) {
-                return [
-                    { node: 'B', rate: 0.3 },
-                    { node: 'C', rate: 0.7 },
-                ];
-            }
-            if (ships_length === 4) {
-                return [
-                    { node: 'B', rate: 0.35 },
-                    { node: 'C', rate: 0.65 },
+                    { node: 'B', rate: 0.45 },
+                    { node: 'C', rate: 0.55 },
                 ];
             }
             if (ships_length === 5) {
@@ -47,10 +29,28 @@ export const calc_1_1: CalcFnNoCondition = (
                     { node: 'C', rate: 0.6 },
                 ];
             }
-            if (ships_length >= 6) { // ships_lengthより例外なし
+            if (ships_length === 4) {
                 return [
-                    { node: 'B', rate: 0.55 },
-                    { node: 'C', rate: 0.45 },
+                    { node: 'B', rate: 0.35 },
+                    { node: 'C', rate: 0.65 },
+                ];
+            }
+            if (ships_length === 3) {
+                return [
+                    { node: 'B', rate: 0.3 },
+                    { node: 'C', rate: 0.7 },
+                ];
+            }
+            if (ships_length === 2) {
+                return [
+                    { node: 'B', rate: 0.25 },
+                    { node: 'C', rate: 0.75 },
+                ];
+            }
+            if (ships_length === 1) {
+                return [
+                    { node: 'B', rate: 0.2 },
+                    { node: 'C', rate: 0.8 },
                 ];
             }
     }
