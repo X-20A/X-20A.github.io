@@ -18,31 +18,31 @@ export const calc_2_5: CalcFnNoCondition = (
         case null:
             return '1';
         case '1':
-            if (Ss > 3) {
+            if (Ss >= 4) {
                 return 'B';
             }
-            if (Ss > 0 && BBs < 4 && (CVs > 0 || AV > 1)) {
+            if (Ss >= 1 && BBs <= 3 && (CVs >= 1 || AV >= 2)) {
                 return [
                     { node: 'B', rate: 0.5 },
                     { node: 'C', rate: 0.5 },
                 ];
             }
-            if (CVs > 0 || AV > 1) {
+            if (CVs >= 1 || AV >= 2) {
                 return 'C';
             }
-            if (drum_carrier_count > 1 || Ds > 3) {
+            if (drum_carrier_count >= 2 || Ds >= 4) {
                 return 'B';
             }
-            if (CL > 0 && Ds > 2) {
+            if (CL >= 1 && Ds >= 3) {
                 return 'B';
             }
-            if (BBs > 0) {
+            if (BBs >= 1) {
                 return 'C';
             }
-            if (CL + CLT > 0 && CAV > 1) {
+            if (CL + CLT >= 1 && CAV >= 2) {
                 return 'C';
             }
-            if (CL + CLT > 0 && CAV > 0 && CAV + CL + CLT > 4) {
+            if (CL + CLT >= 1 && CAV >= 1 && CAV + CL + CLT >= 5) {
                 return 'C';
             }
             if (ships_length === 6) {
@@ -56,18 +56,18 @@ export const calc_2_5: CalcFnNoCondition = (
                 { node: 'C', rate: 0.95 },
             ];
         case 'B':
-            if (Ss > 2) {
+            if (Ss >= 3) {
                 return 'A';
             }
             return 'F';
         case 'C':
-            if (CVs > 2 || BBs > 2) {
+            if (CVs >= 3 || BBs >= 3) {
                 return 'D';
             }
-            if (CL > 0 && DD > 1) {
+            if (CL >= 1 && DD >= 2) {
                 return 'E';
             }
-            if (CAV > 1 && DD > 1) {
+            if (CAV >= 2 && DD >= 2) {
                 return 'E';
             }
             return [
@@ -75,19 +75,19 @@ export const calc_2_5: CalcFnNoCondition = (
                 { node: 'E', rate: 0.7 },
             ];
         case 'E':
-            if (BBs > 0) {
+            if (BBs >= 1) {
                 return 'G';
             }
-            if (CL > 0 && Ds > 3) {
+            if (CL >= 1 && Ds >= 4) {
                 return 'I';
             }
             if (is_fleet_speed_slow(speed)) {
                 return 'G';
             }
-            if (CVH + CAs > 1) {
+            if (CVH + CAs >= 2) {
                 return 'G';
             }
-             if (CL > 0 && DD > 2) {
+            if (CL >= 1 && DD >= 3) {
                 return 'I';
             }
             return 'G';
@@ -95,10 +95,10 @@ export const calc_2_5: CalcFnNoCondition = (
             if (is_fleet_speed_slow(speed)) {
                 return 'J';
             }
-            if (DD > 2) {
+            if (DD >= 3) {
                 return 'E';
             }
-            if (CL > 0 && DD > 1) {
+            if (CL >= 1 && DD >= 2) {
                 return 'E';
             }
             return [
@@ -106,10 +106,10 @@ export const calc_2_5: CalcFnNoCondition = (
                 { node: 'J', rate: 0.65 },
             ];
         case 'G':
-            if (BBCVs < 2 && Ds > 3) {
+            if (BBCVs <= 1 && Ds >= 4) {
                 return 'I';
             }
-            if (BBCVs === 0 && CL > 0 && DD > 2) {
+            if (BBCVs === 0 && CL >= 1 && DD >= 3) {
                 return 'I';
             }
             if (seek.c1 < 37) {
@@ -132,7 +132,7 @@ export const calc_2_5: CalcFnNoCondition = (
                     { node: 'O', rate: 0.5 },
                 ];
             }
-            return 'O'; // f_seek.c1 >= 31
+            return 'O'; // f_seek.c1 >= 34
         case 'J':
             if (seek.c1 < 42) {
                 return 'H';
@@ -146,7 +146,7 @@ export const calc_2_5: CalcFnNoCondition = (
                     ];
                 }
                 return [
-                    { node: 'M', rate: 0.5 },
+                    { node: 'H', rate: 0.5 },
                     { node: 'O', rate: 0.5 },
                 ];
             }
@@ -161,7 +161,7 @@ export const calc_2_5: CalcFnNoCondition = (
             }
             break; // 索敵値より例外なし
         case 'L':
-            if (CL > 0 && DD > 1) {
+            if (CL >= 1 && DD >= 2) {
                 return 'O';
             }
             if (BBCVs === 0) {

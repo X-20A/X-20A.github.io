@@ -22,17 +22,16 @@ export const calc_2_4: CalcFnNoCondition = (
             }
             if (
                 CLE === 1 &&
-                DD > 3 &&
+                DD >= 4 &&
                 (CAs === 1 || DD === 5 || DE === 1)
             ) {
-                // 条件式への変換が難しい。合ってると思うけど
                 return 'G';
             }
-            if (Ds < 3) {
-                if (CVs > 2) {
+            if (Ds <= 2) {
+                if (CVs >= 3) {
                     return 'C';
                 }
-                if (BBs + CVH > 2) {
+                if (BBs + CVH >= 3) {
                     return 'C';
                 }
                 if (BBs + CVH === 2) {
@@ -41,13 +40,13 @@ export const calc_2_4: CalcFnNoCondition = (
                         { node: 'G', rate: 0.2 },
                     ];
                 }
-                if (CVH > 0) {
+                if (CVH >= 1) {
                     return [
                         { node: 'C', rate: 0.6 },
                         { node: 'G', rate: 0.4 },
                     ];
                 }
-                if (Ss > 0) {
+                if (Ss >= 1) {
                     return [
                         { node: 'C', rate: 0.6 },
                         { node: 'G', rate: 0.4 },
@@ -63,7 +62,7 @@ export const calc_2_4: CalcFnNoCondition = (
                 { node: 'G', rate: 0.6 },
             ];
         case 'C':
-            if (AS + AO > 0) {
+            if (AS + AO >= 1) {
                 return 'G';
             }
             return [
@@ -71,52 +70,51 @@ export const calc_2_4: CalcFnNoCondition = (
                 { node: 'G', rate: 0.5 },
             ];
         case 'F':
-            if (CVL > 0 && Ds > 1) {
+            if (CVL >= 1 && Ds >= 2) {
                 return [
                     { node: 'A', rate: 0.075 },
                     { node: 'J', rate: 0.925 },
                 ];
             }
-            if (CVL > 0) {
+            if (CVL >= 1) {
                 return [
                     { node: 'A', rate: 0.175 },
                     { node: 'J', rate: 0.825 },
                 ];
             }
-            if (DD > 1) {
+            if (DD >= 2) {
                 return [
                     { node: 'A', rate: 0.25 },
                     { node: 'J', rate: 0.75 },
                 ];
             }
-            if (DD < 2) {
+            if (DD <= 1) {
                 return 'A';
             }
             break; // DDより例外なし
         case 'H':
             if (
-                CLE > 0 &&
-                DD > 3 &&
+                CLE >= 1 &&
+                DD >= 4 &&
                 (CAs === 1 || CLE === 2 || DD === 5)
             ) {
-                // 条件式変換が難しい
                 return 'L';
             }
             return 'I';
         case 'I':
-            if (CVL > 0 && CL > 0) {
+            if (CVL >= 1 && CL >= 1) {
                 return [
                     { node: 'E', rate: 0.075 },
                     { node: 'K', rate: 0.925 },
                 ];
             }
-            if (CVL > 0) {
+            if (CVL >= 1) {
                 return [
                     { node: 'E', rate: 0.175 },
                     { node: 'K', rate: 0.825 },
                 ];
             }
-            if (CL > 0) {
+            if (CL >= 1) {
                 return [
                     { node: 'E', rate: 0.25 },
                     { node: 'K', rate: 0.75 },
@@ -127,7 +125,7 @@ export const calc_2_4: CalcFnNoCondition = (
                 { node: 'K', rate: 0.3 },
             ];
         case 'J':
-            if (BBCVs > 3) {
+            if (BBCVs >= 4) {
                 return 'L';
             }
             if (BBCVs === 3 || CVH === 2) {
@@ -141,11 +139,11 @@ export const calc_2_4: CalcFnNoCondition = (
                 { node: 'M', rate: 0.65 },
             ];
         case 'K':
-            if (AS + AO > 1) {
+            if (AS + AO >= 2) {
                 return 'N';
             }
-            if (AV + AS + AO > 0) {
-                if (Ds > 1) {
+            if (AV + AS + AO >= 1) {
+                if (Ds >= 2) {
                     return [
                         { node: 'L', rate: 0.7 },
                         { node: 'N', rate: 0.3 },
@@ -166,13 +164,13 @@ export const calc_2_4: CalcFnNoCondition = (
                     ];
                 }
             }
-            if (DE > 1) {
+            if (DE >= 2) {
                 return [
                     { node: 'L', rate: 0.65 },
                     { node: 'N', rate: 0.35 },
                 ];
             }
-            if (Ds > 1) {
+            if (Ds >= 2) {
                 return 'L';
             }
             if (Ds === 1) {
@@ -181,8 +179,8 @@ export const calc_2_4: CalcFnNoCondition = (
                     { node: 'O', rate: 0.35 },
                 ];
             }
-            if (CAV > 0) {
-                if (BB > 0) {
+            if (CAV >= 1) {
+                if (BB >= 1) {
                     return [
                         { node: 'L', rate: 0.35 },
                         { node: 'O', rate: 0.65 },
@@ -193,7 +191,7 @@ export const calc_2_4: CalcFnNoCondition = (
                     { node: 'O', rate: 0.35 },
                 ];
             }
-            if (BB > 0) {
+            if (BB >= 1) {
                 return [
                     { node: 'L', rate: 0.225 },
                     { node: 'O', rate: 0.775 },
@@ -207,10 +205,10 @@ export const calc_2_4: CalcFnNoCondition = (
             if (BBCVs === 4) {
                 return 'M';
             }
-            if (CL > 0 && DD > 1) {
+            if (CL >= 1 && DD >= 2) {
                 return 'P';
             }
-            if (BBs + CVH < 3) {
+            if (BBs + CVH <= 2) {
                 return 'P';
             }
             return [

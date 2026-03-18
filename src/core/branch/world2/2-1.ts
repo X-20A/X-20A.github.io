@@ -18,14 +18,14 @@ export const calc_2_1: CalcFnNoCondition = (
         case null:
             return '1';
         case 'C':
-            if (CVs > 2 || BBV > 1) {
+            if (CVs >= 3 || BBV >= 2) {
                 return 'B';
             }
-            if (AO > 0 && Ss === 0) {
+            if (AO >= 1 && Ss === 0) {
                 return 'B';
             }
-            if (BBV > 0) {
-                if (AV + AS > 0) {
+            if (BBV >= 1) {
+                if (AV + AS >= 1) {
                     return [
                         { node: 'B', rate: 0.7 },
                         { node: 'E', rate: 0.3 },
@@ -36,7 +36,7 @@ export const calc_2_1: CalcFnNoCondition = (
                     { node: 'D', rate: 0.3 },
                 ];
             }
-            if (AV + AS > 0) {
+            if (AV + AS >= 1) {
                 return 'E';
             }
             return [
@@ -44,11 +44,11 @@ export const calc_2_1: CalcFnNoCondition = (
                 { node: 'E', rate: 0.5 },
             ];
         case 'E':
-            if (BBCVs > 4) {
+            if (BBCVs >= 5) {
                 return 'F';
             }
             if (ships_length > 5) {
-                if (BBCVs > 0) {
+                if (BBCVs >= 1) {
                     return 'D';
                 }
                 if (Ds === 6) {
@@ -85,13 +85,13 @@ export const calc_2_1: CalcFnNoCondition = (
                 { node: 'F', rate: 0.4 },
             ];
         case 'F':
-            if (BBCVs > 4) {
+            if (BBCVs >= 5) {
                 return 'G';
             }
-            if (DD > 2) {
+            if (DD >= 3) {
                 return 'H';
             }
-            if (CL > 0 && DD > 1) {
+            if (CL >= 1 && DD >= 2) {
                 return 'H';
             }
             return [

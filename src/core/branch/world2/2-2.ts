@@ -18,14 +18,14 @@ export const calc_2_2: CalcFnNoCondition = (
         case null:
             return '1';
         case 'C':
-            if (CVs > 2 || BBV > 1) {
+            if (CVs >= 3 || BBV >= 2) {
                 return 'B';
             }
-            if (AO > 0 && Ss === 0) {
+            if (AO >= 1 && Ss === 0) {
                 return 'B';
             }
-            if (BBV > 0) {
-                if (AV + AS > 0) {
+            if (BBV >= 1) {
+                if (AV + AS >= 1) {
                     return [
                         { node: 'B', rate: 0.7 },
                         { node: 'E', rate: 0.3 },
@@ -36,7 +36,7 @@ export const calc_2_2: CalcFnNoCondition = (
                     { node: 'D', rate: 0.3 },
                 ];
             }
-            if (AV + AS > 0) {
+            if (AV + AS >= 1) {
                 return 'E';
             }
             return [
@@ -44,10 +44,10 @@ export const calc_2_2: CalcFnNoCondition = (
                 { node: 'E', rate: 0.5 },
             ];
         case 'E':
-            if (BBCVs > 3) {
+            if (BBCVs >= 4) {
                 return 'G';
             }
-            if (DE > 1) {
+            if (DE >= 2) {
                 return 'F';
             }
             if (BBCVs === 3) {
@@ -68,11 +68,11 @@ export const calc_2_2: CalcFnNoCondition = (
                     { node: 'K', rate: 0.7 },
                 ];
             }
-            if (Ds > 2 && AS > 0) {
+            if (Ds >= 3 && AS >= 1) {
                 return 'F';
             }
-            if (Ds > 1) {
-                if (CL > 0 && is_fleet_speed_fast_or_more(speed)) {
+            if (Ds >= 2) {
+                if (CL >= 1 && is_fleet_speed_fast_or_more(speed)) {
                     return 'K';
                 }
                 return [
@@ -85,7 +85,10 @@ export const calc_2_2: CalcFnNoCondition = (
                 { node: 'K', rate: 0.5 },
             ];
         case 'G':
-            if (CVs > 0 || DD === 0) {
+            if (CVs >= 1) {
+                return 'H';
+            }
+            if (DD === 0) {
                 return 'H';
             }
             return [
@@ -93,22 +96,22 @@ export const calc_2_2: CalcFnNoCondition = (
                 { node: 'K', rate: 0.5 },
             ];
         case 'H':
-            if (BBCVs > 3) {
+            if (BBCVs >= 4) {
                 return [
                     { node: 'I', rate: 0.7 },
                     { node: 'K', rate: 0.3 },
                 ];
             }
-            if (CVs + CAV + AV > 0) {
+            if (CVs + CAV + AV >= 1) {
                 return 'K';
             }
-             if (Ss > 0) {
+            if (Ss >= 1) {
                 return [
                     { node: 'I', rate: 0.7 },
                     { node: 'K', rate: 0.3 },
                 ];
             }
-            if (Ds > 1) {
+            if (Ds >= 2) {
                 return [
                     { node: 'J', rate: 0.5 },
                     { node: 'K', rate: 0.5 },
