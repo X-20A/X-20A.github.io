@@ -18,10 +18,10 @@ export const calc_1_2: CalcFnNoCondition = (
         case null:
             return '1';
         case '1':
-            if (Ds === 4 && ships_length < 6) {
+            if (Ds === 4 && ships_length <= 5) {
                 return 'A';
             }
-            if (ships_length > 5) {
+            if (ships_length >= 6) {
                 return [
                     { node: 'A', rate: 0.4 },
                     { node: 'B', rate: 0.6 },
@@ -47,7 +47,7 @@ export const calc_1_2: CalcFnNoCondition = (
             if (is_fleet_speed_fast_or_more(speed)) {
                 return 'E';
             }
-            if (Ds < 4) {
+            if (Ds <= 3) {
                 return 'D';
             }
             if (Ds === 6) {
@@ -56,7 +56,7 @@ export const calc_1_2: CalcFnNoCondition = (
             if (CLE === 1 && Ds === 5) {
                 return 'E';
             }
-            if (CL === 1 && DD > 3) {
+            if (CL === 1 && DD >= 4) {
                 return 'E';
             }
             return [
@@ -66,4 +66,4 @@ export const calc_1_2: CalcFnNoCondition = (
     }
 
     omission_of_conditions(node, sim_fleet);
-} 
+}

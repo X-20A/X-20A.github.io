@@ -17,13 +17,13 @@ export const calc_1_6: CalcFnNoCondition = (
         case null:
             return '1';
         case '1':
-            if (BBV + CVL + CA > 0) {
+            if (BBV + CVL + CA >= 1) {
                 return 'C';
             }
-            if (CAV > 1) {
+            if (CAV >= 2) {
                 return 'C';
             }
-            if (Ds < 4) {
+            if (Ds <= 3) {
                 return 'C';
             }
             return 'A';
@@ -36,13 +36,13 @@ export const calc_1_6: CalcFnNoCondition = (
                 { node: 'K', rate: 0.25 },
             ];
         case 'M':
-            if (BBV + CA + CVL > 2) {
+            if (BBV + CA + CVL >= 3) {
                 return 'L';
             }
-            if (BBV + CAs > 2) {
+            if (BBV + CAs >= 3) {
                 return 'L';
             }
-            if (Ds < 3) {
+            if (Ds <= 2) {
                 return 'L';
             }
             if (seek.c3 < 28) {

@@ -18,10 +18,10 @@ export const calc_1_3: CalcFnNoCondition = (
         case null:
             return '1';
         case '1':
-            if (AO + AV > 0) {
+            if (AO + AV >= 1) {
                 return 'A';
             }
-            if (CVs > 0) {
+            if (CVs >= 1) {
                 return 'C';
             }
             return [
@@ -29,19 +29,25 @@ export const calc_1_3: CalcFnNoCondition = (
                 { node: 'C', rate: 0.5 },
             ];
         case 'A':
-            if (AO > 0) {
+            if (AO >= 1) {
                 return 'D';
             }
-            if (DE > 3) {
+            if (DE >= 4) {
                 return 'D';
             }
-            if (AV > 0 || Ds > 3) {
+            if (AV >= 1) {
                 return [
                     { node: 'D', rate: 0.8 },
                     { node: 'E', rate: 0.2 },
                 ];
             }
-            if (Ss > 0) {
+            if (Ds >= 4) {
+                return [
+                    { node: 'D', rate: 0.8 },
+                    { node: 'E', rate: 0.2 },
+                ];
+            }
+            if (Ss >= 1) {
                 return 'E';
             }
             return [
@@ -49,19 +55,19 @@ export const calc_1_3: CalcFnNoCondition = (
                 { node: 'E', rate: 0.5 },
             ];
         case 'F':
-            if (CVH > 0) {
+            if (CVH >= 1) {
                 return 'H';
             }
-            if (SBB_count > 0) {
+            if (SBB_count >= 1) {
                 return 'H';
             }
-            if (CAV > 0 && DD > 1) {
+            if (CAV >= 1 && DD >= 2) {
                 return 'J';
             }
-            if (DD > 3) {
+            if (DD >= 4) {
                 return 'J';
             }
-            if (CLE > 0 && Ds > 3) {
+            if (CLE >= 1 && Ds >= 4) {
                 return 'J';
             }
             if (is_fleet_speed_fast_or_more(speed)) {
@@ -75,16 +81,16 @@ export const calc_1_3: CalcFnNoCondition = (
                 { node: 'J', rate: 0.4 },
             ];
         case 'H':
-            if (AO > 0) {
+            if (AO >= 1) {
                 return 'G';
             }
-            if (AV + CAV > 0) {
+            if (AV + CAV >= 1) {
                 return 'J';
             }
-            if (CLE > 0 && DD > 1) {
+            if (CLE >= 1 && DD >= 2) {
                 return 'J';
             }
-            if (DD > 1) {
+            if (DD >= 2) {
                 return [
                     { node: 'G', rate: 0.4 },
                     { node: 'I', rate: 0.2 },
