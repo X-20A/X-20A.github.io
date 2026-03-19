@@ -30,17 +30,17 @@ export const calc_4_5: CalcFnWithCondition = (
         case 'E':
             if (
                 is_fleet_speed_faster_or_more(speed) ||
-                AO > 0 ||
-                BBCVs > 2
+                AO >= 1 ||
+                BBCVs >= 3
             ) {
                 return 'M';
             }
-            if (CL > 0 && Ds > 1) {
+            if (CL >= 1 && Ds >= 2) {
                 return 'M';
             }
             return 'K';
         case 'G':
-            if (CL > 0 && Ds > 1) {
+            if (CL >= 1 && Ds >= 2) {
                 return 'H';
             }
             return [
@@ -48,13 +48,13 @@ export const calc_4_5: CalcFnWithCondition = (
                 { node: 'H', rate: 0.5 },
             ];
         case 'H':
-            if (is_fleet_speed_faster_or_more(speed) && BBCVs < 5) {
+            if (is_fleet_speed_faster_or_more(speed) && BBCVs <= 4) {
                 return 'T';
             }
-            if (CL === 1 && Ds > 2) {
+            if (CL === 1 && Ds >= 3) {
                 return 'T';
             }
-            if (!route.includes('D') && CL === 1 && Ds > 1) {
+            if (!route.includes('D') && CL === 1 && Ds >= 2) {
                 return 'T';
             }
             return 'K';
@@ -64,20 +64,20 @@ export const calc_4_5: CalcFnWithCondition = (
             if (route.includes('E')) {
                 return 'M';
             }
-            if (BBs + CVH > 3) {
+            if (BBs + CVH >= 4) {
                 return 'M';
             }
-            if (BBCVs > 4) {
+            if (BBCVs >= 5) {
                 return 'M';
             }
-            if (AO > 0) {
+            if (AO >= 1) {
                 return 'M';
             }
             if (seek.c2 < 63) {
                 return 'L';
             }
             if (seek.c2 < 70 && seek.c2 >= 63) {
-                if (Ss > 0) {
+                if (Ss >= 1) {
                     return [
                         { node: 'L', rate: 0.333 },
                         { node: 'M', rate: 0.333 },
@@ -89,7 +89,7 @@ export const calc_4_5: CalcFnWithCondition = (
                     { node: 'T', rate: 0.5 },
                 ];
             }
-            if (Ss > 0) {
+            if (Ss >= 1) {
                 return [
                     { node: 'M', rate: 0.5 },
                     { node: 'T', rate: 0.5 },
@@ -103,7 +103,7 @@ export const calc_4_5: CalcFnWithCondition = (
             if (is_fleet_speed_fastest(speed)) {
                 return 'N';
             }
-            if (DD < 2) {
+            if (DD <= 1) {
                 return 'R';
             }
             if (is_fleet_speed_faster_or_more(speed)) {
@@ -112,12 +112,12 @@ export const calc_4_5: CalcFnWithCondition = (
             if (is_fleet_speed_slow(speed)) {
                 return 'R';
             }
-            if (BBs + CVH < 2) {
+            if (BBs + CVH <= 1) {
                 return 'N';
             }
             return 'R';
         case 'O':
-            if (BBCVs > 4) {
+            if (BBCVs >= 5) {
                 return 'N';
             }
             return [
@@ -129,7 +129,7 @@ export const calc_4_5: CalcFnWithCondition = (
                 return 'P';
             }
             if (seek.c2 < 59 && seek.c2 >= 55) {
-                if (BBCVs > 4) {
+                if (BBCVs >= 5) {
                     return [
                         { node: 'O', rate: 0.5 },
                         { node: 'P', rate: 0.5 },
@@ -146,7 +146,7 @@ export const calc_4_5: CalcFnWithCondition = (
                     { node: 'P', rate: 0.5 },
                 ];
             }
-            if (BBCVs > 4 || DD === 0) {
+            if (BBCVs >= 5 || DD === 0) {
                 return 'O';
             }
             return 'N'; // f_seek.c2 >= 59
@@ -156,8 +156,8 @@ export const calc_4_5: CalcFnWithCondition = (
             }
             if (
                 is_fleet_speed_fast_or_more(speed) &&
-                CL + CAV > 0 &&
-                DD > 1
+                CL + CAV >= 1 &&
+                DD >= 2
             ) {
                 return 'N';
             }
