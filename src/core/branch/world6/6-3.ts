@@ -20,11 +20,11 @@ export const calc_6_3: CalcFnWithCondition = (
         case 'A':
             return option.A;
         case 'E':
-            if (AV < 2) {
-                if (CL < 2 && DD > 2) {
+            if (AV <= 1) {
+                if (CL <= 1 && DD >= 3) {
                     return 'G';
                 }
-                if (CL < 3) {
+                if (CL <= 2) {
                     return [
                         { node: 'F', rate: 0.6 },
                         { node: 'G', rate: 0.4 },

@@ -18,7 +18,10 @@ export const calc_6_4: CalcFnNoCondition = (
 
     switch (node) {
         case null:
-            if (LHA + CVs > 0) {
+            if (LHA >= 1) {
+                return '2';
+            }
+            if (CVs >= 1) {
                 return '2';
             }
             if (
@@ -28,39 +31,39 @@ export const calc_6_4: CalcFnNoCondition = (
             ) {
                 return '2';
             }
-            if (CAV > 2) {
+            if (CAV >= 3) {
                 return '2';
-            } 
+            }
             if (is_fleet_speed_fast_or_more(speed) &&
                 ((is_flagship_CL(fleet) && DD === 3)
-                    || DD > 3)) {
+                    || DD >= 4)) {
                 return '1';
             }
-            if (DD > 1) {
+            if (DD >= 2) {
                 return '1';
             }
             return '2';
         case '1':
             if (is_fleet_speed_fast_or_more(speed) &&
                 ((is_flagship_CL(fleet) && DD === 3)
-                    || DD > 3)) {
+                    || DD >= 4)) {
                 return 'B';
             }
-            if (DD > 1) {
+            if (DD >= 2) {
                 return 'A';
             }
             break; // これ以外は既に2へ行ってるので例外なし。でもちょっとヤだね
         case 'A':
             if (includes_base_ship('秋津洲', base_ship_names) &&
                 (CAV === 1
-                    || CL > 0
-                    || DD > 2)) {
+                    || CL >= 1
+                    || DD >= 3)) {
                 return 'D';
             }
-            if (BBs > 0 || is_fleet_speed_slow(speed)) {
+            if (BBs >= 1 || is_fleet_speed_slow(speed)) {
                 return 'E';
             }
-            if (is_flagship_CL(fleet) || DD > 2) {
+            if (is_flagship_CL(fleet) || DD >= 3) {
                 return 'D';
             }
             return 'E';
@@ -72,8 +75,8 @@ export const calc_6_4: CalcFnNoCondition = (
                 return 'D';
             }
             if (
-                CAs < 2 &&
-                CL > 0 &&
+                CAs <= 1 &&
+                CL >= 1 &&
                 is_fleet_speed_fast_or_more(speed)
             ) {
                 return 'D';
@@ -81,24 +84,24 @@ export const calc_6_4: CalcFnNoCondition = (
             return 'G';
             break;
         case 'J':
-            if (CL === 0 || DD < 2) {
+            if (CL === 0 || DD <= 1) {
                 return 'L';
             }
-            if (LHA > 0) {
+            if (LHA >= 1) {
                 return 'N';
             }
             if (CVs === 2 && is_fleet_speed_slow(speed)) {
                 return 'L';
             }
-            if (CVs === 2 && BBs > 0) {
+            if (CVs === 2 && BBs >= 1) {
                 return 'L';
             }
             return 'I';
         case 'K':
-            if (BBs === 2 || BBs + CAs > 2) {
+            if (BBs === 2 || BBs + CAs >= 3) {
                 return 'H';
             }
-            if (DD > 1) {
+            if (DD >= 2) {
                 return 'J';
             }
             return 'H';

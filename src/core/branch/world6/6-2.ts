@@ -17,14 +17,14 @@ export const calc_6_2: CalcFnNoCondition = (
         case null:
             return '1';
         case '1':
-            if (CL + DD > 3) {
+            if (CL + DD >= 4) {
                 return 'B';
             }
-            if (BBV + CAV + AV + LHA < 2 && Ss < 5) {
-                if (BBCVs > 4) {
+            if (BBV + CAV + AV + LHA <= 1 && Ss <= 4) {
+                if (BBCVs >= 5) {
                     return 'B';
                 }
-                if (BBCVs > 3) {
+                if (BBCVs >= 4) {
                     return [
                         { node: 'B', rate: 0.65 },
                         { node: 'C', rate: 0.35 },
@@ -34,10 +34,10 @@ export const calc_6_2: CalcFnNoCondition = (
             }
             return 'C';
         case 'B':
-            if (CL + DD > 4) {
+            if (CL + DD >= 5) {
                 return 'D';
             }
-            if (CVs < 3 && BBs === 0) {
+            if (CVs <= 2 && BBs === 0) {
                 return [
                     { node: 'C', rate: 0.7 },
                     { node: 'D', rate: 0.3 },
@@ -47,23 +47,23 @@ export const calc_6_2: CalcFnNoCondition = (
         case 'C':
             if (
                 Ss === 6 ||
-                BBCVs > 4 ||
+                BBCVs >= 5 ||
                 BBCVs + CAs === 6 ||
                 BBCVs + Ss === 6
             ) {
                 return 'A';
             }
-            if (BBCVs < 3) {
+            if (BBCVs <= 2) {
                 return 'E';
             }
             return 'D';
         case 'D':
-            if (DD < 3 || BBCVs > 0 || CL + DD < 5) {
+            if (DD <= 2 || BBCVs >= 1 || CL + DD <= 4) {
                 return 'F';
             }
             return 'H';
         case 'E':
-            if (BBs > 1 || CVs > 1 || DD < 2) {
+            if (BBs >= 2 || CVs >= 2 || DD <= 1) {
                 return 'F';
             }
             if (seek.c3 < 43) {
@@ -85,7 +85,7 @@ export const calc_6_2: CalcFnNoCondition = (
             }
             return 'K';
         case 'I':
-            if (Ss > 3) {
+            if (Ss >= 4) {
                 return 'G';
             }
             if (seek.c3 < 35) {

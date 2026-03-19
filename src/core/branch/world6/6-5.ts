@@ -15,27 +15,27 @@ export const calc_6_5: CalcFnNoCondition = (
 
     switch (node) {
         case null:
-            if (CL === 0 || CVs + CLT > 0 || BBs > 3) {
+            if (CL === 0 || CVs + CLT >= 1 || BBs >= 4) {
                 return '1';
             }
             return '2';
         case 'B':
-            if (BBs === 3 || DD < 2) {
+            if (BBs === 3 || DD <= 1) {
                 return 'C';
             }
             return 'F';
         case 'C':
             if (
                 DD === 0 ||
-                CLT > 1 ||
-                BBCVs > 3 ||
-                BBCVs + CAs > 4
+                CLT >= 2 ||
+                BBCVs >= 4 ||
+                BBCVs + CAs >= 5
             ) {
                 return 'E';
             }
             return 'D';
         case 'E':
-            if (CVs > 0 && CL > 0 && DD > 0) {
+            if (CVs >= 1 && CL >= 1 && DD >= 1) {
                 return 'H';
             }
             return 'I';
@@ -48,14 +48,14 @@ export const calc_6_5: CalcFnNoCondition = (
             if (CL === 0) {
                 return 'H';
             }
-            if (DD > 1) {
+            if (DD >= 2) {
                 return 'J';
             }
             if (
                 BBs === 0 &&
-                CVs + CAs < 5 &&
-                CVs < 3 &&
-                CAs < 5
+                CVs + CAs <= 4 &&
+                CVs <= 2 &&
+                CAs <= 4
             ) {
                 return 'J';
             }

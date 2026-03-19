@@ -17,13 +17,13 @@ export const calc_6_1: CalcFnNoCondition = (
         case null:
             return '1';
         case '1':
-            if (BBCVs + CAs > 2 || BBs > 1) {
+            if (BBCVs + CAs >= 3 || BBs >= 2) {
                 return 'B';
             }
-            if (Ss > 2 && Ss === ships_length) {
+            if (Ss >= 3 && Ss === ships_length) {
                 return 'A';
             }
-            if (AS === 1 && Ss > 2 && AS + Ss === ships_length) {
+            if (AS === 1 && Ss >= 3 && AS + Ss === ships_length) {
                 return 'A';
             }
             if (AS === 1 && Ss === 3 && DD === 2) {
@@ -42,7 +42,7 @@ export const calc_6_1: CalcFnNoCondition = (
             }
             return 'D';
         case 'G':
-            if (Ss < 3 || BBCVs + CAs === 2 || seek.c4 < 12) {
+            if (Ss <= 2 || BBCVs + CAs === 2 || seek.c4 < 12) {
                 return 'I';
             }
             if (AS > 0 && seek.c4 >= 16) {
