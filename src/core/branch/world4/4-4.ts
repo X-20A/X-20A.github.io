@@ -28,7 +28,7 @@ export const calc_4_4: CalcFnNoCondition = (
             if (BBCVs >= 4) {
                 return 'A';
             }
-            if (CA + CAV > 0) {
+            if (CAs > 0) {
                 return [
                     { node: 'D', rate: 0.7 },
                     { node: 'F', rate: 0.3 },
