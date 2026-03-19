@@ -18,10 +18,10 @@ export const calc_3_2: CalcFnNoCondition = (
         case null:
             return '1';
         case '1':
-            if (BBCVs > 0) {
+            if (BBCVs >= 1) {
                 return 'C';
             }
-            if (CL === 1 && DD > 3) {
+            if (CL === 1 && DD >= 4) {
                 return 'C';
             }
             if (DD === 6) {
@@ -29,10 +29,13 @@ export const calc_3_2: CalcFnNoCondition = (
             }
             return 'A';
         case 'C':
-            if (DD < 4 || BBs + CVH > 1) {
+            if (DD <= 3) {
                 return 'A';
             }
-            if (Ss > 0) {
+            if (BBs + CVH >= 2) {
+                return 'A';
+            }
+            if (Ss >= 1) {
                 return [
                     { node: 'A', rate: 0.5 },
                     { node: 'G', rate: 0.5 },
@@ -41,14 +44,14 @@ export const calc_3_2: CalcFnNoCondition = (
             if (
                 is_fleet_speed_slow(speed) ||
                 radar_carrier_count === 0 ||
-                CL + DD + AO < 6
+                CL + DD + AO <= 5
             ) {
                 return 'G';
             }
-            if (is_fleet_speed_fastest(speed) && radar_carrier_count > 3) {
+            if (is_fleet_speed_fastest(speed) && radar_carrier_count >= 4) {
                 return 'E';
             }
-            if (is_fleet_speed_faster_or_more(speed) || AO > 0) {
+            if (is_fleet_speed_faster_or_more(speed) || AO >= 1) {
                 return [
                     { node: 'E', rate: 0.4 },
                     { node: 'G', rate: 0.6 },
@@ -64,20 +67,20 @@ export const calc_3_2: CalcFnNoCondition = (
                 { node: 'F', rate: 0.8 },
             ];
         case 'G':
-            if (Ss > 0 || CVH > 0 || BBs + CVL === 2) {
+            if (Ss >= 1 || CVH >= 1 || BBs + CVL === 2) {
                 return 'J';
             }
             if (
                 is_fleet_speed_slow(speed) ||
                 radar_carrier_count === 0 ||
-                CL + DD + AO < 6
+                CL + DD + AO <= 5
             ) {
                 return 'H';
             }
             if (is_fleet_speed_faster_or_more(speed)) {
                 return 'F';
             }
-            if (AO > 0) {
+            if (AO >= 1) {
                 return [
                     { node: 'F', rate: 0.55 },
                     { node: 'H', rate: 0.45 },

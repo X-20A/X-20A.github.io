@@ -17,11 +17,11 @@ export const calc_3_1: CalcFnNoCondition = (
         case null:
             return '1';
         case 'C':
-            if (Ds < 2) {
+            if (Ds <= 1) {
                 return 'D';
             }
-            if (BBV + CL + AV + AO > 2) {
-                if (BBCVs > 2) {
+            if (BBV + CL + AV + AO >= 3) {
+                if (BBCVs >= 3) {
                     return [
                         { node: 'B', rate: 0.5 },
                         { node: 'D', rate: 0.5 },
@@ -32,24 +32,24 @@ export const calc_3_1: CalcFnNoCondition = (
                     { node: 'F', rate: 0.5 },
                 ];
             }
-            if (AV + AO > 0 && Ds > 2) {
+            if (AV + AO >= 1 && Ds >= 3) {
                 return [
                     { node: 'B', rate: 0.5 },
                     { node: 'F', rate: 0.5 },
                 ];
             }
-            if (Ss > 2) {
+            if (Ss >= 3) {
                 return [
                     { node: 'D', rate: 0.5 },
                     { node: 'F', rate: 0.5 },
                 ];
             }
-            if (BBCVs > 2) {
+            if (BBCVs >= 3) {
                 return 'D';
             }
             return 'F';
         case 'D':
-            if (BBCVs > 4 || Ss === 6) {
+            if (BBCVs >= 5 || Ss === 6) {
                 return 'E';
             }
             if (AS === 1 && Ss === 5) {

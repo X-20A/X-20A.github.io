@@ -17,7 +17,7 @@ export const calc_3_3: CalcFnNoCondition = (
         case null:
             return '1';
         case 'A':
-            if (CVH > 0 || BBs + CVL > 3) {
+            if (CVH >= 1 || BBs + CVL >= 4) {
                 return 'C';
             }
             if (BBs + CVL === 1 && CL === 1 && DD === 4) {
@@ -25,16 +25,16 @@ export const calc_3_3: CalcFnNoCondition = (
             }
             return 'B';
         case 'B':
-            if (Ss > 0) {
+            if (Ss >= 1) {
                 return [
                     { node: 'D', rate: 0.5 },
                     { node: 'F', rate: 0.5 },
                 ];
             }
-            if (BBs + CVL < 2) {
+            if (BBs + CVL <= 1) {
                 return 'F';
             }
-            if (BBs + CVL < 3 && DD > 1) {
+            if (BBs + CVL <= 2 && DD >= 2) {
                 return 'F';
             }
             return [
@@ -42,7 +42,7 @@ export const calc_3_3: CalcFnNoCondition = (
                 { node: 'F', rate: 0.5 },
             ];
         case 'C':
-            if (Ds < 2 || CVH > 1 || BBCVs > 2) {
+            if (Ds <= 1 || CVH >= 2 || BBCVs >= 3) {
                 return 'E';
             }
             if (BBCVs === 2) {
@@ -53,16 +53,16 @@ export const calc_3_3: CalcFnNoCondition = (
             }
             return 'E';
         case 'F':
-            if (DD < 2 || BBs > 2) {
+            if (DD <= 1 || BBs >= 3) {
                 return 'G';
             }
-            if (Ss > 0) {
+            if (Ss >= 1) {
                 return [
                     { node: 'H', rate: 0.5 },
                     { node: 'J', rate: 0.5 },
                 ];
             }
-            if (CL + CAV + AV > 0) {
+            if (CL + CAV + AV >= 1) {
                 return 'J';
             }
             return [
@@ -70,13 +70,13 @@ export const calc_3_3: CalcFnNoCondition = (
                 { node: 'J', rate: 0.5 },
             ];
         case 'G':
-            if (Ss > 0) {
+            if (Ss >= 1) {
                 return [
                     { node: 'I', rate: 0.5 },
                     { node: 'M', rate: 0.5 },
                 ];
             }
-            if (BBCVs < 4) {
+            if (BBCVs <= 3) {
                 return 'M';
             }
             if (BBCVs === 4) {
@@ -91,7 +91,7 @@ export const calc_3_3: CalcFnNoCondition = (
                     { node: 'M', rate: 0.35 },
                 ];
             }
-            if (BBCVs > 5) {
+            if (BBCVs >= 6) {
                 return [
                     { node: 'I', rate: 0.85 },
                     { node: 'M', rate: 0.15 },
@@ -99,21 +99,21 @@ export const calc_3_3: CalcFnNoCondition = (
             }
             break; // BBCVsより例外なし
         case 'J':
-            if (DD > 4) {
+            if (DD >= 5) {
                 return 'M';
             }
-            if (CL === 1 && DD > 3) {
+            if (CL === 1 && DD >= 4) {
                 return 'M';
             }
             return 'K';
         case 'K':
-            if (Ss > 0) {
+            if (Ss >= 1) {
                 return [
                     { node: 'L', rate: 0.5 },
                     { node: 'M', rate: 0.5 },
                 ];
             }
-            if (BBs + CVL < 2) {
+            if (BBs + CVL <= 1) {
                 return 'M';
             }
             if (BBs + CVL === 2) {

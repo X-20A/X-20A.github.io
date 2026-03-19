@@ -18,10 +18,10 @@ export const calc_3_4: CalcFnNoCondition = (
         case null:
             return '1';
         case '1':
-            if (CL + Ds === 0 || BBCVs > 2) {
+            if (CL + Ds === 0 || BBCVs >= 3) {
                 return 'A';
             }
-            if (BBCVs === 2 || Ss > 0) {
+            if (BBCVs === 2 || Ss >= 1) {
                 return [
                     { node: 'A', rate: 0.35 },
                     { node: 'B', rate: 0.65 },
@@ -31,7 +31,7 @@ export const calc_3_4: CalcFnNoCondition = (
                 return 'B';
             }
             if (BBCVs === 0) {
-                if (DD < 3) {
+                if (DD <= 2) {
                     return [
                         { node: 'B', rate: 0.65 },
                         { node: 'D', rate: 0.35 },
@@ -42,16 +42,16 @@ export const calc_3_4: CalcFnNoCondition = (
             }
             break; // BBCVsより例外なし
         case 'C':
-            if (CVH > 2 || CL + Ds === 0 || BBCVs > 4) {
+            if (CVH >= 3 || CL + DD + DE === 0 || BBCVs >= 5) {
                 return 'B';
             }
             if (BBCVs === 2) {
                 return 'F';
             }
-            if (AV + AO > 0) {
+            if (AV + AO >= 1) {
                 return 'E';
             }
-            if (AS > 0) {
+            if (AS >= 1) {
                 return [
                     { node: 'E', rate: 0.5 },
                     { node: 'F', rate: 0.5 },
@@ -59,10 +59,10 @@ export const calc_3_4: CalcFnNoCondition = (
             }
             return 'F';
         case 'F':
-            if (BBCVs + CAs > 4) {
+            if (BBCVs + CAs >= 5) {
                 return 'G';
             }
-            if (BBs + CVH < 3 && CL > 0 && Ds > 1) {
+            if (BBs + CVH <= 2 && CL >= 1 && Ds >= 2) {
                 if (is_fleet_speed_faster_or_more(speed)) {
                     return 'J';
                 }
@@ -77,10 +77,10 @@ export const calc_3_4: CalcFnNoCondition = (
                 { node: 'M', rate: 0.5 },
             ];
         case 'H':
-            if (DD < 3 || CL + DD < 4 || CVH > 0 || BBs + CVL > 1) {
+            if (DD <= 2 || CL + DD <= 3 || CVH >= 1 || BBs + CVL >= 2) {
                 return 'G';
             }
-            if (CL + DD > 4) {
+            if (CL + DD >= 5) {
                 return 'L';
             }
             if (CL === 0) {
@@ -102,7 +102,7 @@ export const calc_3_4: CalcFnNoCondition = (
                 { node: 'O', rate: 0.5 },
             ];
         case 'M':
-            if (CL > 0 && DD > 0) {
+            if (CL >= 1 && DD >= 1) {
                 return 'P';
             }
             return [

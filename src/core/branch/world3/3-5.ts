@@ -18,14 +18,14 @@ export const calc_3_5: CalcFnNoCondition = (
             return '1';
         case '1':
             if (
-                Ss > 2 ||
-                BBs > 1 ||
-                BBs + CAs > 2 ||
-                CVs + CLT > 0
+                Ss >= 3 ||
+                BBs >= 2 ||
+                BBs + CAs >= 3 ||
+                CVs + CLT >= 1
             ) {
                 return 'B';
             }
-            if (DD > 4) {
+            if (DD >= 5) {
                 return 'F';
             }
             if (DD === 4) {
@@ -34,7 +34,7 @@ export const calc_3_5: CalcFnNoCondition = (
                     { node: 'F', rate: 0.75 },
                 ];
             }
-            if (DD < 4) {
+            if (DD <= 3) {
                 return [
                     { node: 'B', rate: 0.5 },
                     { node: 'F', rate: 0.5 },
@@ -42,23 +42,23 @@ export const calc_3_5: CalcFnNoCondition = (
             }
             break; // DDより例外なし
         case 'B':
-            if (Ss > 3 || CVs > 3 || BBCVs > 4) {
+            if (Ss >= 4 || CVs >= 4 || BBCVs >= 5) {
                 return 'A';
             }
             if (
-                CLT > 1 ||
-                CVs > 1 ||
-                BBs > 2 ||
-                BBCVs + CAs > 4
+                CLT >= 2 ||
+                CVs >= 2 ||
+                BBs >= 3 ||
+                BBCVs + CAs >= 5
             ) {
                 return 'D';
             }
-             if (CVs === 0 && CL === 1 && DD > 1) {
+            if (CVs === 0 && CL === 1 && DD >= 2) {
                 return 'E';
             }
             return 'C';
         case 'F':
-            if (BBCVs + LHA > 0 || CL + CLT > 3 || CAs > 1) {
+            if (BBCVs + LHA >= 1 || CL + CLT >= 4 || CAs >= 2) {
                 return 'E';
             }
             if (CAs === 1) {
@@ -74,7 +74,7 @@ export const calc_3_5: CalcFnNoCondition = (
                         { node: 'G', rate: 0.85 },
                     ];
                 }
-                if (CL < 3) {
+                if (CL <= 2) {
                     return 'G';
                 }
             }
@@ -94,10 +94,10 @@ export const calc_3_5: CalcFnNoCondition = (
             }
             break; // 索敵より例外なし
         case 'H':
-            if (BBCVs > 3) {
+            if (BBCVs >= 4) {
                 return 'J';
             }
-            if (BBCVs > 1 && LHA > 0) {
+            if (BBCVs >= 2 && LHA >= 1) {
                 return 'J';
             }
             if (seek.c4 < 35) {
