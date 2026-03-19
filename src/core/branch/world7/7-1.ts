@@ -17,14 +17,14 @@ export const calc_7_1: CalcFnNoCondition = (
         case null:
             return '1';
         case '1':
-            if (Ss > 0) {
-                if (BBCVs > 0 || ships_length > 4) {
+            if (Ss >= 1) {
+                if (BBCVs >= 1 || ships_length >= 5) {
                     return [
                         { node: 'B', rate: 0.5 },
                         { node: 'D', rate: 0.5 },
                     ];
                 }
-                if (ships_length < 5) {
+                if (ships_length <= 4) {
                     return [
                         { node: 'B', rate: 0.333 },
                         { node: 'D', rate: 0.333 },
@@ -32,21 +32,21 @@ export const calc_7_1: CalcFnNoCondition = (
                     ];
                 } // ships_lengthより例外なし
             }
-            if (BBCVs > 0 || ships_length > 5) {
+            if (BBCVs >= 1 || ships_length >= 6) {
                 return 'B';
             }
-            if (ships_length === 5 || AO > 0) {
+            if (ships_length === 5 || AO >= 1) {
                 return 'D';
             }
-            if (ships_length < 5) {
+            if (ships_length <= 4) {
                 return 'F';
             }
             break; // ships_lengthより例外なし
         case 'B':
-            if (BBs + CVH > 0 || CVL > 1 || CAs > 2) {
+            if (BBs + CVH >= 1 || CVL >= 2 || CAs >= 3) {
                 return 'A';
             }
-            if (DD + DE > 1) {
+            if (Ds >= 2) {
                 return 'C';
             }
             return [
@@ -57,48 +57,44 @@ export const calc_7_1: CalcFnNoCondition = (
             if (CL === 1 && DD === 4) {
                 return 'E';
             }
-            if (DD > 0 && DE > 2) {
+            if (DD >= 1 && DE >= 3) {
                 return 'E';
             }
-            if (AO > 0 && DE > 2) {
+            if (AO >= 1 && DE >= 3) {
                 return 'E';
             }
             if (Ds === 5) {
                 return 'E';
             }
             if (Ds === 4) {
-                if (CT + AO > 0) {
+                if (CT + AO >= 1) {
                     return 'E';
                 }
-                if (AV > 0) {
+                if (AV >= 1) {
                     return [
                         { node: 'C', rate: 0.5 },
                         { node: 'E', rate: 0.5 },
                     ];
                 }
-                return [
-                    { node: 'C', rate: 0.5 },
-                    { node: 'E', rate: 0.5 },
-                ];
             }
             return [
                 { node: 'C', rate: 0.5 },
                 { node: 'E', rate: 0.5 },
             ];
         case 'H':
-            if (CL > 0 && DD > 3) {
+            if (CL >= 1 && DD >= 4) {
                 return 'K';
             }
-            if (DD > 0 && DE > 2) {
+            if (DD >= 1 && DE >= 3) {
                 return 'K';
             }
-            if (AO > 0) {
+            if (AO >= 1) {
                 return [
                     { node: 'I', rate: 0.5 },
                     { node: 'K', rate: 0.5 },
                 ];
             }
-            if (BBCVs > 1) {
+            if (BBCVs >= 2) {
                 return 'J';
             }
             if (BBCVs === 1) {

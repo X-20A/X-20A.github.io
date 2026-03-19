@@ -22,18 +22,18 @@ export const calc_7_5: CalcFnWithCondition = (
                 return 'D';
             }
             if (
-                CVH > 1 ||
-                SBB_count > 1 ||
-                Ss > 0 ||
+                CVH >= 2 ||
+                SBB_count >= 2 ||
+                Ss >= 1 ||
                 CL === 0 ||
-                Ds < 2
+                Ds <= 1
             ) {
                 return 'C';
             }
-            if (Ds > 2) {
+            if (Ds >= 3) {
                 return 'D';
             }
-            if (CVH > 0 || CVL > 1 || BBs > 2 || CAs > 2) {
+            if (CVH >= 1 || CVL >= 2 || BBs >= 3 || CAs >= 3) {
                 return 'C';
             }
             return 'D';
@@ -41,13 +41,13 @@ export const calc_7_5: CalcFnWithCondition = (
             if (is_fleet_speed_fastest(speed)) {
                 return 'F';
             }
-            if (CVH > 1) {
+            if (CVH >= 2) {
                 return 'E';
             }
-            if (CVL > 2) {
+            if (CVL >= 3) {
                 return 'E';
             }
-            if (BBs + CVH + CAs > 2) {
+            if (BBs + CVH + CAs >= 3) {
                 return 'E';
             }
             if (CL + DD === 0) {
@@ -56,13 +56,13 @@ export const calc_7_5: CalcFnWithCondition = (
             if (is_fleet_speed_faster_or_more(speed)) {
                 return 'F';
             }
-            if (Ds > 2) {
+            if (Ds >= 3) {
                 return 'F';
             }
-            if (BBs < 2) {
+            if (BBs <= 1) {
                 return 'F';
             }
-            if (Ds < 2) {
+            if (Ds <= 1) {
                 return 'E';
             }
             if (is_fleet_speed_slow(speed)) {
@@ -95,15 +95,15 @@ export const calc_7_5: CalcFnWithCondition = (
                 return 'O';
             }
             if (
-                CVH > 0 ||
-                CVL > 2 ||
-                SBB_count > 1 ||
-                BBs + CAs > 2 ||
-                Ds < 2
+                CVH >= 1 ||
+                CVL >= 3 ||
+                SBB_count >= 2 ||
+                BBs + CAs >= 3 ||
+                Ds <= 1
             ) {
                 return 'N';
             }
-            if (Ds > 2 || is_fleet_speed_fast_or_more(speed)) {
+            if (Ds >= 3 || is_fleet_speed_fast_or_more(speed)) {
                 return 'O';
             }
             return 'N';
@@ -121,9 +121,9 @@ export const calc_7_5: CalcFnWithCondition = (
                     ];
                 }
                 if (
-                    CV > 0 ||
-                    BBs + CVL > 1 ||
-                    BBs + CAs > 2 ||
+                    CV >= 1 ||
+                    BBs + CVL >= 2 ||
+                    BBs + CAs >= 3 ||
                     CL === 0
                 ) {
                     return [
@@ -140,9 +140,9 @@ export const calc_7_5: CalcFnWithCondition = (
                     return 'T';
                 }
                 if (
-                    CV > 0 ||
-                    BBs + CVL > 1 ||
-                    BBs + CAs > 2 ||
+                    CV >= 1 ||
+                    BBs + CVL >= 2 ||
+                    BBs + CAs >= 3 ||
                     CL === 0
                 ) {
                     return 'R';

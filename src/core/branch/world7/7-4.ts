@@ -20,13 +20,13 @@ export const calc_7_4: CalcFnWithCondition = (
         case null:
             return '1';
         case '1':
-            if (BB + CVH + Ss > 0 || CAs > 1 || CLE + CLT > 1) {
+            if (BB + CVH + Ss >= 1 || CAs >= 2 || CLE + CLT >= 2) {
                 return 'C';
             }
             if (
                 includes_base_ship('あきつ丸', base_ship_names) &&
                 DE >= 2 &&
-                (DD > 0 || DE > 3)
+                (DD >= 1 || DE >= 4)
             ) {
                 return 'A';
             }
@@ -34,33 +34,33 @@ export const calc_7_4: CalcFnWithCondition = (
                 BBV
                 + CVL
                 + count_ships_by_base_names(['あきつ丸'], fleet.base_ship_names)
-                > 2
+                >= 3
             ) {
                 return 'C';
             }
-            if (Ds > 2 || DE > 1) {
+            if (Ds >= 3 || DE >= 2) {
                 return 'A';
             }
             return 'C';
         case 'C':
             if (
-                BB + CVH + Ss > 0 ||
-                CVL + count_ships_by_base_names(['あきつ丸'], fleet.base_ship_names) > 2
+                BB + CVH + Ss >= 1 ||
+                CVL + count_ships_by_base_names(['あきつ丸'], fleet.base_ship_names) >= 3
             ) {
                 return 'D';
             }
             if (
-                Ds > 3 ||
-                (CT > 0 && Ds > 2) ||
-                DE > 2 ||
-                (is_fleet_speed_faster_or_more(speed) && DD > 1)
+                Ds >= 4 ||
+                (CT >= 1 && Ds >= 3) ||
+                DE >= 3 ||
+                (is_fleet_speed_faster_or_more(speed) && DD >= 2)
             ) {
                 return 'E';
             }
             return 'D';
         case 'E':
             if (
-                AO + LHA > 0 && DE > 3 &&
+                AO + LHA >= 1 && DE >= 4 &&
                 count_Taiyo_class(fleet) + AO + LHA + DD + DE === 6
             ) {
                 return 'G';
@@ -80,8 +80,8 @@ export const calc_7_4: CalcFnWithCondition = (
                 }
                 if (seek.c4 < 37 && seek.c4 >= 33) {
                     if (
-                        CT > 0 &&
-                        DE > 2 &&
+                        CT >= 1 &&
+                        DE >= 3 &&
                         count_Taiyo_class(fleet) + CT + Ds === 5 &&
                         ships_length === 5
                     ) {
@@ -97,8 +97,8 @@ export const calc_7_4: CalcFnWithCondition = (
                 }
                 if (seek.c4 >= 37) {
                     if (
-                        CT > 0 &&
-                        DE > 2 &&
+                        CT >= 1 &&
+                        DE >= 3 &&
                         count_Taiyo_class(fleet) + CT + Ds === 5 &&
                         ships_length === 5
                     ) {
@@ -112,12 +112,12 @@ export const calc_7_4: CalcFnWithCondition = (
             return 'M';
         case 'M': { // 🤮
             const flag =
-                (SBB_count > 0 && CVH > 0)
-                || (BBs - SBB_count > 1)
-                || (BBV > 1)
-                || (CVL + count_ships_by_base_names(['あきつ丸'], fleet.base_ship_names) > 1)
-                || (BBs - SBB_count + BBV + CVL + count_ships_by_base_names(['あきつ丸'], base_ship_names) > 2)
-                || (Ds < 2);
+                (SBB_count >= 1 && CVH >= 1)
+                || (BBs - SBB_count >= 2)
+                || (BBV >= 2)
+                || (CVL + count_ships_by_base_names(['あきつ丸'], fleet.base_ship_names) >= 2)
+                || (BBs - SBB_count + BBV + CVL + count_ships_by_base_names(['あきつ丸'], base_ship_names) >= 3)
+                || (Ds <= 1);
             if (seek.c4 < 45) {
                 return 'N';
             }

@@ -18,58 +18,64 @@ export const calc_7_2: CalcFnNoCondition = (
         case null:
             return '1';
         case '1':
-            if (Ds < 2 || Ss > 0) {
+            if (Ds <= 1) {
                 return 'A';
             }
-            if (ships_length > 5) {
-                if (CVH > 1 || BBs + CVH > 3 || CLE > 2) {
+            if (Ss >= 1) {
+                return 'A';
+            }
+            if (ships_length >= 6) {
+                if (CVH >= 2 || BBs + CVH >= 4 || CLE >= 3) {
                     return 'A';
                 }
                 return 'B';
             }
             if (ships_length === 5) {
-                if (CVH > 2) {
+                if (CVH >= 3) {
                     return 'A';
                 }
-                if (BBs + CVH > 0 || CLE > 1 || DE < 3) {
+                if (BBs + CVH >= 1 || CLE >= 2 || DE <= 2) {
                     return 'B';
                 }
                 return 'C';
             }
-            if (ships_length < 5) {
-                if (BBs + CVH > 0 || Ds < 3) {
+            if (ships_length <= 4) {
+                if (BBs + CVH >= 1 || Ds <= 2) {
                     return 'B';
                 }
                 return 'C';
             }
             break; // ships_lengthより例外なし
         case 'C':
-            if (AO + Ss > 0) {
+            if (AO >= 1) {
                 return 'D';
             }
-            if (ships_length > 5) {
-                if (BBs + CVH > 0) {
+            if (Ss >= 1) {
+                return 'D';
+            }
+            if (ships_length >= 6) {
+                if (BBs + CVH >= 1) {
                     return 'D';
                 }
-                if (Ds > 3) {
+                if (Ds >= 4) {
                     return 'E';
                 }
                 return 'D';
             }
             if (ships_length === 5) {
-                if (BBs + CVH > 1) {
+                if (BBs + CVH >= 2) {
                     return 'D';
                 }
-                if (Ds > 3 || DE > 2) {
+                if (Ds >= 4 || DE >= 3) {
                     return 'E';
                 }
                 return 'D';
             }
-            if (ships_length < 5) {
-                if (BBs + CVH > 1) {
+            if (ships_length <= 4) {
+                if (BBs + CVH >= 2) {
                     return 'D';
                 }
-                if (Ds > 2 || DE > 1) {
+                if (Ds >= 3 || DE >= 2) {
                     return 'E';
                 }
                 return 'D';
@@ -79,7 +85,7 @@ export const calc_7_2: CalcFnNoCondition = (
             if (is_fleet_speed_faster_or_more(speed)) {
                 return 'I';
             }
-            if (BBCVs > 3) {
+            if (BBCVs >= 4) {
                 return 'H';
             }
             if (is_fleet_speed_fast_or_more(speed)) {
@@ -94,12 +100,12 @@ export const calc_7_2: CalcFnNoCondition = (
                     { node: 'I', rate: 0.65 },
                 ];
             }
-            if (BBCVs < 2) {
+            if (BBCVs <= 1) {
                 return 'I';
             } // BBCVsより例外なし
             break;
         case 'E':
-            if (ships_length < 6 || Ds > 4 || (DD > 0 && DE > 2)) {
+            if (ships_length <= 5 || Ds >= 5 || (DD >= 1 && DE >= 3)) {
                 return 'G';
             }
             if (seek.c4 < 46) {
@@ -107,7 +113,7 @@ export const calc_7_2: CalcFnNoCondition = (
             }
             return 'G';
         case 'I':
-            if (AO > 0 || (AV > 0 && Ds > 2)) {
+            if (AO >= 1 || (AV >= 1 && Ds >= 3)) {
                 return 'J';
             }
             if (seek.c4 < 63) {
