@@ -45,7 +45,7 @@ export const calc_4_1: CalcFnNoCondition = (
             if (BBCVs > 4) {
                 return 'H';
             }
-            if (Ss < 0) {
+            if (Ss >= 1) {
                 return [
                     { node: 'G', rate: 0.3 },
                     { node: 'H', rate: 0.7 },
