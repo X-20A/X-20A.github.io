@@ -8,11 +8,11 @@ export const calc_7_5: CalcFnWithCondition = (
     option,
 ) => {
     const {
-            fleet, fleet_type, ships_length, speed, seek, route,
-            arBulge_carrier_count, SBB_count,
-            BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,
-            AV, AO, LHA, AS, BBs, CVH, CVs, BBCVs, CAs, CLE, Ds, Ss,
-        } = destructuring_assignment_helper(sim_fleet);
+        fleet, fleet_type, ships_length, speed, seek, route,
+        arBulge_carrier_count, SBB_count,
+        BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,
+        AV, AO, LHA, AS, BBs, CVH, CVs, BBCVs, CAs, CLE, Ds, Ss,
+    } = destructuring_assignment_helper(sim_fleet);
 
     switch (node) {
         case null:
