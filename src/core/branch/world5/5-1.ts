@@ -18,16 +18,16 @@ export const calc_5_1: CalcFnNoCondition = (
         case null:
             return '1';
         case '1':
-            if (BBCVs > 4) {
+            if (BBCVs >= 5) {
                 return 'A';
             }
-            if (BBCVs < 3 && DD > 1) {
+            if (BBCVs <= 2 && DD >= 2) {
                 return 'B';
             }
-            if (CAs > 3 && CL > 0) {
+            if (CAs >= 4 && CL >= 1) {
                 return 'B';
             }
-            if (CAs > 1 && CL === 1) {
+            if (CAs >= 2 && CL === 1) {
                 return 'B';
             }
             if (BBs === 3 && CL === 1 && DD === 2) {
@@ -41,16 +41,16 @@ export const calc_5_1: CalcFnNoCondition = (
                 { node: 'B', rate: 0.5 },
             ];
         case 'B':
-            if (CVH > 0 || CVL > 1) {
+            if (CVH >= 1 || CVL >= 2) {
                 return 'E';
             }
-            if (BBs < 3) {
+            if (BBs <= 2) {
                 return 'C';
             }
             if (CL === 1) {
                 return 'E';
             }
-            if (DD > 1) {
+            if (DD >= 2) {
                 return 'C';
             }
             return [
@@ -58,7 +58,7 @@ export const calc_5_1: CalcFnNoCondition = (
                 { node: 'E', rate: 0.5 },
             ];
         case 'F':
-            if (CL + DD === 0 || BBs + CVL > 3) {
+            if (CL + DD === 0 || BBs + CVL >= 4) {
                 return 'H';
             }
             if (BBs + CVL === 3) {
@@ -71,13 +71,13 @@ export const calc_5_1: CalcFnNoCondition = (
             if (is_fleet_speed_fastest(speed)) {
                 return 'J';
             }
-            if (CL > 0) {
-                if (DD > 1) {
+            if (CL >= 1) {
+                if (DD >= 2) {
                     return 'J';
                 }
                 return 'G';
             }
-            if (DD > 3) {
+            if (DD >= 4) {
                 return 'J';
             }
             if (DD === 3) {
@@ -97,16 +97,16 @@ export const calc_5_1: CalcFnNoCondition = (
             }
             break; // 軽巡か駆逐のどちらかに引っかかるので例外なし
         case 'G':
-            if (BBCVs > 4) {
+            if (BBCVs >= 5) {
                 return 'I';
             }
-            if (CVs > 0 && BBCVs > 2) {
+            if (CVs >= 1 && BBCVs >= 3) {
                 return [
                     { node: 'I', rate: 0.5 },
                     { node: 'J', rate: 0.5 },
                 ];
             }
-            if (Ss > 0) {
+            if (Ss >= 1) {
                 return [
                     { node: 'I', rate: 0.5 },
                     { node: 'J', rate: 0.5 },
@@ -115,7 +115,7 @@ export const calc_5_1: CalcFnNoCondition = (
             if (is_fleet_speed_faster_or_more(speed)) {
                 return 'J';
             }
-            if (CAs > 3) {
+            if (CAs >= 4) {
                 if (BBCVs + CLT === 0) {
                     return 'J';
                 }
@@ -124,19 +124,19 @@ export const calc_5_1: CalcFnNoCondition = (
                     { node: 'J', rate: 0.7 },
                 ];
             }
-            if (CVH > 0) {
+            if (CVH >= 1) {
                 return [
                     { node: 'I', rate: 0.7 },
                     { node: 'J', rate: 0.3 },
                 ];
             }
-            if (DD > 3) {
+            if (DD >= 4) {
                 return 'J';
             }
-            if (CAs > 1 && DD > 1) {
+            if (CAs >= 2 && DD >= 2) {
                 return 'J';
             }
-            if (CL > 0 && DD > 1) {
+            if (CL >= 1 && DD >= 2) {
                 return 'J';
             }
             if (BBs === 3 && CL === 1 && CAs === 2) {

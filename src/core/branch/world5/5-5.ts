@@ -19,27 +19,27 @@ export const calc_5_5: CalcFnWithCondition = (
         case null:
             return '1';
         case '1':
-            if (DD > 3) {
+            if (DD >= 4) {
                 return 'A';
             }
-            if (drum_carrier_count > 3) {
+            if (drum_carrier_count >= 4) {
                 return 'A';
             }
-            if (craft_carrier_count > 3) {
+            if (craft_carrier_count >= 4) {
                 return 'A';
             }
             return 'B';
         case 'B':
-            if (CVH > 2) {
+            if (CVH >= 3) {
                 return 'K';
             }
-            if (BBs + CLT > 3) {
+            if (BBs + CLT >= 4) {
                 return 'K';
             }
-            if (CLT > 2) {
+            if (CLT >= 3) {
                 return 'K';
             }
-            if (DD < 2) {
+            if (DD <= 1) {
                 return 'K';
             }
             return 'F';
@@ -47,7 +47,7 @@ export const calc_5_5: CalcFnWithCondition = (
             if (is_fleet_speed_fastest(speed)) {
                 return 'H';
             }
-            if ((DD > 1 && is_fleet_speed_faster_or_more(speed))) {
+            if ((DD >= 2 && is_fleet_speed_faster_or_more(speed))) {
                 return 'H';
             }
             return 'G';
@@ -57,15 +57,15 @@ export const calc_5_5: CalcFnWithCondition = (
             if (is_fleet_speed_fastest(speed)) {
                 return 'N';
             }
-            if (BBCVs > 3) {
+            if (BBCVs >= 4) {
                 return 'P';
             }
-            if (DD < 2) {
+            if (DD <= 1) {
                 return 'L';
             }
             return 'N';
         case 'I':
-            if (BBCVs === 3 && DD > 1) {
+            if (BBCVs === 3 && DD >= 2) {
                 return 'L';
             }
             return 'M';
@@ -73,10 +73,10 @@ export const calc_5_5: CalcFnWithCondition = (
             if (route.includes('N')) {
                 return 'O';
             }
-            if (BBCVs > 3) {
+            if (BBCVs >= 4) {
                 return 'L';
             }
-            if (DD < 2) {
+            if (DD <= 1) {
                 return 'L';
             }
             return 'O';
@@ -93,10 +93,10 @@ export const calc_5_5: CalcFnWithCondition = (
             if (CVH > 0) {
                 return 'M';
             }
-            if (BBs + CVL > 2) {
+            if (BBs + CVL >= 3) {
                 return 'M';
             }
-            if (DD < 2) {
+            if (DD <= 1) {
                 return 'M';
             }
             return 'O';
@@ -128,7 +128,7 @@ export const calc_5_5: CalcFnWithCondition = (
                         { node: 'S', rate: 0.5 },
                     ];
                 }
-                if (BBCVs < 6) {
+                if (BBCVs <= 5) {
                     return 'S';
                 }
                 return [
@@ -139,7 +139,7 @@ export const calc_5_5: CalcFnWithCondition = (
             if (seek.c2 < 73) {
                 return 'Q';
             }
-            if ((seek.c2 < 80 && seek.c2 >= 73) || Ss > 0 || BBCVs > 4) {
+            if ((seek.c2 < 80 && seek.c2 >= 73) || Ss > 0 || BBCVs >= 5) {
                 return [
                     { node: 'S', rate: 0.666 },
                     { node: 'Q', rate: 0.334 },

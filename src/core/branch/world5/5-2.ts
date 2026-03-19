@@ -19,7 +19,7 @@ export const calc_5_2: CalcFnNoCondition = (
         case null:
             return '1';
         case '1':
-            if (BBCVs > 4 || BBs > 3 || CVH > 2) {
+            if (BBCVs >= 5 || BBs >= 4 || CVH >= 3) {
                 return [
                     { node: 'A', rate: 0.5 },
                     { node: 'B', rate: 0.5 },
@@ -72,17 +72,17 @@ export const calc_5_2: CalcFnNoCondition = (
             if (
                 includes_base_ship('翔鶴', base_ship_names) &&
                 includes_base_ship('瑞鶴', base_ship_names) &&
-                DD > 1
+                DD >= 2
             ) {
                 return 'D';
             }
-            if (BBs + CVH > 0) {
+            if (BBs + CVH >= 1) {
                 return 'E';
             }
-            if (CVL === 2 && DD > 1) {
+            if (CVL === 2 && DD >= 2) {
                 return 'D';
             }
-            if (CVL === 1 && CAs > 0 && DD > 1) {
+            if (CVL === 1 && CAs >= 1 && DD >= 2) {
                 return 'D';
             }
             return 'E';
@@ -121,13 +121,13 @@ export const calc_5_2: CalcFnNoCondition = (
                 return 'H';
             }
             if (seek.c2 < 70 && seek.c2 >= 63) {
-                if (BBs + CVH > 4) {
+                if (BBs + CVH >= 5) {
                     return [
                         { node: 'H', rate: 0.5 },
                         { node: 'I', rate: 0.5 },
                     ];
                 }
-                if (BBs > 2 || CVs > 2) {
+                if (BBs >= 3 || CVs >= 3) {
                     return [
                         { node: 'H', rate: 0.333 },
                         { node: 'I', rate: 0.333 },
@@ -139,10 +139,10 @@ export const calc_5_2: CalcFnNoCondition = (
                     { node: 'O', rate: 0.5 },
                 ];
             }
-            if (BBs + CVH > 4) {
+            if (BBs + CVH >= 5) {
                 return 'I';
             }
-            if (BBs > 2 || CVs > 2) {
+            if (BBs >= 3 || CVs >= 3) {
                 return [
                     { node: 'I', rate: 0.7 },
                     { node: 'O', rate: 0.3 },

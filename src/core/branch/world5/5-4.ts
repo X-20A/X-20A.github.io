@@ -18,41 +18,41 @@ export const calc_5_4: CalcFnNoCondition = (
         case null:
             return '1';
         case '1':
-            if (CVs > 0) {
+            if (CVs >= 1) {
                 return 'B';
             }
-            if (BBs > 2 || CAs > 4) {
+            if (BBs >= 3 || CAs >= 5) {
                 return 'A';
             }
             if (
-                drum_carrier_count + craft_carrier_count > 4 ||
-                DD > 3
+                drum_carrier_count + craft_carrier_count >= 5 ||
+                DD >= 4
             ) {
                 return 'B';
             }
-            if (CL === 1 && DD > 2) {
+            if (CL === 1 && DD >= 3) {
                 return 'B';
             }
             return 'A';
         case 'A':
-            if (Ss > 0 || BBs > 4 || DD > 1 || CAs > 2) {
+            if (Ss >= 1 || BBs >= 5 || DD >= 2 || CAs >= 3) {
                 return 'D';
             }
             return 'F';
         case 'B':
-            if (CVs + Ss > 0) {
+            if (CVs + Ss >= 1) {
                 return 'C';
             }
-            if (BBs > 0 && is_fleet_speed_slow(speed)) {
+            if (BBs >= 1 && is_fleet_speed_slow(speed)) {
                 return 'D';
             }
-            if (BBV + SBB_count > 1) {
+            if (BBV + SBB_count >= 2) {
                 return 'D';
             }
             if (
                 is_fleet_speed_faster_or_more(speed) ||
-                (CL === 1 && DD > 2) ||
-                DD > 3
+                (CL === 1 && DD >= 3) ||
+                DD >= 4
             ) {
                 return 'E';
             }
@@ -64,18 +64,18 @@ export const calc_5_4: CalcFnNoCondition = (
                 { node: 'E', rate: 0.5 },
             ];
         case 'D':
-            if (Ss > 0 || SBB_count > 1 || BBs > 2) {
+            if (Ss >= 1 || SBB_count >= 2 || BBs >= 3) {
                 return 'F';
             }
-            if (DD > 1) {
+            if (DD >= 2) {
                 return 'E';
             }
             return 'F';
         case 'G':
-            if (Ss > 0 || BBs > 3) {
+            if (Ss >= 1 || BBs >= 4) {
                 return 'K';
             }
-            if (CVH < 3) {
+            if (CVH <= 2) {
                 return 'L';
             }
             return [
@@ -89,7 +89,7 @@ export const calc_5_4: CalcFnNoCondition = (
             if (seek.c2 < 56) {
                 return 'N';
             }
-            if ((seek.c2 < 60 && seek.c2 >= 56) || BBs + CVH > 4) {
+            if ((seek.c2 < 60 && seek.c2 >= 56) || BBs + CVH >= 5) {
                 return [
                     { node: 'N', rate: 0.5 },
                     { node: 'P', rate: 0.5 },
@@ -113,7 +113,7 @@ export const calc_5_4: CalcFnNoCondition = (
                 ];
             }
             if (seek.c2 >= 45) {
-                if (Ss > 0) {
+                if (Ss >= 1) {
                     return [
                         { node: 'O', rate: 0.334 },
                         { node: 'P', rate: 0.666 },
