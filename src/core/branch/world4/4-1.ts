@@ -22,7 +22,7 @@ export const calc_4_1: CalcFnNoCondition = (
                 { node: 'C', rate: 0.5 },
             ];
         case 'C':
-            if (BBCVs > 4) {
+            if (BBCVs >= 5) {
                 return 'E';
             }
             if (BBCVs === 4) {
@@ -37,12 +37,12 @@ export const calc_4_1: CalcFnNoCondition = (
                     { node: 'F', rate: 0.5 },
                 ];
             }
-            if (BBCVs < 3) {
+            if (BBCVs <= 2) {
                 return 'F';
             }
             break; // BBCVsより例外なし
         case 'D':
-            if (BBCVs > 4) {
+            if (BBCVs >= 5) {
                 return 'H';
             }
             if (Ss >= 1) {
@@ -51,16 +51,16 @@ export const calc_4_1: CalcFnNoCondition = (
                     { node: 'H', rate: 0.7 },
                 ];
             }
-            if (BBCVs === 4 || Ds < 2) {
+            if (BBCVs === 4 || Ds <= 1) {
                 return 'G';
             }
-            if (BBCVs === 0 || Ds > 3) {
+            if (BBCVs === 0 || Ds >= 4) {
                 return 'H';
             }
             if (Ds === 3 || CL === 0) {
                 return 'G';
             }
-            if (CAs > 0 && CAs + CLE === 3) {
+            if (CAs >= 1 && CAs + CLE === 3) {
                 return 'H';
             }
             return [
@@ -68,10 +68,10 @@ export const calc_4_1: CalcFnNoCondition = (
                 { node: 'H', rate: 0.5 },
             ];
         case 'F':
-            if (BBCVs > 0 || Ds < 4) {
+            if (BBCVs >= 1 || Ds <= 3) {
                 return 'D';
             }
-            if (CLE > 0 || CAs === 0) {
+            if (CLE >= 1 || CAs === 0) {
                 return 'H';
             }
             return 'D';
@@ -82,13 +82,13 @@ export const calc_4_1: CalcFnNoCondition = (
                     { node: 'J', rate: 0.5 },
                 ];
             }
-            if (Ss > 1) {
+            if (Ss >= 2) {
                 return 'I';
             }
-            if (BBCVs > 4) {
+            if (BBCVs >= 5) {
                 return 'I';
             }
-            if (BBCVs < 2) {
+            if (BBCVs <= 1) {
                 return 'J';
             }
             return [

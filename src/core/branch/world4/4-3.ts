@@ -18,11 +18,11 @@ export const calc_4_3: CalcFnNoCondition = (
         case null:
             return '1';
         case '1': // nullがヤな感じ 多分こういうことだろうという
-            if (CVH > 0) {
+            if (CVH >= 1) {
                 return 'C';
             }
             if (
-                Ds > 3 &&
+                Ds >= 4 &&
                 (
                     is_fleet_speed_fast_or_more(speed) ||
                     BBs + CVL === 0
@@ -30,10 +30,10 @@ export const calc_4_3: CalcFnNoCondition = (
             ) {
                 return 'D';
             }
-            if (Ds > 2 && CL > 0) {
+            if (Ds >= 3 && CL >= 1) {
                 return 'D';
             }
-            if (Ds > 1 && CL + AO > 0) {
+            if (Ds >= 2 && CL + AO >= 1) {
                 return 'A';
             }
             return [
@@ -41,13 +41,13 @@ export const calc_4_3: CalcFnNoCondition = (
                 { node: 'C', rate: 0.5 },
             ];
         case 'A':
-            if (AV + AO + BBV > 0) {
+            if (AV + AO + BBV >= 1) {
                 return 'B';
             }
-            if (CA > 1 && Ds > 1) {
+            if (CA >= 2 && Ds >= 2) {
                 return 'D';
             }
-            if (CVL > 0) {
+            if (CVL >= 1) {
                 return 'B';
             }
             return [
@@ -55,7 +55,7 @@ export const calc_4_3: CalcFnNoCondition = (
                 { node: 'D', rate: 0.5 },
             ];
         case 'B':
-            if (Ds < 2 || BBs + CVL > 2) {
+            if (Ds <= 1 || BBs + CVL >= 3) {
                 return 'E';
             }
             if (is_fleet_speed_fast_or_more(speed)) {
@@ -66,10 +66,10 @@ export const calc_4_3: CalcFnNoCondition = (
                 { node: 'G', rate: 0.35 },
             ];
         case 'C':
-            if (BBCVs > 3) {
+            if (BBCVs >= 4) {
                 return 'F';
             }
-            if (Ss === 0 && CL === 1 && Ds > 1) {
+            if (Ss === 0 && CL === 1 && Ds >= 2) {
                 return 'D';
             }
             return [
@@ -77,13 +77,13 @@ export const calc_4_3: CalcFnNoCondition = (
                 { node: 'F', rate: 0.8 },
             ];
         case 'F':
-            if (Ss > 0 || DD === 0 || CVs === 0) {
+            if (Ss >= 1 || DD === 0 || CVs === 0) {
                 return 'K';
             }
             if (
                 is_fleet_speed_fast_or_more(speed) &&
-                BBCVs < 3 &&
-                DD > 1
+                BBCVs <= 2 &&
+                DD >= 2
             ) {
                 return 'H';
             }
@@ -118,9 +118,9 @@ export const calc_4_3: CalcFnNoCondition = (
             ];
         case 'K':
             if (
-                Ss > 0 ||
-                (CVs > 2 || CVs === 0) ||
-                Ds < 2
+                Ss >= 1 ||
+                (CVs >= 3 || CVs === 0) ||
+                Ds <= 1
             ) {
                 return 'L';
             }
@@ -144,19 +144,19 @@ export const calc_4_3: CalcFnNoCondition = (
             }
             break; // CVsより例外なし
         case 'L':
-            if (CL + Ds === 0 || BBCVs > 4 || CVs === 0) {
+            if (CL + Ds === 0 || BBCVs >= 5 || CVs === 0) {
                 return 'M';
             }
-            if (CA > 1) {
+            if (CA >= 2) {
                 return 'N';
             }
-            if (Ss > 0) {
+            if (Ss >= 1) {
                 return [
                     { node: 'M', rate: 0.5 },
                     { node: 'N', rate: 0.5 },
                 ];
             }
-            if (BBCVs < 3) {
+            if (BBCVs <= 2) {
                 return 'N';
             }
             return [
