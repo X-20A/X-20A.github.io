@@ -138,7 +138,7 @@ export const calc_2_5: CalcFnNoCondition = (
                 return 'H';
             }
             if (seek.c1 < 49 && seek.c1 >= 42) {
-                if (BBCVs > 3) {
+                if (BBCVs >= 4) {
                     return [
                         { node: 'H', rate: 0.333 },
                         { node: 'M', rate: 0.333 },
@@ -150,7 +150,7 @@ export const calc_2_5: CalcFnNoCondition = (
                     { node: 'O', rate: 0.5 },
                 ];
             }
-            if (BBCVs > 3) {
+            if (BBCVs >= 4) {
                 return [
                     { node: 'M', rate: 0.5 },
                     { node: 'O', rate: 0.5 },

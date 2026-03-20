@@ -27,10 +27,10 @@ export const calc_59_2: CalcFnWithCondition = (
             if (is_fleet_speed_faster_or_more(speed)) {
                 return 'A2';
             }
-            if (DD > 3) {
+            if (DD >= 4) {
                 return 'A2';
             }
-            if (DD > 2 && is_fleet_speed_fast_or_more(speed)) {
+            if (DD >= 3 && is_fleet_speed_fast_or_more(speed)) {
                 return 'A2';
             }
             return 'A1';
@@ -43,35 +43,35 @@ export const calc_59_2: CalcFnWithCondition = (
             if (is_fleet_transport(fleet_type)) {
                 return 'I';
             }
-            if (count_carriers(fleet) > 4) {
+            if (count_carriers(fleet) >= 5) {
                 return 'H';
             }
-            if (BBs > 3) {
+            if (BBs >= 4) {
                 return 'H';
             }
-            if (CVH > 2) {
+            if (CVH >= 3) {
                 return 'H';
             }
-            if (Ds < 3) {
+            if (Ds <= 2) {
                 return 'H';
             }
             if (DD === 3) {
                 if (is_fleet_speed_slow(speed)) {
                     return 'H';
                 }
-                if (LHA > 0) {
+                if (LHA >= 1) {
                     return 'I';
                 }
-                if (AV > 1) {
+                if (AV >= 2) {
                     return 'I';
                 }
                 return 'K';
             }
-            if (DD > 3) {
-                if (LHA > 0) {
+            if (DD >= 4) {
+                if (LHA >= 1) {
                     return 'I';
                 }
-                if (AV > 1) {
+                if (AV >= 2) {
                     return 'I';
                 }
                 if (BBs === 3 && CVs === 1 && CLE === 2) {
@@ -80,29 +80,29 @@ export const calc_59_2: CalcFnWithCondition = (
                 if (is_fleet_speed_fast_or_more(speed)) {
                     return 'K';
                 }
-                if (CVH < 2 && CLE > 1) {
+                if (CVH <= 1 && CLE >= 2) {
                     return 'K';
                 }
                 return 'H';
             }
             return 'H';
         case 'I':
-            if (CVH > 1) {
+            if (CVH >= 2) {
                 return 'J';
             }
-            if (Ds < 4) {
+            if (Ds <= 3) {
                 return 'J';
             }
-            if (CLE < 2 && is_fleet_speed_slow(speed)) {
+            if (CLE <= 1 && is_fleet_speed_slow(speed)) {
                 return 'J';
             }
-            if (Ds + LHA < 6 && is_fleet_speed_slow(speed)) {
+            if (Ds + LHA <= 5 && is_fleet_speed_slow(speed)) {
                 return 'J';
             }
-            if (BBs < 2) {
+            if (BBs <= 1) {
                 return 'L';
             }
-            if (count_carriers(fleet) < 2) {
+            if (count_carriers(fleet) <= 1) {
                 return 'L';
             }
             return 'J';

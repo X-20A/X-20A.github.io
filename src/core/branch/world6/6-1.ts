@@ -37,7 +37,7 @@ export const calc_6_1: CalcFnNoCondition = (
             }
             return 'C';
         case 'A':
-            if (AS > 0) {
+            if (AS >= 1) {
                 return 'F';
             }
             return 'D';
@@ -45,7 +45,7 @@ export const calc_6_1: CalcFnNoCondition = (
             if (Ss <= 2 || BBCVs + CAs === 2 || seek.c4 < 12) {
                 return 'I';
             }
-            if (AS > 0 && seek.c4 >= 16) {
+            if (AS >= 1 && seek.c4 >= 16) {
                 return 'H';
             }
             if (AS === 0 && seek.c4 >= 16) {
@@ -62,7 +62,7 @@ export const calc_6_1: CalcFnNoCondition = (
             if (seek.c4 < 20) {
                 return 'E';
             }
-            if (AS > 0) {
+            if (AS >= 1) {
                 if (seek.c4 < 25 && seek.c4 >= 20) {
                     return [
                         { node: 'E', rate: 0.5 },

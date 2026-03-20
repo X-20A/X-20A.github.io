@@ -47,7 +47,7 @@ export const calc_2_1: CalcFnNoCondition = (
             if (BBCVs >= 5) {
                 return 'F';
             }
-            if (ships_length > 5) {
+            if (ships_length >= 6) {
                 if (BBCVs >= 1) {
                     return 'D';
                 }

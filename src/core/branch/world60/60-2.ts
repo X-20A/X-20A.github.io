@@ -36,38 +36,38 @@ export const calc_60_2: CalcFnWithCondition = (
             if (is_fleet_transport(fleet_type)) {
                 return 'L';
             }
-            if (CL > 1 && Ds > 3) {
+            if (CL >= 2 && Ds >= 4) {
                 return 'L';
             }
-            if (CL > 1 && Ds > 2 && is_fleet_speed_fast_or_more(speed)) {
+            if (CL >= 2 && Ds >= 3 && is_fleet_speed_fast_or_more(speed)) {
                 return 'L';
             }
             return 'H';
         case 'A':
-            if (BBCVs > 3) {
+            if (BBCVs >= 4) {
                 return 'A1';
             }
-            if (CL > 0 && Ds > 1) {
+            if (CL >= 1 && Ds >= 2) {
                 return 'A2';
             }
-            if (BBs > 1) {
+            if (BBs >= 2) {
                 return 'A1';
             }
-            if (CVH > 0) {
+            if (CVH >= 1) {
                 return 'A1';
             }
-            if (Ds < 2 && is_fleet_speed_fast_or_more(speed)) {
+            if (Ds <= 1 && is_fleet_speed_fast_or_more(speed)) {
                 return 'A1';
             }
             return 'A2';
         case 'C':
-            if (count_ships_by_base_names(['大泊'], base_ship_names) > 0) {
+            if (count_ships_by_base_names(['大泊'], base_ship_names) >= 1) {
                 return 'H';
             }
-            if (CL > 0 && Ds > 1) {
+            if (CL >= 1 && Ds >= 2) {
                 return 'H';
             }
-            if (Ds > 1 && is_fleet_speed_fast_or_more(speed)) {
+            if (Ds >= 2 && is_fleet_speed_fast_or_more(speed)) {
                 return 'H';
             }
             return 'G';
@@ -75,7 +75,7 @@ export const calc_60_2: CalcFnWithCondition = (
             if (route.includes('D')) {
                 return 'F2';
             }
-            if (CVH > 0) {
+            if (CVH >= 1) {
                 return 'F2';
             }
             return 'R';
@@ -83,13 +83,13 @@ export const calc_60_2: CalcFnWithCondition = (
             if (route.includes('1')) {
                 return 'I';
             }
-            if (option.difficulty === '4' && count_Daigo_ships(fleet) > 4) {
+            if (option.difficulty === '4' && count_Daigo_ships(fleet) >= 5) {
                 return 'L';
             }
-            if (option.difficulty === '3' && count_Daigo_ships(fleet) > 2) {
+            if (option.difficulty === '3' && count_Daigo_ships(fleet) >= 3) {
                 return 'L';
             }
-            if (option.difficulty === '2' && count_Daigo_ships(fleet) > 1) {
+            if (option.difficulty === '2' && count_Daigo_ships(fleet) >= 2) {
                 return 'L';
             }
             if (option.difficulty === '1') {
@@ -102,19 +102,19 @@ export const calc_60_2: CalcFnWithCondition = (
             }
             return 'J';
         case 'M':
-            if (BBs > 2) {
+            if (BBs >= 3) {
                 return 'D';
             }
-            if (BB > 1 && is_fleet_speed_slow(speed)) {
+            if (BB >= 2 && is_fleet_speed_slow(speed)) {
                 return 'D';
             }
-            if (CVH > 0 && is_fleet_speed_slow(speed)) {
+            if (CVH >= 1 && is_fleet_speed_slow(speed)) {
                 return 'D';
             }
             if (
-                count_ships_by_base_names(['大泊'], base_ship_names) + CA > 1 &&
-                CLE > 1 &&
-                Ds > 2
+                count_ships_by_base_names(['大泊'], base_ship_names) + CA >= 2 &&
+                CLE >= 2 &&
+                Ds >= 3
             ) {
                 return 'N';
             }
@@ -123,30 +123,34 @@ export const calc_60_2: CalcFnWithCondition = (
             if (is_fleet_transport(fleet_type)) {
                 return 'R';
             }
-            if (BB + CVH === 0 && BBV + CVL < 2 && is_fleet_speed_fast_or_more(speed)) {
+            if (
+                BB + CVH === 0 &&
+                BBV + CVL <= 1 &&
+                is_fleet_speed_fast_or_more(speed)
+            ) {
                 return 'R';
             }
             return 'F';
         case 'Q':
-            if (phase < 3) {
+            if (phase <= 2) {
                 return 'S';
             }
-            if (BBs > 0 && CVH > 0) {
+            if (BBs >= 1 && CVH >= 1) {
                 return 'S';
             }
-            if (CVs > 1) {
+            if (CVs >= 2) {
                 return 'S';
             }
-            if (count_ships_by_base_names(['大泊'], base_ship_names) > 0) {
+            if (count_ships_by_base_names(['大泊'], base_ship_names) >= 1) {
                 return 'V';
             }
-            if (CL < 3 && is_fleet_speed_slow(speed)) {
+            if (CL <= 2 && is_fleet_speed_slow(speed)) {
                 return 'S';
             }
-            if (Ds > 5) {
+            if (Ds >= 6) {
                 return 'V';
             }
-            if (count_Daigo_ships(fleet) > 7) {
+            if (count_Daigo_ships(fleet) >= 8) {
                 return 'V';
             }
             if (

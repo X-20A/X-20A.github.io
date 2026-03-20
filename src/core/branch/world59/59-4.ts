@@ -29,53 +29,53 @@ export const calc_59_4: CalcFnWithCondition = (
             }
             return '2';
         case '1':
-            if (Ss > 0) {
+            if (Ss >= 1) {
                 return 'A1';
             }
             if (is_fleet_speed_fast_or_more(speed)) {
-                if (BBs > 2) {
+                if (BBs >= 3) {
                     return 'A1';
                 }
-                if (Ds > 1) {
+                if (Ds >= 2) {
                     return 'A';
                 }
-                if (ships_length < 5) {
+                if (ships_length <= 4) {
                     return 'A';
                 } else {
                     return 'A1';
                 }
             }
             // f_speed === Sp.s1
-            if (CVs > 1) {
+            if (CVs >= 2) {
                 return 'A1';
             }
-            if (BBs > 0) {
+            if (BBs >= 1) {
                 return 'A1';
             }
-            if (CLE > 0 && Ds > 1) {
+            if (CLE >= 1 && Ds >= 2) {
                 return 'A';
             }
-            if (ships_length < 5) {
+            if (ships_length <= 4) {
                 return 'A';
             }
             return 'A1';
         case 'C':
-            if (BBs + CVH > 2) {
+            if (BBs + CVH >= 3) {
                 return 'I';
             }
-            if (CVH > 1) {
+            if (CVH >= 2) {
                 return 'I';
             }
-            if (CVs > 2) {
+            if (CVs >= 3) {
                 return 'I';
             }
-            if (Ds < 2) {
+            if (Ds <= 1) {
                 return 'I';
             }
-            if (phase > 1 && BBs === 0) {
+            if (phase >= 2 && BBs === 0) {
                 return 'M';
             }
-            if (phase > 1 && ships_length < 7 && BBs === 1 && CL > 0) {
+            if (phase >= 2 && ships_length <= 6 && BBs === 1 && CL >= 1) {
                 return 'M';
             }
             return 'L';
@@ -84,29 +84,29 @@ export const calc_59_4: CalcFnWithCondition = (
         case 'G':
             return 'H';
         case 'I':
-            if (CVH > 1) {
+            if (CVH >= 2) {
                 return 'J';
             }
-            if (CLE === 0 && Ds < 3) {
+            if (CLE === 0 && Ds <= 2) {
                 return 'J';
             }
             return 'L';
         case 'J':
             return 'L';
         case 'M':
-            if (CVH > 0) {
+            if (CVH >= 1) {
                 return 'N';
             }
-            if (CVL > 1) {
+            if (CVL >= 2) {
                 return 'N';
             }
-            if (Ds > 3) {
+            if (Ds >= 4) {
                 return 'O';
             }
-            if (CLE > 0 && Ds === 3) {
+            if (CLE >= 1 && Ds === 3) {
                 return 'O';
             }
-            if (CLE > 0 && is_fleet_speed_fast_or_more(speed)) {
+            if (CLE >= 1 && is_fleet_speed_fast_or_more(speed)) {
                 return 'O';
             }
             return 'N';
@@ -119,25 +119,25 @@ export const calc_59_4: CalcFnWithCondition = (
             if (is_fleet_speed_faster_or_more(speed)) {
                 return 'T2';
             }
-            if (Ss > 0 && AS === 0) {
+            if (Ss >= 1 && AS === 0) {
                 return 'T1';
             }
-            if (BBs > 3) {
+            if (BBs >= 4) {
                 return 'T1';
             }
-            if (CVs > 3) {
+            if (CVs >= 4) {
                 return 'T1';
             }
-            if (CVH > 2) {
+            if (CVH >= 3) {
                 return 'T1';
             }
-            if (CLE + Ds < 4) {
+            if (CLE + Ds <= 3) {
                 return 'T1';
             }
             if (is_fleet_speed_fast_or_more(speed)) {
                 return 'T2';
             }
-            if (BBs < 3 && CLE > 1 && Ds > 3) {
+            if (BBs <= 2 && CLE >= 2 && Ds >= 4) {
                 return 'T2';
             }
             return 'T1';
@@ -148,13 +148,13 @@ export const calc_59_4: CalcFnWithCondition = (
             if (is_fleet_speed_faster_or_more(speed)) {
                 return 'Z';
             }
-            if (count_Yamato_class(fleet) > 0) {
+            if (count_Yamato_class(fleet) >= 1) {
                 return 'X';
             }
-            if (BBs > 3) {
+            if (BBs >= 4) {
                 return 'X';
             }
-            if (BBs > 2 && CVs > 2) {
+            if (BBs >= 3 && CVs >= 3) {
                 return 'X';
             }
             return 'Z';
@@ -165,10 +165,10 @@ export const calc_59_4: CalcFnWithCondition = (
             if (is_fleet_speed_faster_or_more(speed)) {
                 return 'Z';
             }
-            if (count_Yamato_class(fleet) > 1) {
+            if (count_Yamato_class(fleet) >= 2) {
                 return 'Y';
             }
-            if (BBs > 4) {
+            if (BBs >= 5) {
                 return 'Y';
             }
             return 'Z';

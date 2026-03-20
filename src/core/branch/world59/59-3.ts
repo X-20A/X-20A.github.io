@@ -36,7 +36,10 @@ export const calc_59_3: CalcFnWithCondition = (
             if (phase === 1 && (is_fleet_surface(fleet_type) || is_fleet_carrier(fleet_type))) {
                 return '1';
             }
-            if (phase > 1 && (is_fleet_surface(fleet_type) || is_fleet_carrier(fleet_type))) {
+            if (
+                phase >= 2 &&
+                (is_fleet_surface(fleet_type) || is_fleet_carrier(fleet_type))
+            ) {
                 return '3';
             }
             break; // 艦隊種別より例外なし
@@ -46,24 +49,24 @@ export const calc_59_3: CalcFnWithCondition = (
             }
             return 'L';
         case '2':
-            if (CVH < 3 && Ds > 2) {
+            if (CVH <= 2 && Ds >= 3) {
                 return 'H';
             }
             return 'G';
         case 'B':
-            if (CVs > 3) {
+            if (CVs >= 4) {
                 return 'B2';
             }
-            if (CVH > 2) {
+            if (CVH >= 3) {
                 return 'B2';
             }
-            if (AV > 1) {
+            if (AV >= 2) {
                 return 'B2';
             }
-            if (LHA > 0) {
+            if (LHA >= 1) {
                 return 'B2';
             }
-            if (BBs < 3 && Ds > 2) {
+            if (BBs <= 2 && Ds >= 3) {
                 return 'C';
             }
             return 'B1';
@@ -78,13 +81,13 @@ export const calc_59_3: CalcFnWithCondition = (
                 return 'N';
             }
             if (is_fleet_carrier(fleet_type)) {
-                if (count_carriers(fleet) > 3) {
+                if (count_carriers(fleet) >= 4) {
                     return 'N';
                 }
-                if (CVH > 1) {
+                if (CVH >= 2) {
                     return 'N';
                 }
-                if (Ds < 2 && BBs > 3) {
+                if (Ds <= 1 && BBs >= 4) {
                     return 'N';
                 }
                 return 'P';
@@ -94,18 +97,18 @@ export const calc_59_3: CalcFnWithCondition = (
             if (seek.c4 < 103) {
                 return 'E';
             }
-            if (BBs + CVH > 3) {
+            if (BBs + CVH >= 4) {
                 return 'D';
             }
-            if (Ds < 2) {
+            if (Ds <= 1) {
                 return 'D';
             }
             return 'F';
         case 'H':
-            if (Ds > 3 && is_fleet_speed_fast_or_more(speed)) {
+            if (Ds >= 4 && is_fleet_speed_fast_or_more(speed)) {
                 return 'H2';
             }
-            if (CVH > 1) {
+            if (CVH >= 2) {
                 return 'B2';
             }
             return 'H1';
@@ -130,13 +133,13 @@ export const calc_59_3: CalcFnWithCondition = (
                 return 'Q';
             }
             if (route.includes('3')) {
-                if (count_Yamato_class(fleet) > 1) {
+                if (count_Yamato_class(fleet) >= 2) {
                     return 'T';
                 }
-                if (CVH > 2) {
+                if (CVH >= 3) {
                     return 'T';
                 }
-                if (Ss > 0 && AS === 0) {
+                if (Ss >= 1 && AS === 0) {
                     return 'T';
                 }
                 if (is_fleet_surface(fleet_type) && is_fleet_speed_slow(speed)) {
@@ -151,40 +154,40 @@ export const calc_59_3: CalcFnWithCondition = (
             }
             return 'R';
         case 'V':
-            if (LHA > 0 && is_fleet_speed_slow(speed)) {
+            if (LHA >= 1 && is_fleet_speed_slow(speed)) {
                 return 'V1';
             }
-            if (AV > 1 && is_fleet_speed_slow(speed)) {
+            if (AV >= 2 && is_fleet_speed_slow(speed)) {
                 return 'V1';
             }
-            if (BBs > 3 && is_fleet_speed_slow(speed)) {
+            if (BBs >= 4 && is_fleet_speed_slow(speed)) {
                 return 'V1';
             }
-            if (BBs > 4) {
+            if (BBs >= 5) {
                 return 'V1';
             }
-            if (BBCVs > 5) {
+            if (BBCVs >= 6) {
                 return 'V2';
             }
-            if (BBs + CVH > 4) {
+            if (BBs + CVH >= 5) {
                 return 'V2';
             }
-            if (CVH > 2) {
+            if (CVH >= 3) {
                 return 'V2';
             }
-            if (Ss > 0 && AS === 0) {
+            if (Ss >= 1 && AS === 0) {
                 return 'V2';
             }
-            if (count_Yamato_class(fleet) > 1 && is_fleet_speed_slow(speed)) {
+            if (count_Yamato_class(fleet) >= 2 && is_fleet_speed_slow(speed)) {
                 return 'V2';
             }
-            if (phase < 3) {
+            if (phase <= 2) {
                 return 'V3';
             }
-            if (Ds < 4) {
+            if (Ds <= 3) {
                 return 'V3';
             }
-            if (CL > 1 && CA > 1) {
+            if (CL >= 2 && CA >= 2) {
                 return 'X';
             }
             if (is_fleet_speed_fast_or_more(speed)) {

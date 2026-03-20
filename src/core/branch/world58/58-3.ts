@@ -31,42 +31,42 @@ export const calc_58_3: CalcFnWithCondition = (
             } else {
                 if (phase === 1) {
                     return '2';
-                } else { // Number(option.phase) > 1
-                    if (AO > 0) {
+                } else { // phase >= 2
+                    if (AO >= 1) {
                         return '3';
                     }
                     if (
-                        CL > 0 &&
-                        DD > 2 &&
+                        CL >= 1 &&
+                        DD >= 3 &&
                         is_fleet_speed_fast_or_more(speed)
                     ) {
                         return '3';
                     }
-                    if (count_carriers(fleet) > 0) {
+                    if (count_carriers(fleet) >= 1) {
                         return '2';
                     }
-                    if (BBs > 0) {
+                    if (BBs >= 1) {
                         return '2';
                     }
-                    if (AO + LHA + AV > 1) {
+                    if (AO + LHA + AV >= 2) {
                         return '2';
                     }
-                    if (phase < 3) {
+                    if (phase <= 2) {
                         return '3';
                     } // option.phase === '3'else 
-                    if (difficulty === 4 && AS > 0 && Ss > 2) {
+                    if (difficulty === 4 && AS >= 1 && Ss >= 3) {
                         return '4';
                     }
-                    if (difficulty === 3 && Ss > 2) {
+                    if (difficulty === 3 && Ss >= 3) {
                         return '4';
                     }
-                    if (difficulty === 2 && Ss > 1) {
+                    if (difficulty === 2 && Ss >= 2) {
                         return '4';
                     }
-                    if (difficulty === 1 && Ss > 0) {
+                    if (difficulty === 1 && Ss >= 1) {
                         return '4';
                     }
-                    if (difficulty === 1 && Ds > 2) {
+                    if (difficulty === 1 && Ds >= 3) {
                         return '4';
                     }
                     return '2';
@@ -74,24 +74,24 @@ export const calc_58_3: CalcFnWithCondition = (
             }
             break;
         case 'B':
-            if (BBCVs > 5) {
+            if (BBCVs >= 6) {
                 return 'C';
             }
             if (is_fleet_speed_fast_or_more(speed)) {
                 return 'D';
             }
-            if (CL > 1 && Ds > 3) {
+            if (CL >= 2 && Ds >= 4) {
                 return 'D';
             }
             return 'C';
         case 'D':
-            if (BBCVs > 6) {
+            if (BBCVs >= 7) {
                 return 'E';
             }
-            if (BBs > 3) {
+            if (BBs >= 4) {
                 return 'E';
             }
-            if (CVH > 2) {
+            if (CVH >= 3) {
                 return 'E';
             }
             return 'F';
@@ -101,27 +101,27 @@ export const calc_58_3: CalcFnWithCondition = (
             }
             return 'G';
         case 'H':
-            if (CL > 0 && DD > 3 && is_fleet_speed_fast_or_more(speed)) {
+            if (CL >= 1 && DD >= 4 && is_fleet_speed_fast_or_more(speed)) {
                 return 'J';
             }
             return 'I';
         case 'I':
-            if (BBCVs > 4) {
+            if (BBCVs >= 5) {
                 return 'L';
             }
-            if (Ds < 2) {
+            if (Ds <= 1) {
                 return 'L';
             }
             if (is_fleet_speed_fast_or_more(speed)) {
                 return 'M';
             }
-            if (BBs > 1) {
+            if (BBs >= 2) {
                 return 'L';
             }
-            if (Ds > 1) {
+            if (Ds >= 2) {
                 return 'L';
             }
-            return 'M';
+            return 'M'; // Dsよりデッドコード 条件通りではある
         case 'J':
             return 'N';
         case 'L':
@@ -130,10 +130,10 @@ export const calc_58_3: CalcFnWithCondition = (
             if (seek.c2 < 75) {
                 return 'O1';
             }
-            if (BBs < 3) {
+            if (BBs <= 2) {
                 return 'O3';
             }
-            if (CL > 1) {
+            if (CL >= 2) {
                 return 'O3';
             }
             return 'O2';
@@ -153,35 +153,35 @@ export const calc_58_3: CalcFnWithCondition = (
             }
             return 'U';
         case 'W':
-            if (AV + LHA > 0) {
+            if (AV + LHA >= 1) {
                 return 'X';
             }
-            if (difficulty === 4 && AS > 0 && Ss > 3) {
+            if (difficulty === 4 && AS >= 1 && Ss >= 4) {
                 return 'Y';
             }
-            if (difficulty === 4 && DD > 1) {
+            if (difficulty === 4 && DD >= 2) {
                 return 'Y';
             }
-            if (difficulty < 4) {
+            if (difficulty <= 3) {
                 return 'Y';
             } return 'X';
         case 'Y':
-            if (CAs + CLE + CLT + AV + LHA > 2) {
+            if (CAs + CLE + CLT + AV + LHA >= 3) {
                 return 'Y1';
             }
             if (CAs + AV === 2) {
                 return 'Y1';
             }
-            if (DD > 0) {
+            if (DD >= 1) {
                 return 'Y2';
             }
-            if (Ss > 4) {
+            if (Ss >= 5) {
                 return 'Y2';
             }
             if (CAs + CLE + CLT + AV + LHA === 2) {
                 return 'Y1';
             }
-            if (Ss < 4) {
+            if (Ss <= 3) {
                 return 'Y1';
             }
             return 'Y2';

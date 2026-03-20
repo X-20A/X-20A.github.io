@@ -39,19 +39,19 @@ export const calc_58_2: CalcFnWithCondition = (
                 if (is_fleet_combined(fleet_type)) {
                     return '2';
                 }
-                if (BBs > 0) {
+                if (BBs >= 1) {
                     return '1';
                 }
-                if (count_carriers(fleet) > 0) {
+                if (count_carriers(fleet) >= 1) {
                     return '1';
                 }
-                if (difficulty === 4 && Ss < 3) {
+                if (difficulty === 4 && Ss <= 2) {
                     return '1';
                 }
-                if (difficulty === 3 && Ss < 2) {
+                if (difficulty === 3 && Ss <= 1) {
                     return '1';
                 }
-                if (difficulty < 3 && Ss === 0) {
+                if (difficulty <= 2 && Ss === 0) {
                     return '1';
                 }
                 return '3';
@@ -62,7 +62,7 @@ export const calc_58_2: CalcFnWithCondition = (
                 if (is_fleet_speed_slow(speed)) {
                     return 'F';
                 }
-                if (CVH > 0) {
+                if (CVH >= 1) {
                     return 'F';
                 }
                 return 'D';
@@ -80,16 +80,16 @@ export const calc_58_2: CalcFnWithCondition = (
             }
             return 'N';
         case 'E':
-            if (CVH > 0) {
+            if (CVH >= 1) {
                 return 'F';
             }
             if (is_fleet_speed_fast_or_more(speed)) {
                 return 'G';
             }
-            if (BBs > 1) {
+            if (BBs >= 2) {
                 return 'F';
             }
-            if (CL > 0 && Ds > 1) {
+            if (CL >= 1 && Ds >= 2) {
                 return 'G';
             }
             return 'F';
@@ -101,10 +101,10 @@ export const calc_58_2: CalcFnWithCondition = (
                 if (is_fleet_speed_slow(speed)) {
                     return 'J';
                 }
-                if (BBs > 1) {
+                if (BBs >= 2) {
                     return 'J';
                 }
-                if (count_ships_by_base_names(['あきつ丸'], base_ship_names) + CVL > 1) {
+                if (count_ships_by_base_names(['あきつ丸'], base_ship_names) + CVL >= 2) {
                     return 'J';
                 }
                 return 'I';
@@ -114,7 +114,7 @@ export const calc_58_2: CalcFnWithCondition = (
             }
             break;
         case 'I':
-            if (Ss > 0) {
+            if (Ss >= 1) {
                 return 'U';
             }
             return 'D3';
@@ -125,13 +125,13 @@ export const calc_58_2: CalcFnWithCondition = (
             if (is_fleet_speed_slow(speed)) {
                 return 'N';
             }
-            if (BBs > 2) {
+            if (BBs >= 3) {
                 return 'N';
             }
-            if (CVs > 2) {
+            if (CVs >= 3) {
                 return 'N';
             }
-            if (CL > 1 && DD > 4) {
+            if (CL >= 2 && DD >= 5) {
                 return 'P';
             }
             return 'N';
@@ -142,16 +142,16 @@ export const calc_58_2: CalcFnWithCondition = (
             }
             return 'D'; // fleet_type === Ft.f3
         case 'N':
-            if (CVH > 0) {
+            if (CVH >= 1) {
                 return 'O';
             }
-            if (CVL > 2) {
+            if (CVL >= 3) {
                 return 'O';
             }
             if (is_fleet_speed_fast_or_more(speed)) {
                 return 'P';
             }
-            if (CL > 1 && DD > 2) {
+            if (CL >= 2 && DD >= 3) {
                 return 'P';
             }
             return 'O';
@@ -161,41 +161,41 @@ export const calc_58_2: CalcFnWithCondition = (
             }
             return 'Q';
         case 'T':
-            if (CAs > 1) {
+            if (CAs >= 2) {
                 return 'C';
             }
-            if (CL > 1) {
+            if (CL >= 2) {
                 return 'C';
             }
             return 'U';
         case 'U':
-            if (CAs > 0) {
+            if (CAs >= 1) {
                 return 'H';
             }
-            if (CL > 1) {
+            if (CL >= 2) {
                 return 'H';
             }
             if (difficulty === 1) {
                 return 'V';
             }
-            if (AV > 0) {
+            if (AV >= 1) {
                 return 'H';
             }
-            if (AS > 0) {
+            if (AS >= 1) {
                 return 'V';
             }
             return 'H';
         case 'V':
-            if (CAs + AV > 1) {
+            if (CAs + AV >= 2) {
                 return 'W';
             }
-            if (difficulty === 4 && Ss > 3) {
+            if (difficulty === 4 && Ss >= 4) {
                 return 'X';
             }
-            if (difficulty === 3 && Ss > 2) {
+            if (difficulty === 3 && Ss >= 3) {
                 return 'X';
             }
-            if (difficulty === 2 && Ss > 1) {
+            if (difficulty === 2 && Ss >= 2) {
                 return 'X';
             }
             if (difficulty === 1) {

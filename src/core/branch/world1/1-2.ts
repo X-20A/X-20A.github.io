@@ -39,7 +39,7 @@ export const calc_1_2: CalcFnNoCondition = (
                     { node: 'B', rate: 0.4 },
                 ];
             }
-            return [ // ships_length < 4
+            return [ // ships_length <= 3
                 { node: 'A', rate: 0.7 },
                 { node: 'B', rate: 0.3 },
             ];

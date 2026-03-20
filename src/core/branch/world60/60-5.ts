@@ -34,13 +34,17 @@ export const calc_60_5: CalcFnWithCondition = (
             } // is_fleet_combined(fleet_type)
             return '2';
         case '1':
-            if (AO + LHA + AV + AS > 2) {
+            if (AO + LHA + AV + AS >= 3) {
                 return 'A';
             }
-            if (AO + LHA > 1) {
+            if (AO + LHA >= 2) {
                 return 'A';
             }
-            if (CVH === 0 && BBs + CVL > 2 && is_fleet_speed_slow(speed)) {
+            if (
+                CVH === 0 &&
+                BBs + CVL >= 3 &&
+                is_fleet_speed_slow(speed)
+            ) {
                 return 'A';
             }
             return 'C';
@@ -50,16 +54,16 @@ export const calc_60_5: CalcFnWithCondition = (
             }
             return 'E';
         case 'E':
-            if (BBCVs > 3) {
+            if (BBCVs >= 4) {
                 return 'E1';
             }
-            if (BBs + CVH > 2 && is_fleet_speed_slow(speed)) {
+            if (BBs + CVH >= 3 && is_fleet_speed_slow(speed)) {
                 return 'E1';
             }
-            if (Ds < 2) {
+            if (Ds <= 1) {
                 return 'E1';
             }
-            if (Ss > 0) {
+            if (Ss >= 1) {
                 return 'E1';
             }
             return 'E2';
@@ -69,7 +73,7 @@ export const calc_60_5: CalcFnWithCondition = (
             }
             return 'F1';
         case 'I':
-            if (Ss === 0 && Ds > 2 && is_fleet_speed_fast_or_more(speed)) {
+            if (Ss === 0 && Ds >= 3 && is_fleet_speed_fast_or_more(speed)) {
                 return 'J';
             }
             return 'J1';
@@ -79,19 +83,19 @@ export const calc_60_5: CalcFnWithCondition = (
             }
             return 'J2';
         case 'M':
-            if (phase < 3) {
+            if (phase <= 2) {
                 return 'N';
             }
-            if (BBs > 3) {
+            if (BBs >= 4) {
                 return 'U1';
             }
             if (BBs === 3 && is_fleet_speed_slow(speed)) {
                 return 'U1';
             }
-            if (AV + AO + LHA === 0 && Ds > 5) {
+            if (AV + AO + LHA === 0 && Ds >= 6) {
                 return 'N';
             }
-            if (CVH > 0) {
+            if (CVH >= 1) {
                 return 'U1';
             }
             if (is_fleet_speed_slow(speed)) {
@@ -99,31 +103,47 @@ export const calc_60_5: CalcFnWithCondition = (
             }
             return 'U';
         case 'N':
-            if (phase === 3 && Ds < 6) {
+            if (phase === 3 && Ds <= 5) {
                 return 'U2';
             }
-            if (phase === 3 && LHA + AV + AO > 0) {
+            if (phase === 3 && LHA + AV + AO >= 1) {
                 return 'U2';
             }
-            if (count_Yamato_class(fleet) > 0) {
+            if (count_Yamato_class(fleet) >= 1) {
                 return 'O';
             }
-            if (Ss > 0 && AS === 0) {
+            if (Ss >= 1 && AS === 0) {
                 return 'O';
             }
-            if (CVH > 0) {
+            if (CVH >= 1) {
                 return 'O';
             }
-            if (difficulty === 4 && count_Reigo_ships(fleet) > 4 && Ds > 5) {
+            if (
+                difficulty === 4 &&
+                count_Reigo_ships(fleet) >= 5 &&
+                Ds >= 6
+            ) {
                 return 'P';
             }
-            if (difficulty === 3 && count_Reigo_ships(fleet) > 4 && Ds > 3) {
+            if (
+                difficulty === 3 &&
+                count_Reigo_ships(fleet) >= 5 &&
+                Ds >= 4
+            ) {
                 return 'P';
             }
-            if (difficulty === 2 && count_Reigo_ships(fleet) > 3 && Ds > 3) {
+            if (
+                difficulty === 2 &&
+                count_Reigo_ships(fleet) >= 4 &&
+                Ds >= 4
+            ) {
                 return 'P';
             }
-            if (difficulty === 1 && count_Reigo_ships(fleet) > 2 && Ds > 3) {
+            if (
+                difficulty === 1 &&
+                count_Reigo_ships(fleet) >= 3 &&
+                Ds >= 4
+            ) {
                 return 'P';
             }
             return 'O';
@@ -131,30 +151,30 @@ export const calc_60_5: CalcFnWithCondition = (
             if (is_fleet_speed_faster_or_more(speed)) {
                 return 'P2';
             }
-            if (BBs > 2) {
+            if (BBs >= 3) {
                 return 'P1';
             }
-            if (CVH > 0) {
+            if (CVH >= 1) {
                 return 'P1';
             }
-            if (CVL > 2) {
+            if (CVL >= 3) {
                 return 'P1';
             }
-            if (Ds < 4) {
+            if (Ds <= 3) {
                 return 'P1';
             }
-            if (Ss > 0 && AS === 0) {
+            if (Ss >= 1 && AS === 0) {
                 return 'P1';
             }
             return 'P2';
         case 'P2':
-            if (count_Yamato_class(fleet) > 0) {
+            if (count_Yamato_class(fleet) >= 1) {
                 return 'Q';
             }
-            if (BBs > 3) {
+            if (BBs >= 4) {
                 return 'Q';
             }
-            if (CVH > 1) {
+            if (CVH >= 2) {
                 return 'Q';
             }
             if (phase !== 3) {
@@ -163,25 +183,25 @@ export const calc_60_5: CalcFnWithCondition = (
             if (BBs === 3) {
                 return 'Q';
             }
-            if (LHA + AV + AO > 2) {
+            if (LHA + AV + AO >= 3) {
                 return 'Q';
             }
             if (
-                Ds < 4 &&
+                Ds <= 3 &&
                 count_ships_by_base_names(['杉', '榧'], base_ship_names) === 0
             ) {
                 return 'Q';
             }
-            if (difficulty === 4 && count_Reigo_ships(fleet) < 5) {
+            if (difficulty === 4 && count_Reigo_ships(fleet) <= 4) {
                 return 'Q';
             }
-            if (count_Reigo_ships(fleet) > 4 && Ds > 3) {
+            if (count_Reigo_ships(fleet) >= 5 && Ds >= 4) {
                 return 'R';
             }
-            if (count_Reigo_ships(fleet) > 1 && Ds > 5) {
+            if (count_Reigo_ships(fleet) >= 2 && Ds >= 6) {
                 return 'R';
             }
-            if (AV + AO + LHA === 0 && Ds > 5) {
+            if (AV + AO + LHA === 0 && Ds >= 6) {
                 return 'R';
             }
             return 'Y';
@@ -198,35 +218,35 @@ export const calc_60_5: CalcFnWithCondition = (
             if (route.includes('U') || route.includes('U1')) {
                 return 'Z';
             }
-            if (Ds < 6) {
+            if (Ds <= 5) {
                 return 'Z';
             }
             return 'T';
         case 'U1':
-            if (Ss > 0 && AS === 0) {
+            if (Ss >= 1 && AS === 0) {
                 return 'N';
             }
-            if (difficulty > 2 && count_Reigo_ships(fleet) > 4) {
+            if (difficulty >= 3 && count_Reigo_ships(fleet) >= 5) {
                 return 'U2';
             }
-            if (difficulty === 2 && count_Reigo_ships(fleet) > 3) {
+            if (difficulty === 2 && count_Reigo_ships(fleet) >= 4) {
                 return 'U2';
             }
-            if (difficulty === 1 && count_Reigo_ships(fleet) > 2) {
+            if (difficulty === 1 && count_Reigo_ships(fleet) >= 3) {
                 return 'U2';
             }
-            if (count_Yamato_class(fleet) > 0) {
+            if (count_Yamato_class(fleet) >= 1) {
                 return 'N';
             }
-            if (CVH > 0) {
+            if (CVH >= 1) {
                 return 'N';
             }
             return 'U2';
         case 'U2':
-            if (CVH > 1) {
+            if (CVH >= 2) {
                 return 'V';
             }
-            if (count_Reigo_ships(fleet) > 3) {
+            if (count_Reigo_ships(fleet) >= 4) {
                 return 'U3';
             }
             if (count_Yamato_class(fleet) === 0) {

@@ -41,7 +41,7 @@ export const calc_57_7: CalcFnWithCondition = (
                     if (!is_fleet_combined(fleet_type)) {
                         return '1';
                     }
-                    if (is_fleet_surface(fleet_type) && BBs > 3) {
+                    if (is_fleet_surface(fleet_type) && BBs >= 4) {
                         return '1';
                     }
                     if (is_fleet_transport(fleet_type)) {
@@ -56,24 +56,24 @@ export const calc_57_7: CalcFnWithCondition = (
             }
             return 'C'; // fleet_type !== 通常艦隊
         case 'A':
-            if (CVH > 0) {
+            if (CVH >= 1) {
                 return 'A1';
             }
             if (CL === 0) {
                 return 'A1';
             }
-            if (Ds < 2) {
+            if (Ds <= 1) {
                 return 'A1';
             }
-            if (Ds < 4 && is_fleet_speed_slow(speed)) {
+            if (Ds <= 3 && is_fleet_speed_slow(speed)) {
                 return 'A1';
             }
             return 'A2';
         case 'A1':
-            if (CL > 0 && DD > 3) {
+            if (CL >= 1 && DD >= 4) {
                 return 'A2';
             }
-            if (BBs > 1) {
+            if (BBs >= 2) {
                 return 'A2';
             }
             return 'B';
@@ -94,7 +94,7 @@ export const calc_57_7: CalcFnWithCondition = (
             ) {
                 return 'L';
             }
-            if (phase >= 5 && CVH < 3) {
+            if (phase >= 5 && CVH <= 2) {
                 return 'D';
             }
             return 'C3';
@@ -102,10 +102,10 @@ export const calc_57_7: CalcFnWithCondition = (
             if (is_fleet_speed_fast_or_more(speed)) {
                 return 'F';
             }
-            if (BBs + CVH > 5) {
+            if (BBs + CVH >= 6) {
                 return 'E';
             }
-            if (DD > 3) {
+            if (DD >= 4) {
                 return 'F';
             }
             return 'E';
@@ -118,7 +118,7 @@ export const calc_57_7: CalcFnWithCondition = (
             }
             return 'H';
         case 'K':
-            if (Ss > 0) {
+            if (Ss >= 1) {
                 return 'M';
             }
             if (is_fleet_speed_slow(speed)) {
@@ -126,39 +126,39 @@ export const calc_57_7: CalcFnWithCondition = (
             }
             return 'N';
         case 'L':
-            if (BBCVs > 6) {
+            if (BBCVs >= 7) {
                 return 'N';
             }
-            if (BBCVs > 5 && is_fleet_speed_slow(speed)) {
+            if (BBCVs >= 6 && is_fleet_speed_slow(speed)) {
                 return 'N';
             }
-            if (Ds < 4 && is_fleet_speed_slow(speed)) {
+            if (Ds <= 3 && is_fleet_speed_slow(speed)) {
                 return 'T';
             }
             if (phase === 7) {
                 if (is_fleet_speed_fastest(speed)) {
                     return 'X';
                 }
-                if (DD > 7 && is_fleet_speed_fast_or_more(speed)) {
+                if (DD >= 8 && is_fleet_speed_fast_or_more(speed)) {
                     return 'X';
                 }
                 if (
-                    count_Yamato_class(fleet) < 2
+                    count_Yamato_class(fleet) <= 1
                     && is_fleet_speed_faster_or_more(speed)
                 ) {
                     return 'V';
                 }
-                if (count_Yamato_class(fleet) < 2
-                    && BBs + CVH < 5
-                    && CVH < 3
-                    && CL + DD > 4
+                if (count_Yamato_class(fleet) <= 1
+                    && BBs + CVH <= 4
+                    && CVH <= 2
+                    && CL + DD >= 5
                     && is_fleet_speed_fast_or_more(speed)
                 ) {
                     return 'V';
                 }
                 return 'U';
             }
-            if (phase >= 6 && BBs + CV < 5 && CL > 1) {
+            if (phase >= 6 && BBs + CV <= 4 && CL >= 2) {
                 return 'U';
             }
             return 'T';
@@ -174,7 +174,7 @@ export const calc_57_7: CalcFnWithCondition = (
             }
             break; // どれかは経由するので例外なし
         case 'O':
-            if (phase < 4) {
+            if (phase <= 3) {
                 return 'P';
             }
             if (is_fleet_carrier(fleet_type) || is_fleet_surface(fleet_type)) {
@@ -182,17 +182,17 @@ export const calc_57_7: CalcFnWithCondition = (
             }
             return 'R'; // fleet_type === Ft.f4 // 通常艦隊がくるかは分からない
         case 'Q':
-            if (BBV + CVL + CAs > 3) {
+            if (BBV + CVL + CAs >= 4) {
                 return 'N';
             }
             return 'O';
         case 'U':
-            if (BBs > 4) {
+            if (BBs >= 5) {
                 return 'V';
             }
             return 'X';
         case 'X':
-            if (phase < 6) {
+            if (phase <= 5) {
                 return 'W';
             }
             if (includes_ship_names(['明石改', '秋津洲改', '速吸改', '神威改母', '山汐丸改', '宗谷'], ship_names)) {

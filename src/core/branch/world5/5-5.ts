@@ -87,10 +87,10 @@ export const calc_5_5: CalcFnWithCondition = (
             if (is_fleet_speed_faster_or_more(speed)) {
                 return 'O';
             }
-            if (AO > 0) {
+            if (AO >= 1) {
                 return 'O';
             }
-            if (CVH > 0) {
+            if (CVH >= 1) {
                 return 'M';
             }
             if (BBs + CVL >= 3) {
@@ -107,7 +107,7 @@ export const calc_5_5: CalcFnWithCondition = (
             if (seek.c2 < 63) {
                 return 'R';
             }
-            if ((seek.c2 < 66 && seek.c2 >= 63) || Ss > 0) {
+            if ((seek.c2 < 66 && seek.c2 >= 63) || Ss >= 1) {
                 return [
                     { node: 'S', rate: 0.5 },
                     { node: 'R', rate: 0.5 },
@@ -122,7 +122,7 @@ export const calc_5_5: CalcFnWithCondition = (
                 return 'S';
             }
             if (is_fleet_speed_faster_or_more(speed)) {
-                if (Ss > 0) {
+                if (Ss >= 1) {
                     return [
                         { node: 'Q', rate: 0.5 },
                         { node: 'S', rate: 0.5 },
@@ -139,7 +139,7 @@ export const calc_5_5: CalcFnWithCondition = (
             if (seek.c2 < 73) {
                 return 'Q';
             }
-            if ((seek.c2 < 80 && seek.c2 >= 73) || Ss > 0 || BBCVs >= 5) {
+            if ((seek.c2 < 80 && seek.c2 >= 73) || Ss >= 1 || BBCVs >= 5) {
                 return [
                     { node: 'S', rate: 0.666 },
                     { node: 'Q', rate: 0.334 },
