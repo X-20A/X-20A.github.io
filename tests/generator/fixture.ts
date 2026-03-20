@@ -29,7 +29,7 @@ export function find_ship_id_from_name(
 ): number {
     const data = Object.entries(SHIP_DATAS)
         .find(([, data]) => data.name === name);
-    if (!data) throw new Error(`指定された名前の装備は存在しません: ${name}`);
+    if (!data) throw new Error(`指定された名前の艦は存在しません: ${name}`);
 
     return Number(data[0]);
 }
