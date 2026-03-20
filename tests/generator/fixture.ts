@@ -9,7 +9,7 @@ import { EquipId } from "../../src/types/equipId";
 import { EquipName } from "../../src/types/equipName";
 import { ShipName } from "../../src/types/shipName";
 
-export function find_player_equip_id_from_name(
+export function find_equip_id_from_name(
     name: EquipName,
 ): number {
     const data = Object.entries(EQUIP_DATAS)
@@ -36,7 +36,7 @@ export function find_ship_id_from_name(
 
 export type EquipFixture = {
     name: EquipName,
-    improvement_lv?: number,
+    improvement_lv?: Improvement,
 }
 
 export type ShipFixture = {
@@ -55,14 +55,14 @@ export function build_equip_from_fixture(
     equip_fixture: EquipFixture,
 ): Equip {
     return derive_equip(
-        find_player_equip_id_from_name(equip_fixture.name),
+        find_equip_id_from_name(equip_fixture.name),
         (equip_fixture.improvement_lv ?? 0) as Improvement,
         false,
     );
 }
 
 /**
- * 艦Fixtureから PlayerEquippedShip を構築する
+ * 艦Fixtureから EquippedShip を構築する
  * @param ship_fixture 
  * @returns 
  */
