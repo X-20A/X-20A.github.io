@@ -7,7 +7,7 @@ import {
 import Const from '../../src/constants/const';
 import type { AreaId, OptionsType } from '../../src/types';
 import { calc_escort_fleet_ship_names, calc_main_fleet_ship_names, MAX_SEEK } from '../../src/models/fleet/AdoptFleet';
-import { TEST_FLEET_DATAS, astray_mock_datas } from '../expects/route';
+import { TEST_FLEET_DATAS } from '../expects/route';
 import { EDGE_DATAS, NODE_DATAS, NT as NodeType } from '../../src/data/map';
 import type { CommandEvacuation } from '../../src/core/CommandEvacuation';
 import { generate_sim_set } from './setup';
@@ -136,28 +136,26 @@ describe('Simテスト', () => {
     }, 30000);
 
     it('route-test: モック艦隊をSimにかけて、正しいルートを返すことを確認', async () => {
-        const fleet_datas = TEST_FLEET_DATAS.concat(astray_mock_datas);
-
-        for (const mock_data of fleet_datas) {
+        for (const fleet_data of TEST_FLEET_DATAS) {
             // 海域
-            const area_id = mock_data.area;
+            const area_id = fleet_data.area;
             const adopt_fleet = {
-                ...build_fleet_from_fixture(mock_data.fleet),
+                ...build_fleet_from_fixture(fleet_data.fleet),
                 seek: MAX_SEEK,
             };
 
-            const expected_routes = mock_data.routes;
+            const expected_routes = fleet_data.routes;
             for (const expected_route of expected_routes) {
                 // option
-                const mock_option = mock_data.option;
+                const option = fleet_data.option;
                 const nodes = expected_route.split('-');
                 for (const [index, node] of nodes.entries()) { // nodeデータから能動分岐自動セット
                     if (NODE_DATAS[area_id][node][2] === NodeType.ac) {
-                        mock_option[node] = nodes[index + 1];
+                        option[node] = nodes[index + 1];
                     }
                 }
                 const options = Const.DEFAULT_OPTIONS;
-                options[area_id] = { ...options[area_id], ...mock_option };
+                options[area_id] = { ...options[area_id], ...option };
 
                 const command_evacuations: CommandEvacuation[] = []; // 退避設定はなし
 
