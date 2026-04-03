@@ -1,21 +1,18 @@
 import { describe, it, expect } from 'vitest';
 import Big from 'big.js';
-import LZString from 'lz-string';
 import {
     derive_sim_executer,
     start_sim,
 } from '../../src/core/SimExecutor';
 import Const from '../../src/constants/const';
 import type { AreaId, OptionsType } from '../../src/types';
-import { derive_FleetComponents_from_DeckBuilder } from '../../src/logic/deckBuilder';
-import { derive_adopt_fleet, calc_escort_fleet_ship_names, calc_main_fleet_ship_names, MAX_SEEK } from '../../src/models/fleet/AdoptFleet';
-import { calc_URL_param } from '../../src/logic/url';
-import { normal_mock_datas, astray_mock_datas } from '../expects/route';
+import { calc_escort_fleet_ship_names, calc_main_fleet_ship_names, MAX_SEEK } from '../../src/models/fleet/AdoptFleet';
+import { TEST_FLEET_DATAS, astray_mock_datas } from '../expects/route';
 import { EDGE_DATAS, NODE_DATAS, NT as NodeType } from '../../src/data/map';
 import type { CommandEvacuation } from '../../src/core/CommandEvacuation';
 import { generate_sim_set } from './setup';
-import { Ft } from '../../src/models/fleet/predicate';
 import { DisallowToSortie } from '../../src/errors/CustomError';
+import { build_fleet_from_fixture } from '../generator/fixture';
 
 const is_route_not_warp = (
     route: string[],
@@ -139,29 +136,15 @@ describe('Simテスト', () => {
     }, 30000);
 
     it('route-test: モック艦隊をSimにかけて、正しいルートを返すことを確認', async () => {
-        const mock_datas = normal_mock_datas.concat(astray_mock_datas);
+        const fleet_datas = TEST_FLEET_DATAS.concat(astray_mock_datas);
 
-        for (const mock_data of mock_datas) {
+        for (const mock_data of fleet_datas) {
             // 海域
             const area_id = mock_data.area;
-
-            // 艦隊
-
-            const debug_deck =
-                mock_data.deck.replaceAll('https://x-20a.github.io', 'http://localhost:5173/compass/');
-
-            const compressed_deck = calc_URL_param('pdz', mock_data.deck)!;
-            const deck_string = LZString.decompressFromEncodedURIComponent(compressed_deck);
-            const deck = JSON.parse(deck_string);
-            const fleet_components = derive_FleetComponents_from_DeckBuilder(
-                deck,
-            );
-            const fleet_type_id = deck!.f1!.t as Ft;
-            const adoptFleet = derive_adopt_fleet(
-                fleet_components,
-                fleet_type_id,
-                { ...MAX_SEEK },
-            );
+            const adopt_fleet = {
+                ...build_fleet_from_fixture(mock_data.fleet),
+                seek: MAX_SEEK,
+            };
 
             const expected_routes = mock_data.routes;
             for (const expected_route of expected_routes) {
@@ -178,19 +161,17 @@ describe('Simテスト', () => {
 
                 const command_evacuations: CommandEvacuation[] = []; // 退避設定はなし
 
-                const executor = derive_sim_executer(adoptFleet, area_id, options, command_evacuations);
+                const executor = derive_sim_executer(adopt_fleet, area_id, options, command_evacuations);
                 const result = start_sim(executor);
                 const actual_route = result[0].route.join('-');
 
                 if (expected_route !== actual_route) {
                     console.log(`海域: ${area_id}`);
                     console.log('option: ', options);
-                    console.log(`期待: ${expected_route}`);
+                    console.log('期待ルート群: ', expected_routes);
+                    console.log(`非合致期待: ${expected_route}`);
                     console.log(`実際: ${actual_route}`);
-                    console.log(
-                        'deck: ',
-                        debug_deck,
-                    );
+                    console.log('艦名: ', adopt_fleet.ship_names);
                 }
 
                 expect(expected_route).toBe(actual_route);
