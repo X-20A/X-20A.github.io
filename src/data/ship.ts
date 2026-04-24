@@ -652,7 +652,7 @@ const SHIP_DATAS: ShipDatas = {
 ,575:{name:"Maestrale",type:ST.DD,seek:7,seek2:20,na:NA.Italia,sg:SG.FastB2,base:575}
 ,576:{name:"Nelson改",type:ST.BB,seek:14,seek2:48,na:NA.UK,sg:SG.SlowB,base:571}
 ,577:{name:"Rodney改",type:ST.BB,seek:13,seek2:48,na:NA.UK,sg:SG.SlowB,base:572}
-,578:{name:"朝霜改二",type:ST.DD,seek:10,seek2:44,na:NA.Japan,sg:SG.FastB2,base:425}
+,578:{name:"朝霜改二",type:ST.DD,seek:10,seek2:46,na:NA.Japan,sg:SG.FastB2,base:425}
 ,579:{name:"Gotland改",type:ST.CL,seek:18,seek2:55,na:NA.Other,sg:SG.FastB2,base:574}
 ,580:{name:"Maestrale改",type:ST.DD,seek:10,seek2:46,na:NA.Italia,sg:SG.FastB2,base:575}
 ,581:{name:"日進",type:ST.AV,seek:40,seek2:80,na:NA.Japan,sg:SG.FastC,base:581}
@@ -938,6 +938,9 @@ const SHIP_DATAS: ShipDatas = {
 ,1031:{name:'飛龍改三',type:ST.CV,seek:53,seek2:91,na:NA.Japan,sg:SG.FastB1,base:91}
 
 ,1033:{name:'玉波改二',type:ST.DD,seek:11,seek2:56,na:NA.Japan,sg:SG.FastB2,base:674}
+
+,1035:{name:"吹雪改三",type:ST.DD,seek:0,seek2:0,na:NA.Japan,sg:SG.FastB2,base:9}
+,1040:{name:"吹雪改三護(六式)",type:ST.DD,seek:0,seek2:0,na:NA.Japan,sg:SG.FastB2,base:9}
 }; // @expansion
 //,_:{name:'',type:ST.,seek:0,seek2:0,na:NA.,sg:SG.}
 export default SHIP_DATAS;
