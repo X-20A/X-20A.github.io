@@ -939,8 +939,8 @@ const SHIP_DATAS: ShipDatas = {
 
 ,1033:{name:'玉波改二',type:ST.DD,seek:11,seek2:56,na:NA.Japan,sg:SG.FastB2,base:674}
 
-,1035:{name:"吹雪改三",type:ST.DD,seek:0,seek2:0,na:NA.Japan,sg:SG.FastB2,base:9}
-,1040:{name:"吹雪改三護(六式)",type:ST.DD,seek:0,seek2:0,na:NA.Japan,sg:SG.FastB2,base:9}
+,1035:{name:"吹雪改三",type:ST.DD,seek:15,seek2:56,na:NA.Japan,sg:SG.FastB2,base:9}
+,1040:{name:"吹雪改三護(六式)",type:ST.DD,seek:20,seek2:62,na:NA.Japan,sg:SG.FastB2,base:9}
 }; // @expansion
 //,_:{name:'',type:ST.,seek:0,seek2:0,na:NA.,sg:SG.}
 export default SHIP_DATAS;
