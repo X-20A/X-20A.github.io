@@ -625,6 +625,10 @@ const EQUIP_DATAS: EquipDatas = {
 ,548:{seek:0,type:EquipType.JetFighter,name:'震電改三(試製 噴式震電)'}
 
 ,571:{seek:0,type:EquipType.Torpedo,name:'53cm連装魚雷改(酸素魚雷)'}
+
+,572:{seek:0,type:EquipType.MainGunS,name:'12.7cm単装高角砲改三'}
+,573:{seek:6,type:EquipType.RadarS,name:'試製 23号電探改三'}
+,574:{seek:10,type:EquipType.RadarS,name:'SCレーダー改(後期調整型)'}
 } as const; // @expansion
 
 export default EQUIP_DATAS;
