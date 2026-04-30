@@ -118,7 +118,10 @@ watch(selectedArea, () => {
 	} = disassembly_area_id(selectedArea.value);
 	
 	let url = '';
-	if (world > 7) {
+	if (world === 2 && section === 2) {
+		source.value.label = 'NGA';
+		url = 'https://bbs.nga.cn/read.php?tid=16820397&pid=330615386&opt=262144';
+	} else if (world > 7) {
 		source.value.label = 'NGA';
 		url = 'https://bbs.nga.cn/read.php?tid=';
 		switch (world) {
@@ -168,7 +171,6 @@ watch(selectedArea, () => {
 	}
 	source.value.url = url;
 
-	// Safely read branchInfo for the selected area. Avoid non-null assertion.
 	const info_for_area = branchInfo.value[selectedArea.value];
 	last_update.value = info_for_area != null ? info_for_area : '情報なし';
 }, { immediate: true });

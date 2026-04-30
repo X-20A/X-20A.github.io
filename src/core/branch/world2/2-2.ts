@@ -18,31 +18,61 @@ export const calc_2_2: CalcFnNoCondition = (
         case null:
             return '1';
         case 'C':
-            if (CVs >= 3 || BBV >= 2) {
+            if (CVs >= 3) {
                 return 'B';
             }
             if (AO >= 1 && Ss === 0) {
                 return 'B';
             }
-            if (BBV >= 1) {
-                if (AV + AS >= 1) {
+            if (BBV >= 2) {
+                return 'B';
+            }
+            // 明らかに処理方式と噛み合ってない 同じようなのが出てくるようなら何か考える
+            if (BBV === 1) {
+                if (CLE >= 1 && Ds >= 4) {
+                    if (AV + AS >= 1) {
+                        return [
+                            { node: 'B', rate: 0.7 },
+                            { node: 'E', rate: 0.3 },
+                        ];
+                    }
                     return [
                         { node: 'B', rate: 0.7 },
-                        { node: 'E', rate: 0.3 },
+                        { node: 'E', rate: 0.18 },
+                        { node: 'D', rate: 0.12 },
+                    ];
+                } else {
+                    if (AV + AS >= 1) {
+                        return [
+                            { node: 'B', rate: 0.7 },
+                            { node: 'E', rate: 0.3 },
+                        ];
+                    }
+                    return [
+                        { node: 'B', rate: 0.7 },
+                        { node: 'D', rate: 0.3 },
                     ];
                 }
-                return [
-                    { node: 'B', rate: 0.7 },
-                    { node: 'D', rate: 0.3 },
-                ];
             }
-            if (AV + AS >= 1) {
-                return 'E';
-            }
-            return [
-                { node: 'D', rate: 0.5 },
-                { node: 'E', rate: 0.5 },
-            ];
+            if (BBV === 0) {
+                if (CLE >= 1 && Ds >= 4) {
+                    if (AV + AS >= 1) {
+                        return 'E';
+                    }
+                    return [
+                        { node: 'E', rate: 0.8 },
+                        { node: 'D', rate: 0.2 },
+                    ];
+                } else {
+                    if (AV + AS >= 1) {
+                        return 'E';
+                    }
+                    return [
+                        { node: 'E', rate: 0.5 },
+                        { node: 'D', rate: 0.5 },
+                    ];
+                }
+            } // BBVより例外なし
         case 'E':
             if (BBCVs >= 4) {
                 return 'G';
@@ -63,18 +93,24 @@ export const calc_2_2: CalcFnNoCondition = (
                 ];
             }
             if (BBCVs === 1) {
+                if (Ds >= 2) {
+                    return [
+                        { node: 'G', rate: 0.3 },
+                        { node: 'K', rate: 0.7 },
+                    ];
+                }
                 return [
-                    { node: 'G', rate: 0.3 },
-                    { node: 'K', rate: 0.7 },
+                    { node: 'G', rate: 0.5 },
+                    { node: 'K', rate: 0.5 },
                 ];
             }
-            if (Ds >= 3 && AS >= 1) {
+            if (Ds >= 3 && AS === 1) {
                 return 'F';
             }
+            if (Ds >= 2 && CL >= 1 && is_fleet_speed_fast_or_more(speed)) {
+                return 'K';
+            }
             if (Ds >= 2) {
-                if (CL >= 1 && is_fleet_speed_fast_or_more(speed)) {
-                    return 'K';
-                }
                 return [
                     { node: 'F', rate: 0.3 },
                     { node: 'K', rate: 0.7 },
@@ -91,18 +127,26 @@ export const calc_2_2: CalcFnNoCondition = (
             if (DD === 0) {
                 return 'H';
             }
-            return [
-                { node: 'H', rate: 0.5 },
-                { node: 'K', rate: 0.5 },
-            ];
-        case 'H':
-            if (BBCVs >= 4) {
+            if (BBs >= 3) {
                 return [
-                    { node: 'I', rate: 0.7 },
+                    { node: 'H', rate: 0.7 },
                     { node: 'K', rate: 0.3 },
                 ];
             }
-            if (CVs + CAV + AV >= 1) {
+            if (BBs <= 2) {
+                return [
+                    { node: 'H', rate: 0.3 },
+                    { node: 'K', rate: 0.7 },
+                ];
+            } // BBsより例外なし
+        case 'H':
+            if (BBCVs >= 4) {
+                return [
+                    { node: 'I', rate: 0.6 },
+                    { node: 'K', rate: 0.4 },
+                ];
+            }
+            if (CVs + AV + CAV >= 1) {
                 return 'K';
             }
             if (Ss >= 1) {
@@ -111,23 +155,25 @@ export const calc_2_2: CalcFnNoCondition = (
                     { node: 'K', rate: 0.3 },
                 ];
             }
+            if (Ds === 0) {
+                return [
+                    { node: 'I', rate: 0.7 },
+                    { node: 'K', rate: 0.3 },
+                ];
+            }
+            if (Ds === 1) {
+                return [
+                    { node: 'I', rate: 0.35 },
+                    { node: 'J', rate: 0.15 },
+                    { node: 'K', rate: 0.5 },
+                ];
+            }
             if (Ds >= 2) {
                 return [
                     { node: 'J', rate: 0.5 },
                     { node: 'K', rate: 0.5 },
                 ];
-            }
-            if (Ds === 1) {
-                return [
-                    { node: 'I', rate: 0.333 },
-                    { node: 'J', rate: 0.333 },
-                    { node: 'K', rate: 0.334 },
-                ];
-            }
-            return [
-                { node: 'I', rate: 0.5 },
-                { node: 'K', rate: 0.5 },
-            ];
+            } // Dsより例外なし
     }
 
     omission_of_conditions(node, sim_fleet);
