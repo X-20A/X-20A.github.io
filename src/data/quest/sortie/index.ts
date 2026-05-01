@@ -26,6 +26,7 @@ export type YearlySortieQuestId =
     | 'By13' | 'By1' | 'By2' | 'By3' | 'By4'
     | 'By11' | 'By12' | 'By14' | 'By6' | 'By7'
     | 'By8' | 'By9' | 'By10' | 'By5' | 'By15'
+    | 'By16'
 
 export type LimitedSortieQuestId =
     | '2412B5'

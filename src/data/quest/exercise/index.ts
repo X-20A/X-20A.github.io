@@ -14,7 +14,7 @@ export type YearlyExerciseQuestId =
     | 'Cy16'
 
 export type LimitedExerciseQuestId =
-    '2409C1'
+    '2409C1' | '2604Cw1'
 
 export type ExerciseQuestData = {
     readonly name: string,

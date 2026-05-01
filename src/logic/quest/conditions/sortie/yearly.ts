@@ -2,6 +2,7 @@ import { QuestCompositionCondition } from ".";
 import { NA, ST } from "../../../../data/ship";
 import { count_ships_by_base_names, extract_flagship, includes_base_ship } from "../../../../models/fleet/AdoptFleet";
 import { includes_ship_name, includes_ship_names, includes_ship_type, is_CVs } from "../../../../models/ship/predicate";
+import { BaseShipName } from "../../../../types/baseShipName";
 
 // wikiがID順でなく月順なので倣う
 
@@ -29,6 +30,18 @@ export const calc_By2: QuestCompositionCondition = (fleet) => {
         DE >= 3
     );
 };
+
+const TOKU_1_BASE_NAMES: BaseShipName[] =
+    ['白雪', '初雪', '深雪', '叢雲', '薄雲', '白雲', '磯波', '浦波'] as const;
+
+export const calc_By16: QuestCompositionCondition = (fleet) => {
+    if (fleet.ships_length <= 1) return false;
+
+    const flagship = extract_flagship(fleet);
+    const second_ship = fleet.fleets[0].units[1].ship;
+    return (includes_ship_name(['吹雪改三', '吹雪改三護(六式)'], flagship.name))
+        && includes_base_ship(second_ship.base_name, TOKU_1_BASE_NAMES);
+}
 
 export const calc_By3: QuestCompositionCondition = (fleet) => {
     const { DD } = fleet.composition;

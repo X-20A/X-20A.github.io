@@ -1,5 +1,5 @@
 import { SortieQuestData, YearlySortieQuestId } from ".";
-import { calc_By1, calc_By10, calc_By11, calc_By12, calc_By13, calc_By14, calc_By15, calc_By2, calc_By3, calc_By4, calc_By5, calc_By6, calc_By7, calc_By8, calc_By9 } from "../../../logic/quest/conditions/sortie/yearly";
+import { calc_By1, calc_By10, calc_By11, calc_By12, calc_By13, calc_By14, calc_By15, calc_By16, calc_By2, calc_By3, calc_By4, calc_By5, calc_By6, calc_By7, calc_By8, calc_By9 } from "../../../logic/quest/conditions/sortie/yearly";
 
 export const YEARLY_SORTIE_QUEST_DATAS = {
     By13: {
@@ -28,6 +28,19 @@ export const YEARLY_SORTIE_QUEST_DATAS = {
             },
         ],
         condition: calc_By2,
+    },
+    By16: {
+        name: '「吹雪改三」抜錨します！見てくださいっ！',
+        icon: 'April',
+        zekamashi_id: 'hubukikaisan-batubyou',
+        target_areas: [
+            {
+                area: '7-5',
+                specific_node: 'T',
+            },
+            '5-1', '5-3', '5-4', '5-5',
+        ],
+        condition: calc_By16,
     },
     By3: {
         name: '工作艦「明石」護衛任務',
