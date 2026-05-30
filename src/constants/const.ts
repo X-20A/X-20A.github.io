@@ -1,6 +1,5 @@
 import Big from 'big.js';
 import type { OptionsType, SimResult } from '../types'
-import { EquipName } from '../types/equipName';
 
 /**
  * 定数系    
@@ -14,6 +13,7 @@ export default class Const {
         '4-5': { 'A': 'D', 'C': 'F', 'I': 'J' },
         '5-3': { 'O': 'K' },
         '5-5': { 'F': 'D' },
+        '5-6': { 'phase': '1', 'I': 'J', 'O': 'P' },
         '6-3': { 'A': 'B' },
         '7-3': { 'phase': '1' },
         '7-4': { 'F': 'H' },

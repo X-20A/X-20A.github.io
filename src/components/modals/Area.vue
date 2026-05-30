@@ -129,6 +129,7 @@ const NORMAL_AREAS: Area[] = [
       { value: "5-3", label: "5-3" },
       { value: "5-4", label: "5-4" },
       { value: "5-5", label: "5-5" },
+			{ value: "5-6", label: "5-6" },
     ],
   },
 	{

@@ -5,7 +5,7 @@ import { calc_1_1, calc_1_2, calc_1_3, calc_1_4, calc_1_5, calc_1_6 } from './wo
 import { calc_2_1, calc_2_2, calc_2_3, calc_2_4, calc_2_5 } from './world2';
 import { calc_3_1, calc_3_2, calc_3_3, calc_3_4, calc_3_5 } from './world3';
 import { calc_4_1, calc_4_2, calc_4_3, calc_4_4, calc_4_5 } from './world4';
-import { calc_5_1, calc_5_2, calc_5_3, calc_5_4, calc_5_5 } from './world5';
+import { calc_5_1, calc_5_2, calc_5_3, calc_5_4, calc_5_5, calc_5_6 } from './world5';
 import { calc_6_1, calc_6_2, calc_6_3, calc_6_4, calc_6_5 } from './world6';
 import { calc_7_1, calc_7_2, calc_7_3, calc_7_4, calc_7_5 } from './world7';
 import { calc_57_7 } from './world57/57-7';
@@ -66,6 +66,7 @@ const CALC_TABLE: Record<AreaId, CalcEntry> = {
     '5-3': { requires_option: true, fn: calc_5_3 },
     '5-4': { requires_option: false, fn: calc_5_4 },
     '5-5': { requires_option: true, fn: calc_5_5 },
+    '5-6': { requires_option: true, fn: calc_5_6 },
 
     '6-1': { requires_option: false, fn: calc_6_1 },
     '6-2': { requires_option: false, fn: calc_6_2 },
