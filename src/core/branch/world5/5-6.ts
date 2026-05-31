@@ -105,7 +105,10 @@ export const calc_5_6: CalcFnWithCondition = (
             }
             return 'F';
         case 'J':
-            return 'K';
+            if (Ds >= 2) {
+                return 'K';
+            }
+            return 'K1';
         case 'K':
             if (is_fleet_speed_slow(speed)) {
                 return 'K2';
@@ -162,7 +165,7 @@ export const calc_5_6: CalcFnWithCondition = (
             }
             return 'X';
         case 'X':
-            if (seek.c4 >= 80) {
+            if (seek.c4 >= 87) {
                 return 'Z';
             }
             return 'Y';
