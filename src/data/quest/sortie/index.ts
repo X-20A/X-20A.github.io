@@ -29,7 +29,7 @@ export type YearlySortieQuestId =
     | 'By16'
 
 export type LimitedSortieQuestId =
-    | '2412B5'
+    | '2412B5' | '2605Bw1' | '2605Bw2' | '2605Bm1'
 
 export type QuestId =
     | DailySortieQuestId
