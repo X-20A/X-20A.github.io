@@ -121,6 +121,9 @@ watch(selectedArea, () => {
 	if (world === 2 && section === 2) {
 		source.value.label = 'NGA';
 		url = 'https://bbs.nga.cn/read.php?tid=16820397&pid=330615386&opt=262144';
+	} else if (world === 5 && section === 6) {
+		source.value.label = 'NGA';
+		url = 'https://bbs.nga.cn/read.php?tid=16820397&page=7';
 	} else if (world > 7) {
 		source.value.label = 'NGA';
 		url = 'https://bbs.nga.cn/read.php?tid=';
