@@ -250,6 +250,7 @@ describe('艦速度テスト', () => {
                 is_both_base('大鳳', d.name) ||
                 is_both_base('島風', d.name) ||
                 is_both_base('Ташкент', d.name) ||
+                includes_ship_name(['飛龍改三'], d.name) ||
                 includes_ship_name(['吹雪改三護(六式)'], d.name)
             ) {
                 verification(SG.FastA, d);

@@ -39,22 +39,19 @@ export const calc_5_6: CalcFnWithCondition = (
             if (Ds <= 1) {
                 return 'A1';
             }
+            if (BBs >= 2 && Ds === 2) {
+                return 'A1';
+            }
             if (AV + LHA >= 3) {
                 return 'A';
             }
-            if (Ds === 2) {
-                if (BBs >= 2) {
-                    return 'A1';
-                }
-                return 'A2';
-            }
-            if (Ds === 3) {
-                return 'A2';
+            if (DE >= 3) {
+                return 'A';
             }
             if (Ds >= 4) {
                 return 'A';
             }
-            return omission_of_conditions(node, sim_fleet);
+            return 'A2';
         case 'A':
             if (BBs >= 1 && CVL >= 1) {
                 return 'B';
@@ -70,6 +67,9 @@ export const calc_5_6: CalcFnWithCondition = (
             if (CVH >= 1) {
                 return 'B';
             }
+            if (BBs >= 2 && Ds <= 2) {
+                return 'B';
+            }
             if (CAs >= 2) {
                 return 'B';
             }
@@ -78,20 +78,20 @@ export const calc_5_6: CalcFnWithCondition = (
             }
             return 'C';
         case 'B':
+            if (BBV === 2 && Ds === 4) {
+                return 'C2';
+            }
+            if (BBs >= 2) {
+                return 'C1';
+            }
             if (CVH >= 1) {
                 return 'C1';
             }
             if (is_fleet_speed_fast_or_more(speed)) {
                 return 'C';
             }
-            if (Ds <= 2) {
-                return 'C1';
-            }
-            if (BBs === 2 && Ds === 4) {
-                return 'C2';
-            }
-            if (BBs + CVL >= 2) {
-                return 'C1';
+            if (CAs + CLE + CLT + AV + LHA >= 2 && Ds >= 3) {
+                return 'C';
             }
             return 'C';
         case 'C1':
@@ -100,7 +100,10 @@ export const calc_5_6: CalcFnWithCondition = (
             }
             return 'C';
         case 'E':
-            if (seek.c4 >= 57) {
+            if (BBs === 0 && seek.c4 >= 58) {
+                return 'G';
+            }
+            if (BBs >= 1 && seek.c4 >= 65) {
                 return 'G';
             }
             return 'F';
@@ -110,13 +113,10 @@ export const calc_5_6: CalcFnWithCondition = (
             }
             return 'K1';
         case 'K':
-            if (is_fleet_speed_slow(speed)) {
-                return 'K2';
+            if (BBCVs <= 2 && CL >= 1 && is_fleet_speed_fast_or_more(speed)) {
+                return 'L';
             }
-            if (BBCVs >= 3) {
-                return 'K2';
-            }
-            return 'L';
+            return 'K2';
         case 'L':
             if (seek.c4 >= 80) {
                 return 'N';
@@ -144,7 +144,10 @@ export const calc_5_6: CalcFnWithCondition = (
             return 'U';
         }
         case 'Q1':
-            return 'T';
+            if (Ds >= 2) {
+                return 'T';
+            }
+            return 'Q2';
         case 'Q2':
             if (route.includes('P')) {
                 return 'T';
@@ -154,10 +157,10 @@ export const calc_5_6: CalcFnWithCondition = (
             }
             break; // どちらかは経由する
         case 'V':
-            if (CVH >= 3) {
+            if (BBCVs >= 4) {
                 return 'W';
             }
-            if (BBCVs >= 4) {
+            if (CVH >= 3) {
                 return 'W';
             }
             if (Ds <= 1) {
@@ -165,7 +168,7 @@ export const calc_5_6: CalcFnWithCondition = (
             }
             return 'X';
         case 'X':
-            if (seek.c4 >= 87) {
+            if (seek.c4 >= 88) {
                 return 'Z';
             }
             return 'Y';
