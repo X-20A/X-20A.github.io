@@ -53,7 +53,7 @@ export const calc_5_6: CalcFnWithCondition = (
             }
             return 'A2';
         case 'A':
-            if (BBs >= 1 && CVL >= 1) {
+            if (BBs + CVL >= 1) {
                 return 'B';
             }
             if (CAs >= 1 && is_fleet_speed_slow(speed)) {
