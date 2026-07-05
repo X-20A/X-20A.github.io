@@ -1,4 +1,4 @@
-import { ST } from "../../../../data/ship";
+import { NA, ST } from "../../../../data/ship";
 import { count_ships_by_base_names, extract_flagship, includes_base_ship } from "../../../../models/fleet/AdoptFleet";
 import { includes_ship_name, includes_ship_type } from "../../../../models/ship/predicate";
 import { BaseShipName } from "../../../../types/baseShipName";
@@ -79,14 +79,15 @@ export const calc_Cy13: QuestCompositionCondition = (fleet) => {
         BBV >= 2;
 };
 
-const GAMBY_ESCORT_BASE_NAMES: BaseShipName[] =
-    ['Fletcher', 'Johnston', 'Samuel B.Roberts'] as const;
-
 export const calc_Cy6: QuestCompositionCondition = (fleet) => {
-    const { base_ship_names } = fleet;
     const flagship = extract_flagship(fleet);
+    const US_DD_count = fleet.fleets[0].units.filter(unit => {
+        const { ship } = unit;
+        return ship.national === NA.USA && ship.type === ST.DD
+    }).length;
+
     return flagship.name === 'Gambier Bay Mk.II' &&
-        count_ships_by_base_names(GAMBY_ESCORT_BASE_NAMES, base_ship_names) >= 2;
+        US_DD_count >= 2;
 };
 
 const JUUROKKU_BASE_NAMES: BaseShipName[] =
