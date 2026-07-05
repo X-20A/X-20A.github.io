@@ -510,4 +510,5 @@ export type EquipId =
     | 573
     | 574
     | 575
+    | 576
 ;
