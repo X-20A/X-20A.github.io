@@ -243,7 +243,7 @@ const EQUIP_DATAS: EquipDatas = {
 ,123:{seek:0,type:EquipType.MainGunM,name:'SKC34 20.3cm連装砲'}
 ,124:{seek:9,type:EquipType.RadarL,name:'FuMO25 レーダー'}
 ,125:{seek:0,type:EquipType.Torpedo,name:'61cm三連装(酸素)魚雷'}
-,126:{seek:0,type:EquipType.WG,name:'WG42 (Wurfgerät 42)'}
+,126:{seek:0,type:EquipType.WG,name:'WG42 (Wurfgerat 42)'}
 ,127:{seek:0,type:EquipType.TorpedoSS,name:'試製FaT仕様九五式酸素魚雷改'}
 ,128:{seek:0,type:EquipType.MainGunL,name:'試製51cm連装砲'}
 ,129:{seek:2,type:EquipType.Picket,name:'熟練見張員'}
@@ -301,7 +301,7 @@ const EQUIP_DATAS: EquipDatas = {
 ,191:{seek:0,type:EquipType.AAGun,name:'QF 2ポンド8連装ポンポン砲'}
 ,192:{seek:0,type:EquipType.MainGunL,name:'38.1cm Mk.I/N連装砲改'}
 ,193:{seek:0,type:EquipType.LandingCraft,name:'特大発動艇'}
-,194:{seek:4,type:EquipType.SeaPlaneBomber,name:'Laté 298B'}
+,194:{seek:4,type:EquipType.SeaPlaneBomber,name:'Late 298B'}
 ,195:{seek:2,type:EquipType.DiveBomber,name:'SBD'}
 ,196:{seek:2,type:EquipType.TorpBomber,name:'TBD'}
 ,197:{seek:0,type:EquipType.Fighter,name:'F4F-3'}
@@ -575,7 +575,7 @@ const EQUIP_DATAS: EquipDatas = {
 ,519:{seek:7,type:EquipType.SubRadar,name:'SJレーダー+潜水艦司令塔装備'}
 ,520:{seek:0,type:EquipType.MainGunM,name:'試製20.3cm(4号)連装砲'}
 ,521:{seek:9,type:EquipType.SeaPlane,name:'紫雲(熟練)'}
-,524:{seek:0,type:EquipType.SecGun,name:'12cm単装高角砲＋25mm機銃増備'}
+,524:{seek:0,type:EquipType.SecGun,name:'12cm単装高角砲+25mm機銃増備'}
 ,525:{seek:0,type:EquipType.LandingTank,name:'特四式内火艇'}
 ,526:{seek:0,type:EquipType.LandingTank,name:'特四式内火艇改'}
 ,522:{seek:3,type:EquipType.SeaPlane,name:'零式小型水上機'}
@@ -601,7 +601,7 @@ const EQUIP_DATAS: EquipDatas = {
 ,540:{seek:7,type:EquipType.SeaPlane,name:'零式水上偵察機11型甲改二'}
 ,549:{seek:3,type:EquipType.AswPlane,name:'三式指揮連絡機改二'}
 ,550:{seek:1,type:EquipType.DiveBomber,name:'試製 明星(増加試作機)'}
-,551:{seek:2,type:EquipType.DiveBomber,name:'明星'}
+,551:{seek:2,type:EquipType.DiveBomber,name:'明星改'}
 ,552:{seek:4,type:EquipType.DiveBomber,name:'九九式練爆二二型改(夜間装備実験機)'}
 ,553:{seek:0,type:EquipType.MainGunS,name:'10cm連装高角砲改'}
 ,554:{seek:2,type:EquipType.TorpBomber,name:'九七式艦攻改(北東海軍航空隊)'}

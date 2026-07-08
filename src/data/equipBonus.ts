@@ -241,7 +241,7 @@ const EQUIP_BONUS_DATAS: EquipBonusDatas = {
             },
         ],
     },
-    'Laté 298B': {
+    'Late 298B': {
         rules: [
             {
                 conditions: {
