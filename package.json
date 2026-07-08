@@ -19,6 +19,7 @@
     "dep": "depcheck",
     "lint": "biome lint",
     "format": "biome format",
+	"download-banner": "bun run scripts/downloadBanner.ts",
 	"gen-type": "bun run scripts/generateUnion.ts && bun run scripts/generateBaseShipNameUnion.ts"
   },
   "dependencies": {
