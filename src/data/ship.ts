@@ -946,6 +946,18 @@ const SHIP_DATAS: ShipDatas = {
 ,744:{name:"朝霜改二補",type:ST.DD,seek:11,seek2:50,na:NA.Japan,sg:SG.FastB2,base:425}
 ,745:{name:"涼波改二補",type:ST.DD,seek:10,seek2:55,na:NA.Japan,sg:SG.FastB2,base:675}
 ,1034:{name:"涼波改二",type:ST.DD,seek:10,seek2:54,na:NA.Japan,sg:SG.FastB2,base:675}
+
+,746:{name:"桐改",type:ST.DD,seek:0,seek2:0,na:NA.Japan,sg:SG.FastB2,base:1044}
+,747:{name:"Reno改",type:ST.CL,seek:0,seek2:0,na:NA.Japan,sg:SG.FastB2,base:991}
+,932:{name:"Indiana",type:ST.BB,seek:0,seek2:0,na:NA.Japan,sg:SG.FastB2,base:932}
+,937:{name:"Indiana改",type:ST.BB,seek:0,seek2:0,na:NA.Japan,sg:SG.FastB2,base:932}
+,991:{name:"Reno",type:ST.CL,seek:0,seek2:0,na:NA.Japan,sg:SG.FastB2,base:991}
+,1023:{name:"Independence",type:ST.CVL,seek:0,seek2:0,na:NA.Japan,sg:SG.FastB2,base:1023}
+,1028:{name:"Independence改",type:ST.CVL,seek:0,seek2:0,na:NA.Japan,sg:SG.FastB2,base:1023}
+,1036:{name:"Independence Flight II",type:ST.CVL,seek:0,seek2:0,na:NA.Japan,sg:SG.FastB2,base:1023}
+,1041:{name:"花月",type:ST.DD,seek:0,seek2:0,na:NA.Japan,sg:SG.FastB2,base:1041}
+,1044:{name:"桐",type:ST.DD,seek:0,seek2:0,na:NA.Japan,sg:SG.FastB2,base:1044}
+,1046:{name:"花月改",type:ST.DD,seek:0,seek2:0,na:NA.Japan,sg:SG.FastB2,base:1041}
 }; // @expansion
 //,_:{name:'',type:ST.,seek:0,seek2:0,na:NA.,sg:SG.}
 export default SHIP_DATAS;
