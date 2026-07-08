@@ -137,8 +137,9 @@ describe('Dataテスト', () => {
             equip_type: EquipType,
         }
         type MismatchEquipParam = {
+            id?: number,
             name: string,
-            param: 'type' | 'seek',
+            param: 'name' | 'type' | 'seek',
             master_param: number,
         }
         const missing_equips = [] as MissingEquip[];
@@ -157,6 +158,15 @@ describe('Dataテスト', () => {
                     equip_type: ac_item.type,
                 });
                 continue;
+            }
+
+            if (ac_item.name !== equip.name) {
+                mismatch_equip_params.push({
+                    id: ac_item.id,
+                    name: ac_item.name,
+                    param: 'name',
+                    master_param: ac_item.type,
+                });
             }
 
             if (ac_item.type !== equip.type) {

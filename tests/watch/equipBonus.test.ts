@@ -154,7 +154,7 @@ describe('bonus-test: 装備ボーナス', () => {
         }))
 
         test(2, build_ship_from_fixture({
-            equips: [{ name: 'Laté 298B' }],
+            equips: [{ name: 'Late 298B' }],
             name: 'Commandant Teste',
         }))
 
