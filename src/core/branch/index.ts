@@ -13,6 +13,7 @@ import { calc_58_1, calc_58_2, calc_58_3, calc_58_4 } from './world58';
 import { calc_59_1, calc_59_2, calc_59_3, calc_59_4, calc_59_5 } from './world59';
 import { calc_60_1, calc_60_2, calc_60_3, calc_60_4, calc_60_5, calc_60_6 } from './world60';
 import { calc_61_1, calc_61_2, calc_61_3, calc_61_4, calc_61_5 } from './world61';
+import { calc_62_1 } from './world62';
 
 /** optionを使用しない分岐関数 */
 export type CalcFnNoCondition = (
@@ -105,6 +106,12 @@ const CALC_TABLE: Record<AreaId, CalcEntry> = {
     '61-3': { requires_option: true, fn: calc_61_3 },
     '61-4': { requires_option: true, fn: calc_61_4 },
     '61-5': { requires_option: true, fn: calc_61_5 },
+
+    '62-1': { requires_option: true, fn: calc_62_1 },
+    // '62-2': { requires_option: true, fn: calc_62_2 },
+    // '62-3': { requires_option: true, fn: calc_62_3 },
+    // '62-4': { requires_option: true, fn: calc_62_4 },
+    // '62-5': { requires_option: true, fn: calc_62_5 },
 
     // @expansion
 } as const;

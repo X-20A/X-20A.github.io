@@ -143,6 +143,8 @@ watch(selectedArea, () => {
 			case 61:
 				url += '45460478&rand=928';
 				break;
+			case 62:
+				url += '47140252';
 		} // @expansion
 	} else {
 		source.value.label = '日wiki';

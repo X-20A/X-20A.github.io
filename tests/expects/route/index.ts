@@ -3,6 +3,7 @@ import { FleetFixture } from '../../generator/fixture';
 import { TEST_FLEET_DATAS_5 } from './world5';
 import { TEST_FLEET_DATAS_60 } from './world60';
 import { TEST_FLEET_DATAS_61 } from './world61';
+import { TEST_FLEET_DATAS_62 } from './world62';
 
 export type TestFleetData = {
     area: AreaId,
@@ -15,4 +16,5 @@ export const TEST_FLEET_DATAS = [
     ...TEST_FLEET_DATAS_5,
     ...TEST_FLEET_DATAS_60,
     ...TEST_FLEET_DATAS_61,
+    ...TEST_FLEET_DATAS_62,
 ]; // @expansion

@@ -40,7 +40,8 @@ export default class Const {
         '61-3': { 'phase': '1', 'A1': 'A2', 'F': 'G' },
         '61-4': { 'phase': '1', 'C': 'D' },
         '61-5': { 'phase': '1', 'A2': 'B2' },
-    };  // @expansion
+        '62-1': { 'phase': '1', 'difficulty': '4', 'B': 'C', 'C': 'C1', 'M': 'N' },
+    }; // @expansion
 
     /**
      * オプションの初期値
