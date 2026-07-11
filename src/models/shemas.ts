@@ -191,7 +191,7 @@ export const area_id_schema = union([
     literal('59-1'), literal('59-2'), literal('59-3'), literal('59-4'), literal('59-5'),
     literal('60-1'), literal('60-2'), literal('60-3'), literal('60-4'), literal('60-5'), literal('60-6'),
     literal('61-1'), literal('61-2'), literal('61-3'), literal('61-4'), literal('61-5'),
-    literal('62-1'), // literal('62-2'), literal('62-3'), literal('62-4'), literal('62-5'),
+    literal('62-1'), literal('62-2'), // literal('62-3'), // literal('62-4'), // literal('62-5'),
 ]); // @expansion
 
 /**
