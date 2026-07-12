@@ -1,4 +1,5 @@
 import type { AdoptFleet } from '../models/fleet/AdoptFleet';
+import type { Sp as Speed } from '../logic/speed/predicate';
 import type { CommandEvacuation } from '../core/CommandEvacuation';
 import type { FleetComponent } from '../models/fleet/FleetComponent';
 import type { AreaId, ItemIconKey, NodeDatas, EdgeDatas, SelectedType, SimResult, OptionsType, SaveData, BranchLastUpdate, BranchType } from '../types';
@@ -20,6 +21,8 @@ export type StoreType = {
     UPDATE_OPTIONS: (value: OptionsType) => void;
     UPDATE_OPTION_WITH_KEY: (area: AreaId, key: string, value: string) => void;
     SWITCH_SEEK: () => void;
+    OVERRIDE_SPEED: (speed: Speed) => void;
+    CLEAR_SPEED_OVERRIDE: () => void;
     LOAD_DATA: (commands: LoadDataCommands) => void;
     SAVE_DATA: (save_data?: SaveData) => void;
     DYNAMIC_LOAD: () => Promise<void>;

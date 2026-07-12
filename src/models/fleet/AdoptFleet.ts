@@ -22,6 +22,8 @@ export type AdoptFleet = {
     readonly fleet_type: FleetType,
     readonly ships_length: number,
     readonly speed: Speed,
+    /** 艦隊構成から算出された本来の速度(上書き判定・復元用) */
+    readonly save_speed: Speed,
     readonly seek: FleetSeek,
     readonly save_seek: FleetSeek,
     readonly drum_carrier_count: number;
@@ -37,13 +39,15 @@ export type AdoptFleet = {
  * @param fleet_type_id - 艦隊種別ID
  * @param seek - 艦隊索敵値(省略可)
  * @param save_seek - 艦隊索敵値(退避, 省略可)
+ * @param speed_override - 艦隊速度の上書き値(省略時は構成から算出)
  * @returns AdoptFleetオブジェクト
  */
 export function derive_adopt_fleet(
     fleets: FleetComponent[],
     fleet_type_id: FleetType,
     seek?: FleetSeek,
-    save_seek?: FleetSeek
+    save_seek?: FleetSeek,
+    speed_override?: Speed
 ): AdoptFleet {
     const is_combined = fleet_type_id > 0;
     const all_ships = fleets[1]
@@ -111,7 +115,8 @@ export function derive_adopt_fleet(
         composition: derive_composition(all_ships),
         fleet_type: fleet_type_id,
         ships_length: all_ships.length,
-        speed,
+        speed: speed_override ?? speed,
+        save_speed: speed,
         seek: fleet_seek,
         save_seek: fleet_save_seek,
         drum_carrier_count,
@@ -328,16 +333,60 @@ export function switch_seek(fleet: AdoptFleet): AdoptFleet {
             fleet.fleets,
             fleet.fleet_type,
             fleet.save_seek,
-            fleet.save_seek
+            fleet.save_seek,
+            fleet.speed,
         );
     } else {
         return derive_adopt_fleet(
             fleet.fleets,
             fleet.fleet_type,
             MAX_SEEK,
-            fleet.seek
+            fleet.seek,
+            fleet.speed,
         );
     }
+}
+
+/**
+ * 艦隊速度が上書きされているか判定して返す
+ * @param fleet AdoptFleet
+ * @returns boolean
+ */
+export function is_speed_overridden(
+    fleet: AdoptFleet,
+): boolean {
+    return fleet.speed !== fleet.save_speed;
+}
+
+/**
+ * 艦隊速度を指定値で上書きしたAdoptFleetを返す
+ * 本来の速度と同値を指定した場合は上書き解除と同義
+ * @param fleet AdoptFleet
+ * @param speed 上書きする速度
+ * @returns AdoptFleet
+ */
+export function override_speed(
+    fleet: AdoptFleet,
+    speed: Speed,
+): AdoptFleet {
+    return derive_adopt_fleet(
+        fleet.fleets,
+        fleet.fleet_type,
+        fleet.seek,
+        fleet.save_seek,
+        speed,
+    );
+}
+
+/**
+ * 艦隊速度の上書きを解除し、本来の速度に戻したAdoptFleetを返す
+ * @param fleet AdoptFleet
+ * @returns AdoptFleet
+ */
+export function clear_speed_override(
+    fleet: AdoptFleet,
+): AdoptFleet {
+    return override_speed(fleet, fleet.save_speed);
 }
 
 /**

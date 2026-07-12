@@ -37,7 +37,11 @@
 					<p>遊撃部隊</p>
 				</template>
 				<p>
-					<span>{{ SPEED_LABELS[adoptFleet.speed] }}</span>
+					<span
+						:style="isSpeedOverridden ? 'color: #f6a306' : ''"
+					>
+						{{ SPEED_LABELS[adoptFleet.speed] }}
+					</span>
 					<span> | </span>
 					<span>搭載艦数[ </span>
 
@@ -136,6 +140,21 @@
 		</div>
 		<div class="result-container">
 			<template v-if="simResult.length > 0">
+				<div class="override-speed" @mouseover="showSpeedOptions" @mouseleave="hideSpeedOptions">
+					<SvgIcon name="speed-meter" :color="isSpeedOverridden ? '#f6a306' : '#fff'"
+						class="icon-on-map override-speed-icon"></SvgIcon>
+					<div v-if="isSpeedOptionsVisible" class="speed-option-box">
+						<span v-for="option in SPEED_OPTIONS" :key="option.id" class="speed-option"
+							@pointerdown="overrideSpeed(option.id)">
+							<SvgIcon :name="option.icon" color="#fff" class="speed-option-icon"></SvgIcon>
+							<span class="speed-tip">{{ option.label }}</span>
+						</span>
+						<span class="speed-option" @pointerdown="clearSpeedOverride">
+							<SvgIcon name="close" color="#fff" class="speed-option-icon"></SvgIcon>
+							<span class="speed-tip">上書きを無効</span>
+						</span>
+					</div>
+				</div>
 				<SvgIcon @pointerdown="switchSeek" name="radar-8" :color="adoptFleet?.seek.c1 === 999 ? '#f6a306' : '#fff'"
 					class="ignore-seek icon-on-map"></SvgIcon>
 				<SvgIcon @pointerdown="show_refference" name="layers" color="#fff" class="reference icon-on-map"></SvgIcon>
@@ -192,7 +211,8 @@ import {
 	is_exists_and_Number,
 	sanitize_text
 } from './logic/util';
-import { type AdoptFleet, count_not_equip_arctic_carriers, derive_adopt_fleet, get_escort_fleet_ships_length, calc_escort_fleet_ship_names, get_main_fleet_ships_length, calc_main_fleet_ship_names, count_Reigo_ships, count_Daigo_ships } from './models/fleet/AdoptFleet';
+import { type AdoptFleet, count_not_equip_arctic_carriers, derive_adopt_fleet, get_escort_fleet_ships_length, calc_escort_fleet_ship_names, get_main_fleet_ships_length, calc_main_fleet_ship_names, count_Reigo_ships, count_Daigo_ships, is_speed_overridden } from './models/fleet/AdoptFleet';
+import type { Sp as FleetSpeed } from './logic/speed/predicate';
 import type { GenerateOptions, DeckBuilder as GkcoiDeckBuilder, LoS, Speed } from 'gkcoi/dist/type';
 import do_draw_map from './logic/efffects/draw';
 import { ROUTING_CRAFT_NAMES } from './models/ship/EquippedShip';
@@ -328,6 +348,39 @@ const SPEED_LABELS = {
 	2: '高速艦隊',
 	3: '高速+艦隊',
 	4: '最速艦隊',
+};
+
+/** 速度上書きドロップダウンの表示順定義 */
+const SPEED_OPTIONS: { id: FleetSpeed, label: string, icon: string }[] = [
+	{ id: 4, label: '最速', icon: 'chevron-quadruple-up' },
+	{ id: 3, label: '高速+', icon: 'chevron-triple-up' },
+	{ id: 2, label: '高速', icon: 'chevron-double-up' },
+	{ id: 1, label: '低速', icon: 'chevron-up' },
+];
+
+const isSpeedOptionsVisible = ref(false);
+
+const showSpeedOptions = () => {
+	isSpeedOptionsVisible.value = true;
+};
+const hideSpeedOptions = () => {
+	isSpeedOptionsVisible.value = false;
+};
+
+const isSpeedOverridden = computed(() =>
+	adoptFleet.value
+		? is_speed_overridden(adoptFleet.value as AdoptFleet)
+		: false
+);
+
+const overrideSpeed = (speed: FleetSpeed) => {
+	store.OVERRIDE_SPEED(speed);
+	isSpeedOptionsVisible.value = false;
+};
+
+const clearSpeedOverride = () => {
+	store.CLEAR_SPEED_OVERRIDE();
+	isSpeedOptionsVisible.value = false;
 };
 
 const FLEET_TYPE_LABELS = {
@@ -644,6 +697,10 @@ const switchSeek = () => {
 const screenShot = async () => {
 	if (!adoptFleet.value || !cytoscape_core) return;
 
+	if (is_speed_overridden(adoptFleet.value)) {
+		store.CLEAR_SPEED_OVERRIDE();
+	}
+
 	const gkcoi = await import('gkcoi'); // 動的import
 	const time = getZeroFilledTime(new Date());
 	const file_name = `${drewArea.value}_${time}`;
@@ -825,6 +882,61 @@ onMounted(async () => {
 }
 .ignore-seek {
 	right: 80px;
+}
+.override-speed {
+	position: absolute;
+	top: 4px;
+	right: 114px;
+	z-index: 9999;
+}
+/* icon-on-mapの絶対配置を打ち消してラッパー内に収める(セレクタ2連で優先) */
+.override-speed .override-speed-icon {
+	position: static;
+	display: block;
+}
+.speed-option-box {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	margin-top: 4px;
+}
+.speed-option {
+	position: relative;
+	display: block;
+	height: 22px;
+	width: 22px;
+	padding: 3px;
+	border-radius: 100%;
+	background-color: #cccccc;
+	cursor: pointer;
+	user-select: none;
+}
+.speed-option:hover {
+	background-color: #b3b3b3;
+}
+.speed-option-icon {
+	display: block;
+	height: 22px;
+	width: 22px;
+}
+.speed-tip {
+	position: absolute;
+	left: 100%;
+	top: 50%;
+	transform: translateY(-50%) translateX(6px);
+	background-color: rgba(0, 0, 0, 0.75);
+	color: white;
+	padding: 2px 8px 5px 8px;
+	border-radius: 4px;
+	white-space: nowrap;
+	font-size: 12px;
+	opacity: 0;
+	transition: opacity 0.2s;
+	pointer-events: none;
+	z-index: 9999;
+}
+.speed-option:hover .speed-tip {
+	opacity: 1;
 }
 .reference {
 	right: 46px;

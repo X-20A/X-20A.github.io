@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia';
 
 import CustomError from "../errors/CustomError";
-import { switch_seek, type AdoptFleet } from '../models/fleet/AdoptFleet';
+import { switch_seek, override_speed, clear_speed_override, type AdoptFleet } from '../models/fleet/AdoptFleet';
+import type { Sp as Speed } from '../logic/speed/predicate';
 import Const from '../constants/const';
 import type {
     SelectedType,
@@ -112,6 +113,14 @@ export const useStore = defineStore('compass', {
         SWITCH_SEEK(): void {
             if (!this.adoptFleet) return;
             this.UPDATE_ADOPT_FLEET(switch_seek(this.adoptFleet as AdoptFleet));
+        },
+        OVERRIDE_SPEED(speed: Speed): void {
+            if (!this.adoptFleet) return;
+            this.UPDATE_ADOPT_FLEET(override_speed(this.adoptFleet as AdoptFleet, speed));
+        },
+        CLEAR_SPEED_OVERRIDE(): void {
+            if (!this.adoptFleet) return;
+            this.UPDATE_ADOPT_FLEET(clear_speed_override(this.adoptFleet as AdoptFleet));
         },
         LOAD_DATA(commands: LoadDataCommands): void {
             const data = localStorage.getItem(LOCAL_STORAGE_KEY);
