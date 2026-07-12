@@ -743,7 +743,7 @@ const BRANCH_TEXTS: BranchType = {
         "W": "条件不明付き、全てW2",
         "W2": "正空3以上はX2$e駆逐+海防2以下はX2$eそれ以外はX1",
         "X1": "要求索敵値不明につき、全てX",
-        "A": ACTIVE_PROGRESS,
+        "A1": ACTIVE_PROGRESS,
     },
     // "62-3": {},
     // "62-4": {},
