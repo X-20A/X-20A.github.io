@@ -121,13 +121,13 @@ export const calc_62_1: CalcFnWithCondition = (
             if (DD >= 6) {
                 return 'O2';
             }
-            if (CLE >= 1 && DD === 5) {
+            if (CLE === 1 && DD === 5) {
                 return 'O2';
             }
-            if (CLE >= 1 && DD === 4 && ships_length === 7 && is_fleet_speed_fast_or_more(speed)) {
+            if (CLE === 1 && DD === 4 && ships_length === 7 && is_fleet_speed_fast_or_more(speed)) {
                 return 'O2';
             }
-            if (CLE >= 1 && DD === 4 && ships_length === 7 && AV + LHA >= 1) {
+            if (CLE === 1 && DD === 4 && ships_length === 7 && AV + LHA >= 1) {
                 return 'O2';
             }
             return 'O1';
