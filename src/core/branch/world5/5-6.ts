@@ -81,26 +81,17 @@ export const calc_5_6: CalcFnWithCondition = (
             if (BBV === 2 && Ds === 4) {
                 return 'C2';
             }
-            if (Ss >= 1) {
-                return  'C1';
+            if (BBs >= 2) {
+                return 'C1';
             }
             if (CVH >= 1) {
                 return 'C1';
             }
-            if (ships_length <= 5) {
-                return 'C';
-            }
-            if (BBs + CVL >= 2) {
-                return 'C1';
-            }
-            if (BBs + CVL === 0) {
-                return 'C';
-            }
             if (is_fleet_speed_fast_or_more(speed)) {
                 return 'C';
             }
-            if (Ds === 3) {
-                return 'C';
+            if (CAs + CLE + CLT + AV + LHA >= 2 && Ds >= 3) {
+                return 'C'
             }
             return 'C1';
         case 'C1':
