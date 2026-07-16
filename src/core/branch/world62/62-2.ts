@@ -1,5 +1,5 @@
 import { DisallowToSortie } from "../../../errors/CustomError";
-import { is_fleet_speed_slow } from "../../../logic/speed/predicate";
+import { is_fleet_speed_fast_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
 import { count_ships_by_base_names } from "../../../models/fleet/AdoptFleet";
 import { is_fleet_carrier, is_fleet_combined, is_fleet_surface } from "../../../models/fleet/predicate";
 import { CalcFnWithCondition } from "..";
@@ -28,6 +28,9 @@ export const calc_62_2: CalcFnWithCondition = (
         case null:
             if (!is_fleet_combined(fleet_type)) {
                 if (phase <= 1) {
+                    if (ships_length !== 6) {
+                        throw new DisallowToSortie('出撃地点2解放前は通常艦隊(6隻)のみ出撃できます');
+                    }
                     return '1';
                 }
                 if (ships_length === 6 && Ds === 6) {
@@ -64,16 +67,13 @@ export const calc_62_2: CalcFnWithCondition = (
             }
             return '3';
         case '3':
-            if (CVs <= 2 && CLE >= 2 && Ds >= 3) {
+            if (CVs <= 2 && CLE + CLT >= 2 && Ds >= 3) {
                 return 'Q';
             }
             return 'E';
         case 'A3':
             if (route.includes('A2')) {
-                if (ships_length <= 4) {
-                    return 'C';
-                }
-                if (BBs + CVs >= 1) {
+                if (BBs + CVs + count_ships_by_base_names(['あきつ丸'], base_ship_names) >= 1 && Ds >= 3) {
                     return 'B2';
                 }
                 return 'C';
@@ -86,7 +86,7 @@ export const calc_62_2: CalcFnWithCondition = (
             if (Ds >= 4) {
                 return 'F';
             }
-            if (BBs + CVH === 0) {
+            if (Ds === 3 && BBs + CVH === 0) {
                 return 'F';
             }
             return 'B2';
@@ -95,9 +95,15 @@ export const calc_62_2: CalcFnWithCondition = (
                 if (Ds >= 4) {
                     return 'D';
                 }
+                if (Ds === 3 && ships_length <= 5 && is_fleet_speed_fast_or_more(speed)) {
+                    return 'D';
+                }
                 return 'C';
             }
             if (route.includes('A2')) {
+                if (ships_length <= 4) {
+                    return 'C';
+                }
                 if (CL === 0) {
                     return 'E';
                 }
@@ -111,7 +117,7 @@ export const calc_62_2: CalcFnWithCondition = (
             }
             return 'E';
         case 'C':
-            if (seek.c4 >= 66) {
+            if (seek.c4 >= 68) {
                 return 'C2';
             }
             return 'C1';
@@ -132,23 +138,35 @@ export const calc_62_2: CalcFnWithCondition = (
                     return 'G2';
                 }
                 if (route.includes('2')) {
-                    return 'K';
+                    if (BBs + CVs === 0 && AV <= 1 && CL <= 1 && Ds >= 5) {
+                        return 'K';
+                    }
+                    return 'G2';
                 } // 通常艦隊は1か2から来る
             }
-            if (BBs >= 4) {
+            if (BBs + CVH >= 5) {
                 return 'G2';
             }
             return 'K';
         case 'I':
-            if (CAs >= 1) {
-                return 'B1';
+            if (CAs === 0 && Ds >= 4) {
+                return 'J';
             }
-            return 'J';
+            return 'B1';
         case 'J':
             if (Ds === 7) {
                 return 'K';
             }
             if (Ds === 6 && ships_length === 6) {
+                return 'K';
+            }
+            if (Ds === 5 && ships_length === 5) {
+                return 'K';
+            }
+            if (Ds === 4 && ships_length === 4) {
+                return 'K';
+            }
+            if (includes_ship_names(['明石改', '朝日改', '秋津洲改'], ship_names)) {
                 return 'K';
             }
             return 'G1';
@@ -168,28 +186,37 @@ export const calc_62_2: CalcFnWithCondition = (
             if (is_fleet_speed_slow(speed)) {
                 return 'D';
             }
-            if (is_fleet_surface(fleet_type) && CL + Ds <= 5) {
+            if (is_fleet_carrier(fleet_type)) {
+                return 'G';
+            }
+            if (is_fleet_surface(fleet_type)) {
+                if (CL >= 2 && Ds >= 4) {
+                    return 'G';
+                }
                 return 'D';
             }
-            return 'G';
+            break;
         case 'T':
             if (route.includes('3')) {
-                return 'V';
+                if (seek.c2 >= 70) {
+                    return 'V';
+                }
+                return 'U';
             }
             if (route.includes('4')) {
                 return 'W';
             }
             return 'W';
         case 'W':
+            if (CVH <= 1 && CL >= 2 && DD >= 4 && is_fleet_speed_fast_or_more(speed)) {
+                return 'X1';
+            }
             return 'W2';
         case 'W2':
-            if (CV >= 3) {
-                return 'X2';
+            if (BBs <= 2 && CVs <= 4 && CVH <= 2 && Ds >= 3) {
+                return 'X1';
             }
-            if (Ds <= 2) {
-                return 'X2';
-            }
-            return 'X1';
+            return 'X2';
         case 'X1':
             return 'X';
         case 'A1':
