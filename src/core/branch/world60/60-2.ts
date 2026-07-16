@@ -155,7 +155,7 @@ export const calc_60_2: CalcFnWithCondition = (
             }
             if (
                 count_ships_by_base_names(['那智', '足柄'], base_ship_names)
-                + CLE === 5
+                + CLE + CLT === 5
             ) {
                 return 'V';
             }
