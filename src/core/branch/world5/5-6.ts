@@ -11,7 +11,7 @@ export const calc_5_6: CalcFnWithCondition = (
         fleet, ship_names, base_ship_names, fleet_type, ships_length, speed, seek, route,
         drum_carrier_count, craft_carrier_count, radar_carrier_count,
         arBulge_carrier_count, SBB_count,
-        BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,
+        BB, BBV, CV, CVL, CA, CAV, CL, CLT, CLs, CT, DD, DE,
         AV, AO, LHA, AS, BBs, CVH, CVs, BBCVs, CAs, CLE, Ds, Ss,
     } = destructuring_assignment_helper(sim_fleet);
 
@@ -90,7 +90,7 @@ export const calc_5_6: CalcFnWithCondition = (
             if (is_fleet_speed_fast_or_more(speed)) {
                 return 'C';
             }
-            if (CAs + CLE + CLT + AV + LHA >= 2 && Ds >= 3) {
+            if (CAs + CLs + AV + LHA >= 2 && Ds >= 3) {
                 return 'C'
             }
             return 'C1';

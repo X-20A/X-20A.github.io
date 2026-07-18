@@ -12,7 +12,7 @@ export const calc_62_1: CalcFnWithCondition = (
         fleet, ship_names, base_ship_names, fleet_type, ships_length, speed, seek, route,
         drum_carrier_count, craft_carrier_count, radar_carrier_count,
         arBulge_carrier_count, SBB_count,
-        BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,
+        BB, BBV, CV, CVL, CA, CAV, CL, CLT, CLs, CT, DD, DE,
         AV, AO, LHA, AS, BBs, CVH, CVs, BBCVs, CAs, CLE, Ds, Ss,
     } = destructuring_assignment_helper(sim_fleet);
 
@@ -89,7 +89,7 @@ export const calc_62_1: CalcFnWithCondition = (
             if (is_fleet_speed_slow(speed)) {
                 return 'J';
             }
-            if (difficulty === 4 && CLE + CLT >= 1 && DD >= 3) {
+            if (difficulty === 4 && CLs >= 1 && DD >= 3) {
                 return 'H';
             }
             if (difficulty <= 3 && DD >= 3) {
@@ -122,7 +122,7 @@ export const calc_62_1: CalcFnWithCondition = (
             if (Ds === 6) {
                 return 'O2';
             }
-            if (CLE + CLT === 1 && Ds === 5) {
+            if (CLs === 1 && Ds === 5) {
                 return 'O2';
             }
             if (CL === 1 && DD === 4 && AV >= 1 && AV + CAs === 2) {
@@ -152,7 +152,7 @@ export const calc_62_1: CalcFnWithCondition = (
             if (BBs + CVs + CAs >= 1) {
                 return 'Q1';
             }
-            if (CLE + CLT >= 2) {
+            if (CLs >= 2) {
                 return 'Q1';
             }
             return 'Q2';

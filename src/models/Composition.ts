@@ -79,6 +79,8 @@ type CompositionUtil = {
     CAs: number,
     /** 軽巡 + 練巡 */
     CLE: number,
+    /** 軽巡級 */
+    CLs: number,
     /** 駆逐艦 + 海防艦 */
     Ds: number,
     /** 潜水艦 + 潜水空母 */
@@ -167,6 +169,7 @@ const calc_composition_util = (
         CAV,
         CL,
         CT,
+        CLT,
         DD,
         DE,
         SS,
@@ -179,6 +182,7 @@ const calc_composition_util = (
     const BBCVs = BBs + CVs;
     const CAs = CA + CAV;
     const CLE = CL + CT;
+    const CLs = CLE + CLT;
     const Ds = DD + DE;
     const Ss = SS + SSV;
 
@@ -189,6 +193,7 @@ const calc_composition_util = (
         BBCVs,
         CAs,
         CLE,
+        CLs,
         Ds,
         Ss,
     };
