@@ -95,7 +95,7 @@ export default defineConfig({
                     const normalized = id.split(path.sep).join('/');
                     if (normalized.includes('/node_modules/')) {
                         // gkcoi等の動的import専用パッケージは既定の分割に任せる
-                        if (/\/node_modules\/(vue|@vue|pinia|big\.js|lz-string|valibot|axios)\//.test(normalized)) {
+                        if (/\/node_modules\/(vue|@vue|pinia|big\.js|lz-string|valibot)\//.test(normalized)) {
                             return 'vendor';
                         }
                         return undefined;
