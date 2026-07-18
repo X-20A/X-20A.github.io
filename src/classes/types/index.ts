@@ -5,6 +5,7 @@ export type Mode = // @expansion
     | 59
     | 60
     | 61
+    | 62
     | 'vanguard'
 
 export interface Ttemplate {
@@ -29,6 +30,7 @@ export type AreaId = // @expansion
     | '59-1' | '59-2' | '59-3' | '59-4' | '59-5'
     | '60-1' | '60-2' | '60-3' | '60-4' | '60-5' | '60-6'
     | '61-1' | '61-2' | '61-3' | '61-4' | '61-5'
+    | '62-1' | '62-2' | '62-3' | '62-4' | '62-5'
 
 export type NodeData = [
     number,

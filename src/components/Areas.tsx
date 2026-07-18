@@ -40,6 +40,9 @@ const Areas: React.FC = () => {
     case 61:
       items = TEMPLATES.filter(item => item.world === mode && item.area === area);
       break;
+    case 62:
+      items = TEMPLATES.filter(item => item.world === mode && item.area === area);
+      break;
   } // @expansion
 
   const openUrl = (template: Ttemplate) => {
@@ -53,7 +56,11 @@ const Areas: React.FC = () => {
     <>
       <div
         className="select-menu"
-        style={{top: position.top, left: position.left}}
+        style={{
+          top: position.top,
+          left: position.left,
+          maxHeight: `calc(100vh - ${position.top}px - 8px)`, // 画面下端まで
+        }}
         onMouseEnter={() => setArea(area)}
         onMouseLeave={() => setArea(0)}
       >

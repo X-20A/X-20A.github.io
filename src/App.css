@@ -3,7 +3,6 @@
 body {
 	margin: 0;
 	background-color: #f5f7f8;
-	overflow: hidden;
 }
 p {
 	margin: 3px;
@@ -11,9 +10,6 @@ p {
 a {
 	text-decoration: none;
 	color: #0000EE;
-}
-::-webkit-scrollbar {
-	display: none;
 }
 .worlds:hover {
 	background-color: #dcefff;
@@ -28,7 +24,6 @@ a {
 }
 .outer {
 	background-color: #f5f7f8;
-	height: 100vh;
 }
 .main {
 	width: 900px;

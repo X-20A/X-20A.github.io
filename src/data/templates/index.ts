@@ -9,6 +9,7 @@ import { WORLD_7 } from "./world7";
 import { WORLD_59 } from "./world59";
 import { WORLD_60 } from "./world60";
 import { WORLD_61 } from "./world61";
+import { WORLD_62 } from "./world62";
 
 export const TEMPLATES: Ttemplate[] = [
     WORLD_1,
@@ -21,6 +22,7 @@ export const TEMPLATES: Ttemplate[] = [
     WORLD_59,
     WORLD_60,
     WORLD_61,
+    WORLD_62,
 ].flat(); // @expansion
 
 /*
