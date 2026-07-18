@@ -109,7 +109,8 @@ function closeSidebar() {
   background-color: #333333;
   height: 100%;
   position: fixed;
-  z-index: 99999999;
+  /* マスクより手前に出すため同レイヤー内で+1 */
+  z-index: calc(var(--z-drawer) + 1);
   display: flex;
   width: 200px;
 }
@@ -137,7 +138,7 @@ function closeSidebar() {
   opacity: 0.4;
   display: none;
   position: fixed;
-  z-index: 99999998;
+  z-index: var(--z-drawer);
 }
 .header-side-close {
   position: absolute;
@@ -152,7 +153,7 @@ function closeSidebar() {
   cursor: pointer;
 }
 .header-container {
-  z-index: 9999;
+  z-index: var(--z-chrome);
   position: fixed;
   width: 100%;
   top: 0;

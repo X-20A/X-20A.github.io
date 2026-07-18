@@ -219,7 +219,8 @@ const EVENT_AREAS: Area[] = [ // @expansion
   justify-content: center;
 	max-width: 543px;
 	width: 100%;
-	z-index: 999999999;
+	/* .modal-overlayのスタッキングコンテキスト内ローカル */
+	z-index: 1;
 	position: fixed;
 	top: 110px;
 }

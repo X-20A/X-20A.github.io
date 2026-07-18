@@ -23,7 +23,7 @@ import SvgIcon from './SvgIcon.vue';
 
 <style scoped>
 .footer {
-	z-index: 9999;
+	z-index: var(--z-chrome);
 	padding: 2px;
 	font-size: 13px;
 	color: white;

@@ -482,7 +482,7 @@ const stop_drag = () => {
 }
 .draggable {
   position: absolute;
-	z-index: 9997;
+	z-index: var(--z-popover);
   cursor: move;
   border-radius: 3px;
 	padding: 5px;

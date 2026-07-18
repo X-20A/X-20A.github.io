@@ -194,7 +194,8 @@ const on_enter_transition = (el: Element): void => {
 	background-color: white;
 	border-bottom: 1px solid #e0e0e0;
 	color: #1976d2;
-	z-index: 20;
+	/* モーダル内スクロールコンテンツに対するローカル */
+	z-index: 1;
 }
 
 .tabs {

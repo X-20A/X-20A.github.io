@@ -1,4 +1,18 @@
 @charset "UTF-8";
+/* ==========================================================
+   z-index レイヤー規約
+   ページ全体で重なりを競う要素は必ず以下の変数を使うこと。
+   コンポーネント内部だけで
+   完結する重なりは素の -1〜9 を直書きしてよい。
+   同一レイヤー内の前後調整は calc(var(--z-*) + 1〜9) で行う。
+   ========================================================== */
+:root {
+	--z-popover: 10; /* ドロップダウン・ツールチップ・ポップアップ */
+    --z-map-overlay: 20; /* マップ上のフローティングアイコン・ボタン */
+	--z-chrome: 30; /* 固定ヘッダー・フッター */
+	--z-drawer: 40; /* サイドバーとそのマスク */
+	--z-modal: 50; /* モーダルオーバーレイ(最前面) */
+}
 body {
     margin:0;
 	overflow-x: hidden;
@@ -66,7 +80,7 @@ li {
 	opacity: 0;
 	transition: opacity 0.2s, transform 0.02s;
 	pointer-events: none;
-	z-index: 9999;
+	z-index: var(--z-popover);
 }
 .tooltip-container:hover .tooltip-text {
 	opacity: 1;
@@ -75,90 +89,6 @@ li {
 #cy-ct-no {
     width: 200px;
     text-align: left;
-}
-#conf-container {
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-    z-index: 999999999;
-    position: fixed;
-    display: none;
-    top: 0;
-}
-#conf-box {
-    background-color: #202129;
-    position: fixed;
-    width: 400px;
-    height: 500px;
-    display: none;
-    opacity: 1;
-    color: white;
-}
-#mask {
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: black;
-    opacity: 0.4;
-    display: none;
-    position: fixed;
-    z-index: 999999998;
-}
-#conf-icon-box {
-    cursor: pointer;
-    opacity: 0.2;
-    top: 40px;
-    right: 5px;
-    position: fixed;
-    display: inline-block;
-    width: 28px;
-    height: 28px;
-    background-color: black;
-    border-radius: 14px;
-}
-#conf-icon {
-    left: 2px;
-    top: 2px;
-    fill: white;
-    width: 24px;
-    position: absolute;
-}
-#fold {
-    position: absolute;
-    top: 2px;
-    right: -28px;
-    z-index:1;
-    cursor: pointer;
-}
-#fold:hover {
-    background-color: #d3d3d3;
-}
-#seek-info {
-    position: relative;
-}
-#asterisk {
-    position: absolute;
-    color: red;
-    top: -4px;
-    left: -6px;
-    cursor: default;
-    height: 12px;
-    user-select: none;
-}
-#seek-message {
-    padding: 0px 4px;
-    border: 1px solid black;
-    font-size: 12px;
-    position: absolute;
-    background-color: white;
-    top: -10px;
-    left: 10px;
-    color: red;
-    display: none;
-}
-#infomation {
-    right: 37px;
 }
 #screen-shot {
     right: 4px;
@@ -173,7 +103,7 @@ li {
     border: 1px solid #000;
     border-radius: 4px;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
-    z-index: 1000;
+    z-index: var(--z-popover);
 }
 .add-font {
 	font-weight: 600;

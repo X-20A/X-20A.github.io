@@ -793,7 +793,7 @@ onMounted(async () => {
 }
 .area-select-button {
 	position: absolute;
-	z-index: 9998;
+	z-index: var(--z-map-overlay);
 	top: 55px;
 	left: 50%;
 	transform: translateX(-50%);
@@ -824,7 +824,7 @@ onMounted(async () => {
 .fleet-option-box {
 	width: 121px;
 	font-size: 14px;
-	z-index: 9997;
+	z-index: var(--z-popover);
 	background-color: white;
 	top: 24px;
 	position: absolute;
@@ -847,7 +847,7 @@ onMounted(async () => {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	z-index: 9999;
+	z-index: var(--z-modal);
 }
 .fleet-type {
 	cursor: pointer;
@@ -885,7 +885,8 @@ onMounted(async () => {
 	position: absolute;
 	top: 4px;
 	right: 114px;
-	z-index: 9999;
+	/* 展開メニューとtipが右隣のアイコンに重なるので同レイヤー内で+1 */
+	z-index: calc(var(--z-map-overlay) + 1);
 }
 /* icon-on-mapの絶対配置を打ち消してラッパー内に収める(セレクタ2連で優先) */
 .override-speed .override-speed-icon {
@@ -931,7 +932,8 @@ onMounted(async () => {
 	opacity: 0;
 	transition: opacity 0.2s;
 	pointer-events: none;
-	z-index: 9999;
+	/* .override-speedのスタッキングコンテキスト内ローカル */
+	z-index: 1;
 }
 .speed-option:hover .speed-tip {
 	opacity: 1;
@@ -951,7 +953,7 @@ onMounted(async () => {
 	width: 22px;
 	top: 4px;
 	position: absolute;
-	z-index: 9999;
+	z-index: var(--z-map-overlay);
 	background-color: #cccccc;
 }
 .cy {
@@ -964,12 +966,13 @@ onMounted(async () => {
 	height: auto;
 	aspect-ratio: 3 / 2;
 	max-height: 640px;
-	z-index: 999;
+	/* 内部canvasを閉じ込めるスタッキングコンテキスト生成用 */
+	z-index: 0;
 	background: blanchedalmond !important;
 }
 .cy-context-menus-cxt-menu {
 	display: none;
-	z-index: 1000;
+	z-index: var(--z-popover);
 	position: absolute;
 	padding: 0;
 	margin: 0;
