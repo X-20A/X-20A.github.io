@@ -40,5 +40,33 @@ export default defineConfig({
         terserOptions: {
             mangle: true, // 変数名などの圧縮
         },
+        rollupOptions: {
+            output: {
+                // 更新頻度の異なるモジュールをチャンク分離し、再訪時に変更分だけ再DLさせる
+                manualChunks(id: string) {
+                    const normalized = id.split(path.sep).join('/');
+                    if (normalized.includes('/node_modules/')) {
+                        if (/\/node_modules\/cytoscape\//.test(normalized)) {
+                            return 'cytoscape';
+                        }
+                        // gkcoi等の動的import専用パッケージは既定の分割に任せる
+                        if (/\/node_modules\/(vue|@vue|pinia|big\.js|lz-string|valibot|axios)\//.test(normalized)) {
+                            return 'vendor';
+                        }
+                        return undefined;
+                    }
+                    // branch.ts は動的import、quest配下は非同期のQuest.vue専用なので
+                    // 静的ロードされるdataチャンクには含めない
+                    if (
+                        normalized.includes('/src/data/') &&
+                        !normalized.includes('/src/data/branch.ts') &&
+                        !normalized.includes('/src/data/quest/')
+                    ) {
+                        return 'data';
+                    }
+                    return undefined;
+                },
+            },
+        },
     },
 })
