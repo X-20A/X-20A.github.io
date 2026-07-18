@@ -1,3 +1,5 @@
+import { MasterData } from "./manual/data.test";
+
 const PROXY_PORT = 'http://localhost:3000';
 
 /**
@@ -18,8 +20,8 @@ async function fetch_json<T>(path: string): Promise<T> {
 /**
  * ACSimのマスターデータを取得
  */
-export async function get_ACSim_master_data(): Promise<unknown> {
-    return await fetch_json<unknown>('/ac-master');
+export async function get_ACSim_master_data(): Promise<MasterData> {
+    return await fetch_json<MasterData>('/ac-master');
 }
 
 /**

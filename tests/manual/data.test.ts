@@ -7,22 +7,27 @@ import { ShipId } from '../../src/types/shipId';
 import { EquipId } from '../../src/types/equipId';
 import { get_ACSim_master_data } from '../gateway';
 
+type MasterShip = {
+    id: number,
+    name: string,
+    type: ShipType,
+    min_scout: number,
+    scout: number,
+    orig: number,
+}
+type MasterItem = {
+    id: number,
+    name: string,
+    type: EquipType,
+    scout: number,
+}
+export type MasterData = {
+    ships: MasterShip[],
+    items: MasterItem[],
+}
+
 describe('Dataテスト', () => {
     it('data-test: 制空シミュのデータと照合して艦や装備に抜けや不一致が無いか確認', async () => {
-        type MasterShip = {
-            id: number,
-            name: string,
-            type: ShipType,
-            min_scout: number,
-            scout: number,
-            orig: number,
-        }
-        type MasterItem = {
-            id: number,
-            name: string,
-            type: EquipType,
-            scout: number,
-        }
         const master = await get_ACSim_master_data();
         const ac_ships: MasterShip[] = master.ships;
         const ac_items: MasterItem[] = master.items;
