@@ -95,11 +95,6 @@ export type NodeDatas = Record<AreaId, NodeData>
 export type EdgeData = [string, string];
 export type EdgeDatas = Record<AreaId, EdgeData[]>
 
-export type CyStyle = {
-    selector: string;
-    style: Record<string, string | number>;
-}
-
 export type OptionsType = Partial<Record<AreaId, Record<string, string>>>;
 
 export type SaveData = {

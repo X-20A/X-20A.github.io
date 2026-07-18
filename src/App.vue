@@ -214,11 +214,11 @@ import {
 import { type AdoptFleet, count_not_equip_arctic_carriers, derive_adopt_fleet, get_escort_fleet_ships_length, calc_escort_fleet_ship_names, get_main_fleet_ships_length, calc_main_fleet_ship_names, count_Reigo_ships, count_Daigo_ships, is_speed_overridden } from './models/fleet/AdoptFleet';
 import type { Sp as FleetSpeed } from './logic/speed/predicate';
 import type { GenerateOptions, DeckBuilder as GkcoiDeckBuilder, LoS, Speed } from 'gkcoi/dist/type';
-import do_draw_map from './logic/efffects/draw';
+import do_draw_map, { type MapCore } from './logic/efffects/draw';
 import { ROUTING_CRAFT_NAMES } from './models/ship/EquippedShip';
 import {
 	calc_Gkcoi_Blob,
-	calc_Cytoscape_Blob,
+	calc_Map_Blob,
 } from './logic/render';
 import {
 	convert_branch_data_to_HTML,
@@ -238,7 +238,7 @@ import Footer from './components/Footer.vue';
 import { derive_sim_executer, start_sim } from './core/SimExecutor';
 import { clear_command_evacuation } from './core/CommandEvacuation';
 import { parseAreaId, parse_DeckBuilder_String, parseSelectedType } from './models/shemas';
-import { register_Cytoscape_events } from './logic/efffects/cytoscapeEvents';
+import { register_map_events } from './logic/efffects/mapEvents';
 import { disassembly_area_id } from './logic/area';
 import lzstring from "lz-string";
 import { Ft as FleetType } from './models/fleet/predicate';
@@ -332,12 +332,8 @@ function is_target_world(
 		: false;
 }
 
-/**
- * cytoscapeインスタンス    
- * storeに登録しようとするとMap maximum size exceeded    
- * たぶん大きすぎる為
- */
-let cytoscape_core = null as cytoscape.Core | null;
+/** 描画済みマップのハンドル */
+let map_core = null as MapCore | null;
 
 const branchData = computed(() => store.branchData);
 
@@ -556,7 +552,7 @@ watch([simResult], async () => {
 	draw_map();
 }, { deep: true });
 
-window.addEventListener('resize', draw_map);
+// リサイズはSVGのviewBoxが自動追従するので再描画不要
 
 async function draw_map() {
 	if (
@@ -564,7 +560,7 @@ async function draw_map() {
 		!selectedArea.value
 	) return;
 
-	cytoscape_core = do_draw_map(
+	map_core = do_draw_map(
 		selectedArea.value,
 		simResult.value,
 		commandEvacuations.value,
@@ -579,8 +575,8 @@ async function draw_map() {
 	hide_popup();
 	store.UPDATE_DREW_AREA(selectedArea.value);
 
-	register_Cytoscape_events(
-		cytoscape_core,
+	register_map_events(
+		map_core,
 		generarte_branch_html,
 		adjust_popup_position,
 		hide_popup,
@@ -644,13 +640,14 @@ const generarte_branch_html = (node_name: string): string | null => {
 };
 
 const adjust_popup_position = (
-	cy: cytoscape.Core,
-	element: cytoscape.EventObject,
+	map: MapCore,
+	node_name: string,
 ) => {
-	const position = element.target.renderedPosition();
+	const position = map.rendered_position(node_name);
+	if (!position) return;
 
 	// cy領域の左上の座標を取得
-	const cyContainer = cy.container()?.getBoundingClientRect()!;
+	const cyContainer = map.container.getBoundingClientRect();
 
 	// 表示位置調整
 	let top: number;
@@ -695,7 +692,7 @@ const switchSeek = () => {
 };
 
 const screenShot = async () => {
-	if (!adoptFleet.value || !cytoscape_core) return;
+	if (!adoptFleet.value || !map_core) return;
 
 	if (is_speed_overridden(adoptFleet.value)) {
 		store.CLEAR_SPEED_OVERRIDE();
@@ -729,7 +726,7 @@ const screenShot = async () => {
 			gkcoi_speed,
 		);
 		const g_blob = calc_Gkcoi_Blob(canvas);
-		const cy_blob = calc_Cytoscape_Blob(cytoscape_core);
+		const cy_blob = calc_Map_Blob(map_core);
 		const data_url = await do_combine_blobs(cy_blob, g_blob);
 		do_download_data_URL(data_url, file_name);
 	} catch (error) {

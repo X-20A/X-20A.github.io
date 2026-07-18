@@ -24,10 +24,8 @@
   },
   "dependencies": {
     "@biomejs/biome": "^1.9.4",
-    "@types/cytoscape": "^3.21.8",
     "axios": "1.2.2",
     "big.js": "^6.2.2",
-    "cytoscape": "^3.31.0",
     "gkcoi": "^1.6.1",
     "lz-string": "^1.5.0",
     "pinia": "^3.0.0",

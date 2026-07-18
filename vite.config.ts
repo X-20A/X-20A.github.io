@@ -94,9 +94,6 @@ export default defineConfig({
                 manualChunks(id: string) {
                     const normalized = id.split(path.sep).join('/');
                     if (normalized.includes('/node_modules/')) {
-                        if (/\/node_modules\/cytoscape\//.test(normalized)) {
-                            return 'cytoscape';
-                        }
                         // gkcoi等の動的import専用パッケージは既定の分割に任せる
                         if (/\/node_modules\/(vue|@vue|pinia|big\.js|lz-string|valibot|axios)\//.test(normalized)) {
                             return 'vendor';

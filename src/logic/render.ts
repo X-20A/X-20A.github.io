@@ -1,16 +1,14 @@
+import { build_map_screenshot_svg, type MapCore } from './efffects/draw';
+
 /**
- * cytoscapeグラフのBlob取得
- * @param cy
- * @returns 
+ * マップ(SVG)のBlob取得
+ * 幅1293/背景#212121は旧cy.jpg設定の踏襲(gkcoi画像と連結するため幅を合わせる)
+ * @param map
+ * @returns
  */
-export function calc_Cytoscape_Blob(cy: cytoscape.Core): Blob {
-    return cy.jpg({
-        maxWidth: 1293,
-        quality: 1,
-        output: 'blob',
-        full: true,
-        bg: '#212121'
-    });
+export function calc_Map_Blob(map: MapCore): Blob {
+    const svg_text = build_map_screenshot_svg(map, 1293, '#212121');
+    return new Blob([svg_text], { type: 'image/svg+xml;charset=utf-8' });
 }
 // Canvasをblobで取得
 export function calc_Gkcoi_Blob(canvas: HTMLCanvasElement): Blob {
