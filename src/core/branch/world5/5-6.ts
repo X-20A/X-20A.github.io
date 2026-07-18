@@ -1,5 +1,6 @@
 import { CalcFnWithCondition } from "..";
 import { is_fleet_speed_fast_or_more, is_fleet_speed_faster_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
+import { count_ships_by_base_names } from "../../../models/fleet/AdoptFleet";
 import { destructuring_assignment_helper, omission_of_conditions } from "../util";
 
 export const calc_5_6: CalcFnWithCondition = (
@@ -11,7 +12,7 @@ export const calc_5_6: CalcFnWithCondition = (
         fleet, ship_names, base_ship_names, fleet_type, ships_length, speed, seek, route,
         drum_carrier_count, craft_carrier_count, radar_carrier_count,
         arBulge_carrier_count, SBB_count,
-        BB, BBV, CV, CVL, CA, CAV, CL, CLT, CT, DD, DE,
+        BB, BBV, CV, CVL, CA, CAV, CL, CLT, CLs, CT, DD, DE,
         AV, AO, LHA, AS, BBs, CVH, CVs, BBCVs, CAs, CLE, Ds, Ss,
     } = destructuring_assignment_helper(sim_fleet);
 
@@ -28,6 +29,9 @@ export const calc_5_6: CalcFnWithCondition = (
             if (AV + LHA >= 1) {
                 return '1';
             }
+            if (DE >= 2) {
+                return '1';
+            }
             if (BBs >= 2 && is_fleet_speed_slow(speed)) {
                 return '1';
             }
@@ -42,7 +46,7 @@ export const calc_5_6: CalcFnWithCondition = (
             if (BBs >= 2 && Ds === 2) {
                 return 'A1';
             }
-            if (AV + LHA >= 3) {
+            if (AV + LHA >= 2) {
                 return 'A';
             }
             if (DE >= 3) {
@@ -53,7 +57,7 @@ export const calc_5_6: CalcFnWithCondition = (
             }
             return 'A2';
         case 'A':
-            if (BBs + CVL >= 1) {
+            if (BBs + CVL + count_ships_by_base_names(['あきつ丸'], base_ship_names) >= 1) {
                 return 'B';
             }
             if (CAs >= 1 && is_fleet_speed_slow(speed)) {
@@ -67,13 +71,13 @@ export const calc_5_6: CalcFnWithCondition = (
             if (CVH >= 1) {
                 return 'B';
             }
-            if (BBs >= 1 && BBs + CVL >= 2 && Ds <= 2) {
-                return 'B';
-            }
             if (CAs >= 2) {
                 return 'B';
             }
             if (Ds <= 1) {
+                return 'B';
+            }
+            if (BBs >= 1 && BBs + CVL >= 2 && CL + Ds <= 3) {
                 return 'B';
             }
             return 'C';
@@ -81,17 +85,29 @@ export const calc_5_6: CalcFnWithCondition = (
             if (BBV === 2 && Ds === 4) {
                 return 'C2';
             }
-            if (BBs >= 2) {
-                return 'C1';
-            }
             if (CVH >= 1) {
                 return 'C1';
             }
             if (is_fleet_speed_fast_or_more(speed)) {
+                if (BBs + CVL + count_ships_by_base_names(['あきつ丸'], base_ship_names) <= 1) {
+                    return 'C';
+                }
+                if (AV + LHA >= 1) {
+                    return 'C';
+                }
+                if (CL >= 1 && Ds >= 2) {
+                    return 'C1';
+                }
+                if (Ds >= 4) {
+                    return 'C1';
+                }
                 return 'C';
             }
-            if (CAs + CLE + CLT + AV + LHA >= 2 && Ds >= 3) {
-                return 'C'
+            if (BBs + CVL + count_ships_by_base_names(['あきつ丸'], base_ship_names) === 0 && Ds >= 2) {
+                return 'C';
+            }
+            if (BBs + CVL + count_ships_by_base_names(['あきつ丸'], base_ship_names) === 1 && Ds === 3) {
+                return 'C';
             }
             return 'C1';
         case 'C1':
@@ -108,7 +124,10 @@ export const calc_5_6: CalcFnWithCondition = (
             }
             return 'F';
         case 'J':
-            if (Ds >= 2) {
+            if (CVH >= 2 && is_fleet_speed_slow(speed)) {
+                return 'K1';
+            }
+            if (DD >= 2) {
                 return 'K';
             }
             return 'K1';
@@ -129,7 +148,7 @@ export const calc_5_6: CalcFnWithCondition = (
             if (is_fleet_speed_faster_or_more(speed)) {
                 return 'W';
             }
-            if (CL >= 1 && Ds >= 3 && is_fleet_speed_fast_or_more(speed)) {
+            if (CL >= 1 && DD >= 3 && is_fleet_speed_fast_or_more(speed)) {
                 return 'W';
             }
             if (CVH >= 3) {
@@ -138,13 +157,13 @@ export const calc_5_6: CalcFnWithCondition = (
             if (BBs >= 2 && CL === 0) {
                 return 'Q2';
             }
-            if (Ds <= 1) {
+            if (DD <= 1) {
                 return 'Q2';
             }
             return 'U';
         }
         case 'Q1':
-            if (Ds >= 2) {
+            if (DD >= 2) {
                 return 'T';
             }
             return 'Q2';
@@ -163,7 +182,7 @@ export const calc_5_6: CalcFnWithCondition = (
             if (CVH >= 3) {
                 return 'W';
             }
-            if (Ds <= 1) {
+            if (DD <= 1) {
                 return 'W';
             }
             return 'X';
