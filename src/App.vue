@@ -716,6 +716,7 @@ const screenShot = async () => {
 		'2': seek.c2,
 		'3': seek.c3,
 		'4': seek.c4,
+		'5': seek.c4,
 	};
 	const gkcoi_speed = adoptFleet.value.speed * 5 as Speed;
 	try {
