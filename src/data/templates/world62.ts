@@ -34,7 +34,7 @@ export const WORLD_62: Ttemplate[] =[
         "memo": "HP: 2640$e基地: ボス集中"
     },
     {
-        "title": "62-1_PQQ2VX_破壊",
+        "title": "62-1_PQQ2VX_破壊_破砕なし",
         "world": 62,
         "area": 1,
         "route": "2-M-P-Q-Q2-V2-V-X",
@@ -74,11 +74,59 @@ export const WORLD_62: Ttemplate[] =[
         "memo": "HP: 3960$e基地: 2部隊ボス集中"
     },
     {
-        "title": "62-2_TWW2X1XY_破壊",
+        "title": "62-2_TWW2X1XY_破壊_破砕なし",
         "world": 62,
         "area": 2,
         "route": "4-T-W-W2-X1-X-Y",
         "token": "ZqDr36Y99q9",
+        "memo": "基地: 2部隊ボス集中"
+    },
+    {
+        "title": "62-3_A2GILO_削り",
+        "world": 62,
+        "area": 3,
+        "route": "2-F-A2-G-H-I-L-O",
+        "token": "kPNUnmN6nqz",
+        "memo": "HP: 3430$e基地: 2部隊ボス集中$e低速でJマス踏み抜き想定"
+    },
+    {
+        "title": "62-3_A2GILO_破壊",
+        "world": 62,
+        "area": 3,
+        "route": "2-F-A2-G-H-I-L-O",
+        "token": "pHIsc5vSrO9",
+        "memo": "HP: 3430$e基地: 2部隊ボス集中$e低速でJマス踏み抜き想定"
+    },
+    {
+        "title": "62-3_STVX_削り",
+        "world": 62,
+        "area": 3,
+        "route": "3-R-S-T-V-X",
+        "token": "sEcqyN8BfYM",
+        "memo": "HP: 4500$e基地: 2部隊ボス集中"
+    },
+    {
+        "title": "62-3_STVX_破壊",
+        "world": 62,
+        "area": 3,
+        "route": "3-R-S-T-V-X",
+        "token": "fyEWdlwbjHW",
+        "memo": "基地: 2部隊ボス集中"
+    },
+    {
+        "title": "62-3_A2-G-M-Y1-U-Y2-Y-Z_削り",
+        "world": 62,
+        "area": 3,
+        "route": "2-F-A2-G-H-M-Y1-U-Y2-Y-Z",
+        "token": "oUCPRS29Jhs",
+        "memo": "HP: 5750$e基地: 2部隊ボス集中"
+    },
+    {
+        "title": "62-3_A2-G-M-Y1-U-Y2-Y-Z_破壊_破砕なし",
+        "world": 62,
+        "area": 3,
+        "route": "2-F-A2-G-H-M-Y1-U-Y2-Y-Z",
+        "token": "RmODEWEUg-P",
         "memo": "基地: 2部隊ボス集中"
     },
 ]
