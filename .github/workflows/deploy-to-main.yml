@@ -1,0 +1,57 @@
+name: Deploy Akashi Build to Main Branch
+# akashi_devブランチにpushされたらビルドして、
+# mainブランチのakashiディレクトリにデプロイ
+
+on:
+  push:
+    branches:
+      - akashi_dev  # ソースコードのあるブランチ
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # --- Step 1: akashi_devブランチのソースをチェックアウトしてビルド ---
+      - name: Checkout source (akashi_dev)
+        uses: actions/checkout@v3
+        with:
+          ref: akashi_dev
+
+      - name: Install Bun
+        run: |
+          curl -fsSL https://bun.sh/install | bash
+          echo "$HOME/.bun/bin" >> $GITHUB_PATH  # bunのパスをGITHUB_PATHに追加
+
+      - name: Install dependencies and build
+        run: |
+          bun install
+          bun run build
+        # ※ビルド後、同ディレクトリ直下に「dist」フォルダが生成される前提
+
+      # --- Step 2: mainブランチをサブディレクトリにチェックアウト ---
+      - name: Checkout main branch into subdirectory
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ github.repository }}
+          ref: main
+          path: main_branch  # 別ディレクトリとしてチェックアウト
+
+      # --- Step 3: mainブランチ内のakashiディレクトリを更新 ---
+      - name: Update akashi directory in main branch
+        run: |
+          # mainブランチ内の古いakashiディレクトリを削除
+          rm -rf main_branch/akashi
+          # ビルド成果物(dist)をakashiディレクトリとしてコピー
+          cp -R dist main_branch/akashi
+          # mainブランチのディレクトリに移動
+          cd main_branch
+          # Gitの設定
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}.git
+          # 変更をステージングしてcommit（変更がない場合はエラーを無視）
+          git add .
+          # [skip ci] は発火ループに入らない為に必要
+          git commit -m "${{ github.event.head_commit.message }} [skip ci]" || echo "No changes to commit"
+          # mainブランチへpush
+          git push origin main
