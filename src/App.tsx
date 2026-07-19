@@ -24,11 +24,7 @@ const App: React.FC = () => {
     const area_id = `${template.world}-${template.area}` as AreaId;
     drawMap(area_id, template.route);
 
-    if (template.memo === null) {
-      setMemoText('');
-    } else if (template.memo) {
-      setMemoText(template.memo);
-    }
+    setMemoText(template.memo ?? '');
   }, [template]);
 
   return (
