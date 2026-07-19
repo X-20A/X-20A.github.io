@@ -411,6 +411,17 @@ const OPTION_DATA: OptionSelector = {
 			],
 		},
 	},
+	'62-4': {
+		'phase': {
+			label: 'Phase',
+			options: [
+				{ value: '1', label: '開始時点' },
+				{ value: '2', label: '出撃地点2解放後' },
+				{ value: '3', label: '出撃地点3解放後' },
+				{ value: '4', label: 'Zボス出現後' },
+			]
+		},
+	},
 } as const; // @expansion
 
 // 海域絞り込み

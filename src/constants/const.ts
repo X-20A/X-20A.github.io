@@ -43,7 +43,7 @@ export default class Const {
         '62-1': { 'phase': '1', 'difficulty': '4', 'B': 'C', 'C': 'C1', 'M': 'N' },
         '62-2': { 'phase': '1', 'A1': 'A3' },
         '62-3': { 'phase': '1', 'difficulty': '4', 'B': 'B1', 'D': 'D1', 'H': 'I' },
-        // '62-4': {  },
+        '62-4': { 'phase': '1', 'P': 'P1', 'T': 'T1' },
         // '62-5': {  },
     }; // @expansion
 
