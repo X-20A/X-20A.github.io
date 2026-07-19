@@ -1,7 +1,7 @@
 import { DisallowToSortie } from "../../../errors/CustomError";
 import { is_fleet_speed_fast_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
 import { count_Yamato_class } from "../../../models/fleet/AdoptFleet";
-import { is_fleet_carrier, is_fleet_combined, is_fleet_transport } from "../../../models/fleet/predicate";
+import { is_fleet_carrier, is_fleet_combined, is_fleet_surface, is_fleet_transport } from "../../../models/fleet/predicate";
 import { CalcFnWithCondition } from "..";
 import { destructuring_assignment_helper, omission_of_conditions } from "../util";
 
@@ -51,7 +51,10 @@ export const calc_62_4: CalcFnWithCondition = (
             if (BBs >= 1) {
                 return 'E';
             }
-            if (CAs >= 2 && Ds >= 3) {
+            if (CAs >= 2 && Ds >= 4) {
+                return 'A';
+            }
+            if (CAs === 3 && Ds === 3) {
                 return 'A';
             }
             return 'E';
@@ -69,10 +72,16 @@ export const calc_62_4: CalcFnWithCondition = (
             }
             break;
         case 'F':
-            if (BBs >= 1) {
-                return 'G';
+            if (is_fleet_carrier(fleet_type)) {
+                return 'H';
             }
-            if (CVL >= 1 && is_fleet_speed_slow(speed)) {
+            if (is_fleet_surface(fleet_type)) {
+                return 'H';
+            }
+            if (AV >= 1) {
+                return 'E1';
+            }
+            if (BBV + CVL >= 1 && is_fleet_speed_slow(speed)) {
                 return 'G';
             }
             return 'E1';
@@ -87,7 +96,10 @@ export const calc_62_4: CalcFnWithCondition = (
             }
             break;
         case 'L':
-            return 'N';
+            if (seek.c2 >= 50) {
+                return 'N';
+            }
+            return 'M';
         case 'O':
             if (BBs >= 3) {
                 return 'J';
@@ -95,10 +107,16 @@ export const calc_62_4: CalcFnWithCondition = (
             if (CVH >= 2) {
                 return 'J';
             }
-            if (Ds <= 2) {
+            if (CVL >= 3) {
                 return 'J';
             }
-            return 'P';
+            if (CL >= 2) {
+                return 'P';
+            }
+            if (Ds >= 4) {
+                return 'P';
+            }
+            return 'J';
         case 'P1':
             if (phase <= 2) {
                 return 'Q';
@@ -107,7 +125,10 @@ export const calc_62_4: CalcFnWithCondition = (
         case 'Q':
             return 'R';
         case 'T1':
-            if (CL >= 2 && Ds >= 4) {
+            if (seek.c2 < 80) {
+                return 'P2';
+            }
+            if (CL >= 2 && Ds >= 4 && is_fleet_surface(fleet_type)) {
                 return 'V';
             }
             return 'U';
@@ -134,7 +155,13 @@ export const calc_62_4: CalcFnWithCondition = (
             if (count_Yamato_class(fleet) >= 1) {
                 return 'W';
             }
-            return 'X';
+            if (CVH === 0) {
+                return 'X';
+            }
+            if (CL >= 2) {
+                return 'X';
+            }
+            return 'W';
         case 'Y':
             return 'Z';
         case 'P':

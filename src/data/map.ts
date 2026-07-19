@@ -180,7 +180,7 @@ export const WARNING_NODE_DATAS: Partial<Record<AreaId, string[]>> = {
     "61-3": ["R2"],
     "62-2": ["K", "X1"],
     "62-3": ["L", "R", "Y"],
-    "62-4": ["H", "Q", "T1", "Y"],
+    "62-4": ["H", "Q", "Y"],
 }; // @expansion
 // "": ["", "", "", "", "", "", "", ""],
 
