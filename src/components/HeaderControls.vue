@@ -1,7 +1,6 @@
 <template>
 	<div class="header-controls">
-		<input v-model="current_data.project_name" placeholder="計画名" @input="handle_project_name_update"
-			class="project-name-input" />
+		<input v-model="sheet_name" placeholder="シート名" class="project-name-input" />
 		<div class="button-group">
 			<button @pointerdown="handle_sort_rows" class="action-btn">上詰め</button>
 			<button @pointerdown="handle_copy_url" class="action-btn" :disabled="is_copying">
@@ -13,30 +12,31 @@
 </template>
 
 <script setup lang="ts">
-import { useStore, useToastStore } from '../stores';
+import { useToastStore } from '../stores';
+import { useWorkspaceStore } from '../stores/workspace';
+import { useSheetStore } from '../stores/sheet';
 import { computed, ref } from 'vue';
 import { do_create_shorten_url } from '../logics/url';
 import { sort_row_datas } from '../logics/sort';
 
-const store = useStore();
-const current_data = computed(() => store.current_data);
+const sheet_store = useSheetStore();
+const workspace_store = useWorkspaceStore();
+
+// 計画名はシート名そのもの。ツリー側の名前を編集する
+const sheet_name = computed({
+	get: () => workspace_store.active_sheet_name,
+	set: (name: string) => {
+		if (!workspace_store.active_sheet_id) return;
+		void workspace_store.RENAME(workspace_store.active_sheet_id, name);
+	},
+});
 
 const toast_store = useToastStore();
 
 const is_copying = ref(false);
 
-// プロジェクト名更新
-const handle_project_name_update = () => {
-	store.UPDATE_CURRENT_DATA({
-		...current_data.value,
-	});
-};
-
 const handle_sort_rows = () => {
-	store.UPDATE_CURRENT_DATA({
-		...current_data.value,
-		row_datas: sort_row_datas(current_data.value.row_datas),
-	});
+	sheet_store.UPDATE_ROW_DATAS(sort_row_datas(sheet_store.row_datas));
 };
 
 const handle_copy_url = async () => {
@@ -45,7 +45,12 @@ const handle_copy_url = async () => {
 	is_copying.value = true;
 
 	try {
-		const shorten_url = await do_create_shorten_url(current_data.value);
+		// 共有するのはアクティブなシート1枚
+		const shorten_url = await do_create_shorten_url({
+			project_name: workspace_store.active_sheet_name,
+			row_datas: sheet_store.row_datas,
+			approved_domains: workspace_store.approved_domains,
+		});
 
 		const textArea = document.createElement('textarea');
 		textArea.value = shorten_url;
@@ -64,10 +69,10 @@ const handle_copy_url = async () => {
 };
 
 const handle_initialize = () => {
-	const is_permission = confirm('データを削除しますか?');
+	const is_permission = confirm('このシートの内容をすべて削除しますか?');
 	if (!is_permission) return;
 
-	store.INITIALIZE_DATA();
+	sheet_store.RESET_ROWS();
 };
 </script>
 

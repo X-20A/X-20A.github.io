@@ -16,11 +16,14 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue';
-import { useStore, useModalStore } from '../stores';
+import { useModalStore } from '../stores';
+import { useWorkspaceStore } from '../stores/workspace';
+import { useSheetStore } from '../stores/sheet';
 import { do_open_url_in_new_tab } from '../logics/url';
 
-const store = useStore();
-const pending_url = computed(() => store.pending_url);
+const sheet_store = useSheetStore();
+const workspace_store = useWorkspaceStore();
+const pending_url = computed(() => sheet_store.pending_url);
 
 const modalStore = useModalStore();
 const is_domain_permission_visible =
@@ -38,7 +41,7 @@ const handle_open = () => {
 const handle_always_open = () => {
 	if (pending_url.value === '') return;
 
-	store.ADD_APPROVED_DOMAIN(pending_url.value);
+	void workspace_store.ADD_APPROVED_DOMAIN(pending_url.value);
 	do_open_url_in_new_tab(pending_url.value);
 	modalStore.HIDE_MODALS();
 };

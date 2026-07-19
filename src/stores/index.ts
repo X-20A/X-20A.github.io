@@ -1,128 +1,5 @@
 import { defineStore } from "pinia";
-import { RowData, INITIAL_SAVE_DATA, SaveData, INITIAL_ROW_DATA } from "../types";
-import { parse, ValiError } from "valibot";
-import { SaveDataSchema } from "../logics/schema";
-import { stash_corrupted_data } from "../logics/migration";
 import CustomError from "../errors/CustomError";
-import { extract_url_domain } from "../logics/url";
-
-const LOCAL_STORAGE_KEY = 'cost-manager';
-
-export const useStore = defineStore('datas', {
-    state: () => ({
-        current_data: INITIAL_SAVE_DATA as SaveData,
-        data_history: [] as SaveData[],
-        pending_url: '' as string,
-        selected_row_indexes: [] as number[],
-        display_mode: 'sum' as 'sum' | 'diff',
-    }),
-    actions: {
-        UPDATE_CURRENT_DATA(new_data: SaveData): void {
-            this.current_data = new_data;
-            this.SAVE_DATA();
-        },
-        UPDATE_ROW_DATA(new_data: RowData, row_index: number): void {
-            const updatedDatas = [...this.current_data.row_datas];
-            updatedDatas[row_index] = {
-                ...updatedDatas[row_index],
-                ...new_data,
-            };
-
-            this.UPDATE_CURRENT_DATA({
-                ...this.current_data,
-                row_datas: updatedDatas,
-            });
-        },
-        UNDO_DATA(history_index: number): void {
-            const previous_data = this.data_history[history_index - 1];
-            if (!previous_data) return;
-
-            this.UPDATE_CURRENT_DATA(previous_data);
-        },
-        UPDATE_PENDING_URL(url: string): void {
-            this.pending_url = url;
-        },
-        UPDATE_SELECTED_ROW_INDEXES(indexes: number[]): void {
-            this.selected_row_indexes = indexes;
-        },
-        UPDATE_DISPLAY_MODE(mode: 'sum' | 'diff'): void {
-            this.display_mode = mode;
-        },
-        REDO_DATA(history_index: number): void {
-            const next_data = this.data_history[history_index + 1];
-            if (!next_data) return;
-
-            this.UPDATE_CURRENT_DATA(next_data);
-        },
-        ADD_ROWS(): void {
-            const ADD_COUNT = 10;
-            const new_row_datas: RowData[] =
-                this.current_data.row_datas
-                    .concat(Array(ADD_COUNT)
-                    .fill(null)
-                    .map(() => ({ ...INITIAL_ROW_DATA })));
-
-            this.UPDATE_CURRENT_DATA({
-                ...this.current_data,
-                row_datas: new_row_datas,
-            });
-        },
-        ADD_APPROVED_DOMAIN(url_string: string): void {
-            const new_domain = extract_url_domain(url_string);
-            if (this.current_data.approved_domains.includes(new_domain)) return;
-
-            const new_approved_domains =
-                this.current_data.approved_domains.concat(new_domain);
-            const new_save_data: SaveData = {
-                ...this.current_data,
-                approved_domains: new_approved_domains,
-            };
-            this.UPDATE_CURRENT_DATA(new_save_data);
-        },
-        SAVE_DATA(): void {
-            localStorage.setItem(
-                LOCAL_STORAGE_KEY,
-                JSON.stringify(this.current_data),
-            );
-        },
-        LOAD_DATA(): void {
-            const data = localStorage.getItem(LOCAL_STORAGE_KEY);
-            if (!data) return;
-
-            try {
-                const parsed_data = JSON.parse(data);
-                // バリデーション実行
-                const validated_data = parse(SaveDataSchema, parsed_data);
-                this.UPDATE_CURRENT_DATA(validated_data);
-            } catch (error) {
-                console.error('ローカルストレージデータの読み込みに失敗しました:', error);
-
-                if (error instanceof ValiError) {
-                    console.error('データ形式が不正です');
-                } else if (error instanceof SyntaxError) {
-                    console.error('JSON形式が不正です');
-                } else {
-                    throw error;
-                }
-
-                // 壊れたデータは削除せず退避する。
-                // 復旧の手掛かりを残さないまま消すと、ユーザーは何も取り戻せない
-                const backup_key = stash_corrupted_data(data);
-                localStorage.removeItem(LOCAL_STORAGE_KEY);
-
-                useToastStore().SHOW_TOAST(
-                    `保存データを読み込めませんでした。壊れたデータは ${backup_key} に退避しています`,
-                    10000,
-                );
-            }
-        },
-        INITIALIZE_DATA(): void {
-            this.UPDATE_CURRENT_DATA({ ...INITIAL_SAVE_DATA });
-            this.UPDATE_SELECTED_ROW_INDEXES([]);
-            this.UPDATE_DISPLAY_MODE('sum');
-        }
-    },
-});
 
 export const useModalStore = defineStore('modal', {
     state: () => ({
@@ -163,28 +40,64 @@ export const useModalStore = defineStore('modal', {
     }
 });
 
+/** 表示中のトーストを閉じるためのタイマー。ストアの状態には含めない */
+let hide_timer: ReturnType<typeof setTimeout> | null = null;
+
 export const useToastStore = defineStore('toast', {
     state: () => ({
         /** トーストの表示状態 */
         is_show_notice: false,
         /** 表示するメッセージ */
         notice_message: '',
+        /** アクションボタンのラベル。null ならボタンを出さない */
+        action_label: null as string | null,
+        action: null as (() => void) | null,
     }),
     actions: {
         SHOW_TOAST(
             message: string,
             display_time: number = 5000,
         ): void {
+            this.SHOW_TOAST_WITH_ACTION(message, null, null, display_time);
+        },
+        /**
+         * 取り消しなどの操作を伴うトースト。
+         * ツリー操作は Undo の対象外のため、直前の移動はここから戻す
+         */
+        SHOW_TOAST_WITH_ACTION(
+            message: string,
+            action_label: string | null,
+            action: (() => void) | null,
+            display_time: number = 5000,
+        ): void {
+            // 前のトーストのタイマーが残っていると、新しいトーストが早く消える
+            if (hide_timer !== null) clearTimeout(hide_timer);
+
             this.notice_message = message;
+            this.action_label = action_label;
+            this.action = action;
             this.is_show_notice = true;
 
-            setTimeout(() => {
+            hide_timer = setTimeout(() => {
+                hide_timer = null;
                 this.HIDE_TOAST();
             }, display_time);
         },
+        RUN_ACTION(): void {
+            const action = this.action;
+            this.HIDE_TOAST();
+            action?.();
+        },
         HIDE_TOAST(): void {
+            if (hide_timer !== null) {
+                clearTimeout(hide_timer);
+                hide_timer = null;
+            }
+
             this.is_show_notice = false;
             this.notice_message = '';
+            this.action_label = null;
+            this.action = null;
         },
     }
 });

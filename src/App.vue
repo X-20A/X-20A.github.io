@@ -25,7 +25,7 @@
 						</tr>
 					</thead>
 					<tbody class="table-body" ref="table_body">
-						<tr v-for="(row, index) in current_data.row_datas" :key="index" class="data-row" :data-index="index"
+						<tr v-for="(row, index) in row_datas" :key="index" class="data-row" :data-index="index"
 							:draggable="true" @dragstart="handle_drag_start($event, index)" @dragover="handle_drag_over($event)"
 							@dragenter="handle_drag_enter($event)" @dragleave="handle_drag_leave($event)"
 							@drop="handle_drop($event, index)" @dragend="handle_drag_end"
@@ -44,8 +44,8 @@
 								@contextmenu.prevent="show_context_menu($event, index, row)">
 								<div class="url-icon-container">
 									<svg v-if="row.url" class="url-icon" :class="{
-										'approved_url': is_approved_url(row.url, current_data.approved_domains),
-										'unapproved_url': !is_approved_url(row.url, current_data.approved_domains)
+										'approved_url': is_approved_url(row.url, approved_domains),
+										'unapproved_url': !is_approved_url(row.url, approved_domains)
 									}" viewBox="0 0 24 24" width="16" height="16">
 										<path fill="currentColor"
 											d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-6h2v6zm3 0h-2V7h2v10z" />
@@ -162,6 +162,9 @@
 		<div v-if="is_show_notice" class="notification">
 			<div class="notification-content">
 				<p>{{ notice_message }}</p>
+				<button v-if="notice_action_label" class="notification-action" @pointerdown="toast_store.RUN_ACTION()">
+					{{ notice_action_label }}
+				</button>
 			</div>
 		</div>
 	</transition>
@@ -177,8 +180,10 @@
 import Footer from './components/Footer.vue';
 import Header from './components/Header.vue';
 import HeaderControls from './components/HeaderControls.vue';
-import { useStore, useModalStore, useToastStore } from './stores';
-import { computed, onMounted, ref } from 'vue';
+import { useModalStore, useToastStore } from './stores';
+import { useWorkspaceStore } from './stores/workspace';
+import { useSheetStore } from './stores/sheet';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { INITIAL_SUM_DATA, INITIAL_ROW_DATA, RowData, INITIAL_DIFF_DATA } from './types';
 import { floor_diff_data, floor_sum_data } from './logics/floor';
 import { calc_URL_param, do_delete_URL_param, is_approved_url, do_open_url_in_new_tab } from './logics/url';
@@ -190,10 +195,13 @@ import DomainPermission from './components/DomainPermission.vue';
 import ErrorView from './components/ErrorView.vue';
 import { calc_diff_data, calc_total_data } from './logics/calculation';
 
-const store = useStore();
-const current_data = computed(() => store.current_data);
-const selected_row_indexes = computed(() => store.selected_row_indexes);
-const display_mode = computed(() => store.display_mode);
+const sheet_store = useSheetStore();
+const row_datas = computed(() => sheet_store.row_datas);
+const selected_row_indexes = computed(() => sheet_store.selected_row_indexes);
+const display_mode = computed(() => sheet_store.display_mode);
+
+const workspace_store = useWorkspaceStore();
+const approved_domains = computed(() => workspace_store.approved_domains);
 
 const modal_store = useModalStore();
 const is_error_visible = computed(() => modal_store.is_error_visible);
@@ -203,15 +211,14 @@ const is_domain_permission_visible =
 const toast_store = useToastStore();
 const is_show_notice = computed(() => toast_store.is_show_notice);
 const notice_message = computed(() => toast_store.notice_message);
+const notice_action_label = computed(() => toast_store.action_label);
 
 const handle_close_modals = () => modal_store.HIDE_MODALS();
 
 const name_cells = ref<HTMLInputElement[]>([]);
 
 const sum_data = computed(() => {
-	if (!current_data.value) return { ...INITIAL_SUM_DATA };
-
-	const total_data = calc_total_data(current_data.value.row_datas);
+	const total_data = calc_total_data(row_datas.value);
 	return floor_sum_data(total_data, 0.1);
 });
 
@@ -224,9 +231,9 @@ const diff_data = computed(() => {
 	const [first_index, second_index] = selected_row_indexes.value;
 	// 選択順に関わらず 下の行 - 上の行
 	const first_row =
-		current_data.value.row_datas[first_index > second_index ? second_index : first_index];
+		row_datas.value[first_index > second_index ? second_index : first_index];
 	const second_row =
-		current_data.value.row_datas[first_index > second_index ? first_index : second_index];
+		row_datas.value[first_index > second_index ? first_index : second_index];
 
 	if (!first_row || !second_row) {
 		return { ...INITIAL_DIFF_DATA };
@@ -363,28 +370,26 @@ const handle_drag_handle_click = (event: MouseEvent, index: number) => {
 		const new_mode = selected_row_indexes.value.length === 2
 			? 'diff'
 			: 'sum';
-		store.UPDATE_DISPLAY_MODE(new_mode);
+		sheet_store.UPDATE_DISPLAY_MODE(new_mode);
 	}
 };
 
 // URLを新しいタブで開く
 const open_url = (url: string) => {
 	if (!url) return;
-	if (is_approved_url(url, current_data.value.approved_domains)) {
+	if (is_approved_url(url, approved_domains.value)) {
 		do_open_url_in_new_tab(url);
 		return;
 	}
 
-	store.UPDATE_PENDING_URL(url);
+	sheet_store.UPDATE_PENDING_URL(url);
 	modal_store.SHOW_DOMAIN_PERMISSION();
 };
 
 // 行データ更新
 const handle_row_update = (row_index: number) => {
-	store.UPDATE_CURRENT_DATA({
-		...current_data.value,
-		row_datas: [...current_data.value.row_datas] // 配列を新しく作成してリアクティブをトリガー
-	});
+	// 配列を新しく作成してリアクティブをトリガー
+	sheet_store.UPDATE_ROW_DATAS([...row_datas.value]);
 };
 
 const handle_paste = (event: ClipboardEvent, row_index: number) => {
@@ -395,9 +400,9 @@ const handle_paste = (event: ClipboardEvent, row_index: number) => {
 
 	try {
 		const extracted_data =
-			extract_data_from_text(pasted_text, current_data.value.row_datas[row_index]);
+			extract_data_from_text(pasted_text, row_datas.value[row_index]);
 
-		store.UPDATE_ROW_DATA(extracted_data, row_index);
+		sheet_store.UPDATE_ROW_DATA(extracted_data, row_index);
 	} catch (error) {
 		console.error(error);
 	}
@@ -405,7 +410,7 @@ const handle_paste = (event: ClipboardEvent, row_index: number) => {
 
 // 行をクリアしてソート
 const clear_row = (row_index: number) => {
-	store.UPDATE_ROW_DATA(INITIAL_ROW_DATA, row_index);
+	sheet_store.UPDATE_ROW_DATA(INITIAL_ROW_DATA, row_index);
 	// クリアした行が選択されていた場合は選択から削除
 	const index = selected_row_indexes.value.indexOf(row_index);
 	if (index !== -1) {
@@ -413,13 +418,13 @@ const clear_row = (row_index: number) => {
 		const new_mode = selected_row_indexes.value.length === 2
 			? 'diff'
 			: 'sum';
-		store.UPDATE_DISPLAY_MODE(new_mode);
+		sheet_store.UPDATE_DISPLAY_MODE(new_mode);
 	}
 };
 
 // 行を追加
 const handle_add_rows = () => {
-	store.ADD_ROWS();
+	sheet_store.ADD_ROWS();
 };
 
 // name-cellのキーダウンイベント処理
@@ -495,7 +500,7 @@ const delete_url = () => {
 	if (context_menu.value.row_index < 0) return;
 
 	const row_index = context_menu.value.row_index;
-	const new_row_datas = [...current_data.value.row_datas];
+	const new_row_datas = [...row_datas.value];
 
 	if (!new_row_datas[row_index]) return;
 
@@ -504,10 +509,7 @@ const delete_url = () => {
 		url: ''
 	};
 
-	store.UPDATE_CURRENT_DATA({
-		...current_data.value,
-		row_datas: new_row_datas
-	});
+	sheet_store.UPDATE_ROW_DATAS(new_row_datas);
 
 	hide_context_menu();
 };
@@ -601,7 +603,7 @@ const handle_drop = (event: DragEvent, drop_index: number) => {
 	}
 
 	// 行の順番を入れ替え
-	const new_row_datas = [...current_data.value.row_datas];
+	const new_row_datas = [...row_datas.value];
 	const [moved_row] = new_row_datas.splice(drag_start_index.value, 1);
 	new_row_datas.splice(drop_index, 0, moved_row);
 
@@ -621,13 +623,10 @@ const handle_drop = (event: DragEvent, drop_index: number) => {
 		}
 		return selected_index;
 	});
-	store.UPDATE_SELECTED_ROW_INDEXES(new_selected_row_indexes);
+	sheet_store.UPDATE_SELECTED_ROW_INDEXES(new_selected_row_indexes);
 
 	// ストアを更新
-	store.UPDATE_CURRENT_DATA({
-		...current_data.value,
-		row_datas: new_row_datas
-	});
+	sheet_store.UPDATE_ROW_DATAS(new_row_datas);
 
 	reset_drag_state();
 };
@@ -654,23 +653,27 @@ const reset_drag_state = () => {
 	is_drag_handle.value = false;
 };
 
-onMounted(() => {
+// サイドバーからシートを切り替えたら本体を読み直す
+watch(() => workspace_store.active_sheet_id, async (sheet_id) => {
+	if (!sheet_id || sheet_id === sheet_store.sheet_id) return;
+
+	await sheet_store.LOAD(sheet_id);
+});
+
+// 未保存の変更を残したままタブを閉じさせない
+const handle_before_unload = () => { void sheet_store.FLUSH(); };
+
+onMounted(async () => {
 	// ドキュメントクリックイベントを登録
 	document.addEventListener('click', handle_document_click);
+	window.addEventListener('beforeunload', handle_before_unload);
+
+	await workspace_store.INITIALIZE();
 
 	const share_data = calc_URL_param('share');
 	do_delete_URL_param();
 
 	if (share_data) {
-		const is_permission = confirm(
-			'現在のデータを共有URLのデータによって上書きします\n続行しますか?'
-		);
-
-		if (!is_permission) {
-			store.LOAD_DATA();
-			return;
-		}
-
 		try {
 			const decompressed_data =
 				lzstring.decompressFromEncodedURIComponent(share_data);
@@ -679,7 +682,12 @@ onMounted(() => {
 			// バリデーション実行
 			const validated_data = parse(SaveDataSchema, parsed_data);
 
-			store.UPDATE_CURRENT_DATA(validated_data);
+			// 既存データを上書きせず、新しいシートとして取り込む
+			const imported_id =
+				await workspace_store.IMPORT_SHARED_SHEET(validated_data);
+			await sheet_store.LOAD(imported_id);
+
+			toast_store.SHOW_TOAST('共有データを新しいシートとして読み込みました');
 			return;
 		} catch (error) {
 			console.error('データの処理に失敗しました:', error);
@@ -695,7 +703,14 @@ onMounted(() => {
 	}
 
 	// 共有データがない場合や、パースに失敗した場合などは通常読み込み
-	store.LOAD_DATA();
+	if (workspace_store.active_sheet_id) {
+		await sheet_store.LOAD(workspace_store.active_sheet_id);
+	}
+});
+
+onUnmounted(() => {
+	document.removeEventListener('click', handle_document_click);
+	window.removeEventListener('beforeunload', handle_before_unload);
 });
 </script>
 
