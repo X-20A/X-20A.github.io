@@ -51,7 +51,7 @@
 
 					<template v-for="(row, i) in ROWS" :key="row.label">
 						<div>{{ row.label }}</div>
-						<div :class="{ empty: row.noBorder }">{{ nezText(row.nez) }}</div>
+						<div :class="{ empty: row.noBorder }">{{ nezText(row) }}</div>
 						<div>{{ row.rateLabel }}</div>
 						<div>{{ results[i]?.expect ?? '' }}</div>
 						<div>{{ results[i]?.witch ?? '' }}</div>
@@ -83,37 +83,44 @@ import { computed, onMounted, onBeforeUnmount, ref, watch } from 'vue';
 import Header from './components/Header.vue';
 import Footer from './components/Footer.vue';
 import SvgIcon from './components/SvgIcon.vue';
-import { imp_json, type ImprovableItem, type ImprovementStep } from './data/improvement';
+import { IMPROVEMENT_DATAS } from './data/improvement.js';
+import type { CostKey, Equipment } from './data/types.js';
 
 const FAVS_KEY = 'imp_favs';
 const MAX_HITS = 20;
 
-/** どの改修段階がどのネジ数・成功率を参照するか */
-const ROWS = [
-	{ label: '1~5', rateLabel: '100%', rate: 1, nez: 'step1', noBorder: true },
-	{ label: '5→6', rateLabel: '94.05%', rate: 0.9405, nez: null, noBorder: false },
-	{ label: '6→7', rateLabel: '88.82%', rate: 0.8882, nez: 'step2', noBorder: true },
-	{ label: '7→8', rateLabel: '81.91%', rate: 0.8191, nez: null, noBorder: true },
-	{ label: '8→9', rateLabel: '78.91%', rate: 0.7891, nez: null, noBorder: true },
-	{ label: '9→10', rateLabel: '70.23%', rate: 0.7023, nez: null, noBorder: false },
-	{ label: '更新', rateLabel: '58.57%', rate: 0.5857, nez: 'step3', noBorder: false },
-] as const;
+/**
+ * 表の各行。cost はネジ数を引く区分、showCost はその区分の先頭行
+ * (ネジ数を実際に表示する行) かどうかを表す。
+ */
+type Row = {
+	label: string;
+	rateLabel: string;
+	rate: number;
+	cost: CostKey;
+	showCost: boolean;
+	noBorder: boolean;
+};
 
-/** 各行が必要ネジ数・確実化ネジ数を引くステップ */
-const ROW_STEPS = ['step1', 'step1', 'step2', 'step2', 'step2', 'step2', 'step3'] as const;
-
-// 改修可能な装備のみが検索・選択の対象
-const improvables = imp_json.filter((entry): entry is ImprovableItem => entry.canImprovement);
+const ROWS: readonly Row[] = [
+	{ label: '1~5', rateLabel: '100%', rate: 1, cost: 'toSix', showCost: true, noBorder: true },
+	{ label: '5→6', rateLabel: '94.05%', rate: 0.9405, cost: 'toSix', showCost: false, noBorder: false },
+	{ label: '6→7', rateLabel: '88.82%', rate: 0.8882, cost: 'toTen', showCost: true, noBorder: true },
+	{ label: '7→8', rateLabel: '81.91%', rate: 0.8191, cost: 'toTen', showCost: false, noBorder: true },
+	{ label: '8→9', rateLabel: '78.91%', rate: 0.7891, cost: 'toTen', showCost: false, noBorder: true },
+	{ label: '9→10', rateLabel: '70.23%', rate: 0.7023, cost: 'toTen', showCost: false, noBorder: false },
+	{ label: '更新', rateLabel: '58.57%', rate: 0.5857, cost: 'upgrade', showCost: true, noBorder: false },
+];
 
 const searchText = ref('');
 const isHitsVisible = ref(false);
-const selected = ref<ImprovableItem | null>(null);
+const selected = ref<Equipment | null>(null);
 const favIds = ref<number[]>(loadFavs());
 const searchInputRef = ref<HTMLInputElement | null>(null);
 const searchWrapperRef = ref<HTMLElement | null>(null);
 
 // 検索結果
-const hits = computed<ImprovableItem[]>(() => {
+const hits = computed<Equipment[]>(() => {
 	const text = convertToHalfWidth(searchText.value);
 	if (!text) {
 		return getFavs();
@@ -134,15 +141,15 @@ const results = computed(() => {
 	if (!item) {
 		return [];
 	}
-	return ROWS.map((row, i) => {
-		const step = item[ROW_STEPS[i]];
-		const need = stepValue(step, 0);
-		// ネジ数が未判明・更新不可の装備は計算できない
-		if (need === null) {
-			return { expect: '-', witch: '-' };
+	return ROWS.map((row) => {
+		const phase = item.cost[row.cost];
+		// 更新先が無い・未判明なら計算できない
+		if (phase.status !== 'available') {
+			const mark = unavailableMark(phase.status);
+			return { expect: mark, witch: mark };
 		}
-		const expect = Math.floor((need / row.rate) * 100) / 100;
-		const certain = stepValue(step, 1);
+		const expect = Math.floor((phase.screws / row.rate) * 100) / 100;
+		const certain = phase.certainScrews;
 		return {
 			expect: String(expect),
 			witch: certain !== null && expect > certain ? '〇' : '',
@@ -150,43 +157,43 @@ const results = computed(() => {
 	});
 });
 
-/** 値なし(null)と要素なし(undefined)を区別せず潰す */
-function stepValue(step: ImprovementStep, index: 0 | 1): number | null {
-	return step[index] ?? null;
+/** 改修できない区分の表示。存在しないのか未判明なのかを区別する */
+function unavailableMark(status: 'none' | 'unknown'): string {
+	return status === 'unknown' ? '?' : '-';
 }
 
 /** ネジ列の「必要数 / 確実化数」表示 */
-function nezText(step: 'step1' | 'step2' | 'step3' | null): string {
+function nezText(row: Row): string {
 	const item = selected.value;
-	if (!item || step === null) {
+	if (!item || !row.showCost) {
 		return '';
 	}
-	const need = stepValue(item[step], 0);
-	const certain = stepValue(item[step], 1);
-	if (need === null) {
-		return '-';
+	const phase = item.cost[row.cost];
+	if (phase.status !== 'available') {
+		return unavailableMark(phase.status);
 	}
-	return certain === null ? String(need) : `${need} / ${certain}`;
+	const certain = phase.certainScrews;
+	return certain === null ? String(phase.screws) : `${phase.screws} / ${certain}`;
 }
 
-function select(item: ImprovableItem) {
+function select(item: Equipment) {
 	selected.value = item;
 	isHitsVisible.value = false;
 }
 
 // ID検索(前方一致) id降順
-function searchWithID(target: number): ImprovableItem[] {
+function searchWithID(target: number): Equipment[] {
 	const prefix = target.toString();
-	return improvables
+	return IMPROVEMENT_DATAS
 		.filter((entry) => entry.id.toString().startsWith(prefix))
 		.sort((a, b) => b.id - a.id)
 		.slice(0, MAX_HITS);
 }
 
 // 名前検索(部分一致) 大文字小文字を区別しない id降順
-function searchWithName(target: string): ImprovableItem[] {
+function searchWithName(target: string): Equipment[] {
 	const lower = target.toLowerCase();
-	return improvables
+	return IMPROVEMENT_DATAS
 		.filter((entry) => entry.name.toLowerCase().includes(lower))
 		.sort((a, b) => b.id - a.id)
 		.slice(0, MAX_HITS);
@@ -206,9 +213,9 @@ function loadFavs(): number[] {
 }
 
 // お気に入りは登録順で表示する
-function getFavs(): ImprovableItem[] {
+function getFavs(): Equipment[] {
 	const ids = favIds.value;
-	return improvables
+	return IMPROVEMENT_DATAS
 		.filter((entry) => ids.includes(entry.id))
 		.sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id));
 }
