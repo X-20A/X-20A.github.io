@@ -17,11 +17,11 @@ describe('parse_abnormal_value', () => {
     });
 
     it('無限大を適切な値に変換する', () => {
-        expect(parse_abnormal_value('infinite')).toBe(99999);
-        expect(parse_abnormal_value('infinity')).toBe(99999);
-        expect(parse_abnormal_value('+infinity')).toBe(99999);
-        expect(parse_abnormal_value('-infinite')).toBe(-99999);
-        expect(parse_abnormal_value('-infinity')).toBe(-99999);
+        expect(parse_abnormal_value('infinite')).toBe(999999);
+        expect(parse_abnormal_value('infinity')).toBe(999999);
+        expect(parse_abnormal_value('+infinity')).toBe(999999);
+        expect(parse_abnormal_value('-infinite')).toBe(-999999);
+        expect(parse_abnormal_value('-infinity')).toBe(-999999);
     });
 
     it('パース不能な文字列を 0 に変換する', () => {
@@ -32,6 +32,6 @@ describe('parse_abnormal_value', () => {
 
     it('前後の空白をトリムする', () => {
         expect(parse_abnormal_value('  123  ')).toBe(123);
-        expect(parse_abnormal_value('  INFINITY  ')).toBe(99999);
+        expect(parse_abnormal_value('  INFINITY  ')).toBe(999999);
     });
 });

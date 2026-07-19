@@ -19,6 +19,9 @@ describe('extract_data_from_text', () => {
 
         const expected: RowData = {
             row_name: "",
+            url: "",
+            multiplier: 1,
+            rate: 2.5,
             fuel: 85286.579,
             ammo: 84482.052,
             steel: 42943.833,
@@ -77,9 +80,12 @@ describe('extract_data_from_text', () => {
 
         const expected: RowData = {
             row_name: "",
+            url: "",
+            multiplier: 1,
+            rate: 0,
             fuel: 0,
-            ammo: 99999,
-            steel: -99999,
+            ammo: 999999,
+            steel: -999999,
             baux: 0,
             bucket: 0,
             damecon: 6.258,
