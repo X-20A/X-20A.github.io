@@ -90,9 +90,9 @@ export const IMPROVEMENT_DATAS = [
 		id: 10,
 		name: '12.7cm連装高角砲',
 		cost: {
-			toSix: { status: 'available', screws: 2, certainScrews: 3 },
+			toSix: { status: 'available', screws: 1, certainScrews: 2 },
 			toTen: { status: 'available', screws: 3, certainScrews: 4 },
-			upgrade: { status: 'available', screws: 6, certainScrews: 10 },
+			upgrade: { status: 'available', screws: 3, certainScrews: 4 },
 		},
 	},
 	{
@@ -100,8 +100,8 @@ export const IMPROVEMENT_DATAS = [
 		name: '15.2cm単装砲',
 		cost: {
 			toSix: { status: 'available', screws: 1, certainScrews: 2 },
-			toTen: { status: 'available', screws: 2, certainScrews: 3 },
-			upgrade: { status: 'available', screws: 3, certainScrews: 5 },
+			toTen: { status: 'available', screws: 1, certainScrews: 2 },
+			upgrade: { status: 'available', screws: 3, certainScrews: 4 },
 		},
 	},
 	{
@@ -144,8 +144,8 @@ export const IMPROVEMENT_DATAS = [
 		id: 16,
 		name: '九七式艦攻',
 		cost: {
-			toSix: { status: 'available', screws: 2, certainScrews: 2 },
-			toTen: { status: 'available', screws: 3, certainScrews: 4 },
+			toSix: { status: 'available', screws: 1, certainScrews: 2 },
+			toTen: { status: 'available', screws: 2, certainScrews: 3 },
 			upgrade: { status: 'available', screws: 2, certainScrews: 4 },
 		},
 	},
@@ -195,11 +195,20 @@ export const IMPROVEMENT_DATAS = [
 		},
 	},
 	{
+		id: 22,
+		name: '試製烈風 後期型',
+		cost: {
+			toSix: { status: 'available', screws: 4, certainScrews: 4 },
+			toTen: { status: 'available', screws: 5, certainScrews: 7 },
+			upgrade: { status: 'available', screws: 6, certainScrews: 10 },
+		},
+	},
+	{
 		id: 23,
 		name: '九九式艦爆',
 		cost: {
 			toSix: { status: 'available', screws: 1, certainScrews: 2 },
-			toTen: { status: 'available', screws: 2, certainScrews: 4 },
+			toTen: { status: 'available', screws: 2, certainScrews: 3 },
 			upgrade: { status: 'available', screws: 3, certainScrews: 5 },
 		},
 	},
@@ -389,7 +398,7 @@ export const IMPROVEMENT_DATAS = [
 		cost: {
 			toSix: { status: 'available', screws: 2, certainScrews: 3 },
 			toTen: { status: 'available', screws: 3, certainScrews: 5 },
-			upgrade: { status: 'none' },
+			upgrade: { status: 'available', screws: 18, certainScrews: 25 },
 		},
 	},
 	{
@@ -426,6 +435,15 @@ export const IMPROVEMENT_DATAS = [
 			toSix: { status: 'available', screws: 3, certainScrews: 3 },
 			toTen: { status: 'available', screws: 4, certainScrews: 6 },
 			upgrade: { status: 'available', screws: 5, certainScrews: 7 },
+		},
+	},
+	{
+		id: 53,
+		name: '烈風 一一型',
+		cost: {
+			toSix: { status: 'available', screws: 7, certainScrews: 8 },
+			toTen: { status: 'available', screws: 9, certainScrews: 11 },
+			upgrade: { status: 'none' },
 		},
 	},
 	{
@@ -492,6 +510,15 @@ export const IMPROVEMENT_DATAS = [
 		},
 	},
 	{
+		id: 64,
+		name: 'Ju87C改',
+		cost: {
+			toSix: { status: 'available', screws: 2, certainScrews: 3 },
+			toTen: { status: 'available', screws: 3, certainScrews: 5 },
+			upgrade: { status: 'available', screws: 8, certainScrews: 15 },
+		},
+	},
+	{
 		id: 65,
 		name: '15.2cm連装砲',
 		cost: {
@@ -504,9 +531,9 @@ export const IMPROVEMENT_DATAS = [
 		id: 66,
 		name: '8cm高角砲',
 		cost: {
-			toSix: { status: 'available', screws: 3, certainScrews: 3 },
-			toTen: { status: 'available', screws: 4, certainScrews: 5 },
-			upgrade: { status: 'available', screws: 8, certainScrews: 12 },
+			toSix: { status: 'available', screws: 2, certainScrews: 3 },
+			toTen: { status: 'available', screws: 2, certainScrews: 4 },
+			upgrade: { status: 'available', screws: 6, certainScrews: 8 },
 		},
 	},
 	{
@@ -621,8 +648,8 @@ export const IMPROVEMENT_DATAS = [
 		id: 82,
 		name: '九七式艦攻(九三一空)',
 		cost: {
-			toSix: { status: 'available', screws: 3, certainScrews: 4 },
-			toTen: { status: 'available', screws: 4, certainScrews: 6 },
+			toSix: { status: 'available', screws: 2, certainScrews: 3 },
+			toTen: { status: 'available', screws: 4, certainScrews: 5 },
 			upgrade: { status: 'available', screws: 7, certainScrews: 13 },
 		},
 	},
@@ -677,7 +704,7 @@ export const IMPROVEMENT_DATAS = [
 		cost: {
 			toSix: { status: 'available', screws: 2, certainScrews: 3 },
 			toTen: { status: 'available', screws: 3, certainScrews: 4 },
-			upgrade: { status: 'none' },
+			upgrade: { status: 'available', screws: 7, certainScrews: 9 },
 		},
 	},
 	{
@@ -696,6 +723,15 @@ export const IMPROVEMENT_DATAS = [
 			toSix: { status: 'available', screws: 4, certainScrews: 5 },
 			toTen: { status: 'available', screws: 6, certainScrews: 7 },
 			upgrade: { status: 'available', screws: 6, certainScrews: 14 },
+		},
+	},
+	{
+		id: 94,
+		name: '天山一二型(友永隊)',
+		cost: {
+			toSix: { status: 'available', screws: 6, certainScrews: 7 },
+			toTen: { status: 'available', screws: 7, certainScrews: 9 },
+			upgrade: { status: 'available', screws: 18, certainScrews: 27 },
 		},
 	},
 	{
@@ -720,8 +756,8 @@ export const IMPROVEMENT_DATAS = [
 		id: 98,
 		name: '九七式艦攻(熟練)',
 		cost: {
-			toSix: { status: 'available', screws: 3, certainScrews: 3 },
-			toTen: { status: 'available', screws: 3, certainScrews: 5 },
+			toSix: { status: 'available', screws: 2, certainScrews: 3 },
+			toTen: { status: 'available', screws: 3, certainScrews: 4 },
 			upgrade: { status: 'available', screws: 7, certainScrews: 9 },
 		},
 	},
@@ -785,6 +821,15 @@ export const IMPROVEMENT_DATAS = [
 		cost: {
 			toSix: { status: 'available', screws: 3, certainScrews: 5 },
 			toTen: { status: 'available', screws: 4, certainScrews: 6 },
+			upgrade: { status: 'none' },
+		},
+	},
+	{
+		id: 110,
+		name: '烈風(六〇一空)',
+		cost: {
+			toSix: { status: 'available', screws: 4, certainScrews: 5 },
+			toTen: { status: 'available', screws: 6, certainScrews: 7 },
 			upgrade: { status: 'none' },
 		},
 	},
@@ -906,6 +951,15 @@ export const IMPROVEMENT_DATAS = [
 		},
 	},
 	{
+		id: 129,
+		name: '熟練見張員',
+		cost: {
+			toSix: { status: 'available', screws: 2, certainScrews: 2 },
+			toTen: { status: 'available', screws: 2, certainScrews: 6 },
+			upgrade: { status: 'none' },
+		},
+	},
+	{
 		id: 130,
 		name: '12.7cm高角砲＋高射装置',
 		cost: {
@@ -982,8 +1036,8 @@ export const IMPROVEMENT_DATAS = [
 		name: '15.2cm連装砲改',
 		cost: {
 			toSix: { status: 'available', screws: 2, certainScrews: 3 },
-			toTen: { status: 'available', screws: 3, certainScrews: 6 },
-			upgrade: { status: 'available', screws: 5, certainScrews: 11 },
+			toTen: { status: 'available', screws: 3, certainScrews: 5 },
+			upgrade: { status: 'available', screws: 5, certainScrews: 10 },
 		},
 	},
 	{
@@ -1095,6 +1149,15 @@ export const IMPROVEMENT_DATAS = [
 		},
 	},
 	{
+		id: 158,
+		name: 'Bf109T改',
+		cost: {
+			toSix: { status: 'available', screws: 2, certainScrews: 3 },
+			toTen: { status: 'available', screws: 3, certainScrews: 5 },
+			upgrade: { status: 'available', screws: 10, certainScrews: 18 },
+		},
+	},
+	{
 		id: 161,
 		name: '16inch三連装砲 Mk.7',
 		cost: {
@@ -1190,6 +1253,15 @@ export const IMPROVEMENT_DATAS = [
 		cost: {
 			toSix: { status: 'available', screws: 2, certainScrews: 3 },
 			toTen: { status: 'available', screws: 3, certainScrews: 5 },
+			upgrade: { status: 'none' },
+		},
+	},
+	{
+		id: 172,
+		name: '5inch連装砲 Mk.28 mod.2',
+		cost: {
+			toSix: { status: 'available', screws: 6, certainScrews: 7 },
+			toTen: { status: 'available', screws: 7, certainScrews: 10 },
 			upgrade: { status: 'none' },
 		},
 	},
@@ -1299,6 +1371,15 @@ export const IMPROVEMENT_DATAS = [
 			toSix: { status: 'available', screws: 6, certainScrews: 7 },
 			toTen: { status: 'available', screws: 7, certainScrews: 9 },
 			upgrade: { status: 'available', screws: 11, certainScrews: 17 },
+		},
+	},
+	{
+		id: 189,
+		name: 'Re.2005 改',
+		cost: {
+			toSix: { status: 'available', screws: 4, certainScrews: 5 },
+			toTen: { status: 'available', screws: 6, certainScrews: 7 },
+			upgrade: { status: 'none' },
 		},
 	},
 	{
@@ -1494,8 +1575,8 @@ export const IMPROVEMENT_DATAS = [
 		id: 220,
 		name: '8cm高角砲改＋増設機銃',
 		cost: {
-			toSix: { status: 'available', screws: 4, certainScrews: 5 },
-			toTen: { status: 'available', screws: 6, certainScrews: 8 },
+			toSix: { status: 'available', screws: 3, certainScrews: 4 },
+			toTen: { status: 'available', screws: 5, certainScrews: 6 },
 			upgrade: { status: 'none' },
 		},
 	},
@@ -1558,8 +1639,8 @@ export const IMPROVEMENT_DATAS = [
 		name: '12.7cm単装高角砲(後期型)',
 		cost: {
 			toSix: { status: 'available', screws: 2, certainScrews: 2 },
-			toTen: { status: 'available', screws: 3, certainScrews: 4 },
-			upgrade: { status: 'none' },
+			toTen: { status: 'available', screws: 3, certainScrews: 3 },
+			upgrade: { status: 'available', screws: 4, certainScrews: 7 },
 		},
 	},
 	{
@@ -1578,6 +1659,15 @@ export const IMPROVEMENT_DATAS = [
 			toSix: { status: 'available', screws: 4, certainScrews: 4 },
 			toTen: { status: 'available', screws: 5, certainScrews: 6 },
 			upgrade: { status: 'none' },
+		},
+	},
+	{
+		id: 233,
+		name: 'F4U-1D',
+		cost: {
+			toSix: { status: 'available', screws: 4, certainScrews: 5 },
+			toTen: { status: 'available', screws: 5, certainScrews: 7 },
+			upgrade: { status: 'available', screws: 8, certainScrews: 16 },
 		},
 	},
 	{
@@ -1692,9 +1782,9 @@ export const IMPROVEMENT_DATAS = [
 		id: 249,
 		name: 'Fulmar',
 		cost: {
-			toSix: { status: 'available', screws: 2, certainScrews: 3 },
-			toTen: { status: 'available', screws: 3, certainScrews: 5 },
-			upgrade: { status: 'available', screws: 6, certainScrews: 9 },
+			toSix: { status: 'available', screws: 1, certainScrews: 3 },
+			toTen: { status: 'available', screws: 2, certainScrews: 4 },
+			upgrade: { status: 'available', screws: 5, certainScrews: 8 },
 		},
 	},
 	{
@@ -1712,7 +1802,16 @@ export const IMPROVEMENT_DATAS = [
 		cost: {
 			toSix: { status: 'available', screws: 3, certainScrews: 4 },
 			toTen: { status: 'available', screws: 4, certainScrews: 6 },
-			upgrade: { status: 'available', screws: 7, certainScrews: null },
+			upgrade: { status: 'available', screws: 7, certainScrews: 9 },
+		},
+	},
+	{
+		id: 252,
+		name: 'Seafire Mk.III改',
+		cost: {
+			toSix: { status: 'available', screws: 4, certainScrews: 4 },
+			toTen: { status: 'available', screws: 5, certainScrews: 8 },
+			upgrade: { status: 'none' },
 		},
 	},
 	{
@@ -1896,6 +1995,15 @@ export const IMPROVEMENT_DATAS = [
 		},
 	},
 	{
+		id: 288,
+		name: '試製15cm9連装対潜噴進砲',
+		cost: {
+			toSix: { status: 'available', screws: 4, certainScrews: 4 },
+			toTen: { status: 'available', screws: 8, certainScrews: 13 },
+			upgrade: { status: 'none' },
+		},
+	},
+	{
 		id: 289,
 		name: '35.6cm三連装砲改(ダズル迷彩仕様)',
 		cost: {
@@ -2004,6 +2112,15 @@ export const IMPROVEMENT_DATAS = [
 		},
 	},
 	{
+		id: 309,
+		name: '甲標的 丙型',
+		cost: {
+			toSix: { status: 'available', screws: 3, certainScrews: 3 },
+			toTen: { status: 'available', screws: 4, certainScrews: 6 },
+			upgrade: { status: 'none' },
+		},
+	},
+	{
 		id: 310,
 		name: '14cm連装砲改',
 		cost: {
@@ -2036,7 +2153,7 @@ export const IMPROVEMENT_DATAS = [
 		cost: {
 			toSix: { status: 'available', screws: 6, certainScrews: 6 },
 			toTen: { status: 'available', screws: 7, certainScrews: 8 },
-			upgrade: { status: 'none' },
+			upgrade: { status: 'available', screws: 9, certainScrews: 13 },
 		},
 	},
 	{
@@ -2157,6 +2274,24 @@ export const IMPROVEMENT_DATAS = [
 		},
 	},
 	{
+		id: 340,
+		name: '152mm／55 三連装速射砲',
+		cost: {
+			toSix: { status: 'available', screws: 2, certainScrews: 3 },
+			toTen: { status: 'available', screws: 3, certainScrews: 5 },
+			upgrade: { status: 'available', screws: 6, certainScrews: 8 },
+		},
+	},
+	{
+		id: 341,
+		name: '152mm／55 三連装速射砲改',
+		cost: {
+			toSix: { status: 'available', screws: 3, certainScrews: 4 },
+			toTen: { status: 'available', screws: 4, certainScrews: 5 },
+			upgrade: { status: 'none' },
+		},
+	},
+	{
 		id: 344,
 		name: '九七式艦攻改 試製三号戊型(空六号電探改装備機)',
 		cost: {
@@ -2188,8 +2323,8 @@ export const IMPROVEMENT_DATAS = [
 		name: '8inch三連装砲 Mk.9',
 		cost: {
 			toSix: { status: 'available', screws: 2, certainScrews: 3 },
-			toTen: { status: 'available', screws: 3, certainScrews: 5 },
-			upgrade: { status: 'available', screws: 7, certainScrews: 12 },
+			toTen: { status: 'available', screws: 3, certainScrews: 4 },
+			upgrade: { status: 'available', screws: 6, certainScrews: 9 },
 		},
 	},
 	{
@@ -2197,7 +2332,7 @@ export const IMPROVEMENT_DATAS = [
 		name: '8inch三連装砲 Mk.9 mod.2',
 		cost: {
 			toSix: { status: 'available', screws: 3, certainScrews: 4 },
-			toTen: { status: 'available', screws: 5, certainScrews: 8 },
+			toTen: { status: 'available', screws: 5, certainScrews: 6 },
 			upgrade: { status: 'none' },
 		},
 	},
@@ -2261,7 +2396,7 @@ export const IMPROVEMENT_DATAS = [
 		cost: {
 			toSix: { status: 'available', screws: 3, certainScrews: 4 },
 			toTen: { status: 'available', screws: 4, certainScrews: 5 },
-			upgrade: { status: 'none' },
+			upgrade: { status: 'available', screws: 7, certainScrews: 14 },
 		},
 	},
 	{
@@ -2322,8 +2457,8 @@ export const IMPROVEMENT_DATAS = [
 		id: 391,
 		name: '九九式艦爆二二型',
 		cost: {
-			toSix: { status: 'available', screws: 2, certainScrews: 3 },
-			toTen: { status: 'available', screws: 3, certainScrews: 5 },
+			toSix: { status: 'available', screws: 2, certainScrews: 2 },
+			toTen: { status: 'available', screws: 3, certainScrews: 4 },
 			upgrade: { status: 'available', screws: 4, certainScrews: 6 },
 		},
 	},
@@ -2332,7 +2467,7 @@ export const IMPROVEMENT_DATAS = [
 		name: '九九式艦爆二二型(熟練)',
 		cost: {
 			toSix: { status: 'available', screws: 3, certainScrews: 3 },
-			toTen: { status: 'available', screws: 4, certainScrews: 6 },
+			toTen: { status: 'available', screws: 4, certainScrews: 5 },
 			upgrade: { status: 'none' },
 		},
 	},
@@ -2360,6 +2495,42 @@ export const IMPROVEMENT_DATAS = [
 		cost: {
 			toSix: { status: 'available', screws: 3, certainScrews: 4 },
 			toTen: { status: 'available', screws: 5, certainScrews: 6 },
+			upgrade: { status: 'none' },
+		},
+	},
+	{
+		id: 397,
+		name: '現地改装12.7cm連装高角砲',
+		cost: {
+			toSix: { status: 'available', screws: 2, certainScrews: 2 },
+			toTen: { status: 'available', screws: 3, certainScrews: 6 },
+			upgrade: { status: 'none' },
+		},
+	},
+	{
+		id: 398,
+		name: '現地改装10cm連装高角砲',
+		cost: {
+			toSix: { status: 'available', screws: 2, certainScrews: 2 },
+			toTen: { status: 'available', screws: 3, certainScrews: 5 },
+			upgrade: { status: 'none' },
+		},
+	},
+	{
+		id: 399,
+		name: '6inch Mk.XXIII三連装砲',
+		cost: {
+			toSix: { status: 'available', screws: 2, certainScrews: 3 },
+			toTen: { status: 'available', screws: 3, certainScrews: 4 },
+			upgrade: { status: 'none' },
+		},
+	},
+	{
+		id: 400,
+		name: '533mm 三連装魚雷(53-39型)',
+		cost: {
+			toSix: { status: 'available', screws: 3, certainScrews: 4 },
+			toTen: { status: 'available', screws: 4, certainScrews: 6 },
 			upgrade: { status: 'none' },
 		},
 	},
@@ -2463,6 +2634,24 @@ export const IMPROVEMENT_DATAS = [
 		},
 	},
 	{
+		id: 422,
+		name: 'FR-1 Fireball',
+		cost: {
+			toSix: { status: 'available', screws: 7, certainScrews: 8 },
+			toTen: { status: 'available', screws: 9, certainScrews: 14 },
+			upgrade: { status: 'none' },
+		},
+	},
+	{
+		id: 423,
+		name: 'Fulmar(戦闘偵察/熟練)',
+		cost: {
+			toSix: { status: 'available', screws: 2, certainScrews: 3 },
+			toTen: { status: 'available', screws: 3, certainScrews: 5 },
+			upgrade: { status: 'none' },
+		},
+	},
+	{
 		id: 424,
 		name: 'Barracuda Mk.II',
 		cost: {
@@ -2493,9 +2682,45 @@ export const IMPROVEMENT_DATAS = [
 		id: 427,
 		name: '305mm/46 三連装砲',
 		cost: {
-			toSix: { status: 'available', screws: 2, certainScrews: 3 },
-			toTen: { status: 'available', screws: 2, certainScrews: 4 },
-			upgrade: { status: 'available', screws: 6, certainScrews: 9 },
+			toSix: { status: 'available', screws: 3, certainScrews: 3 },
+			toTen: { status: 'available', screws: 3, certainScrews: 4 },
+			upgrade: { status: 'available', screws: 8, certainScrews: 11 },
+		},
+	},
+	{
+		id: 428,
+		name: '320mm/44 連装砲',
+		cost: {
+			toSix: { status: 'available', screws: 3, certainScrews: 3 },
+			toTen: { status: 'available', screws: 3, certainScrews: 5 },
+			upgrade: { status: 'none' },
+		},
+	},
+	{
+		id: 429,
+		name: '320mm/44 三連装砲',
+		cost: {
+			toSix: { status: 'available', screws: 4, certainScrews: 4 },
+			toTen: { status: 'available', screws: 4, certainScrews: 6 },
+			upgrade: { status: 'none' },
+		},
+	},
+	{
+		id: 431,
+		name: 'SM.79',
+		cost: {
+			toSix: { status: 'available', screws: 3, certainScrews: 3 },
+			toTen: { status: 'available', screws: 3, certainScrews: 4 },
+			upgrade: { status: 'available', screws: 4, certainScrews: 5 },
+		},
+	},
+	{
+		id: 432,
+		name: 'SM.79 bis',
+		cost: {
+			toSix: { status: 'available', screws: 4, certainScrews: 4 },
+			toTen: { status: 'available', screws: 4, certainScrews: 5 },
+			upgrade: { status: 'none' },
 		},
 	},
 	{
@@ -2643,6 +2868,24 @@ export const IMPROVEMENT_DATAS = [
 		},
 	},
 	{
+		id: 473,
+		name: 'F4U-2 Night Corsair',
+		cost: {
+			toSix: { status: 'available', screws: 5, certainScrews: 6 },
+			toTen: { status: 'available', screws: 7, certainScrews: 12 },
+			upgrade: { status: 'available', screws: 9, certainScrews: 18 },
+		},
+	},
+	{
+		id: 474,
+		name: 'F4U-4',
+		cost: {
+			toSix: { status: 'available', screws: 6, certainScrews: 7 },
+			toTen: { status: 'available', screws: 8, certainScrews: 14 },
+			upgrade: { status: 'none' },
+		},
+	},
+	{
 		id: 478,
 		name: '熟練甲板要員＋航空整備員',
 		cost: {
@@ -2697,11 +2940,38 @@ export const IMPROVEMENT_DATAS = [
 		},
 	},
 	{
+		id: 489,
+		name: '一式戦 隼II型改(20戦隊)',
+		cost: {
+			toSix: { status: 'available', screws: 3, certainScrews: 4 },
+			toTen: { status: 'available', screws: 5, certainScrews: 7 },
+			upgrade: { status: 'none' },
+		},
+	},
+	{
+		id: 492,
+		name: '零戦52型丙(八幡部隊)',
+		cost: {
+			toSix: { status: 'available', screws: 3, certainScrews: 4 },
+			toTen: { status: 'available', screws: 3, certainScrews: 5 },
+			upgrade: { status: 'none' },
+		},
+	},
+	{
 		id: 493,
 		name: '一式陸攻(八幡部隊)',
 		cost: {
 			toSix: { status: 'available', screws: 3, certainScrews: 3 },
 			toTen: { status: 'available', screws: 4, certainScrews: 5 },
+			upgrade: { status: 'none' },
+		},
+	},
+	{
+		id: 496,
+		name: '陸軍歩兵部隊',
+		cost: {
+			toSix: { status: 'available', screws: 1, certainScrews: 1 },
+			toTen: { status: 'available', screws: 1, certainScrews: 2 },
 			upgrade: { status: 'none' },
 		},
 	},
@@ -2787,11 +3057,38 @@ export const IMPROVEMENT_DATAS = [
 		},
 	},
 	{
+		id: 519,
+		name: 'SJレーダー+潜水艦司令塔装備',
+		cost: {
+			toSix: { status: 'available', screws: 9, certainScrews: 10 },
+			toTen: { status: 'available', screws: 10, certainScrews: 12 },
+			upgrade: { status: 'none' },
+		},
+	},
+	{
 		id: 520,
 		name: '試製20.3cm(4号)連装砲',
 		cost: {
 			toSix: { status: 'available', screws: 4, certainScrews: 4 },
 			toTen: { status: 'available', screws: 6, certainScrews: 7 },
+			upgrade: { status: 'none' },
+		},
+	},
+	{
+		id: 522,
+		name: '零式小型水上機',
+		cost: {
+			toSix: { status: 'available', screws: 2, certainScrews: 3 },
+			toTen: { status: 'available', screws: 3, certainScrews: 4 },
+			upgrade: { status: 'available', screws: 4, certainScrews: 8 },
+		},
+	},
+	{
+		id: 523,
+		name: '零式小型水上機(熟練)',
+		cost: {
+			toSix: { status: 'available', screws: 3, certainScrews: 4 },
+			toTen: { status: 'available', screws: 4, certainScrews: 5 },
 			upgrade: { status: 'none' },
 		},
 	},
@@ -2850,12 +3147,30 @@ export const IMPROVEMENT_DATAS = [
 		},
 	},
 	{
+		id: 535,
+		name: '13.8cm連装砲改',
+		cost: {
+			toSix: { status: 'available', screws: 2, certainScrews: 3 },
+			toTen: { status: 'available', screws: 3, certainScrews: 5 },
+			upgrade: { status: 'none' },
+		},
+	},
+	{
 		id: 536,
 		name: '15.2cm三連装主砲',
 		cost: {
 			toSix: { status: 'available', screws: 3, certainScrews: 3 },
 			toTen: { status: 'available', screws: 3, certainScrews: 4 },
 			upgrade: { status: 'available', screws: 7, certainScrews: 10 },
+		},
+	},
+	{
+		id: 537,
+		name: '15.2cm三連装主砲改',
+		cost: {
+			toSix: { status: 'available', screws: 3, certainScrews: 3 },
+			toTen: { status: 'available', screws: 3, certainScrews: 3 },
+			upgrade: { status: 'none' },
 		},
 	},
 	{
@@ -2873,7 +3188,7 @@ export const IMPROVEMENT_DATAS = [
 		cost: {
 			toSix: { status: 'available', screws: 2, certainScrews: 2 },
 			toTen: { status: 'available', screws: 2, certainScrews: 3 },
-			upgrade: { status: 'available', screws: 4, certainScrews: null },
+			upgrade: { status: 'available', screws: 4, certainScrews: 5 },
 		},
 	},
 	{
@@ -2881,7 +3196,7 @@ export const IMPROVEMENT_DATAS = [
 		name: 'TBD(Yellow Wings)',
 		cost: {
 			toSix: { status: 'available', screws: 2, certainScrews: 3 },
-			toTen: { status: 'unknown' },
+			toTen: { status: 'available', screws: 2, certainScrews: 3 },
 			upgrade: { status: 'none' },
 		},
 	},
@@ -2904,11 +3219,137 @@ export const IMPROVEMENT_DATAS = [
 		},
 	},
 	{
+		id: 546,
+		name: '試製 震電(局地戦闘機)',
+		cost: {
+			toSix: { status: 'available', screws: 7, certainScrews: 8 },
+			toTen: { status: 'available', screws: 9, certainScrews: 12 },
+			upgrade: { status: 'none' },
+		},
+	},
+	{
+		id: 547,
+		name: '震電改二(艦戦型改二)',
+		cost: {
+			toSix: { status: 'available', screws: 8, certainScrews: 9 },
+			toTen: { status: 'available', screws: 9, certainScrews: 13 },
+			upgrade: { status: 'none' },
+		},
+	},
+	{
 		id: 549,
 		name: '三式指揮連絡機改二',
 		cost: {
 			toSix: { status: 'available', screws: 4, certainScrews: 5 },
 			toTen: { status: 'available', screws: 5, certainScrews: 7 },
+			upgrade: { status: 'none' },
+		},
+	},
+	{
+		id: 550,
+		name: '試製 明星(増加試作機)',
+		cost: {
+			toSix: { status: 'available', screws: 1, certainScrews: 2 },
+			toTen: { status: 'available', screws: 1, certainScrews: 2 },
+			upgrade: { status: 'available', screws: 3, certainScrews: 6 },
+		},
+	},
+	{
+		id: 551,
+		name: '明星改',
+		cost: {
+			toSix: { status: 'available', screws: 1, certainScrews: 2 },
+			toTen: { status: 'available', screws: 2, certainScrews: 3 },
+			upgrade: { status: 'available', screws: 4, certainScrews: 7 },
+		},
+	},
+	{
+		id: 552,
+		name: '九九式練爆二二型改(夜間装備実験機)',
+		cost: {
+			toSix: { status: 'available', screws: 2, certainScrews: 3 },
+			toTen: { status: 'available', screws: 4, certainScrews: 6 },
+			upgrade: { status: 'none' },
+		},
+	},
+	{
+		id: 553,
+		name: '10cm連装高角砲改',
+		cost: {
+			toSix: { status: 'available', screws: 2, certainScrews: 3 },
+			toTen: { status: 'available', screws: 3, certainScrews: 6 },
+			upgrade: { status: 'available', screws: 14, certainScrews: 18 },
+		},
+	},
+	{
+		id: 555,
+		name: '18cm/57 三連装主砲',
+		cost: {
+			toSix: { status: 'available', screws: 2, certainScrews: 3 },
+			toTen: { status: 'available', screws: 3, certainScrews: 5 },
+			upgrade: { status: 'none' },
+		},
+	},
+	{
+		id: 564,
+		name: '21cm単装主砲',
+		cost: {
+			toSix: { status: 'available', screws: 1, certainScrews: 2 },
+			toTen: { status: 'available', screws: 1, certainScrews: 3 },
+			upgrade: { status: 'none' },
+		},
+	},
+	{
+		id: 565,
+		name: '15cm単装副砲',
+		cost: {
+			toSix: { status: 'available', screws: 1, certainScrews: 1 },
+			toTen: { status: 'available', screws: 1, certainScrews: 3 },
+			upgrade: { status: 'none' },
+		},
+	},
+	{
+		id: 570,
+		name: '流星改(友永隊)',
+		cost: {
+			toSix: { status: 'available', screws: 8, certainScrews: 8 },
+			toTen: { status: 'available', screws: 9, certainScrews: 11 },
+			upgrade: { status: 'none' },
+		},
+	},
+	{
+		id: 572,
+		name: '12.7cm単装高角砲改三',
+		cost: {
+			toSix: { status: 'available', screws: 4, certainScrews: 4 },
+			toTen: { status: 'available', screws: 5, certainScrews: 7 },
+			upgrade: { status: 'none' },
+		},
+	},
+	{
+		id: 573,
+		name: '試製 23号電探改三',
+		cost: {
+			toSix: { status: 'available', screws: 6, certainScrews: 7 },
+			toTen: { status: 'available', screws: 7, certainScrews: 9 },
+			upgrade: { status: 'available', screws: 13, certainScrews: 18 },
+		},
+	},
+	{
+		id: 574,
+		name: 'SCレーダー改(後期調整型)',
+		cost: {
+			toSix: { status: 'available', screws: 7, certainScrews: 8 },
+			toTen: { status: 'available', screws: 9, certainScrews: 12 },
+			upgrade: { status: 'none' },
+		},
+	},
+	{
+		id: 575,
+		name: '25mm連装機銃(熟練機銃員分隊)',
+		cost: {
+			toSix: { status: 'available', screws: 2, certainScrews: 3 },
+			toTen: { status: 'available', screws: 3, certainScrews: 6 },
 			upgrade: { status: 'none' },
 		},
 	},
