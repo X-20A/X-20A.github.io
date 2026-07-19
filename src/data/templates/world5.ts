@@ -97,4 +97,52 @@ export const WORLD_5: Ttemplate[] = [
         "token": "WTjxP0WjUrp",
         "memo": "旗艦健在なら夜戦$eタッチ使用時陣形注意"
     },
+    {
+        "title": "5-6_AC2DG_輸送",
+        "world": 5,
+        "area": 6,
+        "route": "1-A-C2-D-E-G",
+        "token": "QXsmMMjOIO3",
+        "memo": "TP: 280"
+    },
+    {
+        "title": "5-6_A2CH_R到達",
+        "world": 5,
+        "area": 6,
+        "route": "1-A2-C-H-R",
+        "token": "77nMOfpLZb6",
+        "memo": ""
+    },
+    {
+        "title": "5-6_JKMN_削り",
+        "world": 5,
+        "area": 6,
+        "route": "2-I-J-K-L-N",
+        "token": "3w5Ff6bmtHj",
+        "memo": ""
+    },
+    {
+        "title": "5-6_JKMN_破壊",
+        "world": 5,
+        "area": 6,
+        "route": "2-I-J-K-L-N",
+        "token": "y_UECc0SC8v",
+        "memo": ""
+    },
+    {
+        "title": "5-6_QUXZ_削り",
+        "world": 5,
+        "area": 6,
+        "route": "2-I-O-Q-U-X-Z",
+        "token": "CaMSp5GpZiw",
+        "memo": ""
+    },
+    {
+        "title": "5-6_QUXZ_破壊",
+        "world": 5,
+        "area": 6,
+        "route": "2-I-O-Q-U-X-Z",
+        "token": "8wIewn931P3",
+        "memo": ""
+    },
 ] as const;
