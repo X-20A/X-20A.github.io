@@ -6,6 +6,9 @@ import vangards from '@/data/vangard';
 import { Ttemplate } from '@/classes/types';
 import { TEMPLATES } from '@/data/templates';
 
+// 1列に収める最大件数。超えた分は右の列に折り返す
+const ITEMS_PER_COLUMN = 7;
+
 const Areas: React.FC = () => {
   const [mode] = useAtom(modeAtom);
   const [area, setArea] = useAtom(areaAtom);
@@ -59,7 +62,7 @@ const Areas: React.FC = () => {
         style={{
           top: position.top,
           left: position.left,
-          maxHeight: `calc(100vh - ${position.top}px - 8px)`, // 画面下端まで
+          gridTemplateRows: `repeat(${Math.max(1, Math.min(items.length, ITEMS_PER_COLUMN))}, auto)`,
         }}
         onMouseEnter={() => setArea(area)}
         onMouseLeave={() => setArea(0)}

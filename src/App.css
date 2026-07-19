@@ -111,15 +111,18 @@ a {
 .select-menu {
 	position: fixed;
 	z-index: 999999;
-	min-width: 180px;
-	border-left: 2px solid #dcefff;
+	display: grid;
+	grid-auto-flow: column;
+	grid-auto-columns: minmax(180px, auto);
 	font-weight: 500;
 	background-color: #fff;
 }
 .items {
-	padding-left: 5px;
 	cursor: pointer;
 	user-select: none;
+	border-left: 2px solid #dcefff;
+	margin: 0;
+	padding: 3px 3px 3px 5px;
 }
 .items:hover {
 	background-color: #dcefff;
