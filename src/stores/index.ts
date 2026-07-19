@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { RowData, INITIAL_SAVE_DATA, SaveData, INITIAL_ROW_DATA } from "../types";
 import { parse, ValiError } from "valibot";
-import { SaveDataSchema } from "../logics/sheme";
+import { SaveDataSchema } from "../logics/schema";
 import CustomError from "../errors/CustomError";
 import { extract_url_domain } from "../logics/url";
 

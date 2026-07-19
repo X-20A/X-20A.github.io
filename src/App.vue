@@ -185,7 +185,7 @@ import { calc_URL_param, do_delete_URL_param, is_approved_url, do_open_url_in_ne
 import lzstring from "lz-string";
 import { extract_data_from_text } from './logics/extract';
 import { parse, ValiError } from 'valibot';
-import { SaveDataSchema } from './logics/sheme';
+import { SaveDataSchema } from './logics/schema';
 import DomainPermission from './components/DomainPermission.vue';
 import ErrorView from './components/ErrorView.vue';
 import { calc_diff_data, calc_total_data } from './logics/calculation';
