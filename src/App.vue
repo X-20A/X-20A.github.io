@@ -49,12 +49,17 @@
 					<div class="header">期待値</div>
 					<div class="header">確実化</div>
 
-					<template v-for="(row, i) in ROWS" :key="row.label">
-						<div>{{ row.label }}</div>
-						<div :class="{ empty: row.noBorder }">{{ nezText(row) }}</div>
+					<!-- 更新先が同名で複数ある装備があるので、キーは添字 -->
+					<template v-for="(row, i) in results" :key="i">
+						<div :class="{ 'upgrade-label': row.upgradeTo !== null }">
+							{{ row.label
+							}}<template v-if="row.upgradeTo"><br />→ {{ row.upgradeTo
+							}}<template v-if="row.upgradeNote"><br />({{ row.upgradeNote }})</template></template>
+						</div>
+						<div :class="{ empty: row.noBorder }">{{ row.nez }}</div>
 						<div>{{ row.rateLabel }}</div>
-						<div>{{ results[i]?.expect ?? '' }}</div>
-						<div>{{ results[i]?.witch ?? '' }}</div>
+						<div>{{ row.expect }}</div>
+						<div>{{ row.witch }}</div>
 					</template>
 				</div>
 			</div>
@@ -90,27 +95,30 @@ const FAVS_KEY = 'imp_favs';
 const MAX_HITS = 20;
 
 /**
- * 表の各行。cost はネジ数を引く区分、showCost はその区分の先頭行
+ * ★区分の各行。cost はネジ数を引く区分、showCost はその区分の先頭行
  * (ネジ数を実際に表示する行) かどうかを表す。
+ * 更新行は更新先ごとに増えるので、ここには含めず results 側で足す。
  */
 type Row = {
 	label: string;
 	rateLabel: string;
 	rate: number;
-	cost: CostKey;
+	cost: Exclude<CostKey, 'upgrade'>;
 	showCost: boolean;
 	noBorder: boolean;
 };
 
-const ROWS: readonly Row[] = [
+const STAR_ROWS: readonly Row[] = [
 	{ label: '1~5', rateLabel: '100%', rate: 1, cost: 'toSix', showCost: true, noBorder: true },
 	{ label: '5→6', rateLabel: '94.05%', rate: 0.9405, cost: 'toSix', showCost: false, noBorder: false },
 	{ label: '6→7', rateLabel: '88.82%', rate: 0.8882, cost: 'toTen', showCost: true, noBorder: true },
 	{ label: '7→8', rateLabel: '81.91%', rate: 0.8191, cost: 'toTen', showCost: false, noBorder: true },
 	{ label: '8→9', rateLabel: '78.91%', rate: 0.7891, cost: 'toTen', showCost: false, noBorder: true },
 	{ label: '9→10', rateLabel: '70.23%', rate: 0.7023, cost: 'toTen', showCost: false, noBorder: false },
-	{ label: '更新', rateLabel: '58.57%', rate: 0.5857, cost: 'upgrade', showCost: true, noBorder: false },
 ];
+
+const UPGRADE_RATE = 0.5857;
+const UPGRADE_RATE_LABEL = '58.57%';
 
 const searchText = ref('');
 const isHitsVisible = ref(false);
@@ -135,27 +143,96 @@ const hits = computed<Equipment[]>(() => {
 	return searchWithName(text);
 });
 
+/** 表示用に組み上げた1行 */
+type ResultRow = {
+	label: string;
+	/** 更新行のときだけ更新先の装備名。★区分の行では null */
+	upgradeTo: string | null;
+	/** 同名の更新先を見分けるための注記。無ければ null */
+	upgradeNote: string | null;
+	nez: string;
+	rateLabel: string;
+	expect: string;
+	witch: string;
+	noBorder: boolean;
+};
+
 // 選択中の装備の期待値と確実化判定
-const results = computed(() => {
+const results = computed<ResultRow[]>(() => {
 	const item = selected.value;
+	// 未選択でも表の枠は出す
 	if (!item) {
-		return [];
+		return [...STAR_ROWS, { label: '更新', rateLabel: UPGRADE_RATE_LABEL, noBorder: false }].map(
+			(row) => ({ ...row, upgradeTo: null, upgradeNote: null, nez: '', expect: '', witch: '' }),
+		);
 	}
-	return ROWS.map((row) => {
-		const phase = item.cost[row.cost];
+
+	const rows: ResultRow[] = STAR_ROWS.map(({ label, rateLabel, rate, cost, showCost, noBorder }) => {
+		const phase = item.cost[cost];
 		// 更新先が無い・未判明なら計算できない
 		if (phase.status !== 'available') {
 			const mark = unavailableMark(phase.status);
-			return { expect: mark, witch: mark };
+			return {
+				label,
+				rateLabel,
+				noBorder,
+				upgradeTo: null,
+				upgradeNote: null,
+				nez: showCost ? mark : '',
+				expect: mark,
+				witch: mark,
+			};
 		}
-		const expect = Math.floor((phase.screws / row.rate) * 100) / 100;
-		const certain = phase.certainScrews;
 		return {
-			expect: String(expect),
-			witch: certain !== null && expect > certain ? '〇' : '',
+			label,
+			rateLabel,
+			noBorder,
+			upgradeTo: null,
+			upgradeNote: null,
+			nez: showCost ? nezText(phase.screws, phase.certainScrews) : '',
+			...calc(phase.screws, phase.certainScrews, rate),
 		};
 	});
+
+	const upgrade = item.cost.upgrade;
+	if (upgrade.status !== 'available') {
+		const mark = unavailableMark(upgrade.status);
+		rows.push({
+			label: '更新',
+			rateLabel: UPGRADE_RATE_LABEL,
+			upgradeTo: null,
+			upgradeNote: null,
+			nez: mark,
+			expect: mark,
+			witch: mark,
+			noBorder: false,
+		});
+		return rows;
+	}
+
+	// 更新先が複数ある装備があるので、更新先ごとに1行出す
+	for (const entry of upgrade.upgrades) {
+		rows.push({
+			label: '更新',
+			rateLabel: UPGRADE_RATE_LABEL,
+			upgradeTo: entry.to.name,
+			upgradeNote: entry.note ?? null,
+			nez: nezText(entry.screws, entry.certainScrews),
+			...calc(entry.screws, entry.certainScrews, UPGRADE_RATE),
+			noBorder: false,
+		});
+	}
+	return rows;
 });
+
+/** 期待値と、確実化した方が得かの判定 */
+function calc(screws: number, certain: number | null, rate: number) {
+	const expect = Math.floor((screws / rate) * 100) / 100;
+	return {
+		expect: String(expect),
+		witch: certain !== null && expect > certain ? '〇' : '',
+	};
+}
 
 /** 改修できない区分の表示。存在しないのか未判明なのかを区別する */
 function unavailableMark(status: 'none' | 'unknown'): string {
@@ -163,17 +240,8 @@ function unavailableMark(status: 'none' | 'unknown'): string {
 }
 
 /** ネジ列の「必要数 / 確実化数」表示 */
-function nezText(row: Row): string {
-	const item = selected.value;
-	if (!item || !row.showCost) {
-		return '';
-	}
-	const phase = item.cost[row.cost];
-	if (phase.status !== 'available') {
-		return unavailableMark(phase.status);
-	}
-	const certain = phase.certainScrews;
-	return certain === null ? String(phase.screws) : `${phase.screws} / ${certain}`;
+function nezText(screws: number, certain: number | null): string {
+	return certain === null ? String(screws) : `${screws} / ${certain}`;
 }
 
 function select(item: Equipment) {
@@ -320,7 +388,8 @@ onBeforeUnmount(() => {
 }
 .result {
 	display: grid;
-	grid-template-columns: 1fr 2fr 2fr 2fr 1fr;
+	/* 1列目は更新先の装備名が入るので広めに取る */
+	grid-template-columns: 3fr 2fr 2fr 2fr 1fr;
 	width: 100%;
 	margin: auto;
 	text-align: center;
@@ -330,6 +399,12 @@ onBeforeUnmount(() => {
 .result div {
 	border-right: 1px solid #000;
 	border-bottom: 1px solid #000;
+}
+/* 更新先名は長いので、行高を抑えるため小さめに詰める */
+.upgrade-label {
+	font-size: 0.85em;
+	line-height: 1.3;
+	overflow-wrap: anywhere;
 }
 .info-box {
 	display: flex;
