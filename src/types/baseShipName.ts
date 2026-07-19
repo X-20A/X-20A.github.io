@@ -4,9 +4,11 @@
  * @see ../data/ship.ts
  */
 export type BaseShipName =
+    | 'Algerie'
     | 'Aquila'
     | 'Ark Royal'
     | 'Atlanta'
+    | 'Bearn'
     | 'Bismarck'
     | 'Brooklyn'
     | 'C.Cappellini'
@@ -75,7 +77,9 @@ export type BaseShipName =
     | 'Tuscaloosa'
     | 'U-511'
     | 'Valiant'
+    | 'Vautour'
     | 'Victorious'
+    | 'Visby'
     | 'Wahoo'
     | 'Warspite'
     | 'Washington'
@@ -181,6 +185,7 @@ export type BaseShipName =
     | '旗風'
     | '日向'
     | '日振'
+    | '日枝丸'
     | '日進'
     | '早波'
     | '早潮'

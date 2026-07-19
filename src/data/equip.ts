@@ -636,6 +636,17 @@ const EQUIP_DATAS: EquipDatas = {
 
 ,577:{seek:0,type:EquipType.Torpedo,name:'61cm四連装(酸素)魚雷五型改三'}
 ,578:{seek:2,type:EquipType.DiveBomber,name:'SB2U-2'}
+
+,579:{seek:0,type:EquipType.MainGunS,name:'13.8cm単装砲 Modele 1927'}
+,584:{seek:0,type:EquipType.MainGunS,name:'Bofors 12cm単装両用砲'}
+,582:{seek:0,type:EquipType.MainGunM,name:'20.3cm/50 連装砲 Modele 1931'}
+,583:{seek:0,type:EquipType.MainGunM,name:'20.3cm/50 連装砲改(SHS改良弾)'}
+,580:{seek:0,type:EquipType.Torpedo,name:'55cm三連装魚雷 Modele 1924'}
+,581:{seek:0,type:EquipType.Torpedo,name:'55cm複合配置五連装魚雷 Modele 1932'}
+,588:{seek:0,type:EquipType.Fighter,name:'G-36A(F4F輸出型)'}
+,586:{seek:3,type:EquipType.DiveBomber,name:'PL101(爆装)'}
+,587:{seek:2,type:EquipType.DiveBomber,name:'V-156F(SB2U輸出型)'}
+,585:{seek:3,type:EquipType.CarrierScout,name:'PL101(偵察)'}
 } as const; // @expansion
 
 export default EQUIP_DATAS;

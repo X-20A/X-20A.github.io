@@ -958,6 +958,18 @@ const SHIP_DATAS: ShipDatas = {
 ,1041:{name:"花月",type:ST.DD,seek:0,seek2:0,na:NA.Japan,sg:SG.FastB2,base:1041}
 ,1044:{name:"桐",type:ST.DD,seek:0,seek2:0,na:NA.Japan,sg:SG.FastB2,base:1044}
 ,1046:{name:"花月改",type:ST.DD,seek:0,seek2:0,na:NA.Japan,sg:SG.FastB2,base:1041}
+
+,1051:{name:"Algerie",type:ST.CA,seek:0,seek2:0,na:NA.France,sg:SG.FastB2,base:1051}
+,1053:{name:"Vautour",type:ST.DD,seek:0,seek2:0,na:NA.France,sg:SG.FastB2,base:1053}
+,1055:{name:"Bearn",type:ST.CV,seek:0,seek2:0,na:NA.France,sg:SG.FastB2,base:1055}
+,1056:{name:"Algerie改",type:ST.CA,seek:0,seek2:0,na:NA.France,sg:SG.FastB2,base:1051}
+,1058:{name:"Vautour改",type:ST.DD,seek:0,seek2:0,na:NA.France,sg:SG.FastB2,base:1053}
+,1060:{name:"Bearn改",type:ST.CV,seek:0,seek2:0,na:NA.France,sg:SG.FastB2,base:1055}
+,1062:{name:"Visby",type:ST.DD,seek:0,seek2:0,na:NA.France,sg:SG.FastB2,base:1062}
+,1065:{name:"日枝丸",type:ST.AS,seek:0,seek2:0,na:NA.Japan,sg:SG.SlowB,base:1065}
+,1067:{name:"Visby改",type:ST.DD,seek:0,seek2:0,na:NA.France,sg:SG.FastB2,base:1062}
+,1070:{name:"日枝丸改",type:ST.AS,seek:0,seek2:0,na:NA.Japan,sg:SG.SlowB,base:1065}
+,1061:{name:"Bearn amelioration",type:ST.CV,seek:0,seek2:0,na:NA.France,sg:SG.FastB2,base:1055}
 }; // @expansion
 //,_:{name:'',type:ST.,seek:0,seek2:0,na:NA.,sg:SG.}
 export default SHIP_DATAS;
