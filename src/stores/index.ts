@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { RowData, INITIAL_SAVE_DATA, SaveData, INITIAL_ROW_DATA } from "../types";
 import { parse, ValiError } from "valibot";
 import { SaveDataSchema } from "../logics/schema";
+import { stash_corrupted_data } from "../logics/migration";
 import CustomError from "../errors/CustomError";
 import { extract_url_domain } from "../logics/url";
 
@@ -98,12 +99,21 @@ export const useStore = defineStore('datas', {
 
                 if (error instanceof ValiError) {
                     console.error('データ形式が不正です');
-                    // オプション: 不正なデータを削除
-                    localStorage.removeItem(LOCAL_STORAGE_KEY);
                 } else if (error instanceof SyntaxError) {
                     console.error('JSON形式が不正です');
-                    localStorage.removeItem(LOCAL_STORAGE_KEY);
+                } else {
+                    throw error;
                 }
+
+                // 壊れたデータは削除せず退避する。
+                // 復旧の手掛かりを残さないまま消すと、ユーザーは何も取り戻せない
+                const backup_key = stash_corrupted_data(data);
+                localStorage.removeItem(LOCAL_STORAGE_KEY);
+
+                useToastStore().SHOW_TOAST(
+                    `保存データを読み込めませんでした。壊れたデータは ${backup_key} に退避しています`,
+                    10000,
+                );
             }
         },
         INITIALIZE_DATA(): void {
