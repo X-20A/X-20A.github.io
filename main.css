@@ -1,0 +1,56 @@
+@charset "UTF-8";
+/* ==========================================================
+   z-index レイヤー規約 (/sim と共通)
+   ページ全体で重なりを競う要素は必ず以下の変数を使うこと。
+   コンポーネント内部だけで
+   完結する重なりは素の -1〜9 を直書きしてよい。
+   同一レイヤー内の前後調整は calc(var(--z-*) + 1〜9) で行う。
+   ========================================================== */
+:root {
+	--z-popover: 10; /* ドロップダウン・ツールチップ・ポップアップ */
+	--z-chrome: 30; /* 固定ヘッダー・フッター */
+	--z-drawer: 40; /* サイドバーとそのマスク */
+	--z-modal: 50; /* モーダルオーバーレイ(最前面) */
+}
+body {
+	margin: 0;
+	overflow-x: hidden;
+	overflow-y: scroll;
+	scrollbar-width: none;
+}
+a {
+	text-decoration: none;
+	color: #0000EE;
+}
+::-webkit-scrollbar {
+	width: 8px;
+}
+
+::-webkit-scrollbar:horizontal {
+	height: 8px;
+}
+
+::-webkit-scrollbar-track {
+	background: rgba(128, 128, 128, 0.2);
+}
+
+::-webkit-scrollbar-thumb {
+	border-radius: 1px;
+	background: rgb(128, 128, 128, 0.7);
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: rgb(177, 177, 177);
+}
+
+/* Firefox ScrollBar */
+* {
+	scrollbar-width: thin;
+}
+p {
+	margin: 0px;
+}
+details {
+	list-style: none;
+	user-select: none;
+}
