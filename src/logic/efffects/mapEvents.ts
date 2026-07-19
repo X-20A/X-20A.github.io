@@ -124,6 +124,8 @@ export function register_map_events(
                 cancel_hold();
                 fire_cxt(node);
             }, HOLD_MS);
+            // ポップアップがカーソル下に出現してもpointerupを取り逃さないよう捕捉
+            svg.setPointerCapture(event.pointerId);
         } else { // 背景
             hidePopup();
         }

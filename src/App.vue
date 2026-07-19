@@ -195,7 +195,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, watch, ref, computed, defineAsyncComponent } from 'vue';
+import { onMounted, watch, ref, computed, defineAsyncComponent, nextTick } from 'vue';
 import { useStore, useModalStore } from './stores';
 import Header from './components/Header.vue';
 import Option from './components/Option.vue';
@@ -612,6 +612,7 @@ const hide_popup = () => {
 	standard_resource.value = null;
 	syonan_resource.value = null;
 	branchHtml.value = null;
+	popup_anchor = null;
 }
 
 const generarte_branch_html = (node_name: string): string | null => {
@@ -639,30 +640,61 @@ const generarte_branch_html = (node_name: string): string | null => {
 	return node_data;
 };
 
+/** ポップアップ位置の基準ノード(リサイズ・スクロール時の再調整用) */
+let popup_anchor: { map: MapCore; node_name: string } | null = null;
+
+/** ノード中心からポップアップまでのオフセット */
+const POPUP_OFFSET = 20;
+/** ビューポート端との最小余白 */
+const POPUP_MARGIN = 8;
+
 const adjust_popup_position = (
 	map: MapCore,
 	node_name: string,
 ) => {
-	const position = map.rendered_position(node_name);
+	popup_anchor = { map, node_name };
+	apply_popup_position();
+	// 描画完了後に実サイズで再クランプ
+	nextTick(apply_popup_position);
+};
+
+const apply_popup_position = () => {
+	if (!popup_anchor) return;
+	const position = popup_anchor.map.rendered_position(popup_anchor.node_name);
 	if (!position) return;
 
-	// cy領域の左上の座標を取得
-	const cyContainer = map.container.getBoundingClientRect();
+	// ノード中心のビューポート座標
+	const cyContainer = popup_anchor.map.container.getBoundingClientRect();
+	const anchor_x = position.x + cyContainer.left;
+	const anchor_y = position.y + cyContainer.top;
 
-	// 表示位置調整
-	let top: number;
-	let left: number;
-
-	if (position.x >= 650) {
-		left = position.x + cyContainer.left - 260;
-		top = position.y + cyContainer.top + 20;
-	} else {
-		left = position.x + cyContainer.left + 20;
-		top = position.y + cyContainer.top - 10;
+	// 表示中ポップアップの実サイズ(描画前はCSSのmin-width相当をフォールバック)
+	let popup_w = 210;
+	let popup_h = 40;
+	for (const el of document.querySelectorAll<HTMLElement>('.popup-info')) {
+		popup_w = Math.max(popup_w, el.offsetWidth);
+		popup_h = Math.max(popup_h, el.offsetHeight);
 	}
 
-	popupStyle.value.top = top + 'px';
-	popupStyle.value.left = left + 'px';
+	const view_w = document.documentElement.clientWidth;
+	const view_h = document.documentElement.clientHeight;
+
+	// 基本はノードの右。収まらなければ左へ反転し、最後にビューポート内へクランプ
+	let left = anchor_x + POPUP_OFFSET;
+	if (left + popup_w + POPUP_MARGIN > view_w) {
+		left = anchor_x - POPUP_OFFSET - popup_w;
+	}
+	left = Math.max(Math.min(left, view_w - popup_w - POPUP_MARGIN), POPUP_MARGIN);
+
+	let top = anchor_y - 10;
+	if (top + popup_h + POPUP_MARGIN > view_h) {
+		top = view_h - popup_h - POPUP_MARGIN;
+	}
+	top = Math.max(top, POPUP_MARGIN);
+
+	// position:absoluteの基準はドキュメントなのでスクロール分を加算
+	popupStyle.value.top = top + window.scrollY + 'px';
+	popupStyle.value.left = left + window.scrollX + 'px';
 };
 
 // 能動分岐切替
@@ -777,6 +809,9 @@ onMounted(async () => {
 	}
 
 	fleetInputRef.value?.focus();
+
+	// ウィンドウリサイズでポップアップ位置を再調整
+	window.addEventListener('resize', apply_popup_position);
 
 	const GITHUB_DOMAIN = 'https://github.com/X-20A/X-20A.github.io/tree/';
 	console.log(`Source: ${GITHUB_DOMAIN}compass_dev`);
