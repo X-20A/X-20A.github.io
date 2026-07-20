@@ -3,7 +3,13 @@
 		<div class="node-row" :class="{
 			'is-active': is_active,
 			'is-folder': is_folder,
-		}" :style="{ paddingLeft: `${item.depth * 14 + 8}px` }" @pointerdown="handle_activate">
+			'is-dragging': is_dragging,
+			'drop-before': drop_zone === 'before',
+			'drop-after': drop_zone === 'after',
+			'drop-into': drop_zone === 'into',
+		}" :style="{ paddingLeft: `${item.depth * 14 + 8}px` }" @pointerdown="handle_activate"
+			draggable="true" @dragstart="handle_dragstart" @dragend="handle_dragend"
+			@dragover.prevent="handle_dragover" @dragleave="drop_zone = null" @drop.prevent="handle_drop">
 			<button v-if="is_folder" class="disclosure" :aria-label="is_expanded ? '閉じる' : '開く'"
 				@pointerdown.stop="handle_toggle">
 				{{ is_expanded ? '▾' : '▸' }}
@@ -91,6 +97,58 @@ const cancel_rename = () => {
 	is_editing.value = false;
 };
 
+type DropZone = 'before' | 'into' | 'after';
+
+/** ドロップ先の見た目。中央へのドロップはフォルダにのみ許す */
+const drop_zone = ref<DropZone | null>(null);
+const is_dragging = computed(
+	() => workspace_store.dragging_node_id === props.item.node.id,
+);
+
+const handle_dragstart = (event: DragEvent) => {
+	workspace_store.START_DRAG(props.item.node.id);
+	// これを設定しないと Firefox がドラッグを開始しない
+	event.dataTransfer?.setData('text/plain', props.item.node.id);
+	if (event.dataTransfer) event.dataTransfer.effectAllowed = 'move';
+};
+
+const handle_dragend = () => {
+	drop_zone.value = null;
+	workspace_store.END_DRAG();
+};
+
+const handle_dragover = (event: DragEvent) => {
+	const dragging_id = workspace_store.dragging_node_id;
+	// 自分自身の上ではドロップ先を表示しない
+	if (!dragging_id || dragging_id === props.item.node.id) {
+		drop_zone.value = null;
+		return;
+	}
+
+	const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+	const ratio = (event.clientY - rect.top) / rect.height;
+
+	if (is_folder.value && ratio > 0.25 && ratio < 0.75) {
+		drop_zone.value = 'into';
+		return;
+	}
+	drop_zone.value = ratio < 0.5 ? 'before' : 'after';
+};
+
+const handle_drop = async () => {
+	const zone = drop_zone.value;
+	drop_zone.value = null;
+	if (!zone) return;
+
+	if (zone === 'into') {
+		// 落とした先が閉じていると、どこへ入ったのか分からなくなる
+		await workspace_store.SET_EXPANDED(props.item.node.id, true);
+		await workspace_store.DROP_INTO(props.item.node.id);
+		return;
+	}
+	await workspace_store.DROP_BESIDE(props.item.node.id, zone);
+};
+
 const handle_create_sheet = () => {
 	void workspace_store.CREATE_SHEET(props.item.node.id);
 };
@@ -134,6 +192,24 @@ const handle_trash = async () => {
 .node-row.is-active {
 	background-color: #d0ebff;
 	font-weight: 600;
+}
+
+.node-row.is-dragging {
+	opacity: 0.4;
+}
+
+/* ドロップ位置の表示。前後は境界線、フォルダの中は枠で示す */
+.node-row.drop-before {
+	box-shadow: inset 0 2px 0 0 #4dabf7;
+}
+
+.node-row.drop-after {
+	box-shadow: inset 0 -2px 0 0 #4dabf7;
+}
+
+.node-row.drop-into {
+	background-color: #d0ebff;
+	box-shadow: inset 0 0 0 2px #4dabf7;
 }
 
 .disclosure {

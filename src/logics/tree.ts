@@ -136,6 +136,32 @@ export function move_node(
         : reindex(result, node.parent_id);
 }
 
+export type DropPosition = 'before' | 'after';
+
+/**
+ * 対象ノードの前後に落としたときの挿入位置を返す。
+ *
+ * move_node は移動対象を兄弟から除いてから挿入するため、
+ * order をそのまま渡すと同じ親の中で1つずれる
+ */
+export function calc_drop_index(
+    nodes: NodeMap,
+    dragged_id: NodeId,
+    target_id: NodeId,
+    position: DropPosition,
+): number {
+    const target = nodes[target_id];
+    if (!target) return 0;
+
+    const siblings = get_children(nodes, target.parent_id)
+        .filter(node => node.id !== dragged_id);
+
+    const index = siblings.findIndex(node => node.id === target_id);
+    if (index === -1) return siblings.length;
+
+    return position === 'before' ? index : index + 1;
+}
+
 /**
  * ノードを追加する。末尾に置く
  */

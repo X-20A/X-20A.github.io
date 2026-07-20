@@ -14,14 +14,19 @@
 					<button class="toolbar-btn" @pointerdown="handle_create_folder">＋ フォルダ</button>
 				</div>
 
-				<nav class="sidebar-tree">
+				<nav class="sidebar-tree" :class="{ 'is-drop-target': is_root_drop_target }"
+					@dragover.prevent="handle_root_dragover" @dragleave="is_root_drop_target = false"
+					@drop.prevent="handle_root_drop">
 					<ul class="tree-root">
 						<TreeNode v-for="item in tree" :key="item.node.id" :item="item" />
 					</ul>
 				</nav>
 
 				<section class="trash-section">
-					<div class="trash-header" @pointerdown="is_trash_open = !is_trash_open">
+					<div class="trash-header" :class="{ 'is-drop-target': is_trash_drop_target }"
+						@pointerdown="is_trash_open = !is_trash_open"
+						@dragover.prevent="handle_trash_dragover"
+						@dragleave="is_trash_drop_target = false" @drop.prevent="handle_trash_drop">
 						<span class="trash-disclosure">{{ is_trash_open ? '▾' : '▸' }}</span>
 						<span>🗑 ゴミ箱</span>
 						<span class="trash-count">{{ trash_items.length }}</span>
@@ -59,6 +64,49 @@ const tree = computed(() => workspace_store.tree);
 const trash_items = computed(() => workspace_store.trash_items);
 
 const is_trash_open = ref(false);
+
+// 空き領域へのドロップはルート直下への移動として扱う
+const is_root_drop_target = ref(false);
+const is_trash_drop_target = ref(false);
+
+const handle_root_dragover = (event: DragEvent) => {
+	// ノードの上ではノード側の判定を優先する
+	const is_on_node = (event.target as HTMLElement)?.closest('.node-row');
+	is_root_drop_target.value =
+		!is_on_node && workspace_store.dragging_node_id !== null;
+};
+
+const handle_root_drop = async (event: DragEvent) => {
+	const was_target = is_root_drop_target.value;
+	is_root_drop_target.value = false;
+	// ノード上のドロップは TreeNode 側で処理済み
+	if (!was_target || (event.target as HTMLElement)?.closest('.node-row')) return;
+
+	await workspace_store.DROP_INTO(null);
+};
+
+const handle_trash_dragover = () => {
+	is_trash_drop_target.value = workspace_store.dragging_node_id !== null;
+};
+
+const handle_trash_drop = async () => {
+	if (!is_trash_drop_target.value) return;
+	is_trash_drop_target.value = false;
+
+	const node_id = workspace_store.dragging_node_id;
+	if (!node_id) return;
+
+	const name = workspace_store.nodes[node_id]?.name ?? '';
+	workspace_store.END_DRAG();
+	await workspace_store.TRASH(node_id);
+
+	toast_store.SHOW_TOAST_WITH_ACTION(
+		`「${name}」をゴミ箱へ移動しました`,
+		'元に戻す',
+		() => { void workspace_store.UNDO_MOVE(); },
+		8000,
+	);
+};
 
 const close = () => workspace_store.TOGGLE_SIDEBAR();
 
@@ -153,6 +201,17 @@ const handle_empty_trash = async () => {
 	flex: 1;
 	overflow-y: auto;
 	padding: 6px;
+}
+
+.sidebar-tree.is-drop-target {
+	background-color: #e7f5ff;
+	box-shadow: inset 0 0 0 2px #4dabf7;
+	border-radius: 4px;
+}
+
+.trash-header.is-drop-target {
+	background-color: #ffe3e3;
+	box-shadow: inset 0 0 0 2px #fa5252;
 }
 
 .tree-root {

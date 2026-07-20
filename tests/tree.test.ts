@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
-    build_tree, can_move, collect_descendant_ids, empty_trash, get_children,
+    build_tree, calc_drop_index, can_move, collect_descendant_ids, empty_trash, get_children,
     insert_node, is_descendant, is_in_trash, list_active_sheets, move_node,
     remove_node, rename_node, set_folder_expanded, type NodeMap,
 } from "../src/logics/tree";
@@ -192,6 +192,39 @@ describe('move_node', () => {
 
         const orders = Object.values(nodes).map(n => n.order);
         expect(Math.max(...orders)).toBeLessThan(5);
+    });
+});
+
+describe('calc_drop_index', () => {
+    it('別の親から持ってきた場合、対象の前後に入る', () => {
+        const nodes = make_nodes();
+
+        expect(calc_drop_index(nodes, id('memo'), id('e1'), 'before')).toBe(0);
+        expect(calc_drop_index(nodes, id('memo'), id('e1'), 'after')).toBe(1);
+        expect(calc_drop_index(nodes, id('memo'), id('spring'), 'after')).toBe(2);
+    });
+
+    it('同じ親の中では移動対象を除いた位置を返す', () => {
+        const nodes = make_nodes();
+
+        // events の子は [e1, spring]。e1 を spring の後ろへ落とすと、
+        // e1 を除いた [spring] に対する index 1 になる
+        expect(calc_drop_index(nodes, id('e1'), id('spring'), 'after')).toBe(1);
+        expect(calc_drop_index(nodes, id('e1'), id('spring'), 'before')).toBe(0);
+    });
+
+    it('計算した index で move_node すると意図した並びになる', () => {
+        const nodes = make_nodes();
+        const index = calc_drop_index(nodes, id('e1'), id('spring'), 'after');
+        const moved = move_node(nodes, id('e1'), id('events'), index);
+
+        expect(get_children(moved, id('events')).map(n => n.name))
+            .toEqual(['春', 'E-1']);
+    });
+
+    it('存在しない対象には 0 を返す', () => {
+        expect(calc_drop_index(make_nodes(), id('memo'), id('unknown'), 'before'))
+            .toBe(0);
     });
 });
 

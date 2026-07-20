@@ -8,10 +8,11 @@ import {
 import { Domain, extract_url_domain } from "../logics/url";
 import { WorkspaceSchema } from "../logics/schema";
 import {
-    build_tree, empty_trash, insert_node, is_in_trash, list_active_sheets,
-    move_node, rename_node, set_folder_expanded, trash_node,
-    type NodeMap, type TreeItem,
+    build_tree, calc_drop_index, empty_trash, insert_node, is_in_trash,
+    list_active_sheets, move_node, rename_node, set_folder_expanded,
+    type DropPosition, type NodeMap, type TreeItem,
 } from "../logics/tree";
+import { useToastStore } from ".";
 import {
     delete_sheet, load_workspace, save_sheet, save_workspace,
 } from "../logics/storage";
@@ -43,6 +44,8 @@ export const useWorkspaceStore = defineStore('workspace', {
         /** シート間で行を運ぶためのアプリ内クリップボード */
         row_clipboard: [] as RowData[],
         last_move: null as LastMove | null,
+        /** ドラッグ中のノード。ドロップ先の判定に使う */
+        dragging_node_id: null as NodeId | null,
         is_sidebar_open: false,
         is_loaded: false,
     }),
@@ -269,6 +272,67 @@ export const useWorkspaceStore = defineStore('workspace', {
 
             this.approved_domains = this.approved_domains.concat(new_domain);
             await this.SAVE();
+        },
+
+        START_DRAG(node_id: NodeId): void {
+            this.dragging_node_id = node_id;
+        },
+
+        END_DRAG(): void {
+            this.dragging_node_id = null;
+        },
+
+        /**
+         * ドラッグ中のノードを対象の前後へ落とす
+         */
+        async DROP_BESIDE(
+            target_id: NodeId,
+            position: DropPosition,
+        ): Promise<void> {
+            const dragged_id = this.dragging_node_id;
+            this.dragging_node_id = null;
+            if (!dragged_id || dragged_id === target_id) return;
+
+            const target = this.nodes[target_id];
+            if (!target) return;
+
+            const index = calc_drop_index(this.nodes, dragged_id, target_id, position);
+            await this.MOVE_WITH_UNDO(dragged_id, target.parent_id, index);
+        },
+
+        /**
+         * ドラッグ中のノードをフォルダの中(または末尾)へ落とす
+         */
+        async DROP_INTO(parent_id: NodeId | null): Promise<void> {
+            const dragged_id = this.dragging_node_id;
+            this.dragging_node_id = null;
+            if (!dragged_id || dragged_id === parent_id) return;
+
+            await this.MOVE_WITH_UNDO(dragged_id, parent_id);
+        },
+
+        /**
+         * 移動し、取り消せることをトーストで知らせる。
+         * ツリー操作は Undo の対象外のため、ここが唯一の復帰手段になる
+         */
+        async MOVE_WITH_UNDO(
+            node_id: NodeId,
+            target_parent_id: NodeId | null,
+            target_index?: number,
+        ): Promise<void> {
+            const name = this.nodes[node_id]?.name ?? '';
+            const before = this.nodes;
+
+            await this.MOVE(node_id, target_parent_id, target_index);
+            // 移動が拒否された(自身の子孫への移動など)場合は通知しない
+            if (this.nodes === before) return;
+
+            useToastStore().SHOW_TOAST_WITH_ACTION(
+                `「${name}」を移動しました`,
+                '元に戻す',
+                () => { void this.UNDO_MOVE(); },
+                6000,
+            );
         },
 
         SET_ROW_CLIPBOARD(rows: RowData[]): void {
