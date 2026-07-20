@@ -13,8 +13,8 @@ import { Domain, extract_url_domain } from "../logics/url";
 import { SheetSchema, WorkspaceSchema } from "../logics/schema";
 import {
     build_tree, calc_drop_index, empty_trash, insert_node, is_in_trash,
-    list_active_sheets, move_node, rename_node, set_folder_expanded,
-    type DropPosition, type NodeMap, type TreeItem,
+    list_active_sheets, move_node, remember_parent, rename_node, restore_node,
+    set_folder_expanded, type DropPosition, type NodeMap, type TreeItem,
 } from "../logics/tree";
 import { useToastStore } from ".";
 import {
@@ -236,6 +236,8 @@ export const useWorkspaceStore = defineStore('workspace', {
          * ゴミ箱へ移す。ツリー操作は Undo の対象外のため物理削除はしない
          */
         async TRASH(node_id: NodeId): Promise<void> {
+            // 復元先として、捨てる直前の親を控えておく
+            this.nodes = remember_parent(this.nodes, node_id);
             await this.MOVE(node_id, TRASH_ID);
 
             // アクティブなシートを捨てた場合は残っているシートへ移る
@@ -247,6 +249,16 @@ export const useWorkspaceStore = defineStore('workspace', {
 
                 if (!this.active_sheet_id) await this.CREATE_SHEET();
             }
+            await this.SAVE();
+        },
+
+        /**
+         * ゴミ箱から戻す。元の親が使えない場合はルート直下へ置く
+         */
+        async RESTORE(node_id: NodeId): Promise<void> {
+            this.nodes = restore_node(this.nodes, node_id);
+            this.last_move = null;
+
             await this.SAVE();
         },
 

@@ -30,12 +30,13 @@
 			</div>
 
 			<button @pointerdown="handle_initialize" class="action-btn danger">初期化</button>
+			<button class="help-btn" title="操作説明" @pointerdown="modal_store.SHOW_HELP()">？</button>
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
-import { useToastStore } from '../stores';
+import { useModalStore, useToastStore } from '../stores';
 import { useWorkspaceStore } from '../stores/workspace';
 import { useSheetStore } from '../stores/sheet';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
@@ -62,6 +63,7 @@ const sheet_name = computed({
 });
 
 const toast_store = useToastStore();
+const modal_store = useModalStore();
 
 const is_copying = ref(false);
 const is_file_menu_open = ref(false);
@@ -310,6 +312,21 @@ const handle_initialize = () => {
 
 .action-btn:disabled:hover {
 	background-color: #adb5bd;
+}
+
+.help-btn {
+	width: 32px;
+	border: 1px solid #ced4da;
+	border-radius: 50%;
+	background-color: #ffffff;
+	color: #495057;
+	font-size: 14px;
+	cursor: pointer;
+	flex-shrink: 0;
+}
+
+.help-btn:hover {
+	background-color: #e9ecef;
 }
 
 .action-btn.danger {

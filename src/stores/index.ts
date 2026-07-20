@@ -7,6 +7,8 @@ export const useModalStore = defineStore('modal', {
         is_domain_permission_visible: false,
         /** エラーモーダルの表示状態 */
         is_error_visible: false,
+        /** 操作説明モーダルの表示状態 */
+        is_help_visible: false,
         /** 表示するエラーメッセージ */
         error_message: '',
     }),
@@ -16,6 +18,12 @@ export const useModalStore = defineStore('modal', {
          */
         SHOW_DOMAIN_PERMISSION(): void {
             this.is_domain_permission_visible = true;
+        },
+        /**
+         * 操作説明モーダル表示
+         */
+        SHOW_HELP(): void {
+            this.is_help_visible = true;
         },
         /**
          * エラーモーダル    
@@ -35,6 +43,7 @@ export const useModalStore = defineStore('modal', {
         HIDE_MODALS(): void {
             this.is_domain_permission_visible = false;
             this.is_error_visible = false;
+            this.is_help_visible = false;
             this.error_message = '';
         },
     }

@@ -90,6 +90,11 @@ type BaseNode = {
     /** 同一 parent_id 内での並び順 */
     order: number,
     name: string,
+    /**
+     * ゴミ箱へ移す直前の親。復元先として使う。
+     * 旧データには存在しないため省略可能
+     */
+    restore_parent_id?: NodeId | null,
 }
 export type FolderNode = BaseNode & {
     type: 'folder',

@@ -180,7 +180,54 @@ export function insert_node(nodes: NodeMap, node: TreeNode): NodeMap {
  * 個別に移動する必要はない
  */
 export function trash_node(nodes: NodeMap, node_id: NodeId): NodeMap {
-    return move_node(nodes, node_id, TRASH_ID);
+    return move_node(remember_parent(nodes, node_id), node_id, TRASH_ID);
+}
+
+/**
+ * 復元先として、ゴミ箱へ移す直前の親を控える
+ */
+export function remember_parent(nodes: NodeMap, node_id: NodeId): NodeMap {
+    const node = nodes[node_id];
+    if (!node) return nodes;
+
+    return {
+        ...nodes,
+        [node_id]: { ...node, restore_parent_id: node.parent_id },
+    };
+}
+
+/**
+ * 復元先として使える親か。
+ * 消えていたり、それ自体がゴミ箱にあると戻せない
+ */
+function is_valid_restore_target(
+    nodes: NodeMap,
+    parent_id: NodeId | null | undefined,
+): boolean {
+    if (parent_id === null || parent_id === undefined) return false;
+
+    const parent = nodes[parent_id];
+    return parent !== undefined
+        && parent.type === 'folder'
+        && !is_in_trash(nodes, parent_id);
+}
+
+/**
+ * ゴミ箱から戻す。
+ * 元の親が使えない場合はルート直下へ置く
+ */
+export function restore_node(nodes: NodeMap, node_id: NodeId): NodeMap {
+    const node = nodes[node_id];
+    if (!node) return nodes;
+
+    const target = is_valid_restore_target(nodes, node.restore_parent_id)
+        ? node.restore_parent_id!
+        : null;
+
+    const moved = move_node(nodes, node_id, target);
+    const restored = moved[node_id];
+
+    return { ...moved, [node_id]: { ...restored, restore_parent_id: null } };
 }
 
 /**

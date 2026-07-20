@@ -24,12 +24,18 @@
 			<span v-else class="node-name" @dblclick.stop="start_rename">{{ item.node.name }}</span>
 
 			<span class="node-actions">
-				<button v-if="is_folder" class="node-action" title="シートを追加"
-					@pointerdown.stop="handle_create_sheet">＋</button>
-				<button v-if="is_folder" class="node-action" title="フォルダを追加"
-					@pointerdown.stop="handle_create_folder">📁</button>
-				<button class="node-action" title="ゴミ箱へ移動"
-					@pointerdown.stop="handle_trash">🗑</button>
+				<template v-if="is_trashed">
+					<button class="node-action" title="元に戻す"
+						@pointerdown.stop="handle_restore">↩</button>
+				</template>
+				<template v-else>
+					<button v-if="is_folder" class="node-action" title="シートを追加"
+						@pointerdown.stop="handle_create_sheet">＋</button>
+					<button v-if="is_folder" class="node-action" title="フォルダを追加"
+						@pointerdown.stop="handle_create_folder">📁</button>
+					<button class="node-action" title="ゴミ箱へ移動"
+						@pointerdown.stop="handle_trash">🗑</button>
+				</template>
 			</span>
 		</div>
 
@@ -43,7 +49,7 @@
 import { computed, nextTick, ref } from 'vue';
 import { useWorkspaceStore } from '../stores/workspace';
 import { useToastStore } from '../stores';
-import type { TreeItem } from '../logics/tree';
+import { is_in_trash, type TreeItem } from '../logics/tree';
 
 const props = defineProps<{ item: TreeItem }>();
 
@@ -56,6 +62,9 @@ const is_active = computed(
 );
 const is_expanded = computed(() =>
 	props.item.node.type === 'folder' && props.item.node.is_expanded,
+);
+const is_trashed = computed(
+	() => is_in_trash(workspace_store.nodes, props.item.node.id),
 );
 
 const is_editing = ref(false);
@@ -155,6 +164,11 @@ const handle_create_sheet = () => {
 
 const handle_create_folder = () => {
 	void workspace_store.CREATE_FOLDER(props.item.node.id);
+};
+
+const handle_restore = async () => {
+	await workspace_store.RESTORE(props.item.node.id);
+	toast_store.SHOW_TOAST(`「${props.item.node.name}」を元に戻しました`);
 };
 
 const handle_trash = async () => {

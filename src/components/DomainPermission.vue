@@ -1,5 +1,7 @@
-<template v-if="is_domain_permission_visible">
-	<div class="domain-permission-modal" @pointerdown.stop>
+<template>
+	<!-- v-if はルートの template ではなく実要素に付ける。
+	     ルートの template に付けてもコンパイラに無視され、常に描画される -->
+	<div v-if="is_domain_permission_visible" class="domain-permission-modal" @pointerdown.stop>
 		<div class="modal-content">
 			<h2 class="modal-title">以下のURLを開こうとしています</h2>
 			<p class="url-display">{{ pending_url }}</p>

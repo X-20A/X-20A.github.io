@@ -1,6 +1,6 @@
 import {
     object, string, number, array, literal, pipe, brand,
-    variant, boolean, nullable, record, integer, minValue,
+    variant, boolean, nullable, optional, record, integer, minValue,
     type InferOutput,
 } from 'valibot';
 
@@ -41,6 +41,8 @@ const base_node = {
     parent_id: nullable(node_id),
     order: number(),
     name: string(),
+    // 旧データには存在しないため optional。増やすときは必ずこの形にする
+    restore_parent_id: optional(nullable(node_id)),
 };
 
 export const FolderNodeSchema = object({

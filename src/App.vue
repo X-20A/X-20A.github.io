@@ -180,9 +180,11 @@
 	</transition>
 
 	<Footer />
-	<div v-if="is_error_visible || is_domain_permission_visible" class="modal-overlay" @pointerdown="handle_close_modals">
+	<div v-if="is_error_visible || is_domain_permission_visible || is_help_visible" class="modal-overlay"
+		@pointerdown="handle_close_modals">
 		<DomainPermission />
 		<ErrorView />
+		<HelpView />
 	</div>
 </template>
 
@@ -204,6 +206,7 @@ import { parse, ValiError } from 'valibot';
 import { SaveDataSchema } from './logics/schema';
 import DomainPermission from './components/DomainPermission.vue';
 import ErrorView from './components/ErrorView.vue';
+import HelpView from './components/HelpView.vue';
 import { calc_diff_data, calc_total_data } from './logics/calculation';
 
 const sheet_store = useSheetStore();
@@ -219,6 +222,7 @@ const modal_store = useModalStore();
 const is_error_visible = computed(() => modal_store.is_error_visible);
 const is_domain_permission_visible =
 	computed(() => modal_store.is_domain_permission_visible);
+const is_help_visible = computed(() => modal_store.is_help_visible);
 
 const toast_store = useToastStore();
 const is_show_notice = computed(() => toast_store.is_show_notice);
