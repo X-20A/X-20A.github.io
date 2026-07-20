@@ -6,8 +6,11 @@ import { load_sheet, save_sheet } from "../logics/storage";
 import { stash_corrupted_data } from "../logics/migration";
 import {
     calc_selection, can_show_diff, clamp_selection, EMPTY_SELECTION,
-    type ClickModifiers, type SelectionState,
+    sorted_selection, type ClickModifiers, type SelectionState,
 } from "../logics/selection";
+import {
+    calc_pasted_indexes, clear_rows, copy_rows, paste_insert, paste_overwrite,
+} from "../logics/rows";
 
 /** 編集のたびに書き込まないための待ち時間 */
 const SAVE_DEBOUNCE_MS = 500;
@@ -118,6 +121,51 @@ export const useSheetStore = defineStore('sheet', {
             this.APPLY_SELECTION(
                 calc_selection(this.selection_state, index, modifiers),
             );
+        },
+
+        /** 選択行を並び順で複製して返す。クリップボードへの格納は呼び出し側 */
+        COPY_SELECTED_ROWS(): RowData[] {
+            return copy_rows(this.row_datas, this.selection);
+        },
+
+        /** 選択行を空にする。行自体は詰めない */
+        CLEAR_SELECTED_ROWS(): void {
+            this.UPDATE_ROW_DATAS(clear_rows(this.row_datas, this.selection));
+        },
+
+        /**
+         * 選択行の先頭を起点に上書きする
+         * @returns 貼り付けた行数。貼り付け先がない場合は 0
+         */
+        PASTE_OVERWRITE(clipboard: RowData[]): number {
+            const start = sorted_selection(this.selection_state)[0];
+            if (start === undefined || clipboard.length === 0) return 0;
+
+            this.UPDATE_ROW_DATAS(
+                paste_overwrite(this.row_datas, clipboard, start),
+            );
+            this.UPDATE_SELECTED_ROW_INDEXES(
+                calc_pasted_indexes(start, clipboard.length),
+            );
+            return clipboard.length;
+        },
+
+        /**
+         * 選択行の末尾の直後に挿入する
+         * @returns 貼り付けた行数。貼り付け先がない場合は 0
+         */
+        PASTE_INSERT(clipboard: RowData[]): number {
+            const sorted = sorted_selection(this.selection_state);
+            const after = sorted[sorted.length - 1];
+            if (after === undefined || clipboard.length === 0) return 0;
+
+            this.UPDATE_ROW_DATAS(
+                paste_insert(this.row_datas, clipboard, after),
+            );
+            this.UPDATE_SELECTED_ROW_INDEXES(
+                calc_pasted_indexes(after + 1, clipboard.length),
+            );
+            return clipboard.length;
         },
 
         UPDATE_SELECTED_ROW_INDEXES(indexes: number[]): void {

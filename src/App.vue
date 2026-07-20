@@ -31,7 +31,7 @@
 							@dragenter="handle_drag_enter($event)" @dragleave="handle_drag_leave($event)"
 							@drop="handle_drop($event, index)" @dragend="handle_drag_end"
 							:class="{ 'selected-row': selected_row_indexes.includes(index) }">
-							<td class="drag-handle" draggable="false" @mousedown="handle_mouse_down"
+							<td class="drag-handle" draggable="false" tabindex="-1" @mousedown="handle_mouse_down"
 								@click="handle_drag_handle_click($event, index)">⋮⋮</td>
 							<td>
 								<input @paste="handle_paste($event, index)" type="text" class="cell import-cell" />
@@ -413,6 +413,68 @@ const clear_row = (row_index: number) => {
 	);
 };
 
+/**
+ * 入力欄にフォーカスがあるかどうか。
+ *
+ * 取り込みセルは @paste でシミュ結果テキストを解析している。行のコピペと
+ * ターゲットが違うため、入力欄の中では一切介入せずブラウザ既定に任せる
+ */
+const is_editing_cell = (): boolean => {
+	const active = document.activeElement;
+	if (!(active instanceof HTMLElement)) return false;
+
+	return active.tagName === 'INPUT'
+		|| active.tagName === 'TEXTAREA'
+		|| active.isContentEditable;
+};
+
+// 行のコピー / カット / 貼り付け
+const handle_row_shortcut = (event: KeyboardEvent) => {
+	if (!event.ctrlKey && !event.metaKey) return;
+	if (is_editing_cell()) return;
+
+	const key = event.key.toLowerCase();
+	if (!['c', 'x', 'v'].includes(key)) return;
+
+	if (key === 'c' || key === 'x') {
+		const rows = sheet_store.COPY_SELECTED_ROWS();
+		if (rows.length === 0) return;
+
+		event.preventDefault();
+		workspace_store.SET_ROW_CLIPBOARD(rows);
+
+		if (key === 'x') {
+			sheet_store.CLEAR_SELECTED_ROWS();
+			toast_store.SHOW_TOAST(`${rows.length}行を切り取りました`, 3000);
+			return;
+		}
+		toast_store.SHOW_TOAST(`${rows.length}行をコピーしました`, 3000);
+		return;
+	}
+
+	const clipboard = workspace_store.row_clipboard;
+	if (clipboard.length === 0) return;
+
+	event.preventDefault();
+
+	if (selected_row_indexes.value.length === 0) {
+		toast_store.SHOW_TOAST('貼り付け先の行を選択してください', 3000);
+		return;
+	}
+
+	// Shift 併用で上書きではなく挿入
+	const pasted = event.shiftKey
+		? sheet_store.PASTE_INSERT(clipboard)
+		: sheet_store.PASTE_OVERWRITE(clipboard);
+
+	if (pasted > 0) {
+		toast_store.SHOW_TOAST(
+			`${pasted}行を${event.shiftKey ? '挿入' : '貼り付け'}ました`,
+			3000,
+		);
+	}
+};
+
 // 行を追加
 const handle_add_rows = () => {
 	sheet_store.ADD_ROWS();
@@ -657,6 +719,7 @@ const handle_before_unload = () => { void sheet_store.FLUSH(); };
 onMounted(async () => {
 	// ドキュメントクリックイベントを登録
 	document.addEventListener('click', handle_document_click);
+	document.addEventListener('keydown', handle_row_shortcut);
 	window.addEventListener('beforeunload', handle_before_unload);
 
 	await workspace_store.INITIALIZE();
@@ -701,6 +764,7 @@ onMounted(async () => {
 
 onUnmounted(() => {
 	document.removeEventListener('click', handle_document_click);
+	document.removeEventListener('keydown', handle_row_shortcut);
 	window.removeEventListener('beforeunload', handle_before_unload);
 });
 </script>
