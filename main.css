@@ -1,5 +1,12 @@
 @charset "UTF-8";
 
+:root {
+	/* ヘッダとフッタはどちらも position: fixed。
+	   固定配置の要素はこの値を避けて配置する */
+	--header-height: 36px;
+	--footer-height: 24px;
+}
+
 body {
 	margin: 0;
 	overflow-x: hidden;

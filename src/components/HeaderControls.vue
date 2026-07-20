@@ -1,5 +1,6 @@
 <template>
 	<div class="header-controls">
+		<button class="sheet-list-btn" title="シート一覧" @pointerdown="workspace_store.TOGGLE_SIDEBAR()">☰</button>
 		<input v-model="sheet_name" placeholder="シート名" class="project-name-input" />
 		<div class="button-group">
 			<button @pointerdown="handle_sort_rows" class="action-btn">上詰め</button>
@@ -84,6 +85,20 @@ const handle_initialize = () => {
 	margin-bottom: 10px;
 	flex-wrap: wrap;
 	gap: 15px;
+}
+
+.sheet-list-btn {
+	padding: 6px 12px;
+	border: 1px solid #ced4da;
+	border-radius: 4px;
+	background-color: #ffffff;
+	font-size: 15px;
+	line-height: 1;
+	cursor: pointer;
+}
+
+.sheet-list-btn:hover {
+	background-color: #e9ecef;
 }
 
 .project-name-input {

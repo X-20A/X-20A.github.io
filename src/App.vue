@@ -1,5 +1,6 @@
 <template>
 	<Header />
+	<Sidebar />
 	<div class="container">
 		<p style="color:magenta;">β版</p>
 		<HeaderControls />
@@ -180,6 +181,7 @@
 import Footer from './components/Footer.vue';
 import Header from './components/Header.vue';
 import HeaderControls from './components/HeaderControls.vue';
+import Sidebar from './components/Sidebar.vue';
 import { useModalStore, useToastStore } from './stores';
 import { useWorkspaceStore } from './stores/workspace';
 import { useSheetStore } from './stores/sheet';
