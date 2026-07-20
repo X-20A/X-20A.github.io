@@ -74,6 +74,38 @@ export const SheetSchema = object({
     updated_at: number(),
 });
 
+/**
+ * 書き出しファイルの形式。
+ * format で種類を見分け、format_version で後方互換を判断する
+ */
+export const WORKSPACE_FORMAT = 'cost-workspace';
+export const SHEET_FORMAT = 'cost-sheet';
+export const FORMAT_VERSION = 1;
+
+export const WorkspaceExportSchema = object({
+    format: literal(WORKSPACE_FORMAT),
+    format_version: pipe(number(), integer(), minValue(1)),
+    exported_at: string(),
+    workspace: WorkspaceSchema,
+    sheets: array(SheetSchema),
+});
+
+export const SheetExportSchema = object({
+    format: literal(SHEET_FORMAT),
+    format_version: pipe(number(), integer(), minValue(1)),
+    exported_at: string(),
+    name: string(),
+    row_datas: array(object(rowDataSchema)),
+});
+
+/** 読み込み時はどちらの形式か分からないため、まず種類だけ見る */
+export const AnyExportSchema = variant('format', [
+    WorkspaceExportSchema,
+    SheetExportSchema,
+]);
+
+export type ValidatedWorkspaceExport = InferOutput<typeof WorkspaceExportSchema>;
+export type ValidatedSheetExport = InferOutput<typeof SheetExportSchema>;
 export type ValidatedWorkspace = InferOutput<typeof WorkspaceSchema>;
 export type ValidatedSheet = InferOutput<typeof SheetSchema>;
 export type ValidatedSaveData = InferOutput<typeof SaveDataSchema>;
