@@ -7,6 +7,7 @@
 		<div class="sheet-container">
 			<div class="table-wrapper">
 				<table class="spread-sheet">
+					<SheetColgroup />
 					<thead class="table-header">
 						<tr>
 							<th class="drag-column"></th>
@@ -100,9 +101,13 @@
 						</tr>
 					</tbody>
 				</table>
-			</div>
-			<div class="result-row-draggable-container" :style="{ bottom: result_row_position + 'px' }">
+				<!--
+					合計行はスクロールコンテナの内側に置く。
+					外に置くと表を横スクロールしたときに列がずれる
+				-->
+				<div class="result-row-draggable-container" :style="{ bottom: result_row_position + 'px' }">
 				<table class="spread-sheet total-table">
+					<SheetColgroup />
 					<tbody>
 						<tr class="result-row">
 							<td
@@ -110,7 +115,8 @@
 							@mousedown="start_result_row_drag"
 							@touchstart="start_result_row_drag"
 							>⋮⋮</td>
-							<td class="display-mode-cell">
+							<!-- Import / name / url / count の4列ぶん -->
+							<td class="display-mode-cell" colspan="4">
 								<button class="display-mode-btn" :class="{ 'is-diff': display_mode === 'diff' }"
 									:disabled="!can_show_diff && display_mode === 'sum'"
 									:title="can_show_diff || display_mode === 'diff'
@@ -157,6 +163,7 @@
 						</tr>
 					</tbody>
 				</table>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -193,6 +200,7 @@ import Footer from './components/Footer.vue';
 import Header from './components/Header.vue';
 import HeaderControls from './components/HeaderControls.vue';
 import Sidebar from './components/Sidebar.vue';
+import SheetColgroup from './components/SheetColgroup.vue';
 import { useModalStore, useToastStore } from './stores';
 import { useWorkspaceStore } from './stores/workspace';
 import { useSheetStore } from './stores/sheet';
@@ -275,18 +283,19 @@ const drag_start_top = ref(0);
 
 // ドラッグの上限を計算する関数
 const calc_max_position = (): number => {
-	const sheet_container = document.querySelector('.sheet-container') as HTMLElement;
+	// 合計行は sticky。基準はスクロールコンテナの見えている高さになる
+	const table_wrapper = document.querySelector('.table-wrapper') as HTMLElement;
 	const result_row_container = document.querySelector('.result-row-draggable-container') as HTMLElement;
 
-	if (!sheet_container || !result_row_container) {
+	if (!table_wrapper || !result_row_container) {
 		return 400; // デフォルト値
 	}
 
-	const sheet_container_height = sheet_container.clientHeight;
+	const wrapper_height = table_wrapper.clientHeight;
 	const result_row_container_height = result_row_container.clientHeight;
 
-	// シートコンテナの高さから、合計行コンテナの高さとマージンを引いた値が上限
-	return sheet_container_height - result_row_container_height - 10; // 10pxのマージンを確保
+	// 表示領域の高さから、合計行コンテナの高さとマージンを引いた値が上限
+	return wrapper_height - result_row_container_height - 10; // 10pxのマージンを確保
 };
 
 // total-rowのドラッグ開始
@@ -846,33 +855,12 @@ onUnmounted(() => {
 	border-right: none;
 }
 
+/* 列幅は SheetColgroup が持つ。ここでは見た目だけを指定する */
 .drag-column {
-	width: 40px;
 	background-color: #f8f9fa;
 }
 
-.import-column {
-	width: 65px;
-}
-
-.name-column {
-	width: 100px;
-}
-
-.url-column {
-	width: 40px;
-}
-
-.count-column {
-	width: 40px;
-}
-
-.rate-column {
-	width: 50px;
-}
-
 .resource-column {
-	width: 65px;
 	padding: 0px;
 }
 
@@ -1082,12 +1070,17 @@ input[type="number"] {
 }
 
 /* total-rowのドラッグ可能コンテナ */
+/*
+	sticky にすることで、縦は表の上に留まりつつ横スクロールには追従する。
+	absolute だとスクロールしても動かず、列がずれる
+*/
 .result-row-draggable-container {
-	position: absolute;
+	position: sticky;
 	left: 0;
-	right: 0;
 	z-index: 100;
-	transition: transform 0.2s;
+	/* 幅は表と同じ指定にする。max-content にすると内側の width:100% と
+	   循環して幅が破綻する */
+	width: 100%;
 	background: white;
 	border-top: 1px solid #e0e0e0;
 }
@@ -1125,7 +1118,6 @@ input[type="number"] {
 	color: white;
 	font-weight: 600;
 	text-align: center;
-	width: 45px;
 	cursor: ns-resize;
 	user-select: none;
 }
@@ -1136,12 +1128,7 @@ input[type="number"] {
 	background-color: #e7f3ff;
 }
 
-.result-rate-cell {
-	width: 54px;
-}
-
 .display-mode-cell {
-	width: 267px;
 	color: #1971c2;
 }
 
@@ -1172,9 +1159,6 @@ input[type="number"] {
 	cursor: not-allowed;
 }
 
-.leftover-cell {
-	width: 37px;
-}
 
 /* 選択された行のスタイル */
 .selected-row {
@@ -1296,7 +1280,9 @@ input[type="number"] {
 		overflow-x: auto;
 	}
 
-	.spread-sheet {
+	/* 合計行も同じ最小幅にしないと、表だけが広がって列がずれる */
+	.spread-sheet,
+	.result-row-draggable-container {
 		min-width: 980px;
 	}
 }
