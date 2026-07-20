@@ -11,6 +11,9 @@ import {
 import {
     calc_pasted_indexes, clear_rows, copy_rows, paste_insert, paste_overwrite,
 } from "../logics/rows";
+import {
+    can_redo, can_undo, commit, create_history, current, redo, undo,
+} from "../logics/history";
 
 /** 編集のたびに書き込まないための待ち時間 */
 const SAVE_DEBOUNCE_MS = 500;
@@ -21,7 +24,19 @@ function to_plain<T>(value: T): T {
     return JSON.parse(JSON.stringify(value));
 }
 
+/** この間隔以内の連続したセル入力は履歴を1件にまとめる */
+const COALESCE_MS = 500;
+
 let save_timer: ReturnType<typeof setTimeout> | null = null;
+
+/** 直前に履歴を積んだ時刻と、それがまとめてよい編集だったか */
+let last_commit_at = 0;
+let was_coalescable = false;
+
+/** 履歴と現在の行が参照を共有しないよう複製する */
+function snapshot(row_datas: RowData[]): RowData[] {
+    return row_datas.map(row => ({ ...row }));
+}
 
 export const useSheetStore = defineStore('sheet', {
     state: () => ({
@@ -33,8 +48,16 @@ export const useSheetStore = defineStore('sheet', {
         anchor_index: null as number | null,
         display_mode: 'sum' as 'sum' | 'diff',
         pending_url: '' as string,
+        /** シート内編集の履歴。永続化しない */
+        history: create_history([] as RowData[]),
     }),
     getters: {
+        can_undo(): boolean {
+            return can_undo(this.history);
+        },
+        can_redo(): boolean {
+            return can_redo(this.history);
+        },
         selection_state(): SelectionState {
             return { selection: this.selection, anchor_index: this.anchor_index };
         },
@@ -75,9 +98,13 @@ export const useSheetStore = defineStore('sheet', {
             this.selection = [];
             this.anchor_index = null;
             this.display_mode = 'sum';
+            // 履歴はシートをまたいで持ち越さない
+            this.history = create_history(snapshot(row_datas));
+            last_commit_at = 0;
         },
 
-        UPDATE_ROW_DATAS(row_datas: RowData[]): void {
+        /** 履歴を伴わない差し替え。Undo / Redo の適用に使う */
+        SET_ROWS(row_datas: RowData[]): void {
             this.row_datas = row_datas;
             // 行が減った場合に、消えた行を選択したままにしない
             this.APPLY_SELECTION(
@@ -86,11 +113,49 @@ export const useSheetStore = defineStore('sheet', {
             this.SCHEDULE_SAVE();
         },
 
-        UPDATE_ROW_DATA(new_data: RowData, row_index: number): void {
+        /**
+         * @param coalescable 直前の履歴にまとめてよい編集か。
+         *   セルへの連続入力を1件にまとめるために使う
+         */
+        UPDATE_ROW_DATAS(row_datas: RowData[], coalescable: boolean = false): void {
+            this.SET_ROWS(row_datas);
+
+            const now = Date.now();
+            const coalesce = coalescable
+                && was_coalescable
+                && now - last_commit_at < COALESCE_MS;
+
+            // v-model が行を直接書き換えるため、履歴には必ず複製を積む
+            this.history = commit(this.history, snapshot(row_datas), coalesce);
+            last_commit_at = now;
+            was_coalescable = coalescable;
+        },
+
+        UPDATE_ROW_DATA(
+            new_data: RowData,
+            row_index: number,
+            coalescable: boolean = false,
+        ): void {
             const updated = [...this.row_datas];
             updated[row_index] = { ...updated[row_index], ...new_data };
 
-            this.UPDATE_ROW_DATAS(updated);
+            this.UPDATE_ROW_DATAS(updated, coalescable);
+        },
+
+        UNDO(): void {
+            if (!can_undo(this.history)) return;
+
+            this.history = undo(this.history);
+            this.SET_ROWS(snapshot(current(this.history)));
+            last_commit_at = 0;
+        },
+
+        REDO(): void {
+            if (!can_redo(this.history)) return;
+
+            this.history = redo(this.history);
+            this.SET_ROWS(snapshot(current(this.history)));
+            last_commit_at = 0;
         },
 
         ADD_ROWS(): void {

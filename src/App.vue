@@ -384,8 +384,9 @@ const open_url = (url: string) => {
 
 // 行データ更新
 const handle_row_update = (row_index: number) => {
-	// 配列を新しく作成してリアクティブをトリガー
-	sheet_store.UPDATE_ROW_DATAS([...row_datas.value]);
+	// 配列を新しく作成してリアクティブをトリガー。
+	// 連続したセル入力は履歴を1件にまとめる
+	sheet_store.UPDATE_ROW_DATAS([...row_datas.value], true);
 };
 
 const handle_paste = (event: ClipboardEvent, row_index: number) => {
@@ -434,6 +435,17 @@ const handle_row_shortcut = (event: KeyboardEvent) => {
 	if (is_editing_cell()) return;
 
 	const key = event.key.toLowerCase();
+
+	// Ctrl+Z / Ctrl+Y、および Ctrl+Shift+Z による Redo
+	if (key === 'z' || key === 'y') {
+		event.preventDefault();
+
+		const is_redo = key === 'y' || (key === 'z' && event.shiftKey);
+		if (is_redo) sheet_store.REDO();
+		else sheet_store.UNDO();
+		return;
+	}
+
 	if (!['c', 'x', 'v'].includes(key)) return;
 
 	if (key === 'c' || key === 'x') {
