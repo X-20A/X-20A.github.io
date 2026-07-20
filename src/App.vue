@@ -110,7 +110,16 @@
 							@mousedown="start_result_row_drag"
 							@touchstart="start_result_row_drag"
 							>⋮⋮</td>
-							<td class="display-mode-cell">{{ display_mode === 'diff' ? 'diff' : 'sum' }}</td>
+							<td class="display-mode-cell">
+								<button class="display-mode-btn" :class="{ 'is-diff': display_mode === 'diff' }"
+									:disabled="!can_show_diff && display_mode === 'sum'"
+									:title="can_show_diff || display_mode === 'diff'
+										? '合計と差分を切り替える'
+										: '差分は2行を選択したときに使えます'"
+									@pointerdown="sheet_store.TOGGLE_DISPLAY_MODE()">
+									{{ display_mode === 'diff' ? 'diff' : 'sum' }}
+								</button>
+							</td>
 							<td class="result-rate-cell"
 								:class="{ 'diff-negative': display_mode === 'diff' && diff_data.rate > 0, 'diff-positive': display_mode === 'diff' && diff_data.rate < 0 }">
 								{{ display_mode === 'diff' ? format_diff_data(diff_data.rate) : '' }}
@@ -199,8 +208,9 @@ import { calc_diff_data, calc_total_data } from './logics/calculation';
 
 const sheet_store = useSheetStore();
 const row_datas = computed(() => sheet_store.row_datas);
-const selected_row_indexes = computed(() => sheet_store.selected_row_indexes);
+const selected_row_indexes = computed(() => sheet_store.selection);
 const display_mode = computed(() => sheet_store.display_mode);
+const can_show_diff = computed(() => sheet_store.can_show_diff);
 
 const workspace_store = useWorkspaceStore();
 const approved_domains = computed(() => workspace_store.approved_domains);
@@ -346,34 +356,18 @@ const stop_result_row_drag = () => {
 	}
 };
 
-// ドラッグハンドルのCtrl+クリック処理
+// ドラッグハンドルのクリックによる行選択
 const handle_drag_handle_click = (event: MouseEvent, index: number) => {
-	if (event.ctrlKey || event.metaKey) {
-		event.preventDefault();
-		event.stopPropagation();
+	const ctrl = event.ctrlKey || event.metaKey;
+	const shift = event.shiftKey;
 
-		const currentIndex = selected_row_indexes.value.indexOf(index);
+	// 修飾なしのクリックはドラッグ開始と区別がつかないため、選択には使わない
+	if (!ctrl && !shift) return;
 
-		if (currentIndex === -1) {
-			// 行を選択に追加（最大2つまで）
-			if (selected_row_indexes.value.length < 2) {
-				selected_row_indexes.value.push(index);
-			} else {
-				// 既に2つ選択されている場合は古いものを削除して新しいものを追加
-				selected_row_indexes.value.shift();
-				selected_row_indexes.value.push(index);
-			}
-		} else {
-			// 既に選択されている場合は選択解除
-			selected_row_indexes.value.splice(currentIndex, 1);
-		}
+	event.preventDefault();
+	event.stopPropagation();
 
-		// 表示モードを更新
-		const new_mode = selected_row_indexes.value.length === 2
-			? 'diff'
-			: 'sum';
-		sheet_store.UPDATE_DISPLAY_MODE(new_mode);
-	}
+	sheet_store.SELECT_ROW(index, { ctrl, shift });
 };
 
 // URLを新しいタブで開く
@@ -414,14 +408,9 @@ const handle_paste = (event: ClipboardEvent, row_index: number) => {
 const clear_row = (row_index: number) => {
 	sheet_store.UPDATE_ROW_DATA(INITIAL_ROW_DATA, row_index);
 	// クリアした行が選択されていた場合は選択から削除
-	const index = selected_row_indexes.value.indexOf(row_index);
-	if (index !== -1) {
-		selected_row_indexes.value.splice(index, 1);
-		const new_mode = selected_row_indexes.value.length === 2
-			? 'diff'
-			: 'sum';
-		sheet_store.UPDATE_DISPLAY_MODE(new_mode);
-	}
+	sheet_store.UPDATE_SELECTED_ROW_INDEXES(
+		selected_row_indexes.value.filter(index => index !== row_index),
+	);
 };
 
 // 行を追加
@@ -1074,6 +1063,33 @@ input[type="number"] {
 .display-mode-cell {
 	width: 267px;
 	color: #1971c2;
+}
+
+.display-mode-btn {
+	border: 1px solid #a5d8ff;
+	border-radius: 4px;
+	background-color: #ffffff;
+	color: #1971c2;
+	font-size: 13px;
+	padding: 2px 14px;
+	cursor: pointer;
+}
+
+.display-mode-btn:hover:not(:disabled) {
+	background-color: #e7f5ff;
+}
+
+.display-mode-btn.is-diff {
+	background-color: #1971c2;
+	border-color: #1971c2;
+	color: #ffffff;
+}
+
+/* 差分は2行を選んだときだけ成立する */
+.display-mode-btn:disabled {
+	border-color: #dee2e6;
+	color: #adb5bd;
+	cursor: not-allowed;
 }
 
 .leftover-cell {

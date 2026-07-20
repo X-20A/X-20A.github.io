@@ -4,6 +4,10 @@ import { NodeId, RowData, create_empty_rows, create_sheet } from "../types";
 import { SheetSchema } from "../logics/schema";
 import { load_sheet, save_sheet } from "../logics/storage";
 import { stash_corrupted_data } from "../logics/migration";
+import {
+    calc_selection, can_show_diff, clamp_selection, EMPTY_SELECTION,
+    type ClickModifiers, type SelectionState,
+} from "../logics/selection";
 
 /** 編集のたびに書き込まないための待ち時間 */
 const SAVE_DEBOUNCE_MS = 500;
@@ -20,10 +24,21 @@ export const useSheetStore = defineStore('sheet', {
     state: () => ({
         sheet_id: null as NodeId | null,
         row_datas: [] as RowData[],
-        selected_row_indexes: [] as number[],
+        /** 上限なし。diff の対象指定とは切り離している */
+        selection: [] as number[],
+        /** Shift による範囲選択の起点 */
+        anchor_index: null as number | null,
         display_mode: 'sum' as 'sum' | 'diff',
         pending_url: '' as string,
     }),
+    getters: {
+        selection_state(): SelectionState {
+            return { selection: this.selection, anchor_index: this.anchor_index };
+        },
+        can_show_diff(): boolean {
+            return can_show_diff(this.selection_state);
+        },
+    },
     actions: {
         /**
          * シート本体を読み込んで差し替える。
@@ -54,12 +69,17 @@ export const useSheetStore = defineStore('sheet', {
             this.sheet_id = sheet_id;
             this.row_datas = row_datas;
             // 選択は行の位置に紐づくため、シートをまたいで持ち越さない
-            this.selected_row_indexes = [];
+            this.selection = [];
+            this.anchor_index = null;
             this.display_mode = 'sum';
         },
 
         UPDATE_ROW_DATAS(row_datas: RowData[]): void {
             this.row_datas = row_datas;
+            // 行が減った場合に、消えた行を選択したままにしない
+            this.APPLY_SELECTION(
+                clamp_selection(this.selection_state, row_datas.length),
+            );
             this.SCHEDULE_SAVE();
         },
 
@@ -79,16 +99,49 @@ export const useSheetStore = defineStore('sheet', {
         /** 現在のシートを空にする */
         RESET_ROWS(): void {
             this.UPDATE_ROW_DATAS(create_empty_rows());
-            this.selected_row_indexes = [];
+            this.CLEAR_SELECTION();
             this.display_mode = 'sum';
         },
 
+        APPLY_SELECTION(next: SelectionState): void {
+            this.selection = next.selection;
+            this.anchor_index = next.anchor_index;
+
+            // 2行選択でなくなったら diff は成立しない
+            if (this.display_mode === 'diff' && !can_show_diff(next)) {
+                this.display_mode = 'sum';
+            }
+        },
+
+        /** 行がクリックされたときの選択更新 */
+        SELECT_ROW(index: number, modifiers: ClickModifiers): void {
+            this.APPLY_SELECTION(
+                calc_selection(this.selection_state, index, modifiers),
+            );
+        },
+
         UPDATE_SELECTED_ROW_INDEXES(indexes: number[]): void {
-            this.selected_row_indexes = indexes;
+            this.APPLY_SELECTION({
+                selection: indexes,
+                anchor_index: this.anchor_index,
+            });
+        },
+
+        CLEAR_SELECTION(): void {
+            this.APPLY_SELECTION(EMPTY_SELECTION);
         },
 
         UPDATE_DISPLAY_MODE(mode: 'sum' | 'diff'): void {
+            // diff は2行を比べる機能。それ以外の選択数では選ばせない
+            if (mode === 'diff' && !this.can_show_diff) return;
+
             this.display_mode = mode;
+        },
+
+        TOGGLE_DISPLAY_MODE(): void {
+            this.UPDATE_DISPLAY_MODE(
+                this.display_mode === 'sum' ? 'diff' : 'sum',
+            );
         },
 
         UPDATE_PENDING_URL(url: string): void {
