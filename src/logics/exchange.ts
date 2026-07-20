@@ -5,7 +5,6 @@ import {
 } from "../types";
 import {
     AnyExportSchema, FORMAT_VERSION, SHEET_FORMAT, WORKSPACE_FORMAT,
-    type ValidatedSheetExport, type ValidatedWorkspaceExport,
 } from "./schema";
 import { insert_node, type NodeMap } from "./tree";
 
@@ -59,19 +58,22 @@ export function build_sheet_export(
 }
 
 export type ParsedImport =
-    | { kind: 'workspace', data: ValidatedWorkspaceExport }
-    | { kind: 'sheet', data: ValidatedSheetExport };
+    | { kind: 'workspace', data: WorkspaceExport }
+    | { kind: 'sheet', data: SheetExport };
 
 /**
- * 読み込んだ JSON を検証して種類を判別する
+ * 読み込んだ JSON を検証して種類を判別する。
+ *
+ * 形は valibot が検証済み。ブランドは名目的な差でしかないため、
+ * ここでのみキャストする
  * @throws ValiError 形式が適合しない場合
  */
 export function parse_import(raw: unknown): ParsedImport {
     const parsed = parse(AnyExportSchema, raw);
 
     return parsed.format === WORKSPACE_FORMAT
-        ? { kind: 'workspace', data: parsed as ValidatedWorkspaceExport }
-        : { kind: 'sheet', data: parsed as ValidatedSheetExport };
+        ? { kind: 'workspace', data: parsed as unknown as WorkspaceExport }
+        : { kind: 'sheet', data: parsed as unknown as SheetExport };
 }
 
 /**
@@ -130,7 +132,7 @@ export function build_import_folder_name(now: Date = new Date()): string {
  */
 export function merge_workspace_import(
     current_nodes: NodeMap,
-    imported: ValidatedWorkspaceExport,
+    imported: WorkspaceExport,
     folder_name: string = build_import_folder_name(),
 ): { nodes: NodeMap, sheets: Sheet[], folder_id: NodeId } {
     const { nodes: remapped, sheets } = remap_import_ids(
@@ -162,7 +164,7 @@ export function merge_workspace_import(
  */
 export function build_sheet_import(
     current_nodes: NodeMap,
-    imported: ValidatedSheetExport,
+    imported: SheetExport,
 ): { nodes: NodeMap, sheet: Sheet, sheet_id: NodeId } {
     const sheet_id = create_node_id();
     const name = imported.name.trim() || '無題のシート';

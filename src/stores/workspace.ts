@@ -1,12 +1,16 @@
 import { defineStore } from "pinia";
 import { parse } from "valibot";
 import {
-    NodeId, RowData, TreeNode, TRASH_ID, Workspace,
+    NodeId, RowData, Sheet, TreeNode, TRASH_ID, Workspace,
     create_empty_workspace, create_folder_node, create_node_id, create_sheet,
     create_sheet_node, SORTIE_SIM_DOMAIN,
 } from "../types";
+import {
+    build_sheet_import, merge_workspace_import,
+    type SheetExport, type WorkspaceExport,
+} from "../logics/exchange";
 import { Domain, extract_url_domain } from "../logics/url";
-import { WorkspaceSchema } from "../logics/schema";
+import { SheetSchema, WorkspaceSchema } from "../logics/schema";
 import {
     build_tree, calc_drop_index, empty_trash, insert_node, is_in_trash,
     list_active_sheets, move_node, rename_node, set_folder_expanded,
@@ -14,7 +18,7 @@ import {
 } from "../logics/tree";
 import { useToastStore } from ".";
 import {
-    delete_sheet, load_workspace, save_sheet, save_workspace,
+    delete_sheet, load_sheet, load_workspace, save_sheet, save_workspace,
 } from "../logics/storage";
 import { run_legacy_migration, stash_corrupted_data } from "../logics/migration";
 
@@ -333,6 +337,60 @@ export const useWorkspaceStore = defineStore('workspace', {
                 () => { void this.UNDO_MOVE(); },
                 6000,
             );
+        },
+
+        /** 全シートの本体を IndexedDB から集める */
+        async COLLECT_ALL_SHEETS(): Promise<Sheet[]> {
+            const sheets: Sheet[] = [];
+
+            for (const node of Object.values(this.nodes)) {
+                if (node.type !== 'sheet') continue;
+
+                const raw = await load_sheet(node.id);
+                if (raw === null) continue;
+
+                try {
+                    sheets.push(parse(SheetSchema, raw) as unknown as Sheet);
+                } catch (error) {
+                    // 壊れた1枚のせいで書き出し全体を失敗させない
+                    console.error(`シート ${node.id} を読み込めませんでした:`, error);
+                }
+            }
+            return sheets;
+        },
+
+        /**
+         * 取り込んだワークスペースを、インポート用フォルダの下へ追加する。
+         * 既存のシートは一切壊さない
+         */
+        async IMPORT_WORKSPACE(imported: WorkspaceExport): Promise<number> {
+            const { nodes, sheets } = merge_workspace_import(this.nodes, imported);
+
+            for (const sheet of sheets) await save_sheet(to_plain(sheet));
+            this.nodes = nodes;
+
+            // 承認済みドメインは取り込み元のものをマージする
+            for (const domain of imported.workspace.approved_domains) {
+                if (!this.approved_domains.includes(domain)) {
+                    this.approved_domains = this.approved_domains.concat(domain);
+                }
+            }
+
+            await this.SAVE();
+            return sheets.length;
+        },
+
+        /** 取り込んだシートをルート直下に追加してアクティブにする */
+        async IMPORT_SHEET(imported: SheetExport): Promise<NodeId> {
+            const { nodes, sheet, sheet_id } =
+                build_sheet_import(this.nodes, imported);
+
+            await save_sheet(to_plain(sheet));
+            this.nodes = nodes;
+            this.active_sheet_id = sheet_id;
+
+            await this.SAVE();
+            return sheet_id;
         },
 
         SET_ROW_CLIPBOARD(rows: RowData[]): void {

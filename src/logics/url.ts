@@ -21,15 +21,36 @@ const get_shorten_url = async (
     }
 }
 
+export type ShareUrlResult = {
+    url: string,
+    /** 短縮に失敗して元のURLを返したか */
+    is_shortened: boolean,
+}
+
+/**
+ * 共有URLを発行する。
+ *
+ * TinyURL は外部サービスであり落ちることがある。失敗しても共有手段を
+ * 失わないよう、短縮なしのURLへフォールバックする
+ */
 export async function do_create_shorten_url(
     save_data: SaveData,
-): Promise<string> {
+): Promise<ShareUrlResult> {
     const compressed_data =
         lzstring.compressToEncodedURIComponent(JSON.stringify(save_data));
 
     const original_url =
         `${location.host + location.pathname}?share=${compressed_data}`;
-    return await get_shorten_url(original_url);
+
+    try {
+        return {
+            url: await get_shorten_url(original_url),
+            is_shortened: true,
+        };
+    } catch (error) {
+        console.error('短縮URLの発行に失敗したため、短縮なしのURLを返します:', error);
+        return { url: original_url, is_shortened: false };
+    }
 }
 
 /**
