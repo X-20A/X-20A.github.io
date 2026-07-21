@@ -3,7 +3,7 @@
  * @module logic/efffects/mapEvents
  */
 import type { Ref } from 'vue';
-import type { MapCore } from './draw';
+import type { MapCore } from './svgGraph';
 import type { AdoptFleet } from '../../models/fleet/AdoptFleet';
 import { derive_Syonan_resource, type SyonanResource } from '../../models/resource/SyonanResource';
 import type { AreaId, ItemIconKey, NodeDatas, EdgeDatas } from '../../types';

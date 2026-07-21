@@ -1,4 +1,4 @@
-import { build_map_screenshot_svg, type MapCore } from './efffects/draw';
+import { build_map_screenshot_svg, type MapCore } from './efffects/svgGraph';
 
 /**
  * マップ(SVG)のBlob取得

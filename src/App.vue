@@ -214,7 +214,8 @@ import {
 import { type AdoptFleet, count_not_equip_arctic_carriers, derive_adopt_fleet, get_escort_fleet_ships_length, calc_escort_fleet_ship_names, get_main_fleet_ships_length, calc_main_fleet_ship_names, count_Reigo_ships, count_Daigo_ships, is_speed_overridden } from './models/fleet/AdoptFleet';
 import type { Sp as FleetSpeed } from './logic/speed/predicate';
 import type { GenerateOptions, DeckBuilder as GkcoiDeckBuilder, LoS, Speed } from 'gkcoi/dist/type';
-import do_draw_map, { type MapCore } from './logic/efffects/draw';
+import do_draw_map from './logic/efffects/draw';
+import type { MapCore } from './logic/efffects/svgGraph';
 import { ROUTING_CRAFT_NAMES } from './models/ship/EquippedShip';
 import {
 	calc_Gkcoi_Blob,
