@@ -1,5 +1,5 @@
 import { is_fleet_speed_slow } from "../../../logic/speed/predicate";
-import { count_ships_by_base_names } from "../../../models/fleet/AdoptFleet";
+import { count_carriers, count_ships_by_base_names } from "../../../models/fleet/AdoptFleet";
 import { CalcFnWithCondition } from "..";
 import { destructuring_assignment_helper, omission_of_conditions } from "../util";
 
@@ -75,6 +75,9 @@ export const calc_62_1: CalcFnWithCondition = (
             if (DE === 0 && is_fleet_speed_slow(speed)) {
                 return 'F';
             }
+            if (difficulty === 4 && DD >= 5) {
+                return 'G';
+            }
             if (difficulty === 4 && BBCVs === 0 && DD >= 4) {
                 return 'G';
             }
@@ -116,19 +119,16 @@ export const calc_62_1: CalcFnWithCondition = (
             if (CVH >= 1) {
                 return 'O1';
             }
-            if (Ds === 7) {
-                return 'O1';
-            }
             if (Ds === 6) {
                 return 'O2';
             }
             if (CLs === 1 && Ds === 5) {
                 return 'O2';
             }
-            if (CL === 1 && DD === 4 && AV >= 1 && AV + CAs === 2) {
+            if (CL === 1 && Ds === 4 && AV + AS >= 1 && AV + AS + CAs === 2) {
                 return 'O2';
             }
-            if (CL === 1 && DD === 4 && AO + LHA >= 1 && AO + LHA + AV + CVL === 2) {
+            if (CL === 1 && Ds === 4 && AO + LHA >= 1 && AO + LHA + AV + AS + CVL === 2) {
                 return 'O2';
             }
             return 'O1';
@@ -141,7 +141,7 @@ export const calc_62_1: CalcFnWithCondition = (
             }
             break;
         case 'P':
-            if (BBs + CVs >= 1) {
+            if (BBs + count_carriers(fleet) >= 1) {
                 return 'O1';
             }
             if (CAs >= 2) {
@@ -149,7 +149,7 @@ export const calc_62_1: CalcFnWithCondition = (
             }
             return 'Q';
         case 'Q':
-            if (BBs + CVs + CAs >= 1) {
+            if (BBs + count_carriers(fleet) + CAs >= 1) {
                 return 'Q1';
             }
             if (CLs >= 2) {
@@ -165,7 +165,7 @@ export const calc_62_1: CalcFnWithCondition = (
             }
             return 'U';
         case 'R':
-            if (seek.c4 >= 72) {
+            if (seek.c4 >= 71) {
                 return 'T';
             }
             return 'S';
