@@ -11,13 +11,14 @@ description: 分岐条件表の原文(多くは中国語wiki)を渡して「nn-n
 
 1. **ロジック**: `src/core/branch/world<W>/<W>-<M>.ts` の `calc_<W>_<M>`
 2. **原文txt**: `public/originalBranchTexts/world<W>/<W>-<M>.txt`
+   - **中国語原文をそのまま貼らない。日本語に和訳して置く**。用語・言い回しは既存の日本語エントリ(同world・直近world)に合わせる(例: 舰队→艦隊、重巡系→重巡級、水打部队→水上打撃部隊)。
 3. **表示テキスト**: `src/data/branch.ts` の `BRANCH_TEXTS["<W>-<M>"]` と `BRANCH_LAST_UPDATES["<W>-<M>"]`
 
 ## 手順
 
 1. 新しい分岐表と現行実装(現行の `.txt` = 直近版)をノード単位で突き合わせ、変更点を洗い出す。
 2. `branch-implementation` スキルに従って `calc_<W>_<M>` を更新する。未指定組合せや「索敵値のみ・要求索敵値不明」時の扱いなどのルールもそのスキルに従う。
-3. `branch-text-reflection` スキルに従って、`.txt` を新表に書き換え、`branch.ts` に反映する。原文にソース更新日時(例: 「在YYYY-MM-DD HH:MM修改」)があれば `BRANCH_LAST_UPDATES` にその日時を転記する。
+3. `branch-text-reflection` スキルに従って、`.txt` を新表の**和訳**に書き換え、`branch.ts` に反映する。原文にソース更新日時(例: 「在YYYY-MM-DD HH:MM修改」)があれば `BRANCH_LAST_UPDATES` にその日時を転記する。
 4. 型チェックが通ることを確認する。ブラウザでの実画面確認は不要(ユーザーが行う)。
 
 ## 注意
