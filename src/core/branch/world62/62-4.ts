@@ -1,6 +1,6 @@
 import { DisallowToSortie } from "../../../errors/CustomError";
 import { is_fleet_speed_fast_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
-import { count_Yamato_class } from "../../../models/fleet/AdoptFleet";
+import { count_ships_by_base_names, count_Yamato_class } from "../../../models/fleet/AdoptFleet";
 import { is_fleet_carrier, is_fleet_combined, is_fleet_surface, is_fleet_transport } from "../../../models/fleet/predicate";
 import { CalcFnWithCondition } from "..";
 import { destructuring_assignment_helper, omission_of_conditions } from "../util";
@@ -54,23 +54,23 @@ export const calc_62_4: CalcFnWithCondition = (
             if (CAs >= 2 && Ds >= 4) {
                 return 'A';
             }
-            if (CAs === 3 && Ds === 3) {
+            if (CAs === 2 && Ds === 3) {
                 return 'A';
             }
             return 'E';
         case 'A':
-            if (CAs + CL + Ds === ships_length && is_fleet_speed_fast_or_more(speed)) {
+            if (CAs + CLs + Ds === ships_length && is_fleet_speed_fast_or_more(speed)) {
                 return 'C';
             }
             return 'B';
         case 'E1':
             if (!is_fleet_combined(fleet_type)) {
+                if (phase >= 2 && Ds <= 3) {
+                    return 'K';
+                }
                 return 'E2';
             }
-            if (is_fleet_combined(fleet_type)) {
-                return 'K';
-            }
-            break;
+            return 'K';
         case 'F':
             if (is_fleet_carrier(fleet_type)) {
                 return 'H';
@@ -78,10 +78,7 @@ export const calc_62_4: CalcFnWithCondition = (
             if (is_fleet_surface(fleet_type)) {
                 return 'H';
             }
-            if (AV >= 1) {
-                return 'E1';
-            }
-            if (BBV + CVL >= 1 && is_fleet_speed_slow(speed)) {
+            if (BBV + CVL + count_ships_by_base_names(['あきつ丸'], base_ship_names) >= 1 && CAs === 2 && is_fleet_speed_slow(speed)) {
                 return 'G';
             }
             return 'E1';
@@ -128,11 +125,17 @@ export const calc_62_4: CalcFnWithCondition = (
             if (seek.c2 < 80) {
                 return 'P2';
             }
+            if (count_Yamato_class(fleet) >= 2 && is_fleet_speed_slow(speed)) {
+                return 'U';
+            }
             if (CL >= 2 && Ds >= 4 && is_fleet_surface(fleet_type)) {
                 return 'V';
             }
             return 'U';
         case 'T2':
+            if (count_Yamato_class(fleet) >= 2 && Ds <= 3) {
+                return 'U';
+            }
             if (is_fleet_carrier(fleet_type) && is_fleet_speed_fast_or_more(speed)) {
                 return 'Y';
             }
@@ -150,15 +153,33 @@ export const calc_62_4: CalcFnWithCondition = (
             if (is_fleet_speed_slow(speed)) {
                 return 'Y1';
             }
-            return 'Y';
+            if (BBs >= 3) {
+                return 'Y1';
+            }
+            if (CVH >= 3) {
+                return 'Y1';
+            }
+            if (CAs === 2) {
+                return 'Y';
+            }
+            if (CL >= 2 && Ds >= 3) {
+                return 'Y';
+            }
+            if (Ds >= 4) {
+                return 'Y';
+            }
+            return 'Y1';
         case 'V':
             if (count_Yamato_class(fleet) >= 1) {
                 return 'W';
             }
-            if (CVH === 0) {
+            if (is_fleet_speed_fast_or_more(speed)) {
                 return 'X';
             }
             if (CL >= 2) {
+                return 'X';
+            }
+            if (Ds >= 6) {
                 return 'X';
             }
             return 'W';
