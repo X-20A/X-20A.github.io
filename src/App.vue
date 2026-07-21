@@ -1177,12 +1177,29 @@ input[type="number"] {
 
 /* 選択された行のスタイル */
 .selected-row {
-	border: 2px solid #4dabf7 !important;
 	background-color: #e7f3ff !important;
 }
 
 .selected-row td {
-	border-color: #4dabf7;
+	position: relative;
+}
+
+.selected-row td::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	z-index: 2;
+	border-top: 2px solid #4dabf7;
+	border-bottom: 2px solid #4dabf7;
+}
+
+.selected-row td:first-child::after {
+	border-left: 2px solid #4dabf7;
+}
+
+.selected-row td:last-child::after {
+	border-right: 2px solid #4dabf7;
 }
 
 /* 差分表示時のスタイル */
