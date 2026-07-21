@@ -44,7 +44,7 @@ export default class Const {
         '62-2': { 'phase': '1', 'A1': 'A3' },
         '62-3': { 'phase': '1', 'difficulty': '4', 'B': 'B1', 'D': 'D1', 'H': 'I' },
         '62-4': { 'phase': '1', 'P': 'P1', 'T': 'T1' },
-        // '62-5': {  },
+        '62-5': { 'phase': '1', 'Force_de_Raid': '1', 'British_relief_fleet': '1', 'C': 'C2', 'K3': 'L', 'O': 'P1' },
     }; // @expansion
 
     /**

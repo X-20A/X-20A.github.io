@@ -1,4 +1,4 @@
-import { ST as ShipType } from "../../data/ship";
+import { NA, ST as ShipType } from "../../data/ship";
 import type { FleetComponent } from "./FleetComponent";
 import { type Composition, derive_composition } from "../../models/Composition";
 import { FleetSeek } from "../../types";
@@ -310,6 +310,22 @@ export function count_not_equip_arctic_carriers(fleet: AdoptFleet): number {
             ) {
                 if (!ship.has_arctic_gear) count++;
             }
+        }
+    }
+    return count;
+}
+
+/**
+ * 艦隊内のフランス艦の数を返す
+ * @param fleet AdoptFleet
+ */
+export function count_France_ships(
+    fleet: AdoptFleet,
+): number {
+    let count = 0;
+    for (const f of fleet.fleets) {
+        for (const unit of f.units) {
+            if (unit.ship.national === NA.France) count++;
         }
     }
     return count;

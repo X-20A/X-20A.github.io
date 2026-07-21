@@ -422,6 +422,32 @@ const OPTION_DATA: OptionSelector = {
 			]
 		},
 	},
+	'62-5': {
+		'phase': {
+			label: 'Phase',
+			options: [
+				{ value: '1', label: '開始時点' },
+				{ value: '2', label: '出撃地点2解放後' },
+				{ value: '3', label: '出撃地点3解放後' },
+				{ value: '4', label: 'Sボス出現後' },
+				{ value: '5', label: '出撃地点4解放後' },
+			],
+		},
+		'Force_de_Raid': {
+			label: 'Force de Raid',
+			options: [
+				{ value: '1', label: '含む' },
+				{ value: '0', label: '含まない' },
+			]
+		},
+		'British_relief_fleet': {
+			label: 'イギリス救援艦隊',
+			options: [
+				{ value: '1', label: '含む' },
+				{ value: '0', label: '含まない' },
+			],
+		},
+	},
 } as const; // @expansion
 
 // 海域絞り込み
