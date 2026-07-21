@@ -1,6 +1,6 @@
 <template>
 	<div class="header-controls">
-		<button class="sheet-list-btn" title="シート一覧" @pointerdown="workspace_store.TOGGLE_SIDEBAR()">☰</button>
+		<button class="sheet-list-btn" title="シート一覧(s)" @pointerdown="workspace_store.TOGGLE_SIDEBAR()">☰</button>
 		<input v-model="sheet_name" placeholder="シート名" class="project-name-input" />
 		<div class="button-group">
 			<button @pointerdown="handle_sort_rows" class="action-btn">上詰め</button>

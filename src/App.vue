@@ -442,6 +442,16 @@ const is_editing_cell = (): boolean => {
 		|| active.isContentEditable;
 };
 
+// 「s」キーでサイドバーを開閉する
+const handle_sidebar_shortcut = (event: KeyboardEvent) => {
+	if (event.ctrlKey || event.metaKey || event.altKey) return;
+	if (event.key !== 's' && event.key !== 'S') return;
+	if (is_editing_cell()) return;
+
+	event.preventDefault();
+	workspace_store.TOGGLE_SIDEBAR();
+};
+
 // 行のコピー / カット / 貼り付け
 const handle_row_shortcut = (event: KeyboardEvent) => {
 	if (!event.ctrlKey && !event.metaKey) return;
@@ -745,6 +755,7 @@ onMounted(async () => {
 	// ドキュメントクリックイベントを登録
 	document.addEventListener('click', handle_document_click);
 	document.addEventListener('keydown', handle_row_shortcut);
+	document.addEventListener('keydown', handle_sidebar_shortcut);
 	window.addEventListener('beforeunload', handle_before_unload);
 
 	await workspace_store.INITIALIZE();
@@ -790,6 +801,7 @@ onMounted(async () => {
 onUnmounted(() => {
 	document.removeEventListener('click', handle_document_click);
 	document.removeEventListener('keydown', handle_row_shortcut);
+	document.removeEventListener('keydown', handle_sidebar_shortcut);
 	window.removeEventListener('beforeunload', handle_before_unload);
 });
 </script>

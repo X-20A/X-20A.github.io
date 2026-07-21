@@ -2,7 +2,8 @@ import { describe, expect, it } from "vitest";
 import {
     build_tree, calc_drop_index, can_move, collect_descendant_ids, empty_trash, get_children,
     insert_node, is_descendant, is_in_trash, list_active_sheets, move_node,
-    remove_node, rename_node, set_folder_expanded, type NodeMap,
+    remove_node, rename_node, restore_node, set_folder_expanded, trash_node,
+    type NodeMap,
 } from "../src/logics/tree";
 import { NodeId, TRASH_ID, create_folder_node, create_sheet_node } from "../src/types";
 
@@ -271,6 +272,69 @@ describe('ゴミ箱', () => {
     it('空のゴミ箱を空にしても何も起きない', () => {
         const result = empty_trash(make_nodes());
         expect(result.removed_sheet_ids).toEqual([]);
+    });
+});
+
+describe('ゴミ箱からの復元', () => {
+    it('元のフォルダへ戻す', () => {
+        let nodes = trash_node(make_nodes(), id('e1'));
+        expect(is_in_trash(nodes, id('e1'))).toBe(true);
+
+        nodes = restore_node(nodes, id('e1'));
+        expect(nodes[id('e1')].parent_id).toBe(id('events'));
+        expect(is_in_trash(nodes, id('e1'))).toBe(false);
+    });
+
+    it('ルート直下にあったものはルートへ戻す', () => {
+        let nodes = trash_node(make_nodes(), id('memo'));
+        nodes = restore_node(nodes, id('memo'));
+
+        expect(nodes[id('memo')].parent_id).toBeNull();
+    });
+
+    it('復元後は控えを消す', () => {
+        let nodes = trash_node(make_nodes(), id('e1'));
+        nodes = restore_node(nodes, id('e1'));
+
+        expect(nodes[id('e1')].restore_parent_id).toBeNull();
+    });
+
+    it('元の親が消えていればルートへ戻す', () => {
+        let nodes = trash_node(make_nodes(), id('e1'));
+        nodes = remove_node(nodes, id('events')).nodes;
+        nodes = restore_node(nodes, id('e1'));
+
+        expect(nodes[id('e1')].parent_id).toBeNull();
+    });
+
+    it('元の親がゴミ箱にあればルートへ戻す', () => {
+        let nodes = trash_node(make_nodes(), id('e1'));
+        nodes = trash_node(nodes, id('events'));
+        nodes = restore_node(nodes, id('e1'));
+
+        expect(nodes[id('e1')].parent_id).toBeNull();
+        expect(is_in_trash(nodes, id('e1'))).toBe(false);
+    });
+
+    it('控えのない旧データはルートへ戻す', () => {
+        const nodes = move_node(make_nodes(), id('memo'), TRASH_ID);
+        expect(nodes[id('memo')].restore_parent_id).toBeUndefined();
+
+        expect(restore_node(nodes, id('memo'))[id('memo')].parent_id).toBeNull();
+    });
+
+    it('フォルダを戻すと子孫も一緒に出る', () => {
+        let nodes = trash_node(make_nodes(), id('events'));
+        expect(is_in_trash(nodes, id('e2'))).toBe(true);
+
+        nodes = restore_node(nodes, id('events'));
+        expect(is_in_trash(nodes, id('e2'))).toBe(false);
+        expect(nodes[id('e2')].parent_id).toBe(id('spring'));
+    });
+
+    it('存在しないノードは何もしない', () => {
+        const original = make_nodes();
+        expect(restore_node(original, id('unknown'))).toBe(original);
     });
 });
 
