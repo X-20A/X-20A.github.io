@@ -608,10 +608,15 @@ const hide_context_menu = () => {
 };
 
 // ドキュメントクリックでコンテキストメニューを閉じる
-const handle_document_click = () => {
-	if (!context_menu.value.is_visible) return;
+const handle_document_click = (event: MouseEvent) => {
+	if (context_menu.value.is_visible) hide_context_menu();
 
-	hide_context_menu();
+	// シート(表)の外をクリックしたら行選択を解除する。
+	// 表内のセル編集や合計行の操作、ハンドルでの選択（stopPropagation 済み）は対象外
+	if (selected_row_indexes.value.length === 0) return;
+	if ((event.target as HTMLElement | null)?.closest('.spread-sheet')) return;
+
+	sheet_store.CLEAR_SELECTION();
 };
 
 const table_body = ref<HTMLElement>();
