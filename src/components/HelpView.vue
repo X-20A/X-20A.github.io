@@ -58,9 +58,10 @@ const SECTIONS: { title: string, note?: string, items: HelpItem[] }[] = [
 	},
 	{
 		title: '行の選択',
-		note: '行の左端にある ⋮⋮ をクリックします。',
+		note: '行の左端にある ⋮⋮ をクリックします。シートの外をクリックすると選択を解除できます。',
 		items: [
-			{ keys: ['Ctrl', 'クリック'], action: '行を選択に追加、もう一度で解除' },
+			{ keys: [], hint: 'クリック', action: 'その行だけを選択します' },
+			{ keys: ['Ctrl', 'クリック'], action: '行を選択に追加、もう一度で解除（複数選択）' },
 			{ keys: ['Shift', 'クリック'], action: '直前に選んだ行からクリックした行までをまとめて選択' },
 		],
 	},

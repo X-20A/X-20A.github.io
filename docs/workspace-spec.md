@@ -200,8 +200,11 @@ display_mode: 'sum' | 'diff',
 | 操作 | 挙動 |
 |---|---|
 | クリック | 単独選択。`anchor_index` を更新 |
-| Ctrl + クリック | トグル。`anchor_index` を更新 |
+| Ctrl + クリック | トグル(複数選択)。`anchor_index` を更新 |
 | Shift + クリック | `anchor_index` から対象までを範囲選択 |
+| シート(表)の外をクリック | 選択を解除 |
+
+選択にはハンドル(⋮⋮)の素のクリックで足りる。Ctrl / Shift は複数選択したいときだけ使う。
 
 `display_mode` は明示的なトグルとする。`selection.length === 2` のときのみ diff を
 選択可能にし、自動遷移はしない。複数行コピーのために2行選択した瞬間に表示が

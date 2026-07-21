@@ -374,9 +374,7 @@ const handle_drag_handle_click = (event: MouseEvent, index: number) => {
 	const ctrl = event.ctrlKey || event.metaKey;
 	const shift = event.shiftKey;
 
-	// 修飾なしのクリックはドラッグ開始と区別がつかないため、選択には使わない
-	if (!ctrl && !shift) return;
-
+	// 素のクリックで単独選択できる。Ctrl / Shift は複数選択のときだけ使う
 	event.preventDefault();
 	event.stopPropagation();
 
