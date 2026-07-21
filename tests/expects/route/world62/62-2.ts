@@ -3,7 +3,7 @@ import { Ft } from "../../../../src/models/fleet/predicate";
 
 export const TEST_FLEET_DATAS_62_2: TestFleetData[] = [
     {
-        area: '62-2', routes: ['1-A-A1-A2-A3-B2-D-G-G1-G2-K-L-M-O-P'],
+        area: '62-2', routes: ['1-A-A1-A2-A3-B2-D-G-G1-K-L-M-O-P'],
         option: {
             'phase': '1',
         },

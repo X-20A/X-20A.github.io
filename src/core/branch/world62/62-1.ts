@@ -38,7 +38,7 @@ export const calc_62_1: CalcFnWithCondition = (
                 return '1';
             }
         case 'A':
-            if (CVs + count_ships_by_base_names(['あきつ丸'], base_ship_names) >= 2) {
+            if (count_carriers(fleet) >= 2) {
                 return 'A2';
             }
             if (phase <= 1) {

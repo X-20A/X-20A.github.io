@@ -9,6 +9,7 @@ import { Sp as Speed } from "../../logic/speed/predicate";
 import { round_seek } from "../../logic/seek/fleet";
 import { EquippedShip } from "../ship/EquippedShip";
 import { BaseShipName } from "../../types/baseShipName";
+import { includes_ship_name } from "../ship/predicate";
 
 /**
  * FleetComponentsからSelectedTypeによって抽出、構成されたシミュに使用される艦隊のデフォルト構造
@@ -196,6 +197,21 @@ export function includes_base_ship(
     search_base_name: BaseShipName[],
 ): boolean {
     return search_base_name.includes(target_base_name);
+}
+
+/**
+ * match_namesに合致する艦の数を返す
+ * @param match_names
+ * @param search_names
+ * @returns
+ */
+export function count_ships_by_names(
+    match_names: ShipName[],
+    search_names: ShipName[],
+): number {
+    return match_names
+        .filter(name => includes_ship_name(search_names, name))
+        .length;
 }
 
 /**
