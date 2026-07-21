@@ -133,6 +133,9 @@ export const calc_62_4: CalcFnWithCondition = (
             }
             return 'U';
         case 'T2':
+            if (route.includes('U')) {
+                return 'Y';
+            }
             if (count_Yamato_class(fleet) >= 2 && Ds <= 3) {
                 return 'U';
             }
