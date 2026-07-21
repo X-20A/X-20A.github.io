@@ -2,7 +2,6 @@
 	<Header />
 	<Sidebar />
 	<div class="container">
-		<p style="color:magenta;">β版</p>
 		<HeaderControls />
 		<div class="sheet-container">
 			<div class="table-wrapper">
@@ -1159,6 +1158,7 @@ input[type="number"] {
 
 .display-mode-btn:hover:not(:disabled) {
 	background-color: #e7f5ff;
+	color: #1971c2;
 }
 
 .display-mode-btn.is-diff {
