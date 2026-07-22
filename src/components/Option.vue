@@ -433,18 +433,11 @@ const OPTION_DATA: OptionSelector = {
 				{ value: '5', label: '出撃地点4解放後' },
 			],
 		},
-		'Force_de_Raid': {
-			label: 'Force de Raid',
-			options: [
-				{ value: '1', label: '含む' },
-				{ value: '0', label: '含まない' },
-			]
-		},
 		'British_relief_fleet': {
 			label: 'イギリス救援艦隊',
 			options: [
-				{ value: '1', label: '含む' },
-				{ value: '0', label: '含まない' },
+				{ value: '1', label: '全艦左記札or無札' },
+				{ value: '0', label: 'それ以外' },
 			],
 		},
 	},

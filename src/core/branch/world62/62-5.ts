@@ -1,5 +1,5 @@
 import { DisallowToSortie } from "../../../errors/CustomError";
-import { is_fleet_speed_fast_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
+import { is_fleet_speed_fast_or_more, is_fleet_speed_faster_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
 import { count_carriers, count_France_ships, count_ships_by_base_names, count_Yamato_class } from "../../../models/fleet/AdoptFleet";
 import { is_fleet_carrier, is_fleet_combined, is_fleet_transport } from "../../../models/fleet/predicate";
 import { CalcFnWithCondition } from "..";
@@ -69,6 +69,9 @@ export const calc_62_5: CalcFnWithCondition = (
             }
             return '2';
         case '1':
+            if (is_fleet_speed_faster_or_more(speed)) {
+                return 'A';
+            }
             if (Ds <= 1) {
                 return 'A1';
             }
@@ -94,21 +97,30 @@ export const calc_62_5: CalcFnWithCondition = (
             }
             return 'H';
         case '4':
+            if (Ss >= 1) {
+                return 'M2';
+            }
             if (count_Yamato_class(fleet) >= 1 && is_fleet_carrier(fleet_type)) {
                 return 'M2';
             }
-            if (count_ships_by_base_names(['Algerie'], base_ship_names) === 0 && Ds <= 3) {
-                return 'M2';
-            }
-            if (count_ships_by_base_names(['Algerie'], base_ship_names) >= 1 && Ds <= 3) {
+            if (Ds >= 4) {
+                if (CL >= 2) {
+                    return 'U';
+                }
+                if (count_ships_by_base_names(['Gotland', 'Visby'], base_ship_names) >= 1) {
+                    return 'U';
+                }
                 return 'T';
             }
-            if (count_ships_by_base_names(['Gotland'], base_ship_names) >= 1 && Ds >= 4) {
-                return 'U';
+            if (
+                count_ships_by_base_names(['Algerie'], base_ship_names) >= 1
+                && is_fleet_speed_fast_or_more(speed)
+            ) {
+                return 'T';
             }
-            break;
+            return 'M2';
         case 'A2':
-            if (seek.c4 < 75) {
+            if (seek.c4 < 82) {
                 return 'A3';
             }
             if (is_fleet_speed_slow(speed)) {
@@ -133,28 +145,31 @@ export const calc_62_5: CalcFnWithCondition = (
             if (phase <= 1) {
                 return 'E2';
             }
-            if (ships_length <= 5) {
-                return 'E2';
+            if (seek.c4 < 82) {
+                return 'F';
             }
-            return 'G';
+            if (ships_length >= 6) {
+                return 'G';
+            }
+            return 'E2';
         case 'H':
             if (phase <= 2) {
                 return 'I';
             }
-            if (option.Force_de_Raid === '1') {
-                return 'K';
-            }
-            if (option.British_relief_fleet === '1') {
+            if (is_fleet_transport(fleet_type)) {
                 return 'I';
             }
-            break;
-        case 'K':
-            if (is_fleet_speed_slow(speed)) {
-                return 'K1';
+            if (option.Force_de_Raid !== '1') {
+                return 'I';
             }
-            return 'K2';
+            return 'K';
+        case 'K':
+            if (Ds >= 4 && is_fleet_speed_fast_or_more(speed)) {
+                return 'K2';
+            }
+            return 'K1';
         case 'L':
-            if (phase >= 4 && Ds >= 4) {
+            if (phase >= 4 && BBs >= 3) {
                 return 'Q';
             }
             return 'L2';
@@ -187,7 +202,13 @@ export const calc_62_5: CalcFnWithCondition = (
         case 'Q':
             return 'S';
         case 'V':
-            if (count_ships_by_base_names(['Gotland'], base_ship_names) >= 1) {
+            if (count_Yamato_class(fleet) >= 1 && BBs >= 4) {
+                return 'W';
+            }
+            if (Ss >= 1) {
+                return 'X';
+            }
+            if (count_ships_by_base_names(['Gotland', 'Visby'], base_ship_names) >= 1) {
                 return 'X';
             }
             return 'W';
