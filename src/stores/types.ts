@@ -43,8 +43,8 @@ export type ModalStoreType = {
         edge_datas: EdgeDatas
     ) => void;
     SHOW_AREA: () => void;
-    SHOW_REFFERENCE: () => void;
+    SHOW_REFERENCE: () => void;
     SHOW_ERROR: (error: unknown) => void;
     HIDE_MODALS: () => void;
-    UPDATE_CURRENT_REFFERENCE_TAB: (value: 'Route' | 'Branch') => void;
+    UPDATE_CURRENT_REFERENCE_TAB: (value: 'Route' | 'Branch') => void;
 };

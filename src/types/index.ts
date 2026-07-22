@@ -2,7 +2,7 @@ import type Big from "big.js";
 import type { NA as National, SG as SpeedGroup, ST as ShipType } from "../data/ship";
 import type { NT as NodeType } from "../data/map";
 import { ShipName } from "./shipName";
-import { TabKey } from "../components/modals/Refference.vue";
+import { TabKey } from "../components/modals/Reference.vue";
 import { ShipId } from "./shipId";
 import { QuestFilterKey } from "../components/tabs/Quest.vue";
 
@@ -102,7 +102,7 @@ export type SaveData = {
     selected_type: SelectedType | null,
     area: AreaId | null,
     options: OptionsType | null,
-    refferrence_tab_key: TabKey,
+    reference_tab_key: TabKey,
     quest_filter_key: QuestFilterKey,
 }
 

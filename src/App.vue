@@ -157,7 +157,7 @@
 				</div>
 				<SvgIcon @pointerdown="switchSeek" name="radar-8" :color="adoptFleet?.seek.c1 === 999 ? '#f6a306' : '#fff'"
 					class="ignore-seek icon-on-map"></SvgIcon>
-				<SvgIcon @pointerdown="show_refference" name="layers" color="#fff" class="reference icon-on-map"></SvgIcon>
+				<SvgIcon @pointerdown="show_reference" name="layers" color="#fff" class="reference icon-on-map"></SvgIcon>
 				<SvgIcon @click="screenShot" name="camera-outline" color="#fff" class="screen-shot icon-on-map" ></SvgIcon>
 			</template>
 			<div id="cy" class="cy">
@@ -165,12 +165,12 @@
 		</div>
 	</div>
 	<div v-if="isAreaVisible
-		|| isRefferenceVisible
+		|| isReferenceVisible
 		|| isErrorVisible
 		|| isCommandEvacuationVisible"
 		class="modal-overlay" @pointerdown="close_modals">
 		<Area />
-		<Refference />
+		<Reference />
 		<ErrorView />
 		<CommandEvacuation />
 	</div>
@@ -214,8 +214,8 @@ import {
 import { type AdoptFleet, count_not_equip_arctic_carriers, derive_adopt_fleet, get_escort_fleet_ships_length, calc_escort_fleet_ship_names, get_main_fleet_ships_length, calc_main_fleet_ship_names, count_Reigo_ships, count_Daigo_ships, is_speed_overridden } from './models/fleet/AdoptFleet';
 import type { Sp as FleetSpeed } from './logic/speed/predicate';
 import type { GenerateOptions, DeckBuilder as GkcoiDeckBuilder, LoS, Speed } from 'gkcoi/dist/type';
-import do_draw_map from './logic/efffects/draw';
-import type { MapCore } from './logic/efffects/svgGraph';
+import do_draw_map from './logic/effects/draw';
+import type { MapCore } from './logic/effects/svgGraph';
 import { ROUTING_CRAFT_NAMES } from './models/ship/EquippedShip';
 import {
 	calc_Gkcoi_Blob,
@@ -230,24 +230,24 @@ import Drum from '@/icons/items/drum.png';
 import Craft from '@/icons/items/craft.png';
 import Radar from '@/icons/items/radar.png';
 import { do_delete_URL_param, calc_URL_param } from './logic/url';
-import { do_combine_blobs, do_download_data_URL } from './logic/efffects/render';
+import { do_combine_blobs, do_download_data_URL } from './logic/effects/render';
 import type { FleetComponent } from './models/fleet/FleetComponent';
 import type { SyonanResource } from './models/resource/SyonanResource';
 import type { StandardResource } from './models/resource/StandardResource';
 import DetailBox from './components/Detail.vue';
 import Footer from './components/Footer.vue';
-import { derive_sim_executer, start_sim } from './core/SimExecutor';
+import { derive_sim_executor, start_sim } from './core/SimExecutor';
 import { clear_command_evacuation } from './core/CommandEvacuation';
-import { parseAreaId, parse_DeckBuilder_String, parseSelectedType } from './models/shemas';
-import { register_map_events } from './logic/efffects/mapEvents';
+import { parseAreaId, parse_DeckBuilder_String, parseSelectedType } from './models/schemas';
+import { register_map_events } from './logic/effects/mapEvents';
 import { disassembly_area_id } from './logic/area';
 import lzstring from "lz-string";
 import { Ft as FleetType } from './models/fleet/predicate';
 import Area from './components/modals/Area.vue';
 import { EDGE_DATAS, NODE_DATAS } from './data/map';
 
-const Refference = defineAsyncComponent(() => import(
-	'./components/modals/Refference.vue'
+const Reference = defineAsyncComponent(() => import(
+	'./components/modals/Reference.vue'
 ));
 const ErrorView = defineAsyncComponent(() => import(
 	'./components/modals/ErrorView.vue'
@@ -297,15 +297,15 @@ const hideFleetOptions = () => {
 };
 
 const isAreaVisible = computed(() => modalStore.isAreaVisible);
-const isRefferenceVisible = computed(() => modalStore.isRefferenceVisible);
+const isReferenceVisible = computed(() => modalStore.isReferenceVisible);
 const isErrorVisible = computed(() => modalStore.isErrorVisible);
 const isCommandEvacuationVisible = computed(() => modalStore.isCommandEvacuationVisible);
 
 const show_area = () => {
 	modalStore.SHOW_AREA();
 }
-const show_refference = () => {
-	modalStore.SHOW_REFFERENCE();
+const show_reference = () => {
+	modalStore.SHOW_REFERENCE();
 }
 const close_modals = () => {
 	modalStore.HIDE_MODALS();
@@ -525,7 +525,7 @@ watch([adoptFleet, selectedArea, options, commandEvacuations], async () => {
 
 	try {
 		parseAreaId(selectedArea.value);
-		const sim_executer = derive_sim_executer(
+		const sim_executor = derive_sim_executor(
 			adoptFleet.value as AdoptFleet,
 			selectedArea.value,
 			options.value,
@@ -533,7 +533,7 @@ watch([adoptFleet, selectedArea, options, commandEvacuations], async () => {
 		);
 		// console.time('シミュ計測');
 		const result = start_sim(
-			sim_executer,
+			sim_executor,
 		);
 		// console.timeEnd('シミュ計測');
 		store.UPDATE_SIM_RESULT(result);
@@ -772,11 +772,11 @@ const screenShot = async () => {
 
 let save_y = 0;
 // スクロールバウンス回避
-watch([isAreaVisible, isRefferenceVisible, isErrorVisible, isCommandEvacuationVisible], () => {
+watch([isAreaVisible, isReferenceVisible, isErrorVisible, isCommandEvacuationVisible], () => {
 	const style = document.body.style;
 	if (
 		isAreaVisible.value
-		|| isRefferenceVisible.value
+		|| isReferenceVisible.value
 		|| isErrorVisible.value
 		|| isCommandEvacuationVisible.value
 	) { // DOMはあんまし触りたくないけどしゃあないかな

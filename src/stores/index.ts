@@ -19,8 +19,8 @@ import type {
 import type { FleetComponent } from '../models/fleet/FleetComponent';
 import { is_battle_node, is_last_stop_node, type CommandEvacuation } from '../core/CommandEvacuation';
 import type { Node } from '../types/brand';
-import { parseOptionsType } from '../models/shemas';
-import { TabKey } from '../components/modals/Refference.vue';
+import { parseOptionsType } from '../models/schemas';
+import { TabKey } from '../components/modals/Reference.vue';
 import { QuestFilterKey } from '../components/tabs/Quest.vue';
 
 export type LoadDataCommands = {
@@ -68,7 +68,7 @@ export const useStore = defineStore('compass', {
         /** 司令退避設定（ノードごと） */
         commandEvacuations: [] as CommandEvacuation[],
 
-        refferenceTabKey: 'route' as TabKey,
+        referenceTabKey: 'route' as TabKey,
         quest_filter_key: 'Both_Area' as QuestFilterKey,
 	}),
 	actions: {
@@ -104,8 +104,8 @@ export const useStore = defineStore('compass', {
                 this.options[area][key] = value;
             }
         },
-        UPDATE_REFFERENCE_TAB_KEY(refferrence_tab_key: TabKey): void {
-            this.refferenceTabKey = refferrence_tab_key;
+        UPDATE_REFERENCE_TAB_KEY(reference_tab_key: TabKey): void {
+            this.referenceTabKey = reference_tab_key;
         },
         UPDATE_QUEST_FILTER_KEY(quest_filter_key: QuestFilterKey): void {
             this.quest_filter_key = quest_filter_key;
@@ -138,7 +138,7 @@ export const useStore = defineStore('compass', {
                         // Const.OPTIONS をそのまま渡す
                         this.UPDATE_OPTIONS(Const.DEFAULT_OPTIONS);
                     }
-                    if (json.refferrence_tab_key) this.UPDATE_REFFERENCE_TAB_KEY(json.refferrence_tab_key);
+                    if (json.reference_tab_key) this.UPDATE_REFERENCE_TAB_KEY(json.reference_tab_key);
                     if (json.quest_filter_key) this.UPDATE_QUEST_FILTER_KEY(json.quest_filter_key);
                 } catch (e) {
                     // エラーが発生した場合も Const.OPTIONS をそのまま渡す
@@ -161,7 +161,7 @@ export const useStore = defineStore('compass', {
                     selected_type: this.selectedType,
                     area: this.selectedArea,
                     options: this.options,
-                    refferrence_tab_key: this.refferenceTabKey,
+                    reference_tab_key: this.referenceTabKey,
                     quest_filter_key: this.quest_filter_key,
                 };
             }
@@ -211,14 +211,14 @@ export const useModalStore = defineStore('modal', {
         /** 海域選択モーダルの表示状態 */
         isAreaVisible: false,
         /** 資料モーダル表示状態 */
-        isRefferenceVisible: false,
+        isReferenceVisible: false,
         /** エラーモーダルの表示状態 */
 		isErrorVisible: false,
         /** 司令退避モーダルの表示状態 */
         isCommandEvacuationVisible: false,
         /** 表示するエラーメッセージ */
 		errorMessage: '',
-        currentRefferenceTab: 'Route' as 'Route' | 'Branch',
+        currentReferenceTab: 'Route' as 'Route' | 'Branch',
 	}),
 	actions: {
         /**
@@ -230,8 +230,8 @@ export const useModalStore = defineStore('modal', {
         /**
          * 資料モーダル表示
          */
-        SHOW_REFFERENCE(): void {
-            this.isRefferenceVisible = true;
+        SHOW_REFERENCE(): void {
+            this.isReferenceVisible = true;
         },
         /**
          * 司令退避モーダル表示
@@ -264,13 +264,13 @@ export const useModalStore = defineStore('modal', {
          */
         HIDE_MODALS(): void {
             this.isAreaVisible = false;
-            this.isRefferenceVisible = false;
+            this.isReferenceVisible = false;
             this.isErrorVisible = false;
             this.isCommandEvacuationVisible = false;
             this.errorMessage = '';
         },
-        UPDATE_CURRENT_REFFERENCE_TAB(value: 'Route' | 'Branch'): void {
-            this.currentRefferenceTab = value;
+        UPDATE_CURRENT_REFERENCE_TAB(value: 'Route' | 'Branch'): void {
+            this.currentReferenceTab = value;
         },
 	}
 });

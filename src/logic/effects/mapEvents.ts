@@ -1,6 +1,6 @@
 /**
  * SVGマップへのイベント登録を行う関数(旧cytoscapeEvents)
- * @module logic/efffects/mapEvents
+ * @module logic/effects/mapEvents
  */
 import type { Ref } from 'vue';
 import type { MapCore } from './svgGraph';

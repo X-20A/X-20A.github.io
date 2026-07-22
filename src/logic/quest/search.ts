@@ -1,5 +1,5 @@
 import Big from "big.js";
-import { derive_sim_executer, start_sim } from "../../core/SimExecutor";
+import { derive_sim_executor, start_sim } from "../../core/SimExecutor";
 import { NODE_DATAS, NT } from "../../data/map";
 import { QUEST_ICON_PERIOD_MAP, SortieQuestData, QuestIconType, QuestPeriod, TargetNodeInfo } from "../../data/quest/sortie";
 import { AdoptFleet } from "../../models/fleet/AdoptFleet";
@@ -105,13 +105,13 @@ const filter_reach_target_data = (
 ): AreaSimResult[] => {
     const adjusted_options = adjust_option(options);
     const result: AreaSimResult[] = reach_params.map(reach_param => {
-        const sim_executer = derive_sim_executer(
+        const sim_executor = derive_sim_executor(
             fleet,
             reach_param.area_id,
             adjusted_options,
             [],
         )
-        const sim_result = start_sim(sim_executer);
+        const sim_result = start_sim(sim_executor);
         const reach_rate =
             calc_reach_target_rate(sim_result, reach_param.target_node).times(100);
         const area_sim_result: AreaSimResult = {

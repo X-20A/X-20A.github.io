@@ -5,7 +5,7 @@
 	  // 参考: https://x.gd/yaJmS
       "recommended": true,
 	  "a11y": {
-		// target="_brank"だけでrel=“noreferrer·noopener”がないとエラー コンポーネントには効かない？
+		// target="_blank"だけでrel=“noreferrer·noopener”がないとエラー コンポーネントには効かない？
 		// "noBlankTarget": "error"
 	  },
 	  "correctness": {

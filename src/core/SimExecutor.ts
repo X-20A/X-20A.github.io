@@ -36,7 +36,7 @@ export const MAX_CLONE_COUNT = 15;
  * @param command_evacuations 退避艦情報
  * @returns SimControllerState
  */
-export function derive_sim_executer(
+export function derive_sim_executor(
     adopt_fleet: AdoptFleet,
     area_id: AreaId,
     options: OptionsType,

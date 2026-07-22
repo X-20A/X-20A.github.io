@@ -6,7 +6,7 @@
  *   - fit(bbox→viewBox)・SVGマウント・座標変換(rendered_position)・クリック当たり判定
  *   - スクショ用スタンドアロンSVGの生成
  * KanColle固有のデータ・アセット・スタイル判定は一切持たず、data injection側(draw.ts)から与えられる。
- * @module logic/efffects/svgGraph
+ * @module logic/effects/svgGraph
  */
 
 /** 描画済みマップのハンドル(cytoscape.Coreの代替) */

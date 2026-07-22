@@ -1,5 +1,5 @@
 <template>
-	<div v-if="is_refference_visible" @pointerdown.stop class="refference-container">
+	<div v-if="is_reference_visible" @pointerdown.stop class="reference-container">
 		<div class="tab-header tabs" role="tablist">
 			<button v-for="tab in TABS" :key="tab.key" type="button" role="tab"
 				class="tab custom-tab" :class="{ 'tab--selected': tab_key === tab.key }"
@@ -55,15 +55,15 @@ const store = useStore();
 const modal_store = useModalStore();
 
 const tab_key = computed<TabKey>({
-	get: () => store.refferenceTabKey ?? 'route',
+	get: () => store.referenceTabKey ?? 'route',
 	set: (value) => {
-		store.UPDATE_REFFERENCE_TAB_KEY(value);
+		store.UPDATE_REFERENCE_TAB_KEY(value);
 		store.SAVE_DATA();
 	},
 });
 
-const is_refference_visible = computed(
-	() => modal_store.isRefferenceVisible,
+const is_reference_visible = computed(
+	() => modal_store.isReferenceVisible,
 );
 
 /**
@@ -76,7 +76,7 @@ watch(tab_key, (key) => {
 	visited.value[key] = true;
 }, { immediate: true });
 
-watch(is_refference_visible, (visible) => {
+watch(is_reference_visible, (visible) => {
 	if (!visible) {
 		visited.value = { route: false, branch: false, quest: false };
 		visited.value[tab_key.value] = true;
@@ -176,7 +176,7 @@ const on_enter_transition = (el: Element): void => {
 </script>
 
 <style scoped>
-.refference-container {
+.reference-container {
 	width: 590px;
 	height: 90vh;
 	max-height: 820px;

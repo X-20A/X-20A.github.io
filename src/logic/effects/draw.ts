@@ -5,7 +5,7 @@
  *   - ノードタイプ別スタイル(NODE_STYLES)・率別エッジ色(edge_color)
  *   - 装飾判定(能動分岐マス・暫定警告・司令部退避)
  * 描画エンジン(幾何・エッジ描画・fit・マウント・スクショ)はsvgGraph.tsが担う。
- * @module logic/efffects/draw
+ * @module logic/effects/draw
  */
 import { NODE_DATAS, EDGE_DATAS, NT as NodeType, WARNING_NODE_DATAS } from '../../data/map';
 import type { AreaId, SimResult } from '../../types';

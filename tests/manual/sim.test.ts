@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import Big from 'big.js';
 import {
-    derive_sim_executer,
+    derive_sim_executor,
     start_sim,
 } from '../../src/core/SimExecutor';
 import Const from '../../src/constants/const';
@@ -138,7 +138,7 @@ describe('Simテスト', () => {
                 // 残りの組み合わせ(別phase等)は継続して検証する。
                 for (const options of option_sets) {
                     try {
-                        const executor = derive_sim_executer(adoptFleet, area_id, options, []);
+                        const executor = derive_sim_executor(adoptFleet, area_id, options, []);
                         assert_sim_result(start_sim(executor), area_id);
                     } catch (error) {
                         if (error instanceof DisallowToSortie) continue;
@@ -175,7 +175,7 @@ describe('Simテスト', () => {
 
                 const command_evacuations: CommandEvacuation[] = []; // 退避設定はなし
 
-                const executor = derive_sim_executer(adopt_fleet, area_id, options, command_evacuations);
+                const executor = derive_sim_executor(adopt_fleet, area_id, options, command_evacuations);
                 const result = start_sim(executor);
                 const actual_route = result[0].route.join('-');
 
