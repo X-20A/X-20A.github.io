@@ -5,7 +5,7 @@ import {
     start_sim,
 } from '../../src/core/SimExecutor';
 import Const from '../../src/constants/const';
-import type { AreaId, OptionsType } from '../../src/types';
+import type { AreaId, OptionsType, SimResult } from '../../src/types';
 import { calc_escort_fleet_ship_names, calc_main_fleet_ship_names, MAX_SEEK } from '../../src/models/fleet/AdoptFleet';
 import { TEST_FLEET_DATAS } from '../expects/route';
 import { EDGE_DATAS, NODE_DATAS, NT as NodeType } from '../../src/data/map';
@@ -13,6 +13,10 @@ import type { CommandEvacuation } from '../../src/core/CommandEvacuation';
 import { generate_sim_set } from './setup';
 import { DisallowToSortie } from '../../src/errors/CustomError';
 import { build_fleet_from_fixture } from '../generator/fixture';
+import { is_fleet_combined } from '../../src/models/fleet/predicate';
+
+/** rand-testで生成するランダム艦隊の数 */
+const RAND_TEST_ITERATIONS = 1000;
 
 const is_route_not_warp = (
     route: string[],
@@ -31,115 +35,119 @@ const is_route_not_warp = (
     });
 }
 
+/** 配列の配列から全組み合わせ(デカルト積)を生成する */
+const cartesian = <T>(arrays: T[][]): T[][] => {
+    return arrays.reduce<T[][]>(
+        (acc, curr) => acc.flatMap(a => curr.map(b => [...a, b])),
+        [[]]
+    );
+};
+
+/**
+ * 海域の選択肢から、試すべきOptionsTypeの一覧を生成する
+ * @param area_id 対象海域
+ * @param area_option 海域の選択肢(キーごとの取り得る値)。無ければbaseのみ返す
+ * @param base ベースとなるオプション(通常はデフォルト)
+ */
+const build_option_sets = (
+    area_id: AreaId,
+    area_option: Record<string, string[]> | undefined,
+    base: OptionsType,
+): OptionsType[] => {
+    // 選択肢が無ければデフォルトのまま1回だけ実行する
+    if (!area_option) return [base];
+
+    // 各キーを { key, value } の配列にし、全キーの組み合わせを作る
+    const optionsPerKey = Object.keys(area_option).map(key =>
+        area_option[key].map(value => ({ key, value }))
+    );
+
+    return cartesian(optionsPerKey).map(combination => {
+        const area_options = { ...base[area_id] };
+        for (const { key, value } of combination) {
+            area_options[key] = value;
+        }
+        return { ...base, [area_id]: area_options };
+    });
+};
+
+/**
+ * SimResultの健全性を検証する
+ * - 確率(rate)の合計が1であること
+ * - ルートがワープしていないこと
+ */
+const assert_sim_result = (
+    result: SimResult[],
+    area_id: AreaId,
+): void => {
+    const total_rate = result.reduce(
+        (sum, item) => sum.plus(item.rate),
+        new Big(0)
+    );
+    expect(Number(total_rate), '確率指定ミスを検知').toBe(1);
+    expect(is_route_not_warp(result[0].route, area_id), 'ルートワープ検知').toBe(true);
+};
+
+/** テスト失敗時に原因を追うためのデバッグ文字列を組み立てる */
+const build_failure_context = (
+    ctx: {
+        area_id: AreaId,
+        options: OptionsType,
+        simSet: ReturnType<typeof generate_sim_set>,
+    },
+): string => {
+    const { area_id, options, simSet } = ctx;
+    const { adoptFleet, deck } = simSet;
+
+    const lines = [
+        `area: ${area_id}`,
+        `option: ${JSON.stringify(options[area_id])}`,
+        `main: ${calc_main_fleet_ship_names(adoptFleet)}`,
+    ];
+    if (is_fleet_combined(adoptFleet.fleet_type)) {
+        lines.push(`escort: ${calc_escort_fleet_ship_names(adoptFleet)}`);
+    }
+    lines.push(`fleet_type: ${adoptFleet.fleet_type}`);
+    lines.push(`deck: ${JSON.stringify(deck)}`);
+    return lines.join('\n');
+};
+
 describe('Simテスト', () => {
     it(`rand-test:
         ランダムに生成した艦隊をSimクラスに渡してクラス内でエラーが発生しないこと、
         SimResult.rateが 1 と等しいこと、
         ルートがワープしないこと
         を確認`, () => {
-        let limit = 0;
-        while (limit < 1000) {
+        for (let i = 0; i < RAND_TEST_ITERATIONS; i++) {
             const simSet = generate_sim_set();
+            const {
+                adoptFleet,
+                areaIds,
+                options: selectableOptions,
+            } = simSet;
 
-            const adoptFleet = simSet.adoptFleet;
-            const areaIds = simSet.areaIds;
-            const selectableOptions = simSet.options;
-            const defaultOptions = Const.DEFAULT_OPTIONS;
-
-            // 各シミュレーション実行用関数
-            const run_sim = (
-                area_id: AreaId,
-                options: OptionsType,
-                command_evacuations: CommandEvacuation[] = [],
-            ) => {
-                const executor = derive_sim_executer(adoptFleet, area_id, options, command_evacuations);
-                const result = start_sim(executor);
-                // console.log(result);
-                const total_rate = result.reduce(
-                    (sum, item) => sum.plus(item.rate),
-                    new Big(0)
+            for (const area_id of areaIds) {
+                // 海域の選択肢を全組み合わせ展開(選択肢が無ければデフォルト1件)
+                const option_sets = build_option_sets(
+                    area_id,
+                    selectableOptions[area_id],
+                    Const.DEFAULT_OPTIONS,
                 );
-                if (
-                    Number(total_rate) !== 1
-                ) throw new Error('確率指定ミスを検知');
-                if (
-                    !is_route_not_warp(result[0].route, area_id)
-                ) throw new Error('ルートワープ検知');
-            };
 
-            // 配列の配列から全組み合わせを生成するヘルパー関数 デカルト積っていうらしいよ
-            const cartesian = <T>(arrays: T[][]): T[][] => {
-                return arrays.reduce<T[][]>(
-                    (acc, curr) => acc.flatMap(a => curr.map(b => [...a, b])),
-                    [[]]
-                );
-            };
-
-            let debug_area_id: AreaId = '1-1';
-            let debug_option: Record<string, string> | undefined;
-
-            // シミュ実行時エラーのハンドリング
-            // DisallowToSortie(出撃不可)なら true を返して呼び出し側でスキップさせる。
-            // それ以外はデバッグ情報を出力して再スロー(テスト失敗)。
-            const handle_sim_error = (error: unknown): true => {
-                if (error instanceof DisallowToSortie) return true;
-
-                console.error('Error occurred:', error);
-                console.log('area: ', debug_area_id);
-                console.log('option: ', debug_option);
-                console.log(calc_main_fleet_ship_names(adoptFleet));
-                if (adoptFleet.fleet_type > 0) console.log(calc_escort_fleet_ship_names(adoptFleet));
-                console.log(adoptFleet.fleet_type);
-                console.log(JSON.stringify(simSet.deck));
-                throw error;
-            };
-
-            for (const area_id of areaIds) { // area_idは任意に再設定できるように
-                debug_area_id = area_id;
-
-                if (!selectableOptions[area_id]) {
-                    // 選択肢がなければデフォルトで実行
-                    debug_option = defaultOptions[area_id];
+                // 組み合わせ単位で実行。ある組み合わせがDisallowToSortie(出撃不可)でも
+                // 残りの組み合わせ(別phase等)は継続して検証する。
+                for (const options of option_sets) {
                     try {
-                        run_sim(area_id, defaultOptions);
+                        const executor = derive_sim_executer(adoptFleet, area_id, options, []);
+                        assert_sim_result(start_sim(executor), area_id);
                     } catch (error) {
-                        if (handle_sim_error(error)) continue;
-                    }
-                    continue;
-                }
+                        if (error instanceof DisallowToSortie) continue;
 
-                // 該当海域にオプションがある場合、キーごとに全組み合わせを生成する
-                const area_option = selectableOptions[area_id];
-                const keys = Object.keys(area_option);
-                // 各キーに対して、{ key, value }の形で配列を作成
-                const optionsPerKey = keys.map(key =>
-                    area_option[key].map(value => ({ key, value }))
-                );
-                // キーごとの全組み合わせを生成
-                const combinations = cartesian(optionsPerKey);
-
-                // 各組み合わせごとにシミュレーションを実行
-                // try/catchは組み合わせ単位。ある組み合わせがDisallowToSortieでも
-                // 残りの組み合わせ(別phase等)は継続する。
-                for (const combination of combinations) {
-                    // defaultOptionsをコピーして更新
-                    const updatedOptions = {
-                        ...defaultOptions,
-                        [area_id]: { ...defaultOptions[area_id] },
-                    };
-                    for (const { key, value } of combination) {
-                        updatedOptions[area_id]![key] = value;
-                    }
-                    debug_option = updatedOptions[area_id];
-                    try {
-                        run_sim(area_id, updatedOptions);
-                    } catch (error) {
-                        if (handle_sim_error(error)) continue;
+                        console.error(build_failure_context({ area_id, options, simSet }));
+                        throw error;
                     }
                 }
             }
-
-            limit++;
         }
     }, 30000);
 
