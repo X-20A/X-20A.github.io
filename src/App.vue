@@ -404,7 +404,7 @@ async function draw_map() {
 
 	register_map_events(
 		map_core,
-		generarte_branch_html,
+		generate_branch_html,
 		adjust_popup_position,
 		hide_popup,
 		branchHtml,
@@ -442,7 +442,7 @@ const hide_popup = () => {
 	popup_anchor = null;
 }
 
-const generarte_branch_html = (node_name: string): string | null => {
+const generate_branch_html = (node_name: string): string | null => {
 	node.value = node_name;
 
 	let key = selectedArea.value!;
@@ -531,7 +531,7 @@ const switchActive = (event: Event) => {
 		const node_name = target.value;
 
 		const option = options.value[drewArea.value]!;
-		const current_selectted = option[node_name];
+		const current_selected = option[node_name];
 
 		const area_edges = EDGE_DATAS[drewArea.value];
 		const possible_edges =
@@ -539,7 +539,7 @@ const switchActive = (event: Event) => {
 
 		const new_value =
 			possible_edges
-				.find(item => item[1] !== current_selectted)![1];
+				.find(item => item[1] !== current_selected)![1];
 
 		store.UPDATE_OPTION_WITH_KEY(drewArea.value, node_name, new_value);
 		store.SAVE_DATA();
