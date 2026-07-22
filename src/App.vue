@@ -5,30 +5,7 @@
 			{{ selectedArea ? '海域: ' + selectedArea : '海域' }}
 		</button>
 		<div class="upper-container">
-			<div class="input-container">
-				<div class="split">
-					<div class="inputs">
-						<div style="flex: 1;position: relative; user-select: none;">
-							<div>
-								<input type="text" class="import" id="fleet-import" placeholder="DeckBuilder" v-model="fleetInput"
-									ref="fleetInputRef" /><!-- #fleet-importは七四式読込に残しとく -->
-							</div>
-							<p class="type-select" v-if="isVisibleTypeSelect" @mouseover="showFleetOptions">艦隊種別</p>
-							<div v-if="isFleetOptionsVisible" class="fleet-option-box" @mouseover="showFleetOptions"
-								@mouseleave="hideFleetOptions">
-								<span class="fleet-type" @pointerdown=update_selected_type(1)>第一艦隊</span>
-								<span class="fleet-type" @pointerdown=update_selected_type(2)>第二艦隊</span>
-								<span class="fleet-type" @pointerdown=update_selected_type(3)>第三艦隊</span>
-								<span class="fleet-type" @pointerdown=update_selected_type(4)>第四艦隊</span>
-								<span class="fleet-type" @pointerdown=update_selected_type(5)>空母機動部隊</span>
-								<span class="fleet-type" @pointerdown=update_selected_type(6)>水上打撃部隊</span>
-								<span class="fleet-type" @pointerdown=update_selected_type(7)>輸送護衛部隊</span>
-							</div>
-						</div>
-						<Option />
-					</div>
-				</div>
-			</div>
+			<FleetInput @load="load_fleet" @select-type="adjust_fleet_type" />
 			<FleetSummary />
 		</div>
 		<div class="result-container">
@@ -83,20 +60,14 @@ import { onMounted, watch, ref, computed, defineAsyncComponent, nextTick } from 
 import { storeToRefs } from 'pinia';
 import { useStore, useModalStore } from './stores';
 import Header from './components/Header.vue';
-import Option from './components/Option.vue';
 import SvgIcon from './components/SvgIcon.vue';
-import type { SelectedType } from './types';
-import CustomError, { DisallowToSortie, ImageGenerationFailed } from './errors/CustomError';
-import {
-	derive_FleetComponents_from_DeckBuilder,
-	derive_DeckBuilder_from_AdoptFleet,
-} from './logic/deckBuilder';
+import { DisallowToSortie, ImageGenerationFailed } from './errors/CustomError';
+import { derive_DeckBuilder_from_AdoptFleet } from './logic/deckBuilder';
 import {
 	getZeroFilledTime,
-	is_exists_and_Number,
 	sanitize_text
 } from './logic/util';
-import { type AdoptFleet, derive_adopt_fleet, is_speed_overridden } from './models/fleet/AdoptFleet';
+import { type AdoptFleet, is_speed_overridden } from './models/fleet/AdoptFleet';
 import type { Sp as FleetSpeed } from './logic/speed/predicate';
 import type { GenerateOptions, DeckBuilder as GkcoiDeckBuilder, LoS, Speed } from 'gkcoi/dist/type';
 import do_draw_map from './logic/effects/draw';
@@ -112,19 +83,19 @@ import Drum from '@/icons/items/drum.png';
 import Craft from '@/icons/items/craft.png';
 import { do_delete_URL_param, calc_URL_param } from './logic/url';
 import { do_combine_blobs, do_download_data_URL } from './logic/effects/render';
-import type { FleetComponent } from './models/fleet/FleetComponent';
 import type { SyonanResource } from './models/resource/SyonanResource';
 import type { StandardResource } from './models/resource/StandardResource';
 import DetailBox from './components/Detail.vue';
 import Footer from './components/Footer.vue';
 import { derive_sim_executor, start_sim } from './core/SimExecutor';
 import { clear_command_evacuation } from './core/CommandEvacuation';
-import { parseAreaId, parse_DeckBuilder_String, parseSelectedType } from './models/schemas';
+import { parseAreaId } from './models/schemas';
 import { register_map_events } from './logic/effects/mapEvents';
 import lzstring from "lz-string";
-import { Ft as FleetType } from './models/fleet/predicate';
+import FleetInput from './components/FleetInput.vue';
 import FleetSummary from './components/FleetSummary.vue';
 import ModalHost from './components/modals/ModalHost.vue';
+import { useFleetPipeline } from './composables/useFleetPipeline';
 import { EDGE_DATAS, NODE_DATAS } from './data/map';
 
 const StandardResourcePopup = defineAsyncComponent(() => import(
@@ -137,13 +108,7 @@ const SyonanResourcePopup = defineAsyncComponent(() => import(
 const store = useStore();
 const modalStore = useModalStore();
 
-const fleetInput = ref(''); // 入力取得用
-const fleetInputRef = ref<HTMLInputElement | null>(null); // focus用
-
 const {
-	deck,
-	fleetComponents,
-	selectedType,
 	adoptFleet,
 	selectedArea,
 	drewArea,
@@ -154,15 +119,7 @@ const {
 	icons,
 } = storeToRefs(store);
 
-const isVisibleTypeSelect = computed(() => fleetComponents.value.filter(item => item !== null).length >= 2);
-const isFleetOptionsVisible = ref(false);
-
-const showFleetOptions = () => {
-	isFleetOptionsVisible.value = true;
-};
-const hideFleetOptions = () => {
-	isFleetOptionsVisible.value = false;
-};
+const { load_fleet, adjust_fleet_type } = useFleetPipeline();
 
 const {
 	isAreaVisible,
@@ -212,128 +169,6 @@ const clearSpeedOverride = () => {
 	store.CLEAR_SPEED_OVERRIDE();
 	isSpeedOptionsVisible.value = false;
 };
-
-watch(deck, () => { // localStorageからの読込想定
-	if (!deck.value) return;
-
-	load_fleet(deck.value);
-})
-
-// import貼り付け
-watch(fleetInput, (text) => {
-	if (!text) return;
-
-	if (fleetInput.value) fleetInput.value = ''; // 空欄化
-	try {
-		load_fleet(text);
-	} catch (e: unknown) {
-		store.CLEAR_ROUTES();
-		modalStore.SHOW_ERROR(e);
-		console.error(e);
-		return;
-	}
-});
-
-/**
- * デッキビルダー文字列から艦隊読込
- * @param deck_string 
- */
-const load_fleet = (deck_string: string): void => {
-	try {
-		const deck = parse_DeckBuilder_String(deck_string);
-		const fleet_components = derive_FleetComponents_from_DeckBuilder(
-			deck,
-		);
-		store.UPDATE_FLEET_COMPONENTS(fleet_components);
-
-		store.UPDATE_DECK(deck_string);
-		store.SAVE_DATA();
-
-		let selected_type = 1 as SelectedType;
-		if (deck?.f1?.t) {
-			const fleet_type = is_exists_and_Number(deck.f1.t) && [0, 1, 2, 3].includes(Number(deck.f1.t))
-				? Number(deck.f1.t) as FleetType
-				: 0 as FleetType
-				;
-			switch (fleet_type) {
-				case 1:
-					selected_type = 5;
-					break;
-				case 2:
-					selected_type = 6;
-					break;
-				case 3:
-					selected_type = 7;
-					break;
-			}
-		}
-		adjustFleetType(selected_type);
-	} catch (e) {
-		store.CLEAR_ROUTES();
-		modalStore.SHOW_ERROR(e);
-		console.error(e);
-		return;
-	}
-};
-
-const update_selected_type = (type_id: number) => {
-	adjustFleetType(type_id);
-}
-
-// fleet_typeとかselected_typeの調停
-const adjustFleetType = (selected_type_number: number) => { // 入力系とimportの2箇所から発火
-	try {
-		const selected_type = parseSelectedType(selected_type_number);
-		if (selected_type >= 5) {
-			if (!store.fleetComponents[0]) {
-				throw new CustomError('連合艦隊が指定されましたが第一艦隊が空です');
-			}
-			if (!store.fleetComponents[1]) {
-				throw new CustomError('連合艦隊が指定されましたが第二艦隊が空です');
-			}
-		}
-
-		store.UPDATE_SELECTED_TYPE(selected_type);
-		store.SAVE_DATA();
-	} catch (e: unknown) {
-		store.CLEAR_ROUTES();
-		modalStore.SHOW_ERROR(e);
-		console.error(e);
-		return;
-	}
-}
-
-// fleetComponents, selectedTypeからシミュに使用する艦隊をセット
-watch([fleetComponents, selectedType], () => {
-	if (
-		!selectedType.value ||
-		fleetComponents.value.length === 0
-	) return;
-
-	try { // ここでも一応、変な値が保存されてるとエラーになり得る
-		let fleets = [] as FleetComponent[];
-		let fleet_type = 0 as FleetType;
-		if (selectedType.value >= 5) {
-			fleets = [fleetComponents.value[0], fleetComponents.value[1]];
-			fleet_type = selectedType.value - 4 as FleetType;
-		} else {
-			fleets = [fleetComponents.value[selectedType.value - 1]];
-		}
-		if (!fleets[0]) throw new CustomError('艦隊が空です');
-
-		const adopt_fleet = derive_adopt_fleet(
-			fleets,
-			fleet_type,
-		);
-
-		store.UPDATE_ADOPT_FLEET(adopt_fleet);
-	} catch (e: unknown) {
-		store.CLEAR_ROUTES();
-		modalStore.SHOW_ERROR(e);
-		console.error(e);
-		return;
-	}
-});
 
 watch([adoptFleet, selectedArea], () => {
 	// 退避設定は 海域 | 艦隊 間で持ち越さない
@@ -635,8 +470,6 @@ onMounted(async () => {
 		do_delete_URL_param();
 	}
 
-	fleetInputRef.value?.focus();
-
 	// ウィンドウリサイズでポップアップ位置を再調整
 	window.addEventListener('resize', apply_popup_position);
 
@@ -670,53 +503,9 @@ onMounted(async () => {
 		padding-left: 0;
 	}
 }
-.input-container {
-	text-align: center;
-	padding-top: 15px;
-	padding-bottom: 20px;
-}
-.type-select {
-	width: 119px;
-	border: solid 1px;
-	font-size: 14px;
-	padding-left: 2px;
-	border-radius: 2px;
-	color: #5f5f5f;
-}
-.fleet-option-box {
-	width: 121px;
-	font-size: 14px;
-	z-index: var(--z-popover);
-	background-color: white;
-	top: 24px;
-	position: absolute;
-	border: 1px solid;
-}
 .alert {
 	width: 20px;
 	height: 20px;
-}
-.split {
-	display: flex;
-}
-.fleet-type {
-	cursor: pointer;
-	display: block;
-	user-select: none;
-}
-
-.fleet-type:hover {
-	background-color: rgb(0 0 0 / 8%);
-}
-.inputs {
-	flex: 1;
-	text-align: left;
-	flex: 1;
-	display: flex;
-}
-.import {
-	margin: 0px 10px 0px 0px;
-	max-width: 115px;
 }
 .non-margin {
 	margin: 0;
