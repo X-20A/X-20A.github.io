@@ -36,7 +36,7 @@ describe('Simテスト', () => {
         ランダムに生成した艦隊をSimクラスに渡してクラス内でエラーが発生しないこと、
         SimResult.rateが 1 と等しいこと、
         ルートがワープしないこと
-        を確認`, async () => {
+        を確認`, () => {
         let limit = 0;
         while (limit < 1000) {
             const simSet = generate_sim_set();
@@ -47,13 +47,13 @@ describe('Simテスト', () => {
             const defaultOptions = Const.DEFAULT_OPTIONS;
 
             // 各シミュレーション実行用関数
-            const run_sim = async (
+            const run_sim = (
                 area_id: AreaId,
                 options: OptionsType,
                 command_evacuations: CommandEvacuation[] = [],
             ) => {
                 const executor = derive_sim_executer(adoptFleet, area_id, options, command_evacuations);
-                const result = await start_sim(executor);
+                const result = start_sim(executor);
                 // console.log(result);
                 const total_rate = result.reduce(
                     (sum, item) => sum.plus(item.rate),
@@ -78,56 +78,64 @@ describe('Simテスト', () => {
             let debug_area_id: AreaId = '1-1';
             let debug_option: Record<string, string> | undefined;
 
-            // TODO: きたな～い！
+            // シミュ実行時エラーのハンドリング
+            // DisallowToSortie(出撃不可)なら true を返して呼び出し側でスキップさせる。
+            // それ以外はデバッグ情報を出力して再スロー(テスト失敗)。
+            const handle_sim_error = (error: unknown): true => {
+                if (error instanceof DisallowToSortie) return true;
+
+                console.error('Error occurred:', error);
+                console.log('area: ', debug_area_id);
+                console.log('option: ', debug_option);
+                console.log(calc_main_fleet_ship_names(adoptFleet));
+                if (adoptFleet.fleet_type > 0) console.log(calc_escort_fleet_ship_names(adoptFleet));
+                console.log(adoptFleet.fleet_type);
+                console.log(JSON.stringify(simSet.deck));
+                throw error;
+            };
+
             for (const area_id of areaIds) { // area_idは任意に再設定できるように
-                try {
-                    // area_id = '60-1';
-                    debug_area_id = area_id;
-                    // console.log('テスト海域: ', area_id);
-                    // if (adoptFleet.fleet_type_id > 0 && Number(area_id.split('-')[0]) > 7) continue; // 連合艦隊なら通常海域除外
-                    if (!selectableOptions[area_id]) {
-                        // 選択肢がなければデフォルトで実行
-                        await run_sim(area_id, defaultOptions);
-                        continue;
+                debug_area_id = area_id;
+
+                if (!selectableOptions[area_id]) {
+                    // 選択肢がなければデフォルトで実行
+                    debug_option = defaultOptions[area_id];
+                    try {
+                        run_sim(area_id, defaultOptions);
+                    } catch (error) {
+                        if (handle_sim_error(error)) continue;
                     }
+                    continue;
+                }
 
-                    // 該当海域にオプションがある場合、キーごとに全組み合わせを生成する
-                    const area_option = selectableOptions[area_id];
-                    const keys = Object.keys(area_option);
-                    // 各キーに対して、{ key, value }の形で配列を作成
-                    const optionsPerKey = keys.map(key =>
-                        area_option[key].map(value => ({ key, value }))
-                    );
-                    // キーごとの全組み合わせを生成
-                    const combinations = cartesian(optionsPerKey);
+                // 該当海域にオプションがある場合、キーごとに全組み合わせを生成する
+                const area_option = selectableOptions[area_id];
+                const keys = Object.keys(area_option);
+                // 各キーに対して、{ key, value }の形で配列を作成
+                const optionsPerKey = keys.map(key =>
+                    area_option[key].map(value => ({ key, value }))
+                );
+                // キーごとの全組み合わせを生成
+                const combinations = cartesian(optionsPerKey);
 
-                    // 各組み合わせごとにシミュレーションを実行
-                    for (const combination of combinations) {
-                        // defaultOptionsをコピーして更新
-                        const updatedOptions = { ...defaultOptions };
-                        if (!updatedOptions[area_id]) {
-                            updatedOptions[area_id] = {};
-                        }
-                        for (const { key, value } of combination) {
-                            updatedOptions[area_id]![key] = value;
-                        }
-                        debug_option = updatedOptions[area_id];
-                        // console.log('option: ', updatedOptions[area_id]);
-                        await run_sim(area_id, updatedOptions);
-
-                        // throw new Error('エラー時処理テスト');
+                // 各組み合わせごとにシミュレーションを実行
+                // try/catchは組み合わせ単位。ある組み合わせがDisallowToSortieでも
+                // 残りの組み合わせ(別phase等)は継続する。
+                for (const combination of combinations) {
+                    // defaultOptionsをコピーして更新
+                    const updatedOptions = {
+                        ...defaultOptions,
+                        [area_id]: { ...defaultOptions[area_id] },
+                    };
+                    for (const { key, value } of combination) {
+                        updatedOptions[area_id]![key] = value;
                     }
-                } catch (error) {
-                    if (error instanceof DisallowToSortie) continue;
-                    
-                    console.error('Error occurred:', error);
-                    console.log('area: ', debug_area_id);
-                    console.log('option: ', debug_option);
-                    console.log(calc_main_fleet_ship_names(adoptFleet));
-                    if (adoptFleet.fleet_type > 0) console.log(calc_escort_fleet_ship_names(adoptFleet));
-                    console.log(adoptFleet.fleet_type);
-                    console.log(JSON.stringify(simSet.deck));
-                    throw error;
+                    debug_option = updatedOptions[area_id];
+                    try {
+                        run_sim(area_id, updatedOptions);
+                    } catch (error) {
+                        if (handle_sim_error(error)) continue;
+                    }
                 }
             }
 
