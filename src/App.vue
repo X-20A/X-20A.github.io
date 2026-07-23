@@ -61,41 +61,28 @@ import { storeToRefs } from 'pinia';
 import { useStore, useModalStore } from './stores';
 import Header from './components/Header.vue';
 import SvgIcon from './components/SvgIcon.vue';
-import { DisallowToSortie, ImageGenerationFailed } from './errors/CustomError';
-import { derive_DeckBuilder_from_AdoptFleet } from './logic/deckBuilder';
-import {
-	getZeroFilledTime,
-	sanitize_text
-} from './logic/util';
+import { sanitize_text } from './logic/util';
 import { type AdoptFleet, is_speed_overridden } from './models/fleet/AdoptFleet';
 import type { Sp as FleetSpeed } from './logic/speed/predicate';
-import type { GenerateOptions, DeckBuilder as GkcoiDeckBuilder, LoS, Speed } from 'gkcoi/dist/type';
 import do_draw_map from './logic/effects/draw';
 import type { MapCore } from './logic/effects/svgGraph';
-import {
-	calc_Gkcoi_Blob,
-	calc_Map_Blob,
-} from './logic/render';
 import {
 	convert_branch_data_to_HTML,
 } from './logic/convert';
 import Drum from '@/icons/items/drum.png';
 import Craft from '@/icons/items/craft.png';
-import { do_delete_URL_param, calc_URL_param } from './logic/url';
-import { do_combine_blobs, do_download_data_URL } from './logic/effects/render';
 import type { SyonanResource } from './models/resource/SyonanResource';
 import type { StandardResource } from './models/resource/StandardResource';
 import DetailBox from './components/Detail.vue';
 import Footer from './components/Footer.vue';
-import { derive_sim_executor, start_sim } from './core/SimExecutor';
-import { clear_command_evacuation } from './core/CommandEvacuation';
-import { parseAreaId } from './models/schemas';
 import { register_map_events } from './logic/effects/mapEvents';
-import lzstring from "lz-string";
 import FleetInput from './components/FleetInput.vue';
 import FleetSummary from './components/FleetSummary.vue';
 import ModalHost from './components/modals/ModalHost.vue';
 import { useFleetPipeline } from './composables/useFleetPipeline';
+import { useSimulation } from './composables/useSimulation';
+import { useModalScrollLock } from './composables/useModalScrollLock';
+import { useScreenshot } from './composables/useScreenshot';
 import { EDGE_DATAS, NODE_DATAS } from './data/map';
 
 const StandardResourcePopup = defineAsyncComponent(() => import(
@@ -120,13 +107,8 @@ const {
 } = storeToRefs(store);
 
 const { load_fleet, adjust_fleet_type } = useFleetPipeline();
-
-const {
-	isAreaVisible,
-	isReferenceVisible,
-	isErrorVisible,
-	isCommandEvacuationVisible,
-} = storeToRefs(modalStore);
+useSimulation();
+useModalScrollLock();
 
 const show_area = () => {
 	modalStore.SHOW_AREA();
@@ -136,6 +118,8 @@ const show_reference = () => {
 }
 /** 描画済みマップのハンドル */
 let map_core = null as MapCore | null;
+
+const { screenShot } = useScreenshot({ getMapCore: () => map_core });
 
 /** 速度上書きドロップダウンの表示順定義 */
 const SPEED_OPTIONS: { id: FleetSpeed, label: string, icon: string }[] = [
@@ -169,44 +153,6 @@ const clearSpeedOverride = () => {
 	store.CLEAR_SPEED_OVERRIDE();
 	isSpeedOptionsVisible.value = false;
 };
-
-watch([adoptFleet, selectedArea], () => {
-	// 退避設定は 海域 | 艦隊 間で持ち越さない
-	const cleared_command_evacuation = clear_command_evacuation();
-	store.UPDATE_COMMAND_EVACUATIONS(cleared_command_evacuation);
-});
-
-// 艦隊 & 海域 & オプション が揃ったらシミュ開始
-watch([adoptFleet, selectedArea, options, commandEvacuations], async () => {
-	if (
-		!adoptFleet.value
-		|| !selectedArea.value
-		|| !options.value
-	) return;
-
-	try {
-		parseAreaId(selectedArea.value);
-		const sim_executor = derive_sim_executor(
-			adoptFleet.value as AdoptFleet,
-			selectedArea.value,
-			options.value,
-			commandEvacuations.value,
-		);
-		// console.time('シミュ計測');
-		const result = start_sim(
-			sim_executor,
-		);
-		// console.timeEnd('シミュ計測');
-		store.UPDATE_SIM_RESULT(result);
-	} catch (e: unknown) {
-		store.CLEAR_ROUTES();
-		modalStore.SHOW_ERROR(e);
-		if (e instanceof DisallowToSortie) return;
-
-		console.error(e);
-		return;
-	}
-}, { deep: true });
 
 let is_first_run = true;
 
@@ -385,91 +331,7 @@ const switchSeek = () => {
 	store.SWITCH_SEEK();
 };
 
-const screenShot = async () => {
-	if (!adoptFleet.value || !map_core) return;
-
-	if (is_speed_overridden(adoptFleet.value)) {
-		store.CLEAR_SPEED_OVERRIDE();
-	}
-
-	const gkcoi = await import('gkcoi'); // 動的import
-	const time = getZeroFilledTime(new Date());
-	const file_name = `${drewArea.value}_${time}`;
-
-	const deck = derive_DeckBuilder_from_AdoptFleet(adoptFleet.value as AdoptFleet);
-	const gkcoi_deck_builder = Object.assign(deck, {
-		lang: 'jp',
-		theme: 'dark',
-	}) as GkcoiDeckBuilder;
-	const options: GenerateOptions = { // thank you, Chami
-		start2URL: 'https://raw.githubusercontent.com/Tibowl/api_start2/master/start2.json',
-	};
-	const { seek } = adoptFleet.value;
-	const gkcoi_los: LoS = {
-		'1': seek.c1,
-		'2': seek.c2,
-		'3': seek.c3,
-		'4': seek.c4,
-		'5': seek.c4,
-	};
-	const gkcoi_speed = adoptFleet.value.speed * 5 as Speed;
-	try {
-		const canvas = await gkcoi.generate(
-			gkcoi_deck_builder,
-			options,
-			gkcoi_los,
-			gkcoi_speed,
-		);
-		const g_blob = calc_Gkcoi_Blob(canvas);
-		const cy_blob = calc_Map_Blob(map_core);
-		const data_url = await do_combine_blobs(cy_blob, g_blob);
-		do_download_data_URL(data_url, file_name);
-	} catch (error) {
-		modalStore.SHOW_ERROR(new ImageGenerationFailed('画像生成に失敗しました'));
-		console.error(error);
-		return;
-	}
-};
-
-let save_y = 0;
-// スクロールバウンス回避
-watch([isAreaVisible, isReferenceVisible, isErrorVisible, isCommandEvacuationVisible], () => {
-	const style = document.body.style;
-	if (
-		isAreaVisible.value
-		|| isReferenceVisible.value
-		|| isErrorVisible.value
-		|| isCommandEvacuationVisible.value
-	) { // DOMはあんまし触りたくないけどしゃあないかな
-		save_y = window.scrollY;
-		style.top = `-${window.scrollY}px`;
-		style.left = `${window.scrollX}px`;
-		style.position = "fixed";
-		style.minWidth = '100%';
-	} else {
-		style.top = "";
-		style.left = "";
-		style.position = "";
-		window.scrollTo({ top: save_y });
-	}
-});
-
-onMounted(async () => {
-	const predeck = calc_URL_param('predeck');
-	const pdz = calc_URL_param('pdz');
-
-	const exclude_deck =
-		predeck !== null ||
-		pdz !== null;
-	store.LOAD_DATA({ exclude_deck });
-	if (predeck) {
-		load_fleet(decodeURIComponent(predeck));
-		do_delete_URL_param();
-	} else if (pdz) {
-		load_fleet(lzstring.decompressFromEncodedURIComponent(pdz));
-		do_delete_URL_param();
-	}
-
+onMounted(() => {
 	// ウィンドウリサイズでポップアップ位置を再調整
 	window.addEventListener('resize', apply_popup_position);
 

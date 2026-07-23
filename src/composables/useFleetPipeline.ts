@@ -1,4 +1,4 @@
-import { watch } from 'vue';
+import { onMounted, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useStore, useModalStore } from '../stores';
 import CustomError from '../errors/CustomError';
@@ -9,11 +9,14 @@ import { derive_adopt_fleet } from '../models/fleet/AdoptFleet';
 import { derive_FleetComponents_from_DeckBuilder } from '../logic/deckBuilder';
 import { is_exists_and_Number } from '../logic/util';
 import { parse_DeckBuilder_String, parseSelectedType } from '../models/schemas';
+import { do_delete_URL_param, calc_URL_param } from '../logic/url';
+import lzstring from 'lz-string';
 
 /**
  * 艦隊読込パイプライン
  * - deck文字列 → FleetComponents → adoptFleet の導出と、それらを繋ぐwatcherを一括で持つ
- * - App.vueのsetup内で1度だけ呼ぶこと(watcherを二重登録しないため)
+ * - 起動時のURLパラメータ(predeck/pdz)およびlocalStorageからの読込も担う
+ * - App.vueのsetup内で1度だけ呼ぶこと(watcher/onMountedを二重登録しないため)
  */
 export function useFleetPipeline() {
 	const store = useStore();
@@ -124,6 +127,24 @@ export function useFleetPipeline() {
 			modalStore.SHOW_ERROR(e);
 			console.error(e);
 			return;
+		}
+	});
+
+	// URLパラメータ(predeck/pdz)による起動時読込。無ければlocalStorageから復元
+	onMounted(() => {
+		const predeck = calc_URL_param('predeck');
+		const pdz = calc_URL_param('pdz');
+
+		const exclude_deck =
+			predeck !== null ||
+			pdz !== null;
+		store.LOAD_DATA({ exclude_deck });
+		if (predeck) {
+			load_fleet(decodeURIComponent(predeck));
+			do_delete_URL_param();
+		} else if (pdz) {
+			load_fleet(lzstring.decompressFromEncodedURIComponent(pdz));
+			do_delete_URL_param();
 		}
 	});
 
