@@ -114,7 +114,7 @@ export const WORLD_62: Ttemplate[] =[
         "memo": "基地: 2部隊ボス集中"
     },
     {
-        "title": "62-3_A2-G-M-Y1-U-Y2-Y-Z_削り",
+        "title": "62-3_A2GMY1UY2YZ_削り",
         "world": 62,
         "area": 3,
         "route": "2-F-A2-G-H-M-Y1-U-Y2-Y-Z",
@@ -122,11 +122,83 @@ export const WORLD_62: Ttemplate[] =[
         "memo": "HP: 5750$e基地: 2部隊ボス集中"
     },
     {
-        "title": "62-3_A2-G-M-Y1-U-Y2-Y-Z_破壊_破砕なし",
+        "title": "62-3_A2GMY1UY2YZ_破壊_破砕なし",
         "world": 62,
         "area": 3,
         "route": "2-F-A2-G-H-M-Y1-U-Y2-Y-Z",
         "token": "RmODEWEUg-P",
         "memo": "基地: 2部隊ボス集中"
+    },
+    {
+        "title": "62-4_ACD_削り",
+        "world": 62,
+        "area": 4,
+        "route": "1-A-C-D",
+        "token": "d3CISPEMcjh",
+        "memo": "HP: 16800$e煙幕: C"
+    },
+    {
+        "title": "62-4_ACD_破壊",
+        "world": 62,
+        "area": 4,
+        "route": "1-A-C-D",
+        "token": "LvYqsc-jd9G",
+        "memo": "煙幕: C"
+    },
+    {
+        "title": "62-4_E1KN_輸送",
+        "world": 62,
+        "area": 4,
+        "route": "2-F-E1-K-L-N",
+        "token": "zOrzV81mXdi",
+        "memo": "TP: 900$e煙幕未設定"
+    },
+    {
+        "title": "62-4_QRS_S削り",
+        "world": 62,
+        "area": 4,
+        "route": "3-O-P-Q-R-S",
+        "token": "oc_S8wbXZq8",
+        "memo": "HP: 3555$eリシュジャンタッチ想定"
+    },
+    {
+        "title": "62-4_QRS_S破壊",
+        "world": 62,
+        "area": 4,
+        "route": "3-O-P-Q-R-S",
+        "token": "AmrKtL-zPGm",
+        "memo": "リシュジャンタッチ想定"
+    },
+    {
+        "title": "62-4_P1T1VX_X削り",
+        "world": 62,
+        "area": 4,
+        "route": "3-O-P-P1-T-T1-V-X",
+        "token": "lQJwIYEfup9",
+        "memo": "HP: 6975$eネルソンタッチ想定$e基地: 2部隊ボス集中"
+    },
+    {
+        "title": "62-4_P1T1VX_X破壊",
+        "world": 62,
+        "area": 4,
+        "route": "3-O-P-P1-T-T1-V-X",
+        "token": "CCfUraLBnm2",
+        "memo": "ネルソンタッチ想定$e基地: 2部隊ボス集中"
+    },
+    {
+        "title": "62-4_P1T2YZ_Z削り",
+        "world": 62,
+        "area": 4,
+        "route": "3-O-P-P1-T-T1-U-Y-Z",
+        "token": "fVrAaOyNq1i",
+        "memo": "HP: 6000$eリシュジャンタッチ想定$e基地: 2部隊ボス集中"
+    },
+    {
+        "title": "62-4_P1T2YZ_Z破壊",
+        "world": 62,
+        "area": 4,
+        "route": "3-O-P-P1-T-T1-U-Y-Z",
+        "token": "aFTv_HYOHNfA",
+        "memo": "HP: 6000$eリシュジャンタッチ想定$e基地: 2部隊ボス集中"
     },
 ]
