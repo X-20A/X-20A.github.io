@@ -201,4 +201,60 @@ export const WORLD_62: Ttemplate[] =[
         "token": "aFTv_HYOHNfA",
         "memo": "HP: 6000$eリシュジャンタッチ想定$e基地: 2部隊ボス集中"
     },
+    {
+        "title": "62-5_AA2BDE1G_G削り",
+        "world": 62,
+        "area": 5,
+        "route": "1-A-A2-B-C-D-E1-G",
+        "token": "r179SytYodj",
+        "memo": "HP: 790$e煙幕: E1$e基地: 1部隊ボス集中"
+    },
+    {
+        "title": "62-5_AA2BDE1G_G破壊",
+        "world": 62,
+        "area": 5,
+        "route": "1-A-A2-B-C-D-E1-G",
+        "token": "R8-7Vs6JbTY",
+        "memo": "HP: 790$e煙幕: E1$e基地: 1部隊ボス集中"
+    },
+    {
+        "title": "62-5_HIJJ2_J2輸送",
+        "world": 62,
+        "area": 5,
+        "route": "2-H-I-J-J1-J2",
+        "token": "0YP-SifJO4x",
+        "memo": "TP: 1280$e煙幕: E1$e基地: 未設定"
+    },
+    {
+        "title": "62-5_KK2LS_S削り",
+        "world": 62,
+        "area": 5,
+        "route": "2-K-K2-K3-L-Q-S",
+        "token": "nzZ-F_hocgZ",
+        "memo": "HP: 8800$e基地: 2部隊ボス集中"
+    },
+    {
+        "title": "62-5_KK2LS_S破壊",
+        "world": 62,
+        "area": 5,
+        "route": "2-K-K2-K3-L-Q-S",
+        "token": "_zi_kb4sOpJ",
+        "memo": "基地: 2部隊ボス集中"
+    },
+    {
+        "title": "62-5_VXY1ZZZ_ZZ削り",
+        "world": 62,
+        "area": 5,
+        "route": "4-U-V-X-Y-Y1-Z-ZZ",
+        "token": "1pIJ5-vFsjJ",
+        "memo": "HP: 7320$eリシュジャンタッチ想定$e基地: V, ボス, ボス"
+    },
+    {
+        "title": "62-5_VXY1ZZZ_ZZ破壊",
+        "world": 62,
+        "area": 5,
+        "route": "4-U-V-X-Y-Y1-Z-ZZ",
+        "token": "iGiUC-R1hU3",
+        "memo": "リシュジャンタッチ想定$e基地: V, ボス, ボス"
+    },
 ]
