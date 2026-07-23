@@ -798,7 +798,7 @@ const BRANCH_TEXTS: BranchType = {
         "2": "2-K未開通の場合、$e$i輸送護衛部隊はH$e$i空母機動部隊・水上打撃部隊はA3$e2-K開通済みの場合、$e$i戦艦級4以上はA3$e$iイギリス救援艦隊札3～6以上はH $co無視$oc$e$i重巡級2以上はK$e$iそれ以外はH",
         "4": "潜水系1以上はM2$e大和+武蔵1以上 かつ 空母機動部隊はM2$e駆逐+海防4以上の場合、$e$i軽巡2以上はU$e$iGotland+Visby1以上はU$e$iそれ以外はT$e駆逐+海防3以下の場合、$e$iAlgérie1以上 かつ 高速艦隊はT$e$iそれ以外はM2",
         "A2": "$bo分岐点係数4$ob$e索敵値82未満はA3$e低速艦隊はB1$eそれ以外はB",
-        "A3": "A3-A・A3-H・A3-I未開通はC1$e通常艦隊はC1",
+        "A3": "A3-A・A3-H・A3-I未開通はC1$e通常艦隊はC1$e空母機動部隊・水上打撃部隊 かつ ?はI $co無視$oc",
         "D": "D-E・D-E1未開通は帰投 $co無視$oc$e空母系2以上はE$eそれ以外はE1",
         "E1": "$bo分岐点係数4$ob$eE1-F・E1-G未開通はE2$e索敵値82未満はF$e艦隊の隻数6以上はG$eそれ以外はE2",
         "H": "索敵不足はC1 $co無視$oc$eH-K未開通はI$e輸送護衛部隊はI$e艦隊全員がイギリス救援艦隊札のみ もしくは 無札はI$eそれ以外はK",
@@ -810,9 +810,9 @@ const BRANCH_TEXTS: BranchType = {
         "P1": "大和+武蔵0 かつ 高速艦隊はP3$eそれ以外はP2",
         "Q": "条件不明につき、全てS",
         "V": "大和+武蔵1以上 かつ 戦艦級4以上はW$e潜水系1以上はX$eGotland+Visby1以上はX$eそれ以外はW",
-        "Y1": "条件不明につき、全てZ",
+        "Y1": "Richelieu+Jean Bart1以上はZ$e軽巡2以上はZ$eそれ以外はY2",
         "Z": "条件不明につき、全てZZ",
-        "Z1": "条件不明につき、全てZZ",
+        "Z1": "要求索敵値不明につき、全てZZ",
         "C": ACTIVE_PROGRESS,
         "K3": ACTIVE_PROGRESS,
         "O": ACTIVE_PROGRESS,
@@ -901,7 +901,7 @@ export const BRANCH_LAST_UPDATES: BranchLastUpdate = {
     "62-2": "2026-07-21 22:59",
     "62-3": "2026-07-21 17:23",
     "62-4": "2026-07-21 14:25",
-    "62-5": "2026-07-23 00:53",
+    "62-5": "2026-07-23 15:38",
 } // @expansion
 
 export default BRANCH_TEXTS;

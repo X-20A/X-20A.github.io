@@ -213,7 +213,13 @@ export const calc_62_5: CalcFnWithCondition = (
             }
             return 'W';
         case 'Y1':
-            return 'Z';
+            if (count_ships_by_base_names(['Richelieu', 'Jean Bart'], base_ship_names) >= 1) {
+                return 'Z';
+            }
+            if (CL >= 2) {
+                return 'Z';
+            }
+            return 'Y2';
         case 'Z':
             return 'ZZ';
         case 'Z1':
