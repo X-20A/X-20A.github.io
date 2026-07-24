@@ -11,6 +11,11 @@ export const useModalStore = defineStore('modal', {
         is_help_visible: false,
         /** 表示するエラーメッセージ */
         error_message: '',
+        /**
+         * 退避した壊れデータの localStorage キー。
+         * null 以外なら、エラーモーダルに退避データの保存ボタンを出す
+         */
+        corrupted_backup_key: null as string | null,
     }),
     actions: {
         /**
@@ -38,6 +43,18 @@ export const useModalStore = defineStore('modal', {
             this.is_error_visible = true;
         },
         /**
+         * 壊れ / 移行失敗データを検出したことをユーザーに知らせる。
+         * データは削除せず退避済みで、backup_key から取り出せる
+         */
+        SHOW_CORRUPTED_NOTICE(backup_key: string): void {
+            this.error_message =
+                'データの一部を読み込めませんでした。'
+                + '壊れたデータは削除せず退避しています。'
+                + '下のボタンで退避データを保存できます。';
+            this.corrupted_backup_key = backup_key;
+            this.is_error_visible = true;
+        },
+        /**
          * モーダル非表示。種類に関わらず、全てこれを呼ぶ
          */
         HIDE_MODALS(): void {
@@ -45,6 +62,7 @@ export const useModalStore = defineStore('modal', {
             this.is_error_visible = false;
             this.is_help_visible = false;
             this.error_message = '';
+            this.corrupted_backup_key = null;
         },
     }
 });

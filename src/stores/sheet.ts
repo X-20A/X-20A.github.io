@@ -4,6 +4,7 @@ import { NodeId, RowData, create_empty_rows, create_sheet } from "../types";
 import { SheetSchema } from "../logics/schema";
 import { load_sheet, save_sheet } from "../logics/storage";
 import { stash_corrupted_data } from "../logics/migration";
+import { useModalStore } from ".";
 import {
     calc_selection, can_show_diff, clamp_selection, EMPTY_SELECTION,
     sorted_selection, type ClickModifiers, type SelectionState,
@@ -86,7 +87,9 @@ export const useSheetStore = defineStore('sheet', {
                 this.APPLY(sheet_id, sheet.row_datas);
             } catch (error) {
                 console.error('シートの読み込みに失敗しました:', error);
-                stash_corrupted_data(JSON.stringify(raw));
+                // 壊れたデータは削除せず退避し、ユーザーへ通知する
+                const backup_key = stash_corrupted_data(JSON.stringify(raw));
+                useModalStore().SHOW_CORRUPTED_NOTICE(backup_key);
                 this.APPLY(sheet_id, create_empty_rows());
             }
         },

@@ -16,7 +16,7 @@ import {
     list_active_sheets, move_node, remember_parent, rename_node, restore_node,
     set_folder_expanded, type DropPosition, type NodeMap, type TreeItem,
 } from "../logics/tree";
-import { useToastStore } from ".";
+import { useModalStore, useToastStore } from ".";
 import {
     delete_sheet, load_sheet, load_workspace, save_sheet, save_workspace,
 } from "../logics/storage";
@@ -80,7 +80,11 @@ export const useWorkspaceStore = defineStore('workspace', {
         async INITIALIZE(): Promise<void> {
             if (this.is_loaded) return;
 
-            await run_legacy_migration();
+            const outcome = await run_legacy_migration();
+            // 旧データの移行に失敗した場合も、退避を知らせて取り出せるようにする
+            if (outcome.status === 'corrupted') {
+                useModalStore().SHOW_CORRUPTED_NOTICE(outcome.backup_key);
+            }
 
             const raw = await load_workspace();
             if (raw !== null) {
@@ -90,8 +94,9 @@ export const useWorkspaceStore = defineStore('workspace', {
                     this.APPLY_WORKSPACE(parse(WorkspaceSchema, raw) as Workspace);
                 } catch (error) {
                     console.error('ワークスペースの読み込みに失敗しました:', error);
-                    // 壊れたデータは削除せず退避する
-                    stash_corrupted_data(JSON.stringify(raw));
+                    // 壊れたデータは削除せず退避し、ユーザーへ通知する
+                    const backup_key = stash_corrupted_data(JSON.stringify(raw));
+                    useModalStore().SHOW_CORRUPTED_NOTICE(backup_key);
                     this.APPLY_WORKSPACE(create_empty_workspace());
                 }
             } else {

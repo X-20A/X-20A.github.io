@@ -39,6 +39,15 @@ export function download_json(data: unknown, filename: string): void {
     );
 }
 
+/** 文字列をそのままファイルとして保存する。退避データの取り出しに使う */
+export function download_text(
+    text: string,
+    filename: string,
+    mime: string = 'application/json',
+): void {
+    save_blob(new Blob([text], { type: `${mime};charset=utf-8` }), filename);
+}
+
 export function download_csv(text: string, filename: string): void {
     // BOM がないと Excel が UTF-8 と判断せず日本語が化ける
     save_blob(
