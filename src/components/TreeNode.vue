@@ -154,9 +154,11 @@ const handle_drop = async () => {
 	if (!zone) return;
 
 	if (zone === 'into') {
+		// DROP_INTO を先に呼ぶ。SET_EXPANDED の await 中に dragend が発火して
+		// dragging_node_id が消えると、後から DROP_INTO しても移動できないため
+		await workspace_store.DROP_INTO(props.item.node.id);
 		// 落とした先が閉じていると、どこへ入ったのか分からなくなる
 		await workspace_store.SET_EXPANDED(props.item.node.id, true);
-		await workspace_store.DROP_INTO(props.item.node.id);
 		return;
 	}
 	await workspace_store.DROP_BESIDE(props.item.node.id, zone);
