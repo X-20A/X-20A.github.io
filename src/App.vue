@@ -208,7 +208,7 @@ import { INITIAL_SUM_DATA, INITIAL_ROW_DATA, RowData, INITIAL_DIFF_DATA } from '
 import { floor_diff_data, floor_sum_data } from './logics/floor';
 import { calc_URL_param, do_delete_URL_param, is_approved_url, do_open_url_in_new_tab } from './logics/url';
 import lzstring from "lz-string";
-import { extract_data_from_text } from './logics/extract';
+import { extract_report } from './logics/extract';
 import { parse, ValiError } from 'valibot';
 import { SaveDataSchema } from './logics/schema';
 import DomainPermission from './components/DomainPermission.vue';
@@ -406,12 +406,29 @@ const handle_paste = (event: ClipboardEvent, row_index: number) => {
 	event.preventDefault();
 
 	try {
-		const extracted_data =
-			extract_data_from_text(pasted_text, row_datas.value[row_index]);
+		const report = extract_report(pasted_text, row_datas.value[row_index]);
 
-		sheet_store.UPDATE_ROW_DATA(extracted_data, row_index);
+		// 1件も読み取れないと黙って何も起きず、貼り間違いに気づけない
+		if (report.matched.length === 0) {
+			toast_store.SHOW_TOAST(
+				'読み取れる項目がありませんでした。シミュレータの結果テキストを貼り付けてください',
+				5000,
+			);
+			return;
+		}
+
+		sheet_store.UPDATE_ROW_DATA(report.row_data, row_index);
+
+		// 一部だけ取れた場合は、取りこぼしを軽く知らせる
+		if (report.missed.length > 0) {
+			toast_store.SHOW_TOAST(
+				`取り込みました（未取得: ${report.missed.join('・')}）`,
+				5000,
+			);
+		}
 	} catch (error) {
 		console.error(error);
+		toast_store.SHOW_TOAST('取り込み中にエラーが発生しました', 5000);
 	}
 };
 
