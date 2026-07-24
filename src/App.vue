@@ -422,7 +422,7 @@ const handle_paste = (event: ClipboardEvent, row_index: number) => {
 		// 一部だけ取れた場合は、取りこぼしを軽く知らせる
 		if (report.missed.length > 0) {
 			toast_store.SHOW_TOAST(
-				`取り込みました（未取得: ${report.missed.join('・')}）`,
+				`未取得: ${report.missed.join('・')}`,
 				5000,
 			);
 		}

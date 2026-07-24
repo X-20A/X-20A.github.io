@@ -194,7 +194,7 @@ const handle_import = async () => {
 	} catch (error) {
 		console.error('ファイルの読み込みに失敗しました:', error);
 		toast_store.SHOW_TOAST(
-			'ファイルの形式が正しくありません。cost で書き出した JSON を選んでください',
+			'ファイルの形式が正しくありません。本ツールで書き出した JSON を選んでください',
 			6000,
 		);
 	}

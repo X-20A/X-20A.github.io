@@ -1,3 +1,4 @@
+import { optional } from "valibot";
 import { RowData } from "../types";
 
 /**
@@ -52,7 +53,12 @@ const RESOURCE_FIELDS: ResourceField[] = [
     { key: 'steel', label: '鋼材', aliases: ['鋼材', 'Steel'] },
     { key: 'baux', label: 'ボーキ', aliases: ['ボーキ', 'Bauxite'] },
     { key: 'bucket', label: 'バケツ', aliases: ['バケツ', 'Buckets', 'Bucket'] },
-    { key: 'damecon', label: 'ダメコン', aliases: ['ダメコン', 'Repair Teams'] },
+    {
+        key: 'damecon',
+        label: 'ダメコン',
+        aliases: ['ダメコン', 'Repair Teams'],
+        optional: true,
+    },
     {
         key: 'underway_replenishment',
         label: '洋上補給',
