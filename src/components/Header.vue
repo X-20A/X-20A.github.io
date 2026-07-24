@@ -15,6 +15,9 @@
 				<a href="/terminal">
 					<p class="side-menu-content">ターミナル</p>
 				</a>
+				<a href="/cost">
+					<p class="side-menu-content">コストシート</p>
+				</a>
 				<a href="/quest">
 					<p class="side-menu-content">任務手帳</p>
 				</a>
