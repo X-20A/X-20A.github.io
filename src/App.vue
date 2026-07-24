@@ -464,6 +464,19 @@ const handle_sidebar_shortcut = (event: KeyboardEvent) => {
 	workspace_store.TOGGLE_SIDEBAR();
 };
 
+// F2 でサイドバーの選択中ノードをリネームする
+const handle_rename_shortcut = (event: KeyboardEvent) => {
+	if (event.key !== 'F2') return;
+	if (!workspace_store.is_sidebar_open) return;
+
+	// 明示的な選択がなければ、ハイライト中のアクティブシートを対象にする
+	const target = workspace_store.selected_node_id ?? workspace_store.active_sheet_id;
+	if (!target || !workspace_store.nodes[target]) return;
+
+	event.preventDefault();
+	workspace_store.START_EDITING(target);
+};
+
 // 行のコピー / カット / 貼り付け
 const handle_row_shortcut = (event: KeyboardEvent) => {
 	if (!event.ctrlKey && !event.metaKey) return;
@@ -832,6 +845,7 @@ onMounted(async () => {
 	document.addEventListener('click', handle_document_click);
 	document.addEventListener('keydown', handle_row_shortcut);
 	document.addEventListener('keydown', handle_sidebar_shortcut);
+	document.addEventListener('keydown', handle_rename_shortcut);
 	window.addEventListener('beforeunload', handle_before_unload);
 
 	await workspace_store.INITIALIZE();
@@ -878,6 +892,7 @@ onUnmounted(() => {
 	document.removeEventListener('click', handle_document_click);
 	document.removeEventListener('keydown', handle_row_shortcut);
 	document.removeEventListener('keydown', handle_sidebar_shortcut);
+	document.removeEventListener('keydown', handle_rename_shortcut);
 	window.removeEventListener('beforeunload', handle_before_unload);
 });
 </script>

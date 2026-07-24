@@ -51,6 +51,10 @@ export const useWorkspaceStore = defineStore('workspace', {
         last_move: null as LastMove | null,
         /** ドラッグ中のノード。ドロップ先の判定に使う */
         dragging_node_id: null as NodeId | null,
+        /** サイドバーで選択中のノード。F2 リネームの対象になる */
+        selected_node_id: null as NodeId | null,
+        /** 名前を編集中のノード。TreeNode がこれを見て入力欄を出す */
+        editing_node_id: null as NodeId | null,
         is_sidebar_open: false,
         is_loaded: false,
     }),
@@ -379,19 +383,7 @@ export const useWorkspaceStore = defineStore('workspace', {
             target_parent_id: NodeId | null,
             target_index?: number,
         ): Promise<void> {
-            const name = this.nodes[node_id]?.name ?? '';
-            const before = this.nodes;
-
             await this.MOVE(node_id, target_parent_id, target_index);
-            // 移動が拒否された(自身の子孫への移動など)場合は通知しない
-            if (this.nodes === before) return;
-
-            useToastStore().SHOW_TOAST_WITH_ACTION(
-                `「${name}」を移動しました`,
-                '元に戻す',
-                () => { void this.UNDO_MOVE(); },
-                6000,
-            );
         },
 
         /** 全シートの本体を IndexedDB から集める */
@@ -454,6 +446,21 @@ export const useWorkspaceStore = defineStore('workspace', {
 
         TOGGLE_SIDEBAR(): void {
             this.is_sidebar_open = !this.is_sidebar_open;
+        },
+
+        /** サイドバーでノードを選択する。F2 リネームの対象になる */
+        SELECT_NODE(node_id: NodeId | null): void {
+            this.selected_node_id = node_id;
+        },
+
+        /** ノードの名前編集を開始する。存在しないノードは無視する */
+        START_EDITING(node_id: NodeId): void {
+            if (!this.nodes[node_id]) return;
+            this.editing_node_id = node_id;
+        },
+
+        STOP_EDITING(): void {
+            this.editing_node_id = null;
         },
     },
 });

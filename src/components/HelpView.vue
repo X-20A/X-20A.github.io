@@ -100,6 +100,7 @@ const SECTIONS: { title: string, note?: string, items: HelpItem[] }[] = [
 		items: [
 			{ keys: [], hint: 'ドラッグ&ドロップ', action: '一覧の中でシートやフォルダを並べ替え、フォルダの中へ移動できます' },
 			{ keys: [], hint: 'ダブルクリック', action: 'シート名・フォルダ名を変更します' },
+			{ keys: ['F2'], action: '選択中のシート・フォルダの名前を変更します' },
 			{ keys: [], hint: '🗑 ボタン', action: 'ゴミ箱へ移動します。ゴミ箱の中の ↩ でいつでも元に戻せます' },
 		],
 	},

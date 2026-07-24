@@ -2,6 +2,7 @@
 	<li class="tree-node">
 		<div class="node-row" :class="{
 			'is-active': is_active,
+			'is-selected': is_selected,
 			'is-folder': is_folder,
 			'is-dragging': is_dragging,
 			'drop-before': drop_zone === 'before',
@@ -48,7 +49,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, ref } from 'vue';
+import { computed, nextTick, ref, watch } from 'vue';
 import { useWorkspaceStore } from '../stores/workspace';
 import { useSheetStore } from '../stores/sheet';
 import { useToastStore } from '../stores';
@@ -70,12 +71,29 @@ const is_expanded = computed(() =>
 const is_trashed = computed(
 	() => is_in_trash(workspace_store.nodes, props.item.node.id),
 );
+const is_selected = computed(
+	() => workspace_store.selected_node_id === props.item.node.id,
+);
 
-const is_editing = ref(false);
+// 編集状態はストアで持つ。F2 など外部からも編集を開始できるようにするため
+const is_editing = computed(
+	() => workspace_store.editing_node_id === props.item.node.id,
+);
 const draft_name = ref('');
 const name_input = ref<HTMLInputElement | null>(null);
 
+// 編集開始時に、下書きを現在名で初期化して入力欄を選択状態にする
+watch(is_editing, async (editing) => {
+	if (!editing) return;
+
+	draft_name.value = props.item.node.name;
+	await nextTick();
+	name_input.value?.select();
+});
+
 const handle_activate = () => {
+	workspace_store.SELECT_NODE(props.item.node.id);
+
 	if (is_folder.value) {
 		void workspace_store.SET_EXPANDED(props.item.node.id, !is_expanded.value);
 		return;
@@ -87,17 +105,13 @@ const handle_toggle = () => {
 	void workspace_store.SET_EXPANDED(props.item.node.id, !is_expanded.value);
 };
 
-const start_rename = async () => {
-	draft_name.value = props.item.node.name;
-	is_editing.value = true;
-
-	await nextTick();
-	name_input.value?.select();
+const start_rename = () => {
+	workspace_store.START_EDITING(props.item.node.id);
 };
 
 const commit_rename = () => {
 	if (!is_editing.value) return;
-	is_editing.value = false;
+	workspace_store.STOP_EDITING();
 
 	const name = draft_name.value.trim();
 	// 名前を消すと一覧で見分けがつかなくなるため、空なら元に戻す
@@ -107,7 +121,7 @@ const commit_rename = () => {
 };
 
 const cancel_rename = () => {
-	is_editing.value = false;
+	workspace_store.STOP_EDITING();
 };
 
 type DropZone = 'before' | 'into' | 'after';
@@ -222,6 +236,12 @@ const handle_trash = async () => {
 .node-row.is-active {
 	background-color: #d0ebff;
 	font-weight: 600;
+}
+
+/* F2 リネームの対象。アクティブ・ホバー・ドロップ表示と重なっても分かるよう輪郭で示す */
+.node-row.is-selected {
+	outline: 1.5px solid #4dabf7;
+	outline-offset: -1.5px;
 }
 
 .node-row.is-dragging {
