@@ -57,6 +57,16 @@ const SECTIONS: { title: string, note?: string, items: HelpItem[] }[] = [
 		],
 	},
 	{
+		title: 'セル間の移動',
+		note: '表のセルを編集しているときに使えます。',
+		items: [
+			{ keys: ['Enter'], action: '1つ下のセルへ移動' },
+			{ keys: ['Shift', 'Enter'], action: '1つ上のセルへ移動' },
+			{ keys: ['↑', '↓'], action: '上下のセルへ移動' },
+			{ keys: ['←', '→'], action: '左右のセルへ移動（文字の編集中はカーソル移動を優先）' },
+		],
+	},
+	{
 		title: '行の選択',
 		note: '行の左端にある ⋮⋮ をクリックします。シートの外をクリックすると選択を解除できます。',
 		items: [

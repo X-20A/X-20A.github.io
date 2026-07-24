@@ -25,7 +25,7 @@
 							<th class="action-column"></th>
 						</tr>
 					</thead>
-					<tbody class="table-body" ref="table_body">
+					<tbody class="table-body" ref="table_body" @keydown="handle_cell_nav">
 						<tr v-for="(row, index) in row_datas" :key="index" class="data-row" :data-index="index"
 							:draggable="true" @dragstart="handle_drag_start($event, index)" @dragover="handle_drag_over($event)"
 							@dragenter="handle_drag_enter($event)" @dragleave="handle_drag_leave($event)"
@@ -37,9 +37,8 @@
 								<input @paste="handle_paste($event, index)" type="text" class="cell import-cell" />
 							</td>
 							<td>
-								<input v-model="row.row_name" @input="handle_row_update(index)"
-									@keydown="handle_name_cell_keydown($event, index)" type="text" class="cell name-cell"
-									ref="name_cells" />
+								<input v-model="row.row_name" @input="handle_row_update(index)" type="text"
+									class="cell name-cell" />
 							</td>
 							<td class="url-cell" @click="open_url(row.url)"
 								@contextmenu.prevent="show_context_menu($event, index, row)">
@@ -237,8 +236,6 @@ const notice_message = computed(() => toast_store.notice_message);
 const notice_action_label = computed(() => toast_store.action_label);
 
 const handle_close_modals = () => modal_store.HIDE_MODALS();
-
-const name_cells = ref<HTMLInputElement[]>([]);
 
 const sum_data = computed(() => {
 	const total_data = calc_total_data(row_datas.value);
@@ -529,26 +526,76 @@ const handle_add_rows = () => {
 	sheet_store.ADD_ROWS();
 };
 
-// name-cellのキーダウンイベント処理
-const handle_name_cell_keydown = (
-	event: KeyboardEvent,
-	index: number,
-) => {
-	if (
-		event.key !== 'Enter' ||
-		event.isComposing
-	) return;
+// スプレッドシートのセル間移動。
+// 各行の入力欄(取り込み / name / count / rate / 資源) を格子として扱う
+const NAV_CELL_SELECTOR = 'input.cell';
 
-	// Enterキーかつ文字変換中でない場合
-	event.preventDefault();
+/** row 行 col 列の入力欄へフォーカスを移す。移せたら true */
+const focus_cell = (row: number, col: number): boolean => {
+	const rows = table_body.value?.querySelectorAll<HTMLElement>('.data-row');
+	const tr = rows?.[row];
+	if (!tr) return false;
 
-	// 次の行のname-cellにフォーカスを移動
-	const next_index = index + 1;
-	if (next_index >= name_cells.value.length) return;
+	const cells = tr.querySelectorAll<HTMLInputElement>(NAV_CELL_SELECTOR);
+	const cell = cells[col];
+	if (!cell) return false;
 
-	const next_name_cell = name_cells.value[next_index];
-	if (next_name_cell) {
-		next_name_cell.focus();
+	cell.focus();
+	// number 型など選択に対応しない環境では select が例外を投げる
+	try { cell.select(); } catch { /* noop */ }
+	return true;
+};
+
+/**
+ * キャレットが左端 / 右端にあるか。
+ * number 型は selectionStart が null で判定できないため、端とみなして
+ * 横移動を優先する(数値欄では矢印でそのままセル移動する)
+ */
+const caret_at_start = (el: HTMLInputElement): boolean => {
+	if (el.selectionStart === null) return true;
+	return el.selectionStart === 0 && el.selectionEnd === 0;
+};
+const caret_at_end = (el: HTMLInputElement): boolean => {
+	if (el.selectionStart === null) return true;
+	const end = el.value.length;
+	return el.selectionStart === end && el.selectionEnd === end;
+};
+
+// セルでのキー操作。Enter/Shift+Enter で上下、矢印で上下左右へ移動する
+const handle_cell_nav = (event: KeyboardEvent) => {
+	const el = event.target;
+	if (!(el instanceof HTMLInputElement) || !el.classList.contains('cell')) return;
+	// IME 変換確定の Enter や候補選択の矢印ではセル移動しない
+	if (event.isComposing) return;
+
+	const tr = el.closest<HTMLElement>('.data-row');
+	if (!tr) return;
+
+	const row = Number(tr.dataset.index);
+	const cells = Array.from(tr.querySelectorAll<HTMLInputElement>(NAV_CELL_SELECTOR));
+	const col = cells.indexOf(el);
+	if (col === -1) return;
+
+	switch (event.key) {
+		case 'Enter':
+			event.preventDefault();
+			focus_cell(event.shiftKey ? row - 1 : row + 1, col);
+			return;
+		case 'ArrowDown':
+			event.preventDefault();
+			focus_cell(row + 1, col);
+			return;
+		case 'ArrowUp':
+			event.preventDefault();
+			focus_cell(row - 1, col);
+			return;
+		case 'ArrowRight':
+			// テキスト欄はキャレットが右端のときだけ移動し、通常の編集を妨げない
+			if (caret_at_end(el) && focus_cell(row, col + 1)) event.preventDefault();
+			return;
+		case 'ArrowLeft':
+			if (caret_at_start(el) && focus_cell(row, col - 1)) event.preventDefault();
+			return;
 	}
 };
 
