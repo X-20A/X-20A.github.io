@@ -1,17 +1,27 @@
 import { RowData, INITIAL_SUM_DATA, SumData, DiffData } from "../types";
 
+/**
+ * 数値化して返す。空欄や文字列(v-model の取りこぼし)で NaN / Infinity になった値は
+ * 0 に倒し、合計・差分に NaN を伝播させない
+ */
+const num = (value: unknown): number => {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : 0;
+}
+
 const calc_product_data = (
     data: RowData,
     multiplier: number,
 ): SumData => {
+    const rate = num(multiplier);
     const new_data: SumData = {
-        fuel: data.fuel * multiplier,
-        ammo: data.ammo * multiplier,
-        steel: data.steel * multiplier,
-        baux: data.baux * multiplier,
-        bucket: data.bucket * multiplier,
-        damecon: data.damecon * multiplier,
-        underway_replenishment: data.underway_replenishment * multiplier,
+        fuel: num(data.fuel) * rate,
+        ammo: num(data.ammo) * rate,
+        steel: num(data.steel) * rate,
+        baux: num(data.baux) * rate,
+        bucket: num(data.bucket) * rate,
+        damecon: num(data.damecon) * rate,
+        underway_replenishment: num(data.underway_replenishment) * rate,
     };
 
     return new_data;
@@ -55,11 +65,11 @@ export function calc_total_data(
 ): DiffData {
     const producted_above_data: DiffData = {
         ...calc_product_data(above_data, above_data.multiplier),
-        rate: above_data.rate,
+        rate: num(above_data.rate),
     };
     const producted_below_data: DiffData = {
         ...calc_product_data(below_data, below_data.multiplier),
-        rate: below_data.rate,
+        rate: num(below_data.rate),
     }
     const diff_data: DiffData = {
         rate: producted_below_data.rate - producted_above_data.rate,

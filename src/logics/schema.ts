@@ -1,22 +1,41 @@
 import {
     object, string, number, array, literal, pipe, brand,
     variant, boolean, nullable, optional, record, integer, minValue,
+    union, transform,
     type InferOutput,
 } from 'valibot';
+
+/**
+ * 行の数値フィールド。
+ *
+ * count / rate セルが `.number` 無しの v-model で束縛されていた時期に、値が
+ * 文字列("3")のまま保存されたシートが存在しうる。厳密な number() だと parse に
+ * 失敗し、シート全体が corrupted 扱いで空に差し替わる(データ喪失)。
+ *
+ * 文字列を数値へ復元し、NaN / Infinity は 0 に倒すことで、旧データを壊さず
+ * ロードできるようにする(自己修復)。
+ */
+const numeric = pipe(
+    union([number(), string()]),
+    transform((value) => {
+        const parsed = typeof value === 'number' ? value : Number(value);
+        return Number.isFinite(parsed) ? parsed : 0;
+    }),
+);
 
 // 行データのスキーマ定義
 const rowDataSchema = {
     row_name: string(),
     url: string(),
-    multiplier: number(),
-    rate: number(),
-    fuel: number(),
-    ammo: number(),
-    steel: number(),
-    baux: number(),
-    bucket: number(),
-    damecon: number(),
-    underway_replenishment: number(),
+    multiplier: numeric,
+    rate: numeric,
+    fuel: numeric,
+    ammo: numeric,
+    steel: numeric,
+    baux: numeric,
+    bucket: numeric,
+    damecon: numeric,
+    underway_replenishment: numeric,
 };
 
 export const RowDataSchema = object(rowDataSchema);

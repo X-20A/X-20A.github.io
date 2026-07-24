@@ -42,6 +42,17 @@ describe('migrate_legacy_save_data', () => {
         expect(sheet.row_datas).toEqual(legacy.row_datas);
     });
 
+    it('数値が文字列で保存された旧データを数値へ復元する', () => {
+        const { sheet } = migrate_legacy_save_data(
+            make_legacy({
+                row_datas: [{ ...INITIAL_ROW_DATA, fuel: '1200', multiplier: '3' }],
+            }),
+        );
+
+        expect(sheet.row_datas[0].fuel).toBe(1200);
+        expect(sheet.row_datas[0].multiplier).toBe(3);
+    });
+
     it('承認済みドメインをワークスペースへ昇格させる', () => {
         const { workspace, sheet } = migrate_legacy_save_data(make_legacy());
 
@@ -110,9 +121,9 @@ describe('migrate_legacy_save_data', () => {
             )).toThrow();
         });
 
-        it('行データの型が違えば例外を投げる', () => {
+        it('数値フィールドが number/string 以外なら例外を投げる', () => {
             expect(() => migrate_legacy_save_data(
-                make_legacy({ row_datas: [{ ...INITIAL_ROW_DATA, fuel: '1200' }] }),
+                make_legacy({ row_datas: [{ ...INITIAL_ROW_DATA, fuel: true }] }),
             )).toThrow();
         });
 

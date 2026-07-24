@@ -55,11 +55,11 @@
 								</div>
 							</td>
 							<td>
-								<input v-model="row.multiplier" @input="handle_row_update(index)" class="cell count-cell"
+								<input v-model.number="row.multiplier" @input="handle_row_update(index)" class="cell count-cell"
 									type="number" />
 							</td>
 							<td>
-								<input v-model="row.rate" @input="handle_row_update(index)" class="cell rate-cell" type="number" />
+								<input v-model.number="row.rate" @input="handle_row_update(index)" class="cell rate-cell" type="number" />
 							</td>
 							<td>
 								<input v-model.number="row.fuel" @input="handle_row_update(index)" class="cell resource-cell"
