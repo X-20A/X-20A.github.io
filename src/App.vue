@@ -403,6 +403,9 @@ const handle_paste = (event: ClipboardEvent, row_index: number) => {
 
 	event.preventDefault();
 
+	// 貼り付け後はフォーカスを外す（誤って続けて入力されるのを防ぐ）
+	(event.target as HTMLElement).blur();
+
 	try {
 		const report = extract_report(pasted_text, row_datas.value[row_index]);
 
