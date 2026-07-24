@@ -9,30 +9,59 @@ import type {
 import type { AreaId } from "../../src/types";
 import SHIP_DATAS from "../../src/data/ship";
 import EQUIP_DATAS from "../../src/data/equip";
+import { NODE_DATAS, EDGE_DATAS, NT } from "../../src/data/map";
+import { OPTION_DATA } from "../../src/data/options";
 import { Ft } from "../../src/models/fleet/predicate";
 
 const ship_ids = Object.keys(SHIP_DATAS).map(key => Number.parseInt(key));
 const item_ids = Object.keys(EQUIP_DATAS).map(key => Number.parseInt(key));
 
-const BASE_AREA_IDS: AreaId[] = [
-        '1-1', '1-2', '1-3', '1-4', '1-5', '1-6',
-        '2-1', '2-2', '2-3', '2-4', '2-5',
-        '3-1', '3-2', '3-3', '3-4', '3-5',
-        '4-1', '4-2', '4-3', '4-4', '4-5',
-        '5-1', '5-2', '5-3', '5-4', '5-5', '5-6',
-        '6-1', '6-2', '6-3', '6-4', '6-5',
-        '7-1', '7-2', '7-3', '7-4', '7-5',
-        '57-7',
-        '58-1', '58-2', '58-3', '58-4',
-        '59-1', '59-2', '59-3', '59-4', '59-5',
-        '60-1', '60-2', '60-3', '60-4', '60-5', '60-6',
-        '61-1', '61-2', '61-3', '61-4', '61-5',
-        '62-1', '62-2', '62-3', '62-4', '62-5',
-    ]; // @expansion
+const AREA_IDS = Object.keys(NODE_DATAS) as AreaId[];
+
+/** テスト都合で除外する海域 */
 const EXCLUDE_AREA_IDS: AreaId[] = [
     '58-2', // トライアングルがあるので除外
     '62-2', // 条件改定待ち
 ];
+
+/** 海域ごとの、テストで試すべき選択肢(キーごとの取り得る値) */
+type SelectableOptions = Partial<Record<AreaId, Record<string, string[]>>>;
+
+/** 海域ごとの option を本番データから導出 */
+const derive_selectable_options = (): SelectableOptions => {
+    const result: SelectableOptions = {};
+
+    for (const area_id of AREA_IDS) {
+        const route_map: Record<string, string[]> = {};
+
+        // メタ選択肢(phase / difficulty / tag など)
+        const meta = OPTION_DATA[area_id];
+        if (meta) {
+            for (const key of Object.keys(meta)) {
+                route_map[key] = meta[key].options.map(option => option.value);
+            }
+        }
+
+        // 能動分岐(NT.ac)の行き先を出力辺から導出
+        const nodes = NODE_DATAS[area_id];
+        const edges = EDGE_DATAS[area_id];
+        for (const node of Object.keys(nodes)) {
+            if (nodes[node][2] !== NT.ac) continue;
+            const destinations = edges
+                .filter(edge => edge[0] === node)
+                .map(edge => edge[1]);
+            if (destinations.length > 0) route_map[node] = destinations;
+        }
+
+        if (Object.keys(route_map).length > 0) result[area_id] = route_map;
+    }
+
+    return result;
+};
+
+// 導出結果はイテレーションに依らず不変なのでモジュールロード時に一度だけ計算する
+const filtered_area_ids = AREA_IDS.filter(id => !EXCLUDE_AREA_IDS.includes(id));
+const selectable_options = derive_selectable_options();
 
 export const generate_sim_set = () => {
     const deck = generate_random_deck();
@@ -41,55 +70,11 @@ export const generate_sim_set = () => {
     );
     const fleet_type_id = deck?.f1?.t as Ft;
     const adopt_fleet = derive_adopt_fleet(fleet_components, fleet_type_id);
-    
-    const area_ids = BASE_AREA_IDS.filter(id => !EXCLUDE_AREA_IDS.includes(id));
-
-    type MapKey = `${number}-${number}`; // '4-5' などのキー
-    type PhaseKey = 'phase' | 'difficulty' | 'tag' | 'is_third' | string; // 特定のキーを定義しつつ汎用性も持たせる
-    type RouteMap = Record<PhaseKey, string[]>; // 各キーに対して行き先の配列を持つ
-    type Options = Record<MapKey, RouteMap>; // マップキーと対応するルート情報
-
-    const options: Options = {
-        '4-5': { 'A': ['B','D'], 'C': ['D','F'], 'I': ['G','J'] },
-        '5-3': { 'O': ['K','P'] },
-        '5-5': { 'F': ['D','J'] },
-        '5-6': { 'phase': ['1', '2', '3'], 'I': ['J', 'O'], 'O': ['P', 'Q'] },
-        '6-3': { 'A': ['B','C'] },
-        '7-3': { 'phase': ['1','2'] },
-        '7-4': { 'F': ['H','J'] },
-        '7-5': { 'F': ['G','J'], 'H': ['I','K'], 'O': ['P','Q'] },
-        '57-7': { 'phase': ['1','2','3','4','5','6','7'], 'A2': ['A3','B'], 'B2': ['B3','B4'], 'C': ['A3','C1'], 'J': ['K','L'] },
-        '58-1': { 'phase': ['1', '2', '3'], 'A': ['B','D'], 'I': ['D','N1'], 'F': ['G','H'] },
-        '58-2': { 'phase': ['1', '2', '3'], 'difficulty': ['1', '2', '3', '4'], 'B': ['C','E'] },
-        '58-3': { 'phase': ['1', '2', '3'], 'difficulty': ['1', '2', '3', '4'], 'M': ['P','N'] },
-        '58-4': { 'phase': ['1', '2', '3'], 'difficulty': ['1', '2', '3', '4'], 'tag': ['0', '1'], 'B': ['C','D'] },
-        '59-1': { 'phase': ['1', '2', '3'], 'C': ['C1','C2'], 'E': ['F','G'] },
-        '59-2': { 'L': ['M','N'], 'N': ['O','P'], 'P': ['Q','R'] },
-        '59-3': { 'phase': ['1', '2', '3'], 'C': ['C1','C2'] },
-        '59-4': { 'phase': ['1', '2'], 'A2': ['B','C'], 'D': ['E','F'] },
-        '59-5': { 'phase': ['1', '2', '3'], 'G': ['H','I'], 'O2': ['P','Q'], 'W': ['X','Z'] },
-        '60-1': { 'phase': ['1', '2', '3'], 'is_third': ['0', '1'], 'A': ['B', 'D'] },
-        '60-2': { 'phase': ['1', '2', '3'], 'B': ['C', 'D'], 'E': ['F', 'F1'], 'N': ['O', 'P'] },
-        '60-3': { 'phase': ['1', '2', '3', '4', '5'], 'difficulty': ['1', '2', '3', '4'], 'A': ['B', 'C'], 'C': ['D', 'E'], 'H': ['H1', 'I'], 'M': ['M1', 'M2'], 'S': ['S1', 'S2'] },
-        '60-4': { 'phase': ['1', '2', '3'], 'A': ['B', 'D'], 'F': ['F1', 'G'], 'G': ['G1', 'H'] },
-        '60-5': { 'phase': ['1', '2', '3'], 'difficulty': ['1', '2', '3', '4'], 'B': ['B1', 'B2'], 'D': ['D1', 'E'] },
-        '60-6': { 'phase': ['1', '2', '3'], 'difficulty': ['1', '2', '3', '4'], 'G': ['H', 'J'], 'K': ['J3', 'L'], 'R': ['S', 'T'] },
-        '61-1': { 'phase': ['1', '2', '3'], 'A': ['B', 'F'], 'F': ['G', 'J'], 'L': ['M', 'P'], },
-        '61-2': { 'phase': ['1', '2', '3'], 'A': ['B', 'F'] },
-        '61-3': { 'phase': ['1', '2', '3'], 'A1': ['A2', 'B'], 'F': ['G', 'H'] },
-        '61-4': { 'phase': ['1', '2', '3', '4'], 'C': ['D', 'F'] },
-        '61-5': { 'phase': ['1', '2', '3', '4', '5'], 'A2': ['B2', 'E'] },
-        '62-1': { 'phase': ['1', '2', '3', '4'], 'difficulty': ['1', '2', '3', '4'], 'B': ['C', 'E'], 'C': ['C1', 'C3'], 'M': ['N', 'P'] },
-        '62-2': { 'phase': ['1', '2', '3', '4'], 'A1': ['A2', 'A3'] },
-        '62-3': { 'phase': ['1', '2', '3', '4', '5'], 'difficulty': ['1', '2', '3', '4'], 'B': ['B1', 'C'], 'D': ['D1', 'E'], 'H': ['I', 'M'] },
-        '62-4': { 'phase': ['1', '2', '3'], 'P': ['P1', 'Q'], 'T': ['T1', 'T2'] },
-        '62-5': { 'phase': ['1', '2', '3', '4', '5'], 'British_relief_fleet': ['1', '0'],'C': ['C2', 'D'], 'K3': ['L', 'L1'], 'O': ['P', 'P1'] },
-    }; // @expansion
 
     return {
         adopt_fleet,
-        area_ids,
-        options,
+        area_ids: filtered_area_ids,
+        options: selectable_options,
         deck,
     }
 };
