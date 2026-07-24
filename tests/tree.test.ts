@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
     build_tree, calc_drop_index, can_move, collect_descendant_ids, empty_trash, get_children,
-    insert_node, is_descendant, is_in_trash, list_active_sheets, move_node,
+    insert_node, insert_node_after, is_descendant, is_in_trash, list_active_sheets, move_node,
     remove_node, rename_node, restore_node, set_folder_expanded, trash_node,
     type NodeMap,
 } from "../src/logics/tree";
@@ -238,6 +238,55 @@ describe('insert_node', () => {
 
         expect(get_children(nodes, id('events')).map(n => n.name))
             .toEqual(['E-1', '春', '新規']);
+    });
+});
+
+describe('insert_node_after', () => {
+    it('対象の直後(同じ親)へ挿入する', () => {
+        const nodes = insert_node_after(
+            make_nodes(),
+            create_sheet_node(id('copy'), 'E-1のコピー', null),
+            id('e1'),
+        );
+
+        // events の子は [E-1, 春]。E-1 の直後へ入る
+        expect(get_children(nodes, id('events')).map(n => n.name))
+            .toEqual(['E-1', 'E-1のコピー', '春']);
+        // 親は対象に合わせる(引数の parent_id は上書きされる)
+        expect(nodes[id('copy')].parent_id).toBe(id('events'));
+    });
+
+    it('末尾の対象の直後にも入る', () => {
+        const nodes = insert_node_after(
+            make_nodes(),
+            create_sheet_node(id('copy'), 'メモのコピー', null),
+            id('memo'),
+        );
+
+        expect(get_children(nodes, null).map(n => n.name))
+            .toEqual(['イベント', 'メモ', 'メモのコピー']);
+    });
+
+    it('兄弟の order を 0 から振り直す', () => {
+        const nodes = insert_node_after(
+            make_nodes(),
+            create_sheet_node(id('copy'), 'コピー', null),
+            id('e1'),
+        );
+
+        expect(get_children(nodes, id('events')).map(n => n.order))
+            .toEqual([0, 1, 2]);
+    });
+
+    it('対象が見つからなければ末尾へ追加する', () => {
+        const nodes = insert_node_after(
+            make_nodes(),
+            create_sheet_node(id('copy'), '孤児', null),
+            id('unknown'),
+        );
+
+        expect(get_children(nodes, null).map(n => n.name))
+            .toEqual(['イベント', 'メモ', '孤児']);
     });
 });
 

@@ -2,8 +2,8 @@ import { defineStore } from "pinia";
 import { parse } from "valibot";
 import {
     NodeId, RowData, Sheet, TreeNode, TRASH_ID, Workspace,
-    create_empty_workspace, create_folder_node, create_node_id, create_sheet,
-    create_sheet_node, SORTIE_SIM_DOMAIN,
+    create_empty_rows, create_empty_workspace, create_folder_node,
+    create_node_id, create_sheet, create_sheet_node, SORTIE_SIM_DOMAIN,
 } from "../types";
 import {
     build_sheet_import, merge_workspace_import,
@@ -12,9 +12,10 @@ import {
 import { Domain, extract_url_domain } from "../logics/url";
 import { SheetSchema, WorkspaceSchema } from "../logics/schema";
 import {
-    build_tree, calc_drop_index, empty_trash, insert_node, is_in_trash,
-    list_active_sheets, move_node, remember_parent, rename_node, restore_node,
-    set_folder_expanded, type DropPosition, type NodeMap, type TreeItem,
+    build_tree, calc_drop_index, empty_trash, insert_node, insert_node_after,
+    is_in_trash, list_active_sheets, move_node, remember_parent, rename_node,
+    restore_node, set_folder_expanded,
+    type DropPosition, type NodeMap, type TreeItem,
 } from "../logics/tree";
 import { useModalStore, useToastStore } from ".";
 import {
@@ -178,6 +179,43 @@ export const useWorkspaceStore = defineStore('workspace', {
             this.active_sheet_id = id;
             await this.SAVE();
             return id;
+        },
+
+        /**
+         * シートを複製する。行データを引き継ぎ、元シートの直後(同じ親)へ置いて
+         * アクティブにする。承認ドメインはワークスペース共有のため対象外。
+         *
+         * アクティブシートを複製する場合、未保存の編集を取りこぼさないよう
+         * 呼び出し側で先に sheet_store.FLUSH() を済ませておくこと
+         * @returns 複製したシートの ID。対象がシートでなければ null
+         */
+        async DUPLICATE_SHEET(node_id: NodeId): Promise<NodeId | null> {
+            const source = this.nodes[node_id];
+            if (!source || source.type !== 'sheet') return null;
+
+            // 元シートの本体を読む。壊れていても複製自体は空で成立させる
+            let row_datas: RowData[] = create_empty_rows();
+            const raw = await load_sheet(node_id);
+            if (raw !== null) {
+                try {
+                    row_datas = (parse(SheetSchema, raw) as unknown as Sheet).row_datas;
+                } catch (error) {
+                    console.error('複製元シートを読み込めませんでした:', error);
+                }
+            }
+
+            const new_id = create_node_id();
+            this.nodes = insert_node_after(
+                this.nodes,
+                create_sheet_node(new_id, `${source.name}のコピー`, source.parent_id),
+                node_id,
+            );
+            // to_plain の JSON 往復で行データは複製されるため、元と参照を共有しない
+            await save_sheet(to_plain(create_sheet(new_id, row_datas)));
+
+            this.active_sheet_id = new_id;
+            await this.SAVE();
+            return new_id;
         },
 
         async CREATE_FOLDER(parent_id: NodeId | null = null): Promise<NodeId> {

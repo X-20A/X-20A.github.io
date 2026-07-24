@@ -175,6 +175,32 @@ export function insert_node(nodes: NodeMap, node: TreeNode): NodeMap {
 }
 
 /**
+ * 対象ノードの直後(同じ親)へ挿入する。複製したシートを元の隣に置くのに使う。
+ * 対象が見つからない場合は末尾へ追加する
+ */
+export function insert_node_after(
+    nodes: NodeMap,
+    node: TreeNode,
+    after_id: NodeId,
+): NodeMap {
+    const after = nodes[after_id];
+    if (!after) return insert_node(nodes, node);
+
+    const parent_id = after.parent_id;
+    const siblings = get_children(nodes, parent_id);
+    const after_index = siblings.findIndex(sibling => sibling.id === after_id);
+
+    siblings.splice(after_index + 1, 0, { ...node, parent_id });
+
+    const result: NodeMap = { ...nodes };
+    siblings.forEach((sibling, index) => {
+        result[sibling.id] = { ...sibling, parent_id, order: index };
+    });
+
+    return result;
+}
+
+/**
  * ゴミ箱へ移す。
  * フォルダの子孫は親がゴミ箱にあることで暗黙にゴミ箱扱いになるため、
  * 個別に移動する必要はない

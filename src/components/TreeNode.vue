@@ -33,6 +33,8 @@
 						@pointerdown.stop="handle_create_sheet">＋</button>
 					<button v-if="is_folder" class="node-action" title="フォルダを追加"
 						@pointerdown.stop="handle_create_folder">📁</button>
+					<button v-if="!is_folder" class="node-action" title="シートを複製"
+						@pointerdown.stop="handle_duplicate">⧉</button>
 					<button class="node-action" title="ゴミ箱へ移動"
 						@pointerdown.stop="handle_trash">🗑</button>
 				</template>
@@ -48,12 +50,14 @@
 <script setup lang="ts">
 import { computed, nextTick, ref } from 'vue';
 import { useWorkspaceStore } from '../stores/workspace';
+import { useSheetStore } from '../stores/sheet';
 import { useToastStore } from '../stores';
 import { is_in_trash, type TreeItem } from '../logics/tree';
 
 const props = defineProps<{ item: TreeItem }>();
 
 const workspace_store = useWorkspaceStore();
+const sheet_store = useSheetStore();
 const toast_store = useToastStore();
 
 const is_folder = computed(() => props.item.node.type === 'folder');
@@ -164,6 +168,16 @@ const handle_create_sheet = () => {
 
 const handle_create_folder = () => {
 	void workspace_store.CREATE_FOLDER(props.item.node.id);
+};
+
+const handle_duplicate = async () => {
+	// 複製元がアクティブなら、未保存の編集を先に確定させてから本体を読む
+	await sheet_store.FLUSH();
+
+	const new_id = await workspace_store.DUPLICATE_SHEET(props.item.node.id);
+	if (new_id) {
+		toast_store.SHOW_TOAST(`「${props.item.node.name}」を複製しました`);
+	}
 };
 
 const handle_restore = async () => {
