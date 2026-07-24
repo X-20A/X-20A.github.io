@@ -220,6 +220,9 @@ export const calc_62_3: CalcFnWithCondition = (
             if (difficulty === 4 && Ss >= 4 && is_fleet_speed_fast_or_more(speed)) {
                 return 'X';
             }
+            if (difficulty === 4 && AS === 1 && Ss === 4 && DD === 2) {
+                return 'X';
+            }
             if (difficulty === 3 && Ss >= 4) {
                 return 'X';
             }
