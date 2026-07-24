@@ -55,38 +55,38 @@
 							</td>
 							<td>
 								<input v-model.number="row.multiplier" @input="handle_row_update(index)" class="cell count-cell"
-									type="number" />
+									type="number" step="any" />
 							</td>
 							<td>
-								<input v-model.number="row.rate" @input="handle_row_update(index)" class="cell rate-cell" type="number" />
+								<input v-model.number="row.rate" @input="handle_row_update(index)" class="cell rate-cell" type="number" step="any" />
 							</td>
 							<td>
 								<input v-model.number="row.fuel" @input="handle_row_update(index)" class="cell resource-cell"
-									type="number" />
+									type="number" step="any" />
 							</td>
 							<td>
 								<input v-model.number="row.ammo" @input="handle_row_update(index)" class="cell resource-cell"
-									type="number" />
+									type="number" step="any" />
 							</td>
 							<td>
 								<input v-model.number="row.steel" @input="handle_row_update(index)" class="cell resource-cell"
-									type="number" />
+									type="number" step="any" />
 							</td>
 							<td>
 								<input v-model.number="row.baux" @input="handle_row_update(index)" class="cell resource-cell"
-									type="number" />
+									type="number" step="any" />
 							</td>
 							<td>
 								<input v-model.number="row.bucket" @input="handle_row_update(index)" class="cell resource-cell"
-									type="number" />
+									type="number" step="any" />
 							</td>
 							<td>
 								<input v-model.number="row.damecon" @input="handle_row_update(index)" class="cell resource-cell"
-									type="number" />
+									type="number" step="any" />
 							</td>
 							<td>
 								<input v-model.number="row.underway_replenishment" @input="handle_row_update(index)"
-									class="cell resource-cell" type="number" />
+									class="cell resource-cell" type="number" step="any" />
 							</td>
 							<td @pointerup="clear_row(index)" class="action-cell">
 								<span class="clear-btn">X</span>
@@ -514,7 +514,6 @@ const handle_row_shortcut = (event: KeyboardEvent) => {
 
 		if (key === 'x') {
 			sheet_store.CLEAR_SELECTED_ROWS();
-			toast_store.SHOW_TOAST(`${rows.length}行を切り取りました`, 3000);
 			return;
 		}
 		toast_store.SHOW_TOAST(`${rows.length}行をコピーしました`, 3000);
@@ -532,16 +531,9 @@ const handle_row_shortcut = (event: KeyboardEvent) => {
 	}
 
 	// Shift 併用で上書きではなく挿入
-	const pasted = event.shiftKey
+	event.shiftKey
 		? sheet_store.PASTE_INSERT(clipboard)
 		: sheet_store.PASTE_OVERWRITE(clipboard);
-
-	if (pasted > 0) {
-		toast_store.SHOW_TOAST(
-			`${pasted}行を${event.shiftKey ? '挿入' : '貼り付け'}ました`,
-			3000,
-		);
-	}
 };
 
 // 行を追加
