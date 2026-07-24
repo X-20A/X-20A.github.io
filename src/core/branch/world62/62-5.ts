@@ -1,7 +1,7 @@
 import { DisallowToSortie } from "../../../errors/CustomError";
 import { is_fleet_speed_fast_or_more, is_fleet_speed_faster_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
 import { count_carriers, count_France_ships, count_ships_by_base_names, count_Yamato_class } from "../../../models/fleet/AdoptFleet";
-import { is_fleet_carrier, is_fleet_combined, is_fleet_transport } from "../../../models/fleet/predicate";
+import { is_fleet_combined, is_fleet_transport } from "../../../models/fleet/predicate";
 import { CalcFnWithCondition } from "..";
 import { destructuring_assignment_helper, omission_of_conditions } from "../util";
 
@@ -92,15 +92,21 @@ export const calc_62_5: CalcFnWithCondition = (
             if (BBs >= 4) {
                 return 'A3';
             }
-            if (CAs >= 2) {
+            if (CAs >= 2 && is_fleet_speed_fast_or_more(speed)) {
+                return 'K';
+            }
+            if (CAs >= 2 && Ds >= 4) {
                 return 'K';
             }
             return 'H';
         case '4':
-            if (Ss >= 1) {
+            if (Ss >= 1 && AS === 0) {
                 return 'M2';
             }
-            if (count_Yamato_class(fleet) >= 1 && is_fleet_carrier(fleet_type)) {
+            if (BBs >= 5) {
+                return 'M2';
+            }
+            if (count_Yamato_class(fleet) >= 1 && CVs >= 3) {
                 return 'M2';
             }
             if (Ds >= 4) {
@@ -112,10 +118,7 @@ export const calc_62_5: CalcFnWithCondition = (
                 }
                 return 'T';
             }
-            if (
-                count_ships_by_base_names(['Algerie'], base_ship_names) >= 1
-                && is_fleet_speed_fast_or_more(speed)
-            ) {
+            if (count_ships_by_base_names(['Algerie'], base_ship_names) >= 1) {
                 return 'T';
             }
             return 'M2';
