@@ -12,6 +12,7 @@ import {
 } from "valibot";
 import type DeckBuilder from "../types/DeckBuilder";
 import type { OptionsType, SelectedType, AreaId } from "../types";
+import { NODE_DATAS } from "../data/map";
 
 /**
  * DeckBuilderItem型のvalibotスキーマ定義
@@ -175,24 +176,10 @@ export function parseSelectedType(input: number): SelectedType {
     }
 }
 
-/**
- * AreaId型のvalibotバリデーションスキーマ
- */
-export const area_id_schema = union([
-    literal('1-1'), literal('1-2'), literal('1-3'), literal('1-4'), literal('1-5'), literal('1-6'),
-    literal('2-1'), literal('2-2'), literal('2-3'), literal('2-4'), literal('2-5'),
-    literal('3-1'), literal('3-2'), literal('3-3'), literal('3-4'), literal('3-5'),
-    literal('4-1'), literal('4-2'), literal('4-3'), literal('4-4'), literal('4-5'),
-    literal('5-1'), literal('5-2'), literal('5-3'), literal('5-4'), literal('5-5'), literal('5-6'),
-    literal('6-1'), literal('6-2'), literal('6-3'), literal('6-4'), literal('6-5'),
-    literal('7-1'), literal('7-2'), literal('7-3'), literal('7-4'), literal('7-5'),
-    literal('57-7'),
-    literal('58-1'), literal('58-2'), literal('58-3'), literal('58-4'),
-    literal('59-1'), literal('59-2'), literal('59-3'), literal('59-4'), literal('59-5'),
-    literal('60-1'), literal('60-2'), literal('60-3'), literal('60-4'), literal('60-5'), literal('60-6'),
-    literal('61-1'), literal('61-2'), literal('61-3'), literal('61-4'), literal('61-5'),
-    literal('62-1'), literal('62-2'), literal('62-3'), literal('62-4'), literal('62-5'),
-]); // @expansion
+/** AreaId型のvalibotバリデーションスキーマ */
+export const area_id_schema = union(
+    Object.keys(NODE_DATAS).map((id) => literal(id))
+);
 
 /**
  * AreaId値を検証・パースする関数
