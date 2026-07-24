@@ -13,6 +13,7 @@
         <a href="/compass"><p class="side-menu-content">羅針盤シミュ</p></a>
         <a href="/reference"><p class="side-menu-content">資料室</p></a>
         <a href="/terminal"><p class="side-menu-content">ターミナル</p></a>
+        <a href="/cost"><p class="side-menu-content">コストシート</p></a>
         <a href="/quest"><p class="side-menu-content">任務手帳</p></a>
         <a href="/akashi"><p class="side-menu-content">改修効率計算機</p></a>
         <a href="/dock"><p class="side-menu-content">入渠計算機</p></a>
