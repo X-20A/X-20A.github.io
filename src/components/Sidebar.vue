@@ -4,11 +4,6 @@
 
 		<transition name="sidebar">
 			<aside v-if="is_open" class="sidebar">
-				<header class="sidebar-header">
-					<span class="sidebar-title">シート</span>
-					<button class="sidebar-close" title="閉じる" @pointerdown="close">×</button>
-				</header>
-
 				<div class="sidebar-toolbar">
 					<button class="toolbar-btn" @pointerdown="handle_create_sheet">＋ シート</button>
 					<button class="toolbar-btn" @pointerdown="handle_create_folder">＋ フォルダ</button>

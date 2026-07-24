@@ -47,7 +47,7 @@ const SECTIONS: { title: string, note?: string, items: HelpItem[] }[] = [
 			{
 				keys: [],
 				hint: 'Import 列に貼り付け',
-				action: 'シミュレータの結果テキストを貼り付けると、燃料・弾薬などを自動で読み取ります',
+				action: 'Sortie Simの結果テキストを貼り付けると燃料・弾薬などを自動で読み取ります',
 			},
 			{
 				keys: [],
@@ -96,12 +96,12 @@ const SECTIONS: { title: string, note?: string, items: HelpItem[] }[] = [
 	},
 	{
 		title: 'シートの管理',
-		note: '左上の ☰ でシート一覧を開きます。',
+		note: 'シート左上の ☰ でシート一覧を開きます。',
 		items: [
 			{ keys: [], hint: 'ドラッグ&ドロップ', action: '一覧の中でシートやフォルダを並べ替え、フォルダの中へ移動できます' },
 			{ keys: [], hint: 'ダブルクリック', action: 'シート名・フォルダ名を変更します' },
 			{ keys: ['F2'], action: '選択中のシート・フォルダの名前を変更します' },
-			{ keys: [], hint: '🗑 ボタン', action: 'ゴミ箱へ移動します。ゴミ箱の中の ↩ でいつでも元に戻せます' },
+			{ keys: [], hint: '🗑 ボタン', action: 'ゴミ箱へ移動します。↩ で元に戻せます' },
 		],
 	},
 	{
