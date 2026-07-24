@@ -119,7 +119,7 @@
 									:disabled="!can_show_diff && display_mode === 'sum'"
 									:title="can_show_diff || display_mode === 'diff'
 										? '合計と差分を切り替える'
-										: '差分は2行を選択したときに使えます'"
+										: '差分は2行だけを選択したときに使えます'"
 									@pointerdown="sheet_store.TOGGLE_DISPLAY_MODE()">
 									{{ display_mode === 'diff' ? 'diff' : 'sum' }}
 								</button>
@@ -214,6 +214,7 @@ import DomainPermission from './components/DomainPermission.vue';
 import ErrorView from './components/ErrorView.vue';
 import HelpView from './components/HelpView.vue';
 import { calc_diff_data, calc_total_data } from './logics/calculation';
+import { filled_row_indexes } from './logics/rows';
 
 const sheet_store = useSheetStore();
 const row_datas = computed(() => sheet_store.row_datas);
@@ -477,6 +478,15 @@ const handle_row_shortcut = (event: KeyboardEvent) => {
 		const is_redo = key === 'y' || (key === 'z' && event.shiftKey);
 		if (is_redo) sheet_store.REDO();
 		else sheet_store.UNDO();
+		return;
+	}
+
+	// Ctrl+A で入力済みの行をすべて選択する
+	if (key === 'a') {
+		event.preventDefault();
+
+		const indexes = filled_row_indexes(row_datas.value);
+		if (indexes.length > 0) sheet_store.UPDATE_SELECTED_ROW_INDEXES(indexes);
 		return;
 	}
 

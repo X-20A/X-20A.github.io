@@ -73,6 +73,7 @@ const SECTIONS: { title: string, note?: string, items: HelpItem[] }[] = [
 			{ keys: [], hint: 'クリック', action: 'その行だけを選択します' },
 			{ keys: ['Ctrl', 'クリック'], action: '行を選択に追加、もう一度で解除（複数選択）' },
 			{ keys: ['Shift', 'クリック'], action: '直前に選んだ行からクリックした行までをまとめて選択' },
+			{ keys: ['Ctrl', 'A'], action: '入力済みの行をすべて選択（セルの編集中を除く）' },
 		],
 	},
 	{

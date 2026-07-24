@@ -92,3 +92,25 @@ export function calc_pasted_indexes(
 ): number[] {
     return Array.from({ length: count }, (_, i) => start_index + i);
 }
+
+/**
+ * 行が初期状態(未入力)か。何かしら入力されていれば false。
+ * count(multiplier) の既定値は 1 のため、INITIAL_ROW_DATA との一致で判定する
+ */
+export function is_row_empty(row: RowData): boolean {
+    return (Object.keys(INITIAL_ROW_DATA) as (keyof RowData)[])
+        .every(key => row[key] === INITIAL_ROW_DATA[key]);
+}
+
+/**
+ * 何かしら入力されている行の添字を、並び順で返す
+ */
+export function filled_row_indexes(row_datas: RowData[]): number[] {
+    const result: number[] = [];
+
+    row_datas.forEach((row, index) => {
+        if (!is_row_empty(row)) result.push(index);
+    });
+
+    return result;
+}

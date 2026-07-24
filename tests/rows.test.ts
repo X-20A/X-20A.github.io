@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
-    calc_pasted_indexes, clear_rows, copy_rows, paste_insert, paste_overwrite,
+    calc_pasted_indexes, clear_rows, copy_rows, filled_row_indexes, is_row_empty,
+    paste_insert, paste_overwrite,
 } from "../src/logics/rows";
 import { INITIAL_ROW_DATA, RowData } from "../src/types";
 
@@ -166,5 +167,47 @@ describe('calc_pasted_indexes', () => {
 
     it('0件なら空配列', () => {
         expect(calc_pasted_indexes(2, 0)).toEqual([]);
+    });
+});
+
+describe('is_row_empty', () => {
+    it('初期状態の行を空と判定する', () => {
+        expect(is_row_empty({ ...INITIAL_ROW_DATA })).toBe(true);
+    });
+
+    it('名前が入っていれば空でない', () => {
+        expect(is_row_empty(row('E-1'))).toBe(false);
+    });
+
+    it('資源が入っていれば空でない', () => {
+        expect(is_row_empty(row('', 100))).toBe(false);
+    });
+
+    it('count(multiplier)が既定の1以外なら空でない', () => {
+        expect(is_row_empty({ ...INITIAL_ROW_DATA, multiplier: 3 })).toBe(false);
+    });
+
+    it('rate が入っていれば空でない', () => {
+        expect(is_row_empty({ ...INITIAL_ROW_DATA, rate: 5 })).toBe(false);
+    });
+
+    it('URL が入っていれば空でない', () => {
+        expect(is_row_empty({ ...INITIAL_ROW_DATA, url: 'https://example.com' })).toBe(false);
+    });
+});
+
+describe('filled_row_indexes', () => {
+    it('入力済みの行の添字だけを並び順で返す', () => {
+        const rows = [row('A', 100), { ...INITIAL_ROW_DATA }, row('C', 300), { ...INITIAL_ROW_DATA }];
+        expect(filled_row_indexes(rows)).toEqual([0, 2]);
+    });
+
+    it('すべて空なら空配列', () => {
+        const rows = [{ ...INITIAL_ROW_DATA }, { ...INITIAL_ROW_DATA }];
+        expect(filled_row_indexes(rows)).toEqual([]);
+    });
+
+    it('すべて入力済みなら全添字', () => {
+        expect(filled_row_indexes(make_rows())).toEqual([0, 1, 2, 3]);
     });
 });
