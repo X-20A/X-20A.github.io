@@ -14,15 +14,7 @@ import { Ft } from "../../src/models/fleet/predicate";
 const ship_ids = Object.keys(SHIP_DATAS).map(key => Number.parseInt(key));
 const item_ids = Object.keys(EQUIP_DATAS).map(key => Number.parseInt(key));
 
-export const generate_sim_set = () => {
-    const deck = generate_random_deck();
-    const fleet_components = derive_FleetComponents_from_DeckBuilder(
-        deck,
-    );
-    const fleet_type_id = deck?.f1?.t as Ft;
-    const adoptFleet = derive_adopt_fleet(fleet_components, fleet_type_id);
-
-    const areaIds: AreaId[] = [
+const BASE_AREA_IDS: AreaId[] = [
         '1-1', '1-2', '1-3', '1-4', '1-5', '1-6',
         '2-1', '2-2', '2-3', '2-4', '2-5',
         '3-1', '3-2', '3-3', '3-4', '3-5',
@@ -31,14 +23,26 @@ export const generate_sim_set = () => {
         '6-1', '6-2', '6-3', '6-4', '6-5',
         '7-1', '7-2', '7-3', '7-4', '7-5',
         '57-7',
-        '58-1', /*'58-2',*/ '58-3', '58-4', // 58-2はトライアングルがあるので除外
+        '58-1', '58-2', '58-3', '58-4',
         '59-1', '59-2', '59-3', '59-4', '59-5',
         '60-1', '60-2', '60-3', '60-4', '60-5', '60-6',
         '61-1', '61-2', '61-3', '61-4', '61-5',
-        '62-1',
-        // '62-2', // 条件改定待ち
-        '62-3', '62-4', '62-5',
+        '62-1', '62-2', '62-3', '62-4', '62-5',
     ]; // @expansion
+const EXCLUDE_AREA_IDS: AreaId[] = [
+    '58-2', // トライアングルがあるので除外
+    '62-2', // 条件改定待ち
+];
+
+export const generate_sim_set = () => {
+    const deck = generate_random_deck();
+    const fleet_components = derive_FleetComponents_from_DeckBuilder(
+        deck,
+    );
+    const fleet_type_id = deck?.f1?.t as Ft;
+    const adopt_fleet = derive_adopt_fleet(fleet_components, fleet_type_id);
+    
+    const area_ids = BASE_AREA_IDS.filter(id => !EXCLUDE_AREA_IDS.includes(id));
 
     type MapKey = `${number}-${number}`; // '4-5' などのキー
     type PhaseKey = 'phase' | 'difficulty' | 'tag' | 'is_third' | string; // 特定のキーを定義しつつ汎用性も持たせる
@@ -83,10 +87,10 @@ export const generate_sim_set = () => {
     }; // @expansion
 
     return {
-        adoptFleet: adoptFleet,
-        areaIds: areaIds,
-        options: options,
-        deck: deck,
+        adopt_fleet,
+        area_ids,
+        options,
+        deck,
     }
 };
 

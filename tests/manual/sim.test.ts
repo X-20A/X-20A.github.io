@@ -99,17 +99,17 @@ const build_failure_context = (
     },
 ): string => {
     const { area_id, options, simSet } = ctx;
-    const { adoptFleet, deck } = simSet;
+    const { adopt_fleet, deck } = simSet;
 
     const lines = [
         `area: ${area_id}`,
         `option: ${JSON.stringify(options[area_id])}`,
-        `main: ${calc_main_fleet_ship_names(adoptFleet)}`,
+        `main: ${calc_main_fleet_ship_names(adopt_fleet)}`,
     ];
-    if (is_fleet_combined(adoptFleet.fleet_type)) {
-        lines.push(`escort: ${calc_escort_fleet_ship_names(adoptFleet)}`);
+    if (is_fleet_combined(adopt_fleet.fleet_type)) {
+        lines.push(`escort: ${calc_escort_fleet_ship_names(adopt_fleet)}`);
     }
-    lines.push(`fleet_type: ${adoptFleet.fleet_type}`);
+    lines.push(`fleet_type: ${adopt_fleet.fleet_type}`);
     lines.push(`deck: ${JSON.stringify(deck)}`);
     return lines.join('\n');
 };
@@ -123,12 +123,12 @@ describe('Simテスト', () => {
         for (let i = 0; i < RAND_TEST_ITERATIONS; i++) {
             const simSet = generate_sim_set();
             const {
-                adoptFleet,
-                areaIds,
+                adopt_fleet,
+                area_ids,
                 options: selectableOptions,
             } = simSet;
 
-            for (const area_id of areaIds) {
+            for (const area_id of area_ids) {
                 // 海域の選択肢を全組み合わせ展開(選択肢が無ければデフォルト1件)
                 const option_sets = build_option_sets(
                     area_id,
@@ -140,7 +140,7 @@ describe('Simテスト', () => {
                 // 残りの組み合わせ(別phase等)は継続して検証する。
                 for (const options of option_sets) {
                     try {
-                        const executor = derive_sim_executor(adoptFleet, area_id, options, []);
+                        const executor = derive_sim_executor(adopt_fleet, area_id, options, []);
                         assert_sim_result(start_sim(executor), area_id);
                     } catch (error) {
                         if (error instanceof DisallowToSortie) continue;
