@@ -1,7 +1,7 @@
 <template>
 	<StandardResourcePopup v-if="standardResource" :data="standardResource" :style="popupStyle" class="popup popup-info" />
 	<SyonanResourcePopup v-if="syonanResource" :data="syonanResource" :style="popupStyle" class="popup popup-info" />
-	<template v-if="branchHtml === '<p>$sw</p>'">
+	<template v-if="isActiveBranch">
 		<div class="popup popup-info" :style="popupStyle">
 			<p>
 				<span>能動分岐</span>
@@ -34,6 +34,7 @@ const SyonanResourcePopup = defineAsyncComponent(() => import(
 
 defineProps<{
 	branchHtml: string | null;
+	isActiveBranch: boolean;
 	popupStyle: { top: string; left: string };
 	node: string | null;
 	standardResource: StandardResource | null;

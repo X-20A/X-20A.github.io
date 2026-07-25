@@ -3,6 +3,7 @@ import { storeToRefs } from 'pinia';
 import { useStore } from '../stores';
 import { sanitize_text } from '../logic/util';
 import { convert_branch_data_to_HTML } from '../logic/convert';
+import { is_active_branch_node } from '../data/map';
 import type { MapCore } from '../logic/effects/svgGraph';
 import type { StandardResource } from '../models/resource/StandardResource';
 import type { SyonanResource } from '../models/resource/SyonanResource';
@@ -27,6 +28,7 @@ export function usePopup() {
 		left: '0px',
 	});
 	const node = ref<string | null>(null);
+	const is_active_branch = ref(false);
 	const standard_resource = ref<StandardResource | null>(null);
 	const syonan_resource = ref<SyonanResource | null>(null);
 
@@ -37,11 +39,17 @@ export function usePopup() {
 		standard_resource.value = null;
 		syonan_resource.value = null;
 		branch_html.value = null;
+		is_active_branch.value = false;
 		popup_anchor = null;
 	};
 
 	const generate_branch_html = (node_name: string): string | null => {
 		node.value = node_name;
+
+		// 能動分岐マスはmapデータから判定(branchデータには持たない)
+		is_active_branch.value =
+			is_active_branch_node(selectedArea.value!, node_name);
+		if (is_active_branch.value) return null;
 
 		let key = selectedArea.value!;
 
@@ -126,6 +134,7 @@ export function usePopup() {
 		branch_html,
 		popup_style,
 		node,
+		is_active_branch,
 		standard_resource,
 		syonan_resource,
 		hide_popup,

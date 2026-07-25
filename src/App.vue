@@ -13,6 +13,7 @@
 	<ModalHost />
 	<MapPopups
 		:branch-html="branch_html"
+		:is-active-branch="is_active_branch"
 		:popup-style="popup_style"
 		:node="node"
 		:standard-resource="standard_resource"
@@ -52,6 +53,7 @@ useModalScrollLock();
 const popup = usePopup();
 const {
 	branch_html,
+	is_active_branch,
 	popup_style,
 	node,
 	standard_resource,

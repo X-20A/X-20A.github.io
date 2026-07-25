@@ -36,6 +36,7 @@ import { useStore } from '../../stores';
 import { convert_branch_data_to_HTML } from '../../logic/convert';
 import { sanitize_text } from '../../logic/util';
 import { disassembly_area_id } from '../../logic/area';
+import { NODE_DATAS, is_active_branch_node } from '../../data/map';
 import SvgIcon from '../SvgIcon.vue';
 
 // 分岐条件一覧
@@ -99,18 +100,28 @@ watch(selectedArea, () => {
 	if (!branch_data_value || !branch_key_value) return;
 	const area_conditions = branch_data_value[branch_key_value];
 
-	formated_branch.value = Object.fromEntries(
+	const formated = Object.fromEntries(
 		Object.entries(area_conditions).map(([key, node_branch]) => {
 			const node_branch_string = node_branch;
 			const topic =
 				sanitize_text(`${selectedArea.value}-${node_branch_string}`);
-			let html = convert_branch_data_to_HTML(node_branch_string, topic);
-			
-			if (html === '$sw') html = '能動分岐';
-			
+			const html = convert_branch_data_to_HTML(node_branch_string, topic);
+
 			return [key, html];
-    })
+		})
 	);
+
+	// 能動分岐マスはmapデータから注入
+	const area_nodes = NODE_DATAS[selectedArea.value];
+	if (area_nodes) {
+		for (const node_name of Object.keys(area_nodes)) {
+			if (is_active_branch_node(selectedArea.value, node_name)) {
+				formated[node_name] = '能動分岐';
+			}
+		}
+	}
+
+	formated_branch.value = formated;
 
 	const {
 		world,

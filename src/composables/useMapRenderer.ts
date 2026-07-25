@@ -100,7 +100,7 @@ export function useMapRenderer(
 
 			if (node) { // node(旧mousedown/tapstart)
 				const html = popup.generate_branch_html(node);
-				if (html) {
+				if (html || popup.is_active_branch.value) {
 					popup.branch_html.value = html;
 					popup.adjust_popup_position(map, node);
 				}

@@ -168,6 +168,12 @@ export const NODE_DATAS: NodeDatas = {
     "62-5":{"0":[570,275,NT.st],"1":[396,492,NT.st],"2":[353,426,NT.st],"3":[653,138,NT.st],"4":[818,221,NT.st],"A1":[310,542,NT.as],"A":[303,464,NT.en],"A2":[243,472,NT.ad],"A3":[294,374,NT.en],"B":[223,367,NT.en],"B1":[194,437,NT.en],"B2":[156,394,NT.en],"C":[280,308,NT.ac],"C1":[328,310,NT.ca],"C2":[343,242,NT.po],"D":[253,231,NT.en],"E":[226,157,NT.as],"E1":[179,221,NT.en],"E2":[164,138,NT.en],"F":[221,293,NT.ca],"G":[168,322,NT.bo],"H":[376,366,NT.as],"I":[406,287,NT.en],"J":[476,187,NT.en],"J1":[523,210,NT.tl],"J2":[525,151,NT.bo],"K":[432,376,NT.en],"K1":[470,417,NT.ad],"K2":[483,365,NT.en],"K3":[526,390,NT.ac],"L1":[572,369,NT.en],"L":[599,406,NT.en],"L2":[617,353,NT.en],"M":[685,188,NT.ca],"M1":[707,223,NT.en],"M2":[766,180,NT.as],"N":[653,262,NT.en],"O":[739,274,NT.ac],"P":[681,301,NT.en],"P1":[806,283,NT.en],"P2":[863,269,NT.ad],"P3":[866,324,NT.en],"Q":[657,343,NT.ca],"R":[666,382,NT.ca],"S":[728,344,NT.un],"T":[796,133,NT.en],"U":[889,152,NT.ca],"V":[1006,124,NT.en],"W":[1030,193,NT.ad],"X":[998,227,NT.en],"Y":[965,262,NT.ca],"Y1":[944,304,NT.en],"Y2":[967,339,NT.en],"Z":[1008,320,NT.en],"Z1":[1023,370,NT.un],"Z2":[1067,293,NT.un],"ZZ":[1076,348,NT.bo]},
 } as const; // @expansion
 
+/** 能動分岐マスか判定 */
+export const is_active_branch_node = (
+    area: AreaId,
+    node: string,
+): boolean => NODE_DATAS[area]?.[node]?.[2] === NT.ac;
+
 /** 暫定度が高いNode 「!」を表示する */
 export const WARNING_NODE_DATAS: Partial<Record<AreaId, string[]>> = {
     "5-6": ["Q1"],
