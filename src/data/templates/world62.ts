@@ -186,20 +186,20 @@ export const WORLD_62: Ttemplate[] =[
         "memo": "ネルソンタッチ想定$e基地: 2部隊ボス集中"
     },
     {
-        "title": "62-4_P1T2YZ_Z削り",
+        "title": "62-4_P1T1UYZ_Z削り",
         "world": 62,
         "area": 4,
         "route": "3-O-P-P1-T-T1-U-Y-Z",
-        "token": "fVrAaOyNq1i",
+        "token": "bIFlKerJGI-",
         "memo": "HP: 6000$eリシュジャンタッチ想定$e基地: 2部隊ボス集中"
     },
     {
-        "title": "62-4_P1T2YZ_Z破壊",
+        "title": "62-4_P1T1UYZ_Z破壊",
         "world": 62,
         "area": 4,
         "route": "3-O-P-P1-T-T1-U-Y-Z",
-        "token": "aFTv_HYOHNfA",
-        "memo": "HP: 6000$eリシュジャンタッチ想定$e基地: 2部隊ボス集中"
+        "token": "QH7WWoCK0c4",
+        "memo": "リシュジャンタッチ想定$e基地: 2部隊ボス集中"
     },
     {
         "title": "62-5_AA2BDE1G_G削り",
