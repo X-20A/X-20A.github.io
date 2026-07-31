@@ -90,6 +90,22 @@ export const WORLD_62: Ttemplate[] =[
         "memo": "HP: 3430$e基地: 2部隊ボス集中$e低速でJマス踏み抜き想定"
     },
     {
+        "title": "62-3_A2GQ_輸送",
+        "world": 62,
+        "area": 3,
+        "route": "1-A-A2-G-P-Q",
+        "token": "nxPYCVdOjL1",
+        "memo": "TP: 1000$e基地: 1部隊ボス集中$e高速+想定"
+    },
+    {
+        "title": "62-3_A2CC2Q_輸送",
+        "world": 62,
+        "area": 3,
+        "route": "1-A-A2-B-C-C2-P-Q",
+        "token": "xmyJGfhUg6P",
+        "memo": "TP: 1000$e基地: 1部隊ボス集中$e煙幕: C2"
+    },
+    {
         "title": "62-3_A2GILO_破壊",
         "world": 62,
         "area": 3,
