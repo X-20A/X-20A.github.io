@@ -86,7 +86,7 @@ export const WORLD_62: Ttemplate[] =[
         "world": 62,
         "area": 3,
         "route": "2-F-A2-G-H-I-L-O",
-        "token": "kPNUnmN6nqz",
+        "token": "ibKvIsTT4vd",
         "memo": "HP: 3430$e基地: 2部隊ボス集中$e低速でJマス踏み抜き想定"
     },
     {
@@ -94,7 +94,7 @@ export const WORLD_62: Ttemplate[] =[
         "world": 62,
         "area": 3,
         "route": "2-F-A2-G-H-I-L-O",
-        "token": "pHIsc5vSrO9",
+        "token": "jEbBtCHl-15",
         "memo": "HP: 3430$e基地: 2部隊ボス集中$e低速でJマス踏み抜き想定"
     },
     {
