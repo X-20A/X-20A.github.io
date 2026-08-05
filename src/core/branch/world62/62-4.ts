@@ -65,7 +65,7 @@ export const calc_62_4: CalcFnWithCondition = (
             return 'B';
         case 'E1':
             if (!is_fleet_combined(fleet_type)) {
-                if (phase >= 2 && Ds <= 3 && Ss === 0) {
+                if (phase >= 2 && BBs <= 1 && CVH === 0 && Ds <= 3 && Ss === 0) {
                     return 'K';
                 }
                 return 'E2';
@@ -78,12 +78,21 @@ export const calc_62_4: CalcFnWithCondition = (
             if (is_fleet_surface(fleet_type)) {
                 return 'H';
             }
-            if (BBV + CVL + count_ships_by_base_names(['あきつ丸'], base_ship_names) >= 1 && CAs === 2 && is_fleet_speed_slow(speed)) {
+            if (is_fleet_speed_fast_or_more(speed)) {
+                return 'E1';
+            }
+            if (BBV >= 1 && CAs === 2) {
+                return 'G';
+            }
+            if (CVL + count_ships_by_base_names(['あきつ丸'], base_ship_names) === 1 && CAs === 2) {
                 return 'G';
             }
             return 'E1';
         case 'H':
-            return 'J';
+            if (AV >= 2) {
+                return 'J';
+            }
+            return 'I';
         case 'J':
             if (route.includes('2')) {
                 return 'K';
@@ -107,7 +116,7 @@ export const calc_62_4: CalcFnWithCondition = (
             if (CVL >= 3) {
                 return 'J';
             }
-            if (CL >= 2) {
+            if (CL + CT >= 2) {
                 return 'P';
             }
             if (Ds >= 4) {
@@ -118,12 +127,15 @@ export const calc_62_4: CalcFnWithCondition = (
             if (phase <= 2) {
                 return 'Q';
             }
-            if (BBs >= 4) {
+            if (BBs + CVH >= 5 && Ds <= 3) {
                 return 'Q';
             }
             return 'T';
         case 'Q':
-            return 'R';
+            if (seek.c2 >= 80) {
+                return 'R';
+            }
+            return 'P2';
         case 'T1':
             if (seek.c2 < 80) {
                 return 'P2';
@@ -151,7 +163,7 @@ export const calc_62_4: CalcFnWithCondition = (
             if (CVH >= 4) {
                 return 'U';
             }
-            if (count_Yamato_class(fleet) >= 2 && CL >= 1 && Ds <= 3) {
+            if (count_Yamato_class(fleet) >= 1 && CL <= 1 && Ds <= 3) {
                 return 'U';
             }
             if (is_fleet_carrier(fleet_type) && is_fleet_speed_fast_or_more(speed)) {
@@ -163,27 +175,24 @@ export const calc_62_4: CalcFnWithCondition = (
                 return 'V';
             }
             if (count_Yamato_class(fleet) >= 1) {
-                if (!route.includes('T2')) {
-                    return 'T2';
+                if (CVH === 0 && CVL <= 1) {
+                    return 'Y1';
                 }
-                return 'Y1';
+                if (route.includes('T2')) {
+                    return 'Y1';
+                }
+                return 'T2';
             }
             if (is_fleet_speed_slow(speed)) {
-                return 'Y1';
-            }
-            if (BBs >= 3) {
                 return 'Y1';
             }
             if (CVH >= 3) {
                 return 'Y1';
             }
-            if (CAs === 2 && Ds >= 3) {
-                return 'Y';
-            }
-            if (CL >= 2 && Ds >= 3) {
-                return 'Y';
-            }
             if (Ds >= 4) {
+                return 'Y';
+            }
+            if (BBs <= 2 && CLs >= 2 && Ds === 3) {
                 return 'Y';
             }
             return 'Y1';
@@ -191,16 +200,13 @@ export const calc_62_4: CalcFnWithCondition = (
             if (count_Yamato_class(fleet) >= 1) {
                 return 'W';
             }
-            if (is_fleet_speed_fast_or_more(speed)) {
-                return 'X';
+            if (BBs >= 3) {
+                return 'W';
             }
-            if (CL >= 2) {
-                return 'X';
+            if (Ss >= 1) {
+                return 'W';
             }
-            if (Ds >= 6) {
-                return 'X';
-            }
-            return 'W';
+            return 'X';
         case 'Y':
             if (seek.c2 >= 85) {
                 return 'Z';
