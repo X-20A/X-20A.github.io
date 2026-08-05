@@ -575,7 +575,7 @@ const SHIP_DATAS: ShipDatas = {
 ,493:{name:"伊400",type:ST.SSV,seek:15,seek2:46,na:NA.Japan,sg:SG.SlowC,base:493}
 ,494:{name:"伊13",type:ST.SSV,seek:13,seek2:43,na:NA.Japan,sg:SG.SlowC,base:494}
 ,495:{name:"伊14",type:ST.SSV,seek:14,seek2:44,na:NA.Japan,sg:SG.SlowC,base:495}
-,496:{name:"Zara due",type:ST.CA,seek:19,seek2:64,na:NA.France,sg:SG.FastB2,base:448}
+,496:{name:"Zara due",type:ST.CA,seek:19,seek2:64,na:NA.Italia,sg:SG.FastB2,base:448}
 ,497:{name:"白露改二",type:ST.DD,seek:10,seek2:50,na:NA.Japan,sg:SG.FastB2,base:42}
 ,498:{name:"村雨改二",type:ST.DD,seek:9,seek2:47,na:NA.Japan,sg:SG.FastB2,base:44}
 ,499:{name:"神威改",type:ST.AV,seek:22,seek2:48,na:NA.Japan,sg:SG.SlowB,base:162}
