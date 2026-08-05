@@ -3,6 +3,7 @@ import { is_fleet_speed_fast_or_more, is_fleet_speed_faster_or_more, is_fleet_sp
 import { count_carriers, count_France_ships, count_ships_by_base_names, count_Yamato_class } from "../../../models/fleet/AdoptFleet";
 import { is_fleet_combined, is_fleet_transport } from "../../../models/fleet/predicate";
 import { CalcFnWithCondition } from "..";
+import { includes_ship_names } from "../../../models/ship/predicate";
 import { destructuring_assignment_helper, omission_of_conditions } from "../util";
 
 export const calc_62_5: CalcFnWithCondition = (
@@ -72,10 +73,16 @@ export const calc_62_5: CalcFnWithCondition = (
             if (is_fleet_speed_faster_or_more(speed)) {
                 return 'A';
             }
+            if (Ss >= 1) {
+                return 'A1';
+            }
+            if (BBs >= 2) {
+                return 'A1';
+            }
             if (Ds <= 1) {
                 return 'A1';
             }
-            if (CL >= 2) {
+            if (CLE >= 2) {
                 return 'A';
             }
             if (is_fleet_speed_fast_or_more(speed)) {
@@ -106,10 +113,19 @@ export const calc_62_5: CalcFnWithCondition = (
             if (BBs >= 5) {
                 return 'M2';
             }
+            if (CVs >= 5) {
+                return 'M2';
+            }
+            if (DD === 2 && is_fleet_speed_slow(speed)) {
+                return 'M2';
+            }
             if (count_Yamato_class(fleet) >= 1 && CVs >= 3) {
                 return 'M2';
             }
             if (Ds >= 4) {
+                if (BBs + CVs >= 7) {
+                    return 'T';
+                }
                 if (CL >= 2) {
                     return 'U';
                 }
@@ -126,21 +142,32 @@ export const calc_62_5: CalcFnWithCondition = (
             if (seek.c4 < 82) {
                 return 'A3';
             }
-            if (is_fleet_speed_slow(speed)) {
-                return 'B1';
+            if (AV >= 1) {
+                return 'B';
             }
-            return 'B';
+            if (is_fleet_speed_fast_or_more(speed)) {
+                return 'B';
+            }
+            return 'B1';
         case 'A3':
-            if (phase <= 1) {
-                return 'C1';
-            }
             if (!is_fleet_combined(fleet_type)) {
                 return 'C1';
             }
+            if (BBs + CVs >= 5) {
+                return 'A';
+            }
+            if (BBs + CVH >= 4) {
+                return 'H';
+            }
+            if (BBs + CVH === 3 && Ds <= 4) {
+                return 'H';
+            }
             return 'I';
-            break;
         case 'D':
             if (CVs >= 2) {
+                return 'E';
+            }
+            if (Ss >= 1) {
                 return 'E';
             }
             return 'E1';
@@ -148,7 +175,7 @@ export const calc_62_5: CalcFnWithCondition = (
             if (phase <= 1) {
                 return 'E2';
             }
-            if (seek.c4 < 82) {
+            if (seek.c4 < 92) {
                 return 'F';
             }
             if (ships_length >= 6) {
@@ -156,13 +183,22 @@ export const calc_62_5: CalcFnWithCondition = (
             }
             return 'E2';
         case 'H':
+            if (seek.c2 < 50) {
+                return 'C1';
+            }
             if (phase <= 2) {
                 return 'I';
             }
             if (is_fleet_transport(fleet_type)) {
                 return 'I';
             }
-            if (option.Force_de_Raid !== '1') {
+            if (CAs >= 1) {
+                return 'K';
+            }
+            if (AV === 2) {
+                return 'I';
+            }
+            if (CL === 3) {
                 return 'I';
             }
             return 'K';
@@ -177,12 +213,24 @@ export const calc_62_5: CalcFnWithCondition = (
             }
             return 'L2';
         case 'M':
-            if (CVH <= 1 && Ds >= 4) {
+            if (CVH >= 2) {
+                return 'M2';
+            }
+            if (CL >= 3) {
+                return 'M1';
+            }
+            if (Ds >= 4) {
                 return 'M1';
             }
             return 'M2';
         case 'M1':
-            if (count_Yamato_class(fleet) === 0 && is_fleet_speed_fast_or_more(speed)) {
+            if (
+                count_Yamato_class(fleet) === 0
+                && BBs + CVs <= 4
+                && CVH <= 1
+                && Ds >= 4
+                && is_fleet_speed_fast_or_more(speed)
+            ) {
                 return 'O';
             }
             return 'N';
@@ -191,6 +239,9 @@ export const calc_62_5: CalcFnWithCondition = (
                 return 'M1';
             }
             if (route.includes('4')) {
+                if (count_Yamato_class(fleet) >= 2) {
+                    return 'T';
+                }
                 if (is_fleet_speed_slow(speed)) {
                     return 'T';
                 }
@@ -198,32 +249,59 @@ export const calc_62_5: CalcFnWithCondition = (
             }
             break;
         case 'P1':
-            if (count_Yamato_class(fleet) === 0 && is_fleet_speed_fast_or_more(speed)) {
+            if (count_Yamato_class(fleet) >= 1) {
+                return 'P2';
+            }
+            if (is_fleet_speed_slow(speed)) {
+                return 'P2';
+            }
+            if (CL >= 3) {
+                return 'P3';
+            }
+            if (Ds >= 4) {
                 return 'P3';
             }
             return 'P2';
         case 'Q':
+            if (includes_ship_names(['明石改', '朝日改', '秋津洲改'], ship_names)) {
+                return 'R';
+            }
             return 'S';
         case 'V':
             if (count_Yamato_class(fleet) >= 1 && BBs >= 4) {
                 return 'W';
             }
-            if (Ss >= 1) {
+            if (count_ships_by_base_names(['Gotland', 'Visby'], base_ship_names) >= 1) {
                 return 'X';
             }
-            if (count_ships_by_base_names(['Gotland', 'Visby'], base_ship_names) >= 1) {
+            if (
+                count_ships_by_base_names(['Algerie'], base_ship_names) >= 1
+                && count_France_ships(fleet) >= 3
+            ) {
                 return 'X';
             }
             return 'W';
         case 'Y1':
-            if (count_ships_by_base_names(['Richelieu', 'Jean Bart'], base_ship_names) >= 1) {
+            if (count_ships_by_base_names(['Richelieu', 'Jean Bart', 'Algerie'], base_ship_names) >= 2) {
                 return 'Z';
             }
-            if (CL >= 2) {
+            if (
+                count_ships_by_base_names(['Gotland', 'Visby'], base_ship_names) >= 1
+                && is_fleet_speed_fast_or_more(speed)
+            ) {
+                return 'Z';
+            }
+            if (count_Yamato_class(fleet) === 0 && CL >= 2 && Ds >= 3) {
                 return 'Z';
             }
             return 'Y2';
         case 'Z':
+            if (seek.c2 < 88) {
+                return 'Z2';
+            }
+            if (includes_ship_names(['明石改', '朝日改', '秋津洲改'], ship_names)) {
+                return 'Z1';
+            }
             return 'ZZ';
         case 'Z1':
             return 'ZZ';

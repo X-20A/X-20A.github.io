@@ -101,11 +101,14 @@
 			<span>{{ adoptFleet.seek.c4 }}</span>
 		</p>
 	</div>
-	<p v-if="is_target_world([61])" style="color: red;font-size: 15px;">
+	<p v-if="is_target_world([61])" class="warning">
 		イベント海域の分岐条件は暫定的で随時更新されます
 		<a href="https://x.com/momemi_kc/status/1985248128975671483" target="_blank" rel="noopener noreferrer">
 			更新履歴
 		</a>
+	</p>
+	<p v-if="selectedArea === '62-5'" class="warning">
+		現在、出撃地点2の札判定は行っていません
 	</p>
 </template>
 
@@ -177,3 +180,9 @@ function is_target_world(
 		: false;
 }
 </script>
+<style>
+	.warning {
+		color: red;
+		font-size: 15px;
+	}
+</style>

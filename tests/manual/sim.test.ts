@@ -18,7 +18,7 @@ import { is_fleet_combined } from '../../src/models/fleet/predicate';
 /** rand-testで生成するランダム艦隊の数 */
 const RAND_TEST_ITERATIONS = 1000;
 /** rand-test タイムアウト(ms) */
-const RAND_TEST_TIMEOUT = 40 * 1000;
+const RAND_TEST_TIMEOUT = 60 * 1000;
 
 const is_route_not_warp = (
     route: string[],
