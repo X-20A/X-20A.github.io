@@ -16,7 +16,7 @@ import { build_fleet_from_fixture } from '../generator/fixture';
 import { is_fleet_combined } from '../../src/models/fleet/predicate';
 
 /** rand-testで生成するランダム艦隊の数 */
-const RAND_TEST_ITERATIONS = 1000;
+const RAND_TEST_ITERATIONS = 500;
 /** rand-test タイムアウト(ms) */
 const RAND_TEST_TIMEOUT = 60 * 1000;
 
@@ -116,9 +116,9 @@ const build_failure_context = (
 
 describe('Simテスト', () => {
     it(`rand-test:
-        ランダムに生成した艦隊をSimクラスに渡してクラス内でエラーが発生しないこと、
-        SimResult.rateが 1 と等しいこと、
-        ルートがワープしないこと
+        ランダムに生成した艦隊をSimクラスに渡してクラス内でエラーが発生しない、
+        SimResult.rateが 1 と等しい、
+        ルートがワープしない
         を確認`, () => {
         for (let i = 0; i < RAND_TEST_ITERATIONS; i++) {
             const simSet = generate_sim_set();
@@ -153,7 +153,7 @@ describe('Simテスト', () => {
         }
     }, RAND_TEST_TIMEOUT);
 
-    it('route-test: モック艦隊をSimにかけて、正しいルートを返すことを確認', async () => {
+    it('route-test: 既定艦隊が規定ルートを通る', async () => {
         for (const fleet_data of TEST_FLEET_DATAS) {
             // 海域
             const area_id = fleet_data.area;

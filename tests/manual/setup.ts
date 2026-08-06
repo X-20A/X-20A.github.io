@@ -12,6 +12,7 @@ import EQUIP_DATAS from "../../src/data/equip";
 import { NODE_DATAS, EDGE_DATAS, NT } from "../../src/data/map";
 import { OPTION_DATA } from "../../src/data/options";
 import { Ft } from "../../src/models/fleet/predicate";
+import { FLEET_RULES, validate_adopt_fleet, type FleetRule } from "./validate";
 
 const ship_ids = Object.keys(SHIP_DATAS).map(key => Number.parseInt(key));
 const item_ids = Object.keys(EQUIP_DATAS).map(key => Number.parseInt(key));
@@ -63,36 +64,65 @@ const derive_selectable_options = (): SelectableOptions => {
 const filtered_area_ids = AREA_IDS.filter(id => !EXCLUDE_AREA_IDS.includes(id));
 const selectable_options = derive_selectable_options();
 
-export const generate_sim_set = () => {
-    const deck = generate_random_deck();
-    const fleet_components = derive_FleetComponents_from_DeckBuilder(
-        deck,
-    );
-    const fleet_type_id = deck?.f1?.t as Ft;
-    const adopt_fleet = derive_adopt_fleet(fleet_components, fleet_type_id);
+/**
+ * 編成条件を満たす艦隊を引き当てるまでの最大試行回数
+ * 実測の合格率は最も厳しい輸送護衛部隊でも約0.17%(平均約590試行)なので、
+ * この回数に達するのは編成条件か生成器のどちらかが壊れている場合に限られる
+ */
+const MAX_GENERATE_ATTEMPTS = 10000;
 
-    return {
-        adopt_fleet,
-        area_ids: filtered_area_ids,
-        options: selectable_options,
-        deck,
+export const generate_sim_set = () => {
+    // 艦隊種別は引き直しの外で決める
+    // 中で決めると、合格率の低い連合艦隊ばかりが捨てられて通常艦隊に偏る
+    const fleet_type = Math.floor(Math.random() * 4) as Ft; // 0 1 2 3
+
+    for (let attempt = 0; attempt < MAX_GENERATE_ATTEMPTS; attempt++) {
+        const deck = generate_random_deck(fleet_type);
+        const fleet_components = derive_FleetComponents_from_DeckBuilder(
+            deck,
+        );
+        const fleet_type_id = deck?.f1?.t as Ft;
+        const adopt_fleet = derive_adopt_fleet(fleet_components, fleet_type_id);
+
+        // 編成条件を満たさない艦隊は本番では作れないので捨てて引き直す
+        if (validate_adopt_fleet(adopt_fleet).length > 0) continue;
+
+        return {
+            adopt_fleet,
+            area_ids: filtered_area_ids,
+            options: selectable_options,
+            deck,
+        }
     }
+
+    throw new Error(
+        `艦隊種別${fleet_type}で編成条件を満たす艦隊を`
+        + `${MAX_GENERATE_ATTEMPTS}回の試行で生成できなかった`
+    );
 };
 
-const generate_random_deck = () => {
+const generate_random_deck = (fleet_type: Ft) => {
     const deck = {} as DeckBuilder;
 
-    const fleet_type = Math.floor(Math.random() * 4); // 0 1 2 3
-    if (fleet_type === 0) {
-        deck.f1 = generate_random_fleet_deck(Math.floor(Math.random() * 7) + 1);
-        deck.f1.t = fleet_type;
-    } else {
-        deck.f1 = generate_random_fleet_deck(Math.floor(Math.random() * 6) + 1);
-        deck.f2 = generate_random_fleet_deck(Math.floor(Math.random() * 6) + 1);
-        deck.f1.t = fleet_type;
+    const [main_rule, escort_rule] = FLEET_RULES[fleet_type];
+
+    deck.f1 = generate_random_fleet_deck(random_ships_length(main_rule));
+    if (escort_rule) {
+        deck.f2 = generate_random_fleet_deck(random_ships_length(escort_rule));
     }
+    deck.f1.t = fleet_type;
 
     return deck;
+};
+
+/**
+ * 編成条件の隻数範囲から隻数を抽選する
+ * 隻数まで完全ランダムにすると連合艦隊の合格率が0.04〜0.56%まで落ちるので、
+ * ここだけは条件に従わせて引き直しの回数を抑える
+ */
+const random_ships_length = (rule: FleetRule): number => {
+    const width = rule.max_ships - rule.min_ships + 1;
+    return rule.min_ships + Math.floor(Math.random() * width);
 };
 
 const generate_random_fleet_deck = (ship_length: number): DeckBuilderFleet => {

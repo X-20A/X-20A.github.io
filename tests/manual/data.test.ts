@@ -115,7 +115,6 @@ describe('Dataテスト', () => {
         if (missing_ships.length) console.log('艦に不足: ', missing_ships);
         if (mismatch_ship_params.length) console.log('艦パラメータ不一致: ', mismatch_ship_params);
 
-        // 空であることを確認
         expect(0).toBe(missing_ships.length);
         expect(0).toBe(mismatch_ship_params.length);
 
@@ -194,7 +193,6 @@ describe('Dataテスト', () => {
         if (missing_equips.length) console.log('装備に不足: ', missing_equips);
         if (mismatch_equip_params.length) console.log('装備パラメータ不一致: ', mismatch_equip_params);
 
-        // 空であることを確認
         expect(0).toBe(missing_equips.length);
         expect(0).toBe(mismatch_equip_params.length);
     });

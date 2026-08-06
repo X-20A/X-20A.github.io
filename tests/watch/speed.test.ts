@@ -42,7 +42,7 @@ const POWER_KAN: EquipInDeck = {
 }
 
 describe('艦速度テスト', () => {
-    it('speed-test: 速度グループごとに想定される速度(装備込)になることを確認', async () => {
+    it('speed-test: 速度グループごとに想定される速度(装備込)になる', async () => {
         // 高速A群
         cartesian_equip_pattern(
             SHIPMAKAZE_KAI,
