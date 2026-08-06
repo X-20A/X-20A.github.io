@@ -1,6 +1,6 @@
 import { DisallowToSortie } from "../../../errors/CustomError";
 import { is_fleet_speed_fast_or_more, is_fleet_speed_slow } from "../../../logic/speed/predicate";
-import { count_carriers, count_ships_by_names } from "../../../models/fleet/AdoptFleet";
+import { count_carriers, count_ships_by_base_names, count_ships_by_names } from "../../../models/fleet/AdoptFleet";
 import { is_fleet_carrier, is_fleet_combined, is_fleet_surface } from "../../../models/fleet/predicate";
 import { CalcFnWithCondition } from "..";
 import { includes_ship_names } from "../../../models/ship/predicate";
@@ -128,18 +128,21 @@ export const calc_62_2: CalcFnWithCondition = (
             if (CVH >= 1) {
                 return 'H';
             }
-            if (BBs + CVL >= 2) {
+            if (BBs + CVL + count_ships_by_base_names(['あきつ丸'], base_ship_names) >= 2) {
                 return 'H';
             }
             return 'G1';
         case 'G1':
-            if (phase >= 3 && !is_fleet_combined(fleet_type)) {
-                if (BBs + CVs === 0 && AV <= 1 && CLs <= 1 && Ds >= 5) {
+            if (!is_fleet_combined(fleet_type)) {
+                if (phase >= 3 && BBs + count_carriers(fleet) === 0 && AV <= 1 && CLs <= 1 && Ds >= 5) {
                     return 'K';
                 }
                 return 'G2';
             }
             if (BBs + CVH >= 5) {
+                return 'G2';
+            }
+            if (CVH >= 3) {
                 return 'G2';
             }
             return 'K';
