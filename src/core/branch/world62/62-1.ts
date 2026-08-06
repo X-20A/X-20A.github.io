@@ -69,16 +69,16 @@ export const calc_62_1: CalcFnWithCondition = (
             if (phase >= 3 && AV + AS + AO + LHA >= 2) {
                 return 'J';
             }
+            if (phase >= 3 && BBs >= 2) {
+                return 'J';
+            }
             if (BBCVs >= 2) {
                 return 'F';
             }
             if (DE === 0 && is_fleet_speed_slow(speed)) {
                 return 'F';
             }
-            if (difficulty === 4 && DD >= 5) {
-                return 'G';
-            }
-            if (difficulty === 4 && BBCVs === 0 && DD >= 4) {
+            if (difficulty === 4 && CVs === 0 && DD >= 4) {
                 return 'G';
             }
             if (difficulty <= 3 && DD >= 3) {
