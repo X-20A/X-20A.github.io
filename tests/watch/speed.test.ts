@@ -330,10 +330,10 @@ describe('艦速度テスト', () => {
             }
 
             if (
-                is_both_base('加賀', d.name) ||
                 is_both_base('あきつ丸', d.name) ||
                 is_both_base('速吸', d.name) ||
-                is_both_base('明石', d.name)
+                is_both_base('明石', d.name) ||
+                is_both_base('Bearn', d.name)
             ) {
                 verification(SG.SlowC, d);
                 return true;

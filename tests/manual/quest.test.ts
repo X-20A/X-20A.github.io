@@ -1,8 +1,8 @@
 import { describe, it } from "vitest";
 import { get_wikiwiki_quest_names, get_zekamashi_article_title } from "../gateway";
 import { SORTIE_QUEST_DATAS } from "../../src/data/quest/sortie";
-import { LIMITED_SORTIE_QUEST_DATAS } from "../../src/data/quest/sortie/limited";
 import { EXERCISE_QUEST_DATAS } from "../../src/data/quest/exercise";
+import { LIMITED_SORTIE_QUEST_DATAS } from "../../src/data/quest/sortie/limited";
 
 const delay = (
     ms: number,
@@ -36,36 +36,35 @@ describe('任務データ', () => {
     it(
         'quest-test: ぜかましリンク',
         { timeout: 50000 },
-    )
-    async () => {
-        for (const quest_data of all_quest_datas) {
-            const {
-                zekamashi_id,
-                name,
-            } = quest_data;
-            // 表記ゆれ弾き
-            if (name === '海上輸送路の安全確保に努めよ！') continue;
+        async () => {
+            for (const quest_data of all_quest_datas) {
+                const {
+                    zekamashi_id,
+                    name,
+                } = quest_data;
+                // 表記ゆれ弾き
+                if (name === '海上輸送路の安全確保に努めよ！') continue;
 
-            type ResponseData = {
-                h1_texts: string,
+                type ResponseData = {
+                    h1_texts: string,
+                }
+
+                const response_data =
+                    await get_zekamashi_article_title(zekamashi_id) as unknown as ResponseData;
+
+                const response_title = response_data.h1_texts;
+                // console.log('response_title: ', response_title);
+                if (
+                    !response_title.includes(name)
+                ) throw new Error(`${name} のぜかましIDに不備があります`);
+
+                await delay(200);
             }
-
-            const response_data =
-                await get_zekamashi_article_title(zekamashi_id) as unknown as ResponseData;
-
-            const response_title = response_data.h1_texts;
-            // console.log('response_title: ', response_title);
-            if (
-                !response_title.includes(name)
-            ) throw new Error(`${name} のぜかましIDに不備があります`);
-
-            await delay(200);
-        }
-    };
+        },
+    );
     it(
         'quest-test: 期間限定任務 期限切れチェック',
-        { timeout: 10000 }
-    ),
+        { timeout: 10000 },
         async () => {
             const quest_names =
                 await get_wikiwiki_quest_names();
@@ -79,5 +78,6 @@ describe('任務データ', () => {
                     !quest_names.includes(name)
                 ) throw new Error(`${name} は期限切れの可能性があります`);
             }
-        };
+        },
+    );
 });
