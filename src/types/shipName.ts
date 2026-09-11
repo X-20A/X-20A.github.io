@@ -861,4 +861,7 @@ export type ShipName =
     | 'Visby改'
     | '日枝丸改'
     | 'Bearn amelioration'
+    | '扶桑改二補'
+    | '山城改二補'
+    | '北上改三'
 ;

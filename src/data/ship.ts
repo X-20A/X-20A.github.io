@@ -323,7 +323,7 @@ const SHIP_DATAS: ShipDatas = {
 ,225:{name:"陽炎改",type:ST.DD,seek:8,seek2:39,na:NA.Japan,sg:SG.FastB2,base:17}
 ,226:{name:"不知火改",type:ST.DD,seek:8,seek2:39,na:NA.Japan,sg:SG.FastB2,base:18}
 ,227:{name:"黒潮改",type:ST.DD,seek:8,seek2:39,na:NA.Japan,sg:SG.FastB2,base:19}
-,228:{name:"雪風改",type:ST.DD,seek:8,seek2:41,na:NA.Japan,sg:SG.FastB2,base:20}
+,228:{name:"雪風改",type:ST.DD,seek:8,seek2:40,na:NA.Japan,sg:SG.FastB2,base:20}
 ,229:{name:"島風改",type:ST.DD,seek:9,seek2:39,na:NA.Japan,sg:SG.FastA,base:50}
 ,230:{name:"朧改",type:ST.DD,seek:7,seek2:39,na:NA.Japan,sg:SG.FastB2,base:93}
 ,231:{name:"曙改",type:ST.DD,seek:7,seek2:39,na:NA.Japan,sg:SG.FastB2,base:15}
@@ -654,7 +654,7 @@ const SHIP_DATAS: ShipDatas = {
 ,575:{name:"Maestrale",type:ST.DD,seek:7,seek2:20,na:NA.Italia,sg:SG.FastB2,base:575}
 ,576:{name:"Nelson改",type:ST.BB,seek:14,seek2:48,na:NA.UK,sg:SG.SlowB,base:571}
 ,577:{name:"Rodney改",type:ST.BB,seek:13,seek2:48,na:NA.UK,sg:SG.SlowB,base:572}
-,578:{name:"朝霜改二",type:ST.DD,seek:10,seek2:46,na:NA.Japan,sg:SG.FastB2,base:425}
+,578:{name:"朝霜改二",type:ST.DD,seek:10,seek2:44,na:NA.Japan,sg:SG.FastB2,base:425}
 ,579:{name:"Gotland改",type:ST.CL,seek:18,seek2:55,na:NA.Sweden,sg:SG.FastB2,base:574}
 ,580:{name:"Maestrale改",type:ST.DD,seek:10,seek2:46,na:NA.Italia,sg:SG.FastB2,base:575}
 ,581:{name:"日進",type:ST.AV,seek:40,seek2:80,na:NA.Japan,sg:SG.FastC,base:581}
@@ -695,7 +695,7 @@ const SHIP_DATAS: ShipDatas = {
 ,617:{name:"屋代改",type:ST.DE,seek:5,seek2:30,na:NA.Japan,sg:SG.SlowB,base:612}
 ,618:{name:"Perth改",type:ST.CL,seek:10,seek2:50,na:NA.Other,sg:SG.FastB2,base:613}
 ,619:{name:"Grecale改",type:ST.DD,seek:10,seek2:46,na:NA.Italia,sg:SG.FastB2,base:614}
-,620:{name:"Helena改",type:ST.CL,seek:0,seek2:77,na:NA.USA,sg:SG.FastB2,base:615}
+,620:{name:"Helena改",type:ST.CL,seek:24,seek2:77,na:NA.USA,sg:SG.FastB2,base:615}
 ,621:{name:"神州丸",type:ST.LHA,seek:20,seek2:52,na:NA.Japan,sg:SG.SlowB,base:621}
 ,622:{name:"夕張改二",type:ST.CL,seek:11,seek2:52,na:NA.Japan,sg:SG.FastB2,base:115}
 ,623:{name:"夕張改二特",type:ST.CL,seek:10,seek2:50,na:NA.Japan,sg:SG.SlowB2,base:115}
@@ -949,29 +949,33 @@ const SHIP_DATAS: ShipDatas = {
 ,745:{name:"涼波改二補",type:ST.DD,seek:10,seek2:55,na:NA.Japan,sg:SG.FastB2,base:675}
 ,1034:{name:"涼波改二",type:ST.DD,seek:10,seek2:54,na:NA.Japan,sg:SG.FastB2,base:675}
 
-,746:{name:"桐改",type:ST.DD,seek:0,seek2:0,na:NA.Japan,sg:SG.FastB2,base:1044}
-,747:{name:"Reno改",type:ST.CL,seek:0,seek2:0,na:NA.Japan,sg:SG.FastB2,base:991}
-,932:{name:"Indiana",type:ST.BB,seek:0,seek2:0,na:NA.Japan,sg:SG.FastB2,base:932}
-,937:{name:"Indiana改",type:ST.BB,seek:0,seek2:0,na:NA.Japan,sg:SG.FastB2,base:932}
-,991:{name:"Reno",type:ST.CL,seek:0,seek2:0,na:NA.Japan,sg:SG.FastB2,base:991}
-,1023:{name:"Independence",type:ST.CVL,seek:0,seek2:0,na:NA.Japan,sg:SG.FastB2,base:1023}
-,1028:{name:"Independence改",type:ST.CVL,seek:0,seek2:0,na:NA.Japan,sg:SG.FastB2,base:1023}
-,1036:{name:"Independence Flight II",type:ST.CVL,seek:0,seek2:0,na:NA.Japan,sg:SG.FastB2,base:1023}
-,1041:{name:"花月",type:ST.DD,seek:0,seek2:0,na:NA.Japan,sg:SG.FastB2,base:1041}
-,1044:{name:"桐",type:ST.DD,seek:0,seek2:0,na:NA.Japan,sg:SG.FastB2,base:1044}
-,1046:{name:"花月改",type:ST.DD,seek:0,seek2:0,na:NA.Japan,sg:SG.FastB2,base:1041}
+,746:{name:"桐改",type:ST.DD,seek:16,seek2:44,na:NA.Japan,sg:SG.FastB2,base:1044}
+,747:{name:"Reno改",type:ST.CL,seek:10,seek2:49,na:NA.Japan,sg:SG.FastB2,base:991}
+,932:{name:"Indiana",type:ST.BB,seek:15,seek2:49,na:NA.Japan,sg:SG.FastB2,base:932}
+,937:{name:"Indiana改",type:ST.BB,seek:18,seek2:61,na:NA.Japan,sg:SG.FastB2,base:932}
+,991:{name:"Reno",type:ST.CL,seek:11,seek2:39,na:NA.Japan,sg:SG.FastB2,base:991}
+,1023:{name:"Independence",type:ST.CVL,seek:40,seek2:68,na:NA.Japan,sg:SG.FastB2,base:1023}
+,1028:{name:"Independence改",type:ST.CVL,seek:50,seek2:81,na:NA.Japan,sg:SG.FastB2,base:1023}
+,1036:{name:"Independence Flight II",type:ST.CVL,seek:51,seek2:84,na:NA.Japan,sg:SG.FastB2,base:1023}
+,1041:{name:"花月",type:ST.DD,seek:8,seek2:26,na:NA.Japan,sg:SG.FastB2,base:1041}
+,1044:{name:"桐",type:ST.DD,seek:9,seek2:24,na:NA.Japan,sg:SG.FastB2,base:1044}
+,1046:{name:"花月改",type:ST.DD,seek:8,seek2:47,na:NA.Japan,sg:SG.FastB2,base:1041}
 
-,1051:{name:"Algerie",type:ST.CA,seek:0,seek2:0,na:NA.France,sg:SG.FastB2,base:1051}
-,1053:{name:"Vautour",type:ST.DD,seek:0,seek2:0,na:NA.France,sg:SG.FastB2,base:1053}
-,1055:{name:"Bearn",type:ST.CV,seek:0,seek2:0,na:NA.France,sg:SG.SlowC,base:1055}
-,1056:{name:"Algerie改",type:ST.CA,seek:0,seek2:0,na:NA.France,sg:SG.FastB2,base:1051}
-,1058:{name:"Vautour改",type:ST.DD,seek:0,seek2:0,na:NA.France,sg:SG.FastB2,base:1053}
-,1060:{name:"Bearn改",type:ST.CV,seek:0,seek2:0,na:NA.France,sg:SG.SlowC,base:1055}
-,1062:{name:"Visby",type:ST.DD,seek:0,seek2:0,na:NA.Sweden,sg:SG.FastB2,base:1062}
-,1065:{name:"日枝丸",type:ST.AS,seek:0,seek2:0,na:NA.Japan,sg:SG.SlowB,base:1065}
-,1067:{name:"Visby改",type:ST.DD,seek:0,seek2:0,na:NA.Sweden,sg:SG.FastB2,base:1062}
-,1070:{name:"日枝丸改",type:ST.AS,seek:0,seek2:0,na:NA.Japan,sg:SG.SlowB,base:1065}
-,1061:{name:"Bearn amelioration",type:ST.CV,seek:0,seek2:0,na:NA.France,sg:SG.SlowC,base:1055}
+,1051:{name:"Algerie",type:ST.CA,seek:13,seek2:40,na:NA.France,sg:SG.FastB2,base:1051}
+,1053:{name:"Vautour",type:ST.DD,seek:7,seek2:20,na:NA.France,sg:SG.FastB2,base:1053}
+,1055:{name:"Bearn",type:ST.CV,seek:24,seek2:60,na:NA.France,sg:SG.SlowC,base:1055}
+,1056:{name:"Algerie改",type:ST.CA,seek:22,seek2:68,na:NA.France,sg:SG.FastB2,base:1051}
+,1058:{name:"Vautour改",type:ST.DD,seek:10,seek2:40,na:NA.France,sg:SG.FastB2,base:1053}
+,1060:{name:"Bearn改",type:ST.CV,seek:30,seek2:68,na:NA.France,sg:SG.SlowC,base:1055}
+,1062:{name:"Visby",type:ST.DD,seek:8,seek2:28,na:NA.Sweden,sg:SG.FastB2,base:1062}
+,1065:{name:"日枝丸",type:ST.AS,seek:10,seek2:30,na:NA.Japan,sg:SG.SlowB,base:1065}
+,1067:{name:"Visby改",type:ST.DD,seek:9,seek2:42,na:NA.Sweden,sg:SG.FastB2,base:1062}
+,1070:{name:"日枝丸改",type:ST.AS,seek:17,seek2:38,na:NA.Japan,sg:SG.SlowB,base:1065}
+,1061:{name:"Bearn amelioration",type:ST.CV,seek:45,seek2:80,na:NA.France,sg:SG.SlowC,base:1055}
+
+,748:{name:"扶桑改二補",type:ST.BBV,seek:0,seek2:61,na:NA.Japan,sg:SG.SlowB,base:26}
+,749:{name:"山城改二補",type:ST.BBV,seek:0,seek2:60,na:NA.Japan,sg:SG.SlowB,base:27}
+,1071:{name:"北上改三",type:ST.CLT,seek:0,seek2:56,na:NA.Japan,sg:SG.FastB2,base:25}
 }; // @expansion
 //,_:{name:'',type:ST.,seek:0,seek2:0,na:NA.,sg:SG.}
 export default SHIP_DATAS;
