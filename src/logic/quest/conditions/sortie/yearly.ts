@@ -3,6 +3,7 @@ import { NA, ST } from "../../../../data/ship";
 import { count_ships_by_base_names, extract_flagship, includes_base_ship } from "../../../../models/fleet/AdoptFleet";
 import { includes_ship_name, includes_ship_names, includes_ship_type, is_CVs } from "../../../../models/ship/predicate";
 import { BaseShipName } from "../../../../types/baseShipName";
+import { ShipName } from "../../../../types/shipName";
 
 // wikiがID順でなく月順なので倣う
 
@@ -152,5 +153,20 @@ export const calc_By15: QuestCompositionCondition = (fleet) => {
         includes_base_ship('比叡', base_ship_names) &&
         includes_base_ship('霧島', base_ship_names) &&
         DD >= 2
+    );
+};
+
+const KITAKAMI_OOI_NAMES: ShipName[] =
+    ['北上改二', '北上改三', '大井改二'] as const;
+
+export const calc_By17: QuestCompositionCondition = (fleet) => {
+    if (fleet.ships_length <= 1) return false;
+
+    const flagship = extract_flagship(fleet);
+    const second_ship = fleet.fleets[0].units[1].ship;
+    return (
+        includes_ship_name(KITAKAMI_OOI_NAMES, flagship.name) &&
+        includes_ship_name(KITAKAMI_OOI_NAMES, second_ship.name) &&
+        fleet.composition.DD >= 2
     );
 };

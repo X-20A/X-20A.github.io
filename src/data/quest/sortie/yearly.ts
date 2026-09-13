@@ -1,5 +1,5 @@
 import { SortieQuestData, YearlySortieQuestId } from ".";
-import { calc_By1, calc_By10, calc_By11, calc_By12, calc_By13, calc_By14, calc_By15, calc_By16, calc_By2, calc_By3, calc_By4, calc_By5, calc_By6, calc_By7, calc_By8, calc_By9 } from "../../../logic/quest/conditions/sortie/yearly";
+import { calc_By1, calc_By10, calc_By11, calc_By12, calc_By13, calc_By14, calc_By15, calc_By16, calc_By17, calc_By2, calc_By3, calc_By4, calc_By5, calc_By6, calc_By7, calc_By8, calc_By9 } from "../../../logic/quest/conditions/sortie/yearly";
 
 export const YEARLY_SORTIE_QUEST_DATAS = {
     By13: {
@@ -147,5 +147,12 @@ export const YEARLY_SORTIE_QUEST_DATAS = {
         zekamashi_id: 'daisansentai-dainisyoutai-tetteikaikyou',
         target_areas: ['5-1', '5-3', '5-4', '5-5'],
         condition: calc_By15,
+    },
+    By17: {
+        name: '「第九戦隊」抜錨！前線展開せよッ！',
+        icon: 'September',
+        zekamashi_id: 'daikyuusentai-zensen',
+        target_areas: ['1-4', '2-1', '2-2', '2-3'],
+        condition: calc_By17,
     },
 } as const satisfies Record<YearlySortieQuestId, SortieQuestData>;
