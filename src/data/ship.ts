@@ -973,9 +973,11 @@ const SHIP_DATAS: ShipDatas = {
 ,1070:{name:"日枝丸改",type:ST.AS,seek:17,seek2:38,na:NA.Japan,sg:SG.SlowB,base:1065}
 ,1061:{name:"Bearn amelioration",type:ST.CV,seek:45,seek2:80,na:NA.France,sg:SG.SlowC,base:1055}
 
-,748:{name:"扶桑改二補",type:ST.BBV,seek:0,seek2:61,na:NA.Japan,sg:SG.SlowB,base:26}
-,749:{name:"山城改二補",type:ST.BBV,seek:0,seek2:60,na:NA.Japan,sg:SG.SlowB,base:27}
-,1071:{name:"北上改三",type:ST.CLT,seek:0,seek2:56,na:NA.Japan,sg:SG.FastB2,base:25}
+,748:{name:"扶桑改二補",type:ST.BBV,seek:24,seek2:61,na:NA.Japan,sg:SG.SlowB,base:26}
+,749:{name:"山城改二補",type:ST.BBV,seek:25,seek2:60,na:NA.Japan,sg:SG.SlowB,base:27}
+,1071:{name:"北上改三",type:ST.CLT,seek:14,seek2:56,na:NA.Japan,sg:SG.FastB2,base:25}
+
+,902:{name:"狭霧改二",type:ST.DD,seek:11,seek2:46,na:NA.Japan,sg:SG.FastB2,base:480}
 }; // @expansion
 //,_:{name:'',type:ST.,seek:0,seek2:0,na:NA.,sg:SG.}
 export default SHIP_DATAS;

@@ -868,4 +868,5 @@ export type ShipId =
     | 748
     | 749
     | 1071
+    | 902
 ;
