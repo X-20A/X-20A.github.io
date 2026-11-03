@@ -962,10 +962,10 @@ const SHIP_DATAS: ShipDatas = {
 ,1046:{name:"花月改",type:ST.DD,seek:8,seek2:47,na:NA.Japan,sg:SG.FastB2,base:1041}
 
 ,1051:{name:"Algerie",type:ST.CA,seek:13,seek2:40,na:NA.France,sg:SG.FastB2,base:1051}
-,1053:{name:"Vautour",type:ST.DD,seek:7,seek2:20,na:NA.France,sg:SG.FastB2,base:1053}
+,1053:{name:"Vautour",type:ST.DD,seek:7,seek2:20,na:NA.France,sg:SG.FastA,base:1053}
 ,1055:{name:"Bearn",type:ST.CV,seek:24,seek2:60,na:NA.France,sg:SG.SlowC,base:1055}
 ,1056:{name:"Algerie改",type:ST.CA,seek:22,seek2:68,na:NA.France,sg:SG.FastB2,base:1051}
-,1058:{name:"Vautour改",type:ST.DD,seek:10,seek2:40,na:NA.France,sg:SG.FastB2,base:1053}
+,1058:{name:"Vautour改",type:ST.DD,seek:10,seek2:40,na:NA.France,sg:SG.FastA,base:1053}
 ,1060:{name:"Bearn改",type:ST.CV,seek:30,seek2:68,na:NA.France,sg:SG.SlowC,base:1055}
 ,1062:{name:"Visby",type:ST.DD,seek:8,seek2:28,na:NA.Sweden,sg:SG.FastB2,base:1062}
 ,1065:{name:"日枝丸",type:ST.AS,seek:10,seek2:30,na:NA.Japan,sg:SG.SlowB,base:1065}
