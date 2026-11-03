@@ -1,6 +1,8 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 
+// bun run download-banner 1 2 3
+
 const BANNER_OUTPUT_DIR = path.resolve(process.cwd(), "public/banners");
 const BANNER_BASE_URL =
 	"https://raw.githubusercontent.com/noro6/kc-web/main/public/img/ship/banner";
