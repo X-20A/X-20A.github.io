@@ -523,4 +523,5 @@ export type EquipName =
     | 'PL101(爆装)'
     | 'V-156F(SB2U輸出型)'
     | 'PL101(偵察)'
+    | 'XF6F-6'
 ;

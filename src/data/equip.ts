@@ -644,9 +644,11 @@ const EQUIP_DATAS: EquipDatas = {
 ,580:{seek:0,type:EquipType.Torpedo,name:'55cm三連装魚雷 Modele 1924'}
 ,581:{seek:0,type:EquipType.Torpedo,name:'55cm複合配置五連装魚雷 Modele 1932'}
 ,588:{seek:0,type:EquipType.Fighter,name:'G-36A(F4F輸出型)'}
-,586:{seek:3,type:EquipType.DiveBomber,name:'PL101(爆装)'}
+,586:{seek:2,type:EquipType.DiveBomber,name:'PL101(爆装)'}
 ,587:{seek:2,type:EquipType.DiveBomber,name:'V-156F(SB2U輸出型)'}
 ,585:{seek:3,type:EquipType.CarrierScout,name:'PL101(偵察)'}
+
+,589:{seek:1,type:EquipType.Fighter,name:'XF6F-6'}
 } as const; // @expansion
 
 export default EQUIP_DATAS;
