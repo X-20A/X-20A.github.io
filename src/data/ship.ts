@@ -739,7 +739,7 @@ const SHIP_DATAS: ShipDatas = {
 ,662:{name:"能代改二",type:ST.CL,seek:15,seek2:61,na:NA.Japan,sg:SG.FastB1,base:138}
 ,663:{name:"矢矧改二",type:ST.CL,seek:15,seek2:60,na:NA.Japan,sg:SG.FastB1,base:139}
 ,665:{name:"曙改二",type:ST.DD,seek:10,seek2:46,na:NA.Japan,sg:SG.FastB2,base:15}
-,666:{name:"磯波改二",type:ST.DD,seek:9,seek2:43,na:NA.Japan,sg:SG.FastB2,base:12}
+,666:{name:"磯波改二",type:ST.DD,seek:9,seek2:44,na:NA.Japan,sg:SG.FastB2,base:12}
 ,667:{name:"山風改二丁",type:ST.DD,seek:8,seek2:41,na:NA.Japan,sg:SG.FastB2,base:457}
 ,668:{name:"矢矧改二乙",type:ST.CL,seek:15,seek2:60,na:NA.Japan,sg:SG.FastB1,base:139}
 ,670:{name:"親潮改二",type:ST.DD,seek:9,seek2:42,na:NA.Japan,sg:SG.FastB2,base:456}
@@ -978,6 +978,11 @@ const SHIP_DATAS: ShipDatas = {
 ,1071:{name:"北上改三",type:ST.CLT,seek:14,seek2:56,na:NA.Japan,sg:SG.FastB2,base:25}
 
 ,902:{name:"狭霧改二",type:ST.DD,seek:11,seek2:46,na:NA.Japan,sg:SG.FastB2,base:480}
+
+,750:{name:"由良改二偵",type:ST.CL,seek:0,seek2:0,na:NA.Japan,sg:SG.FastB2,base:23}
+,751:{name:"川内改二偵",type:ST.CL,seek:0,seek2:66,na:NA.Japan,sg:SG.FastB2,base:54}
+,752:{name:"高波改二偵",type:ST.DD,seek:0,seek2:69,na:NA.Japan,sg:SG.FastB2,base:424}
+,753:{name:"青葉改偵",type:ST.CA,seek:0,seek2:0,na:NA.Japan,sg:SG.FastB2,base:61}
 }; // @expansion
 //,_:{name:'',type:ST.,seek:0,seek2:0,na:NA.,sg:SG.}
 export default SHIP_DATAS;
